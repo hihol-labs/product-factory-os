@@ -1,0 +1,28 @@
+name: Roadmap task
+description: Track a planned roadmap item.
+title: "[Roadmap]: "
+labels: ["type:roadmap", "status:planned"]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired Outcome
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What files, commands, or contracts are expected to change?
+    validations:
+      required: true
+  - type: textarea
+    id: gates
+    attributes:
+      label: Quality Gates
+      value: |
+        - [ ] Structure validation passes.
+        - [ ] Runtime validation passes.
+        - [ ] Fixtures pass.
+        - [ ] Benchmarks pass when routing/classification changes.
+        - [ ] Documentation is updated.

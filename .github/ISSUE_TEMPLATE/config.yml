@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Product Factory OS discussions
+    url: https://github.com/hihol-labs/product-factory-os/discussions
+    about: Ask questions, propose ideas, and discuss Product Factory OS usage patterns.

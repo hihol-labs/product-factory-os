@@ -99,6 +99,9 @@ Product Factory OS использует open-core модель:
 - [Pricing Model](docs/PRICING.md)
 - [Starter Pack Strategy](docs/PACKS.md)
 - [PFO Cloud](docs/CLOUD.md)
+- [GitHub Launch Checklist](docs/GITHUB_LAUNCH.md)
+- [Initial Roadmap Issues](docs/GITHUB_ISSUES.md)
+- [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
 
 ## Проверка
 

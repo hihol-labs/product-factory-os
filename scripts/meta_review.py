@@ -96,10 +96,11 @@ def main() -> None:
 
     workspace_policy = ROOT.parent / "PFO_WORKSPACE.json"
     workspace_codex = ROOT.parent / "CODEX.md"
-    if not workspace_policy.is_file():
-        fail("workspace root is missing PFO_WORKSPACE.json")
-    if not workspace_codex.is_file():
-        fail("workspace root is missing CODEX.md")
+    if not workspace_policy.is_file() or not workspace_codex.is_file():
+        warn(
+            "workspace root policy files are absent; this is expected for a standalone GitHub clone",
+            warnings,
+        )
 
     routes = fenced_routes()
     if len(routes) < 8:

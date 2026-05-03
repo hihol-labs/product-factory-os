@@ -1,0 +1,40 @@
+name: Feature request
+description: Propose a new Product Factory OS capability.
+title: "[Feature]: "
+labels: ["type:feature", "status:needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What product-factory workflow problem should this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the runtime, skill, starter, gate, or documentation change.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - runtime
+        - skills
+        - agents
+        - starters
+        - validators
+        - docs
+        - open-core
+        - commercial
+        - integrations
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      placeholder: What must be true for this to be complete?
