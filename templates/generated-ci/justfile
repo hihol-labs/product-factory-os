@@ -1,0 +1,9 @@
+validate:
+    python3 /home/hihol/projects/product-factory-os/scripts/validate_project.py .
+
+state:
+    python3 /home/hihol/projects/product-factory-os/scripts/validate_state.py .codex-memory/STATE.json
+
+graph:
+    python3 /home/hihol/projects/product-factory-os/scripts/validate_execution_graph.py EXECUTION_GRAPH.md
+

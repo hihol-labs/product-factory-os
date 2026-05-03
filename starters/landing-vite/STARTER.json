@@ -1,0 +1,13 @@
+{
+  "id": "landing-vite",
+  "productType": "landing_page",
+  "stack": ["Vite", "Vue_or_static_HTML", "Netlify_or_Vercel"],
+  "folders": ["src", "tests", "public"],
+  "commands": {
+    "test": "npm test",
+    "build": "npm run build",
+    "preview": "npm run preview"
+  },
+  "requiredArtifacts": ["MARKET_BRIEF.md", "ICP.md", "GO_TO_MARKET.md", "TEST_PLAN.md"]
+}
+

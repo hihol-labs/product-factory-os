@@ -1,0 +1,13 @@
+{
+  "id": "mini-app-vue",
+  "productType": "mini_app",
+  "stack": ["Vue", "TypeScript", "Platform SDK", "FastAPI", "PostgreSQL"],
+  "folders": ["frontend/src", "backend/app", "tests", "infra"],
+  "commands": {
+    "test": "pytest && npm test",
+    "build": "npm run build",
+    "backend": "uvicorn app.main:app --reload"
+  },
+  "requiredArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "TEST_PLAN.md"]
+}
+

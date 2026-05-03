@@ -1,0 +1,13 @@
+{
+  "id": "ecommerce-fastapi-vue",
+  "productType": "ecommerce",
+  "stack": ["FastAPI", "PostgreSQL", "Vue", "Payment provider", "Docker"],
+  "folders": ["backend/app", "backend/tests", "frontend/src", "frontend/tests", "infra"],
+  "commands": {
+    "test": "pytest && npm test",
+    "build": "docker compose build",
+    "smoke": "just smoke"
+  },
+  "requiredArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "TEST_PLAN.md", "QUALITY_GATES.md"]
+}
+

@@ -1,0 +1,6 @@
+deployment preflight
+explicit confirmation
+health check result
+rollback notes
+session save
+

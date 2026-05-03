@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "prompts": [
+    {"id": "saas-1", "text": "Создай SaaS для учета подписок", "expectedType": "saas"},
+    {"id": "saas-2", "text": "Сервис для управления клиентскими счетами и тарифами", "expectedType": "saas"},
+    {"id": "bot-1", "text": "Telegram бот для продаж с CRM", "expectedType": "messaging_bot"},
+    {"id": "bot-2", "text": "Discord bot для модерации сообщества", "expectedType": "messaging_bot"},
+    {"id": "api-1", "text": "REST API для бронирования слотов", "expectedType": "api_service"},
+    {"id": "api-2", "text": "Backend service для обработки вебхуков", "expectedType": "api_service"},
+    {"id": "landing-1", "text": "Лендинг для сбора заявок", "expectedType": "landing_page"},
+    {"id": "landing-2", "text": "Промо сайт для нового продукта", "expectedType": "landing_page"},
+    {"id": "cli-1", "text": "CLI для проверки ссылок", "expectedType": "cli_tool"},
+    {"id": "cli-2", "text": "Терминальный инструмент для batch rename", "expectedType": "cli_tool"},
+    {"id": "scraper-1", "text": "Парсер цен конкурентов", "expectedType": "data_scraper"},
+    {"id": "scraper-2", "text": "Scraper для мониторинга каталога", "expectedType": "data_scraper"},
+    {"id": "shop-1", "text": "Интернет-магазин для каталога товаров", "expectedType": "ecommerce"},
+    {"id": "shop-2", "text": "E-commerce система с корзиной и заказами", "expectedType": "ecommerce"},
+    {"id": "mini-1", "text": "Telegram mini app для программы лояльности", "expectedType": "mini_app"},
+    {"id": "mini-2", "text": "Embedded mini app для записи клиентов", "expectedType": "mini_app"},
+    {"id": "automation-1", "text": "Внутренний инструмент автоматизации операций", "expectedType": "internal_automation"},
+    {"id": "automation-2", "text": "Backoffice automation для сверки отчетов", "expectedType": "internal_automation"},
+    {"id": "web-1", "text": "Web app для личного кабинета", "expectedType": "web_app"},
+    {"id": "web-2", "text": "Портал для пользователей с авторизацией", "expectedType": "web_app"}
+  ]
+}
+

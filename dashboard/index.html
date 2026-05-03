@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Factory OS Dashboard</title>
+    <style>
+      body { margin: 0; font-family: system-ui, sans-serif; background: #f7f7f4; color: #1d2428; }
+      header { padding: 24px 32px; border-bottom: 1px solid #d8d8d0; background: #ffffff; }
+      main { padding: 24px 32px; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+      section { background: #ffffff; border: 1px solid #d8d8d0; border-radius: 8px; padding: 16px; }
+      h1 { margin: 0; font-size: 24px; }
+      h2 { margin: 0 0 8px; font-size: 16px; }
+      code { background: #eeeeea; padding: 2px 4px; border-radius: 4px; }
+      .metric { font-size: 32px; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Product Factory OS Dashboard</h1>
+      <p>Drop a generated <code>metrics.json</code> next to this file or paste metrics into the script block.</p>
+    </header>
+    <main id="app"></main>
+    <script>
+      const metrics = window.PFO_METRICS || {
+        projectCount: 0,
+        deployReadyCount: 0,
+        deployedCount: 0,
+        blockedCount: 0,
+        failedGateCount: 0,
+        verificationEvents: 0
+      };
+      const labels = {
+        projectCount: "Projects",
+        deployReadyCount: "Deploy Ready",
+        deployedCount: "Deployed",
+        blockedCount: "Blocked",
+        failedGateCount: "Failed Gates",
+        verificationEvents: "Verification Events"
+      };
+      document.getElementById("app").innerHTML = Object.entries(metrics).map(([key, value]) => `
+        <section>
+          <h2>${labels[key] || key}</h2>
+          <div class="metric">${value}</div>
+        </section>
+      `).join("");
+    </script>
+  </body>
+</html>
+

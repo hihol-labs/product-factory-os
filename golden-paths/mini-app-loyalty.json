@@ -1,0 +1,10 @@
+{
+  "id": "mini-app-loyalty",
+  "prompt": "Создай Telegram mini app для программы лояльности",
+  "productType": "mini_app",
+  "starter": "mini-app-vue",
+  "route": "/project -> /kickstart",
+  "requiredArtifacts": ["ICP.md", "GO_TO_MARKET.md", "PRODUCT_BLUEPRINT.md", "THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "TEST_PLAN.md"],
+  "minimumGates": ["architecture", "tests", "review", "security", "hardening"]
+}
+

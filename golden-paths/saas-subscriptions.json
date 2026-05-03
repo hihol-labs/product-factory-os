@@ -1,0 +1,10 @@
+{
+  "id": "saas-subscriptions",
+  "prompt": "Создай SaaS для учета подписок",
+  "productType": "saas",
+  "starter": "saas-fastapi-vue",
+  "route": "/project -> /kickstart",
+  "requiredArtifacts": ["MARKET_BRIEF.md", "ICP.md", "BUSINESS_MODEL.md", "PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "TEST_PLAN.md", "QUALITY_GATES.md"],
+  "minimumGates": ["strategy", "architecture", "tests", "review", "security", "dependencies", "hardening"]
+}
+

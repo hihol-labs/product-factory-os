@@ -1,0 +1,10 @@
+{
+  "id": "cli-link-checker",
+  "prompt": "Создай CLI для массовой проверки ссылок",
+  "productType": "cli_tool",
+  "starter": "cli-typer",
+  "route": "/project -> /kickstart",
+  "requiredArtifacts": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "TEST_PLAN.md", "DATA_CLASSIFICATION.md"],
+  "minimumGates": ["architecture", "tests", "review", "dependencies"]
+}
+

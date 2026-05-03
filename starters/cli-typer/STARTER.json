@@ -1,0 +1,13 @@
+{
+  "id": "cli-typer",
+  "productType": "cli_tool",
+  "stack": ["Python", "Typer", "pytest"],
+  "folders": ["src", "tests", "docs"],
+  "commands": {
+    "test": "pytest",
+    "run": "python -m src",
+    "package": "python -m build"
+  },
+  "requiredArtifacts": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "TEST_PLAN.md"]
+}
+

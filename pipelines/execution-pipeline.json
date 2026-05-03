@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "pipeline": [
+    "INTENT_PARSING",
+    "PRODUCT_CLASSIFICATION",
+    "ARCHITECTURE_SELECTION",
+    "BLUEPRINT_GENERATION",
+    "EXECUTION_PLAN_GENERATION",
+    "MODULAR_BUILD",
+    "TEST_GENERATION",
+    "VALIDATION_GATES",
+    "DEPLOYMENT_READINESS",
+    "SESSION_PERSISTENCE"
+  ],
+  "artifacts": {
+    "INTENT_PARSING": ["DISCOVERY.md"],
+    "PRODUCT_CLASSIFICATION": ["PRODUCT_BLUEPRINT.md"],
+    "ARCHITECTURE_SELECTION": ["PROJECT_ARCHITECTURE.md"],
+    "BLUEPRINT_GENERATION": ["PRD.md", "PRODUCT_BLUEPRINT.md"],
+    "EXECUTION_PLAN_GENERATION": ["BUILD_PLAN.md", "EXECUTION_GRAPH.md", "IMPLEMENTATION_PLAN.md"],
+    "MODULAR_BUILD": ["source_files", "CODEX.md"],
+    "TEST_GENERATION": ["test_files", "verification_log"],
+    "VALIDATION_GATES": ["review_report", "security_report", "dependency_report"],
+    "DEPLOYMENT_READINESS": ["deployment_plan", ".env.example", "health_check", "rollback_notes"],
+    "SESSION_PERSISTENCE": [".codex-memory/STATE.json", ".codex-memory/MEMORY.md"]
+  },
+  "noSkipRules": [
+    "MODULAR_BUILD requires BLUEPRINT_GENERATION and EXECUTION_PLAN_GENERATION artifacts.",
+    "READY_FOR_DEPLOY requires passing validation gates.",
+    "SESSION_PERSISTENCE runs after every major milestone."
+  ]
+}
+

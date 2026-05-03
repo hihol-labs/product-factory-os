@@ -1,0 +1,15 @@
+{
+  "name": "product-factory-os",
+  "displayName": "Product Factory OS",
+  "source": {
+    "source": "local",
+    "path": "./product-factory-os"
+  },
+  "policy": {
+    "installation": "AVAILABLE",
+    "authentication": "ON_INSTALL"
+  },
+  "category": "Productivity",
+  "capabilities": ["Product Planning", "Code Generation", "Testing", "Deployment", "Memory"]
+}
+

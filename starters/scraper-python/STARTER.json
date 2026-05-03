@@ -1,0 +1,13 @@
+{
+  "id": "scraper-python",
+  "productType": "data_scraper",
+  "stack": ["Python", "httpx", "selectolax_or_BeautifulSoup", "PostgreSQL_or_SQLite", "Docker"],
+  "folders": ["scraper", "scraper/parsers", "tests/fixtures", "infra"],
+  "commands": {
+    "test": "pytest",
+    "dryRun": "python -m scraper --dry-run",
+    "build": "docker build ."
+  },
+  "requiredArtifacts": ["DATA_CLASSIFICATION.md", "TEST_PLAN.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md"]
+}
+

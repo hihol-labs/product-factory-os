@@ -1,0 +1,164 @@
+{
+  "version": 2,
+  "outputContract": [
+    "PRODUCT_TYPE",
+    "DOMAIN",
+    "COMPLEXITY",
+    "CONFIDENCE",
+    "AMBIGUITY",
+    "DATA_SENSITIVITY",
+    "MONETIZATION_MODEL",
+    "REQUIRED_MODULES",
+    "INFRASTRUCTURE",
+    "RECOMMENDED_STACK",
+    "STRATEGY_ARTIFACTS_REQUIRED",
+    "SECURITY_ARTIFACTS_REQUIRED"
+  ],
+  "productTypes": [
+    {
+      "id": "saas",
+      "name": "SaaS Application",
+      "signals": ["saas", "subscription", "dashboard", "users", "billing", "tenant"],
+      "defaultComplexity": "medium",
+      "defaultArchitecture": "modular_monolith",
+      "defaultMonetization": "subscription",
+      "defaultDataSensitivity": "user_data",
+      "requiredModules": ["auth", "billing", "database", "api", "dashboard"],
+      "recommendedStack": ["FastAPI", "PostgreSQL", "Vue", "Docker"],
+      "requiredStrategyArtifacts": ["MARKET_BRIEF.md", "ICP.md", "BUSINESS_MODEL.md", "GO_TO_MARKET.md"],
+      "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
+    },
+    {
+      "id": "messaging_bot",
+      "name": "Messaging Bot",
+      "signals": ["telegram", "discord", "bot", "chat command", "message handler"],
+      "defaultComplexity": "medium",
+      "defaultArchitecture": "modular_monolith",
+      "defaultMonetization": "service_or_lead_generation",
+      "defaultDataSensitivity": "conversation_data",
+      "requiredModules": ["event_loop", "command_router", "handlers", "state_manager", "integrations"],
+      "recommendedStack": ["Python", "aiogram_or_discord.py", "PostgreSQL_or_SQLite", "Docker"],
+      "requiredStrategyArtifacts": ["ICP.md", "GO_TO_MARKET.md"],
+      "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
+    },
+    {
+      "id": "api_service",
+      "name": "REST API Service",
+      "signals": ["api", "backend", "endpoint", "rest", "service"],
+      "defaultComplexity": "medium",
+      "defaultArchitecture": "modular_monolith",
+      "defaultMonetization": "usage_or_internal_platform",
+      "defaultDataSensitivity": "depends_on_domain",
+      "requiredModules": ["routing", "controllers", "services", "middleware", "db_layer"],
+      "recommendedStack": ["FastAPI", "Pydantic", "PostgreSQL", "Docker"],
+      "requiredStrategyArtifacts": ["MARKET_BRIEF.md"],
+      "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
+    },
+    {
+      "id": "web_app",
+      "name": "Web App",
+      "signals": ["web app", "frontend", "portal", "account", "interface"],
+      "defaultComplexity": "medium",
+      "defaultArchitecture": "modular_monolith",
+      "defaultMonetization": "product_or_internal_value",
+      "defaultDataSensitivity": "user_data",
+      "requiredModules": ["frontend", "backend", "auth", "storage"],
+      "recommendedStack": ["Vue", "TypeScript", "FastAPI", "PostgreSQL"],
+      "requiredStrategyArtifacts": ["ICP.md"],
+      "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
+    },
+    {
+      "id": "landing_page",
+      "name": "Landing Page",
+      "signals": ["landing", "promo page", "site", "lead form"],
+      "defaultComplexity": "small",
+      "defaultArchitecture": "monolith",
+      "defaultMonetization": "lead_generation",
+      "defaultDataSensitivity": "lead_contact_data",
+      "requiredModules": ["page", "lead_capture", "analytics", "deployment"],
+      "recommendedStack": ["Vite", "Vue_or_static_HTML", "Netlify_or_Vercel"],
+      "requiredStrategyArtifacts": ["MARKET_BRIEF.md", "ICP.md", "GO_TO_MARKET.md"],
+      "requiredSecurityArtifacts": ["DATA_CLASSIFICATION.md"]
+    },
+    {
+      "id": "cli_tool",
+      "name": "CLI Tool",
+      "signals": ["cli", "command line", "terminal", "script"],
+      "defaultComplexity": "small",
+      "defaultArchitecture": "monolith",
+      "defaultMonetization": "utility_or_internal_value",
+      "defaultDataSensitivity": "local_files_or_config",
+      "requiredModules": ["commands", "config", "io", "packaging"],
+      "recommendedStack": ["Python", "Typer_or_Click", "pytest"],
+      "requiredStrategyArtifacts": ["MARKET_BRIEF.md"],
+      "requiredSecurityArtifacts": ["DATA_CLASSIFICATION.md"]
+    },
+    {
+      "id": "mini_app",
+      "name": "Mini App",
+      "signals": ["mini app", "telegram mini app", "embedded app"],
+      "defaultComplexity": "medium",
+      "defaultArchitecture": "modular_monolith",
+      "defaultMonetization": "platform_distribution",
+      "defaultDataSensitivity": "platform_user_data",
+      "requiredModules": ["frontend", "platform_sdk", "backend", "auth", "storage"],
+      "recommendedStack": ["Vue", "TypeScript", "FastAPI", "PostgreSQL"],
+      "requiredStrategyArtifacts": ["ICP.md", "GO_TO_MARKET.md"],
+      "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
+    },
+    {
+      "id": "ecommerce",
+      "name": "E-commerce System",
+      "signals": ["shop", "store", "cart", "checkout", "catalog", "orders"],
+      "defaultComplexity": "large",
+      "defaultArchitecture": "modular_monolith",
+      "defaultMonetization": "transaction_margin_or_sales",
+      "defaultDataSensitivity": "personal_and_payment_adjacent_data",
+      "requiredModules": ["catalog", "cart", "checkout", "orders", "payments", "admin"],
+      "recommendedStack": ["FastAPI", "PostgreSQL", "Vue", "Stripe_or_payment_provider", "Docker"],
+      "requiredStrategyArtifacts": ["MARKET_BRIEF.md", "ICP.md", "BUSINESS_MODEL.md", "GO_TO_MARKET.md"],
+      "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
+    },
+    {
+      "id": "data_scraper",
+      "name": "Data Scraper",
+      "signals": ["scraper", "parser", "crawl", "extract", "monitor prices"],
+      "defaultComplexity": "medium",
+      "defaultArchitecture": "modular_monolith",
+      "defaultMonetization": "data_asset_or_internal_automation",
+      "defaultDataSensitivity": "collected_external_data",
+      "requiredModules": ["fetch", "parse", "storage", "scheduler", "queue"],
+      "recommendedStack": ["Python", "httpx", "BeautifulSoup_or_selectolax", "PostgreSQL", "Docker"],
+      "requiredStrategyArtifacts": ["MARKET_BRIEF.md"],
+      "requiredSecurityArtifacts": ["DATA_CLASSIFICATION.md"]
+    },
+    {
+      "id": "internal_automation",
+      "name": "Internal Automation Tool",
+      "signals": ["automation", "internal tool", "workflow", "ops", "backoffice"],
+      "defaultComplexity": "medium",
+      "defaultArchitecture": "modular_monolith",
+      "defaultMonetization": "time_saved_or_operational_risk_reduction",
+      "defaultDataSensitivity": "internal_business_data",
+      "requiredModules": ["workflow", "integrations", "admin_ui", "storage", "audit_log"],
+      "recommendedStack": ["FastAPI", "PostgreSQL", "Vue_or_CLI", "Docker"],
+      "requiredStrategyArtifacts": ["BUSINESS_MODEL.md"],
+      "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
+    }
+  ],
+  "confidenceRules": {
+    "high": "One product type has multiple direct signals and no conflicting product-type signals.",
+    "medium": "One product type is likely, but domain or infrastructure is ambiguous.",
+    "low": "Multiple product types are plausible or the idea lacks enough detail."
+  },
+  "ambiguityRules": {
+    "askClarifyingQuestion": "Ask only when ambiguity changes architecture, security, data model, or deployment.",
+    "defaultWhenDelegated": "If the user says to decide, choose the simplest reversible architecture and record the assumption."
+  },
+  "complexityRules": {
+    "small": "Single actor, few flows, local/static deployment, no sensitive multi-user data.",
+    "medium": "Multiple modules, persistent data, auth, external integrations, or scheduled work.",
+    "large": "Payments, multi-role workflows, async jobs, high scale, regulated data, or multiple deployment surfaces."
+  }
+}
+

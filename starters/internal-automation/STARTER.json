@@ -1,0 +1,13 @@
+{
+  "id": "internal-automation",
+  "productType": "internal_automation",
+  "stack": ["FastAPI", "PostgreSQL", "Vue_or_CLI", "Docker"],
+  "folders": ["app/workflows", "app/integrations", "tests", "docs"],
+  "commands": {
+    "test": "pytest",
+    "run": "python -m app",
+    "build": "docker build ."
+  },
+  "requiredArtifacts": ["BUSINESS_MODEL.md", "THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "QUALITY_GATES.md"]
+}
+

@@ -1,0 +1,98 @@
+{
+  "version": 2,
+  "templates": {
+    "saas": {
+      "modules": ["auth", "billing", "subscriptions", "api", "dashboard", "database"],
+      "defaultFolders": ["backend/app", "backend/tests", "frontend/src", "frontend/tests", "infra", "docs"],
+      "testMinimums": ["auth tests", "core API tests", "permission tests", "dashboard smoke", "billing webhook mocks"],
+      "securityMinimums": ["tenant isolation", "secret handling", "session/cookie policy", "rate limit on auth"],
+      "deployMinimums": ["Dockerfile", ".env.example", "health check", "rollback notes"]
+    },
+    "messaging_bot": {
+      "modules": ["event_loop", "handlers", "state_manager", "integrations", "command_router"],
+      "defaultFolders": ["bot", "bot/handlers", "bot/services", "tests", "infra"],
+      "testMinimums": ["command routing tests", "handler flow tests", "state transition tests", "integration mocks"],
+      "securityMinimums": ["token env vars", "admin command permissions", "input validation", "rate limiting"],
+      "deployMinimums": ["Dockerfile", "process manager or webhook notes", ".env.example"]
+    },
+    "api_service": {
+      "modules": ["routing", "controllers", "services", "middleware", "db_layer"],
+      "defaultFolders": ["app/api", "app/services", "app/models", "tests", "infra"],
+      "testMinimums": ["route contract tests", "service tests", "validation error tests", "auth/permission tests"],
+      "securityMinimums": ["auth middleware", "input validation", "CORS policy", "rate limiting"],
+      "deployMinimums": ["Dockerfile", "health check", ".env.example", "rollback notes"]
+    },
+    "web_app": {
+      "modules": ["frontend", "backend", "auth", "storage"],
+      "defaultFolders": ["frontend/src", "frontend/tests", "backend/app", "backend/tests"],
+      "testMinimums": ["form tests", "core flow smoke", "API contract tests", "responsive/accessibility checks"],
+      "securityMinimums": ["auth boundaries", "XSS-safe rendering", "CSRF/cookie policy where relevant"],
+      "deployMinimums": ["build command", ".env.example", "static or server deployment notes"]
+    },
+    "landing_page": {
+      "modules": ["page_sections", "lead_capture", "analytics", "deployment"],
+      "defaultFolders": ["src", "tests", "public"],
+      "testMinimums": ["lead form test", "responsive smoke", "analytics hook check"],
+      "securityMinimums": ["spam control", "no secret exposure", "privacy note for lead data"],
+      "deployMinimums": ["Vercel or Netlify config", "build command", "publish directory"]
+    },
+    "cli_tool": {
+      "modules": ["commands", "config", "io", "packaging"],
+      "defaultFolders": ["src", "tests", "docs"],
+      "testMinimums": ["command parsing tests", "error code tests", "file/stdin/stdout tests"],
+      "securityMinimums": ["safe file paths", "no shell injection", "config secret handling"],
+      "deployMinimums": ["packaging notes", "install command", "release artifact"]
+    },
+    "mini_app": {
+      "modules": ["frontend", "platform_sdk", "backend", "auth", "storage"],
+      "defaultFolders": ["frontend/src", "backend/app", "tests", "infra"],
+      "testMinimums": ["platform init test", "auth handshake test", "core UI flow", "backend contract tests"],
+      "securityMinimums": ["platform signature validation", "auth boundaries", "data classification"],
+      "deployMinimums": ["platform config", "frontend build", "backend health check"]
+    },
+    "ecommerce": {
+      "modules": ["catalog", "cart", "checkout", "orders", "payments", "admin"],
+      "defaultFolders": ["backend/app", "backend/tests", "frontend/src", "frontend/tests", "infra"],
+      "testMinimums": ["catalog tests", "cart tests", "checkout tests", "payment webhook mocks", "order state tests"],
+      "securityMinimums": ["payment provider isolation", "admin permissions", "PII handling", "audit log"],
+      "deployMinimums": ["Dockerfile", "health check", "migration step", "rollback notes"]
+    },
+    "data_scraper": {
+      "modules": ["fetch", "parse", "storage", "scheduler", "queue"],
+      "defaultFolders": ["scraper", "scraper/parsers", "tests/fixtures", "infra"],
+      "testMinimums": ["parser fixture tests", "fetch retry tests", "scheduler dry run", "storage tests"],
+      "securityMinimums": ["robots/terms note", "rate limit", "credential handling", "safe output storage"],
+      "deployMinimums": ["scheduler config", "Dockerfile", "logs", "retry/failure notes"]
+    },
+    "internal_automation": {
+      "modules": ["workflow", "integrations", "admin_ui", "storage", "audit_log"],
+      "defaultFolders": ["app/workflows", "app/integrations", "tests", "docs"],
+      "testMinimums": ["workflow tests", "integration mocks", "audit log tests", "permission tests"],
+      "securityMinimums": ["least privilege integrations", "audit trail", "secret handling", "role boundaries"],
+      "deployMinimums": ["runbook", "health check", ".env.example", "rollback notes"]
+    }
+  },
+  "moduleContracts": {
+    "auth": ["users", "sessions", "roles", "password_or_provider_strategy", "permission_tests"],
+    "billing": ["plans", "checkout", "webhooks", "subscription_status", "idempotency"],
+    "database": ["entities", "relationships", "migrations", "seed_data", "rollback"],
+    "api": ["routes", "handlers", "validation", "errors", "contract_tests"],
+    "dashboard": ["navigation", "views", "forms", "empty_states", "accessibility"],
+    "event_loop": ["startup", "polling_or_webhook", "shutdown", "error_boundary"],
+    "handlers": ["commands", "message_flows", "callbacks", "fallbacks", "negative_tests"],
+    "state_manager": ["conversation_state", "persistence", "timeouts", "state_tests"],
+    "integrations": ["external_clients", "credentials", "retry_policy", "mock_tests"],
+    "command_router": ["command_map", "permissions", "help", "unknown_command"],
+    "routing": ["paths", "methods", "request_validation", "response_contract"],
+    "controllers": ["input_mapping", "response_mapping", "errors"],
+    "services": ["business_logic", "transactions", "domain_errors", "idempotency"],
+    "middleware": ["auth", "logging", "rate_limit", "cors", "security_headers"],
+    "db_layer": ["models", "repositories", "migrations", "rollback"],
+    "fetch": ["client", "headers", "rate_limits", "retries", "timeout"],
+    "parse": ["selectors", "normalization", "validation", "fixture_tests"],
+    "storage": ["schema", "repositories", "backup_or_export", "retention"],
+    "scheduler": ["jobs", "intervals", "failure_policy", "dry_run"],
+    "queue": ["producer", "consumer", "dead_letter_policy", "retry_policy"]
+  }
+}
+

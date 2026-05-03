@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "target": "github",
+  "objects": ["issue", "milestone", "label"],
+  "mapping": {
+    "executionNode": "issue",
+    "gateBlocker": "bug label",
+    "roadmapMilestone": "milestone",
+    "qualityGate": "checklist item"
+  }
+}
+

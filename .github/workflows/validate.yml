@@ -1,0 +1,47 @@
+name: Validate Methodology
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate structure
+        run: python3 scripts/validate_structure.py
+
+      - name: Run routing fixtures
+        run: python3 scripts/run_fixtures.py
+
+      - name: Validate execution graph semantics
+        run: python3 scripts/validate_execution_graph.py
+
+      - name: Validate runtime assets
+        run: python3 scripts/validate_runtime.py
+
+      - name: Run benchmark suite
+        run: python3 scripts/run_benchmarks.py
+
+      - name: Smoke-test PFO project bootstrap
+        run: python3 scripts/pfo_new_project.py smoke-pfo-product --workspace /tmp --idea "Smoke SaaS product"
+
+      - name: Validate bootstrapped PFO state
+        run: python3 scripts/validate_state.py /tmp/smoke-pfo-product/.codex-memory/STATE.json
+
+      - name: Validate bootstrapped PFO project
+        run: python3 scripts/validate_project.py /tmp/smoke-pfo-product
+
+      - name: Generate bootstrapped PFO report
+        run: python3 scripts/pfo_report.py /tmp/smoke-pfo-product
+
+      - name: Run meta review
+        run: python3 scripts/meta_review.py

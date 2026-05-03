@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "requiredFields": [
+    "sessionState",
+    "currentStage",
+    "intent",
+    "classification",
+    "architecture",
+    "existingProject",
+    "currentNode",
+    "gateResults",
+    "verificationHistory",
+    "decisionLog",
+    "artifactHashes",
+    "lastSuccessfulState",
+    "artifacts",
+    "completedModules",
+    "failedValidations",
+    "blockers",
+    "nextAction"
+  ],
+  "stateTemplate": {
+    "sessionState": "ACTIVE",
+    "currentStage": "IDLE",
+    "intent": "",
+    "classification": {
+      "productType": "",
+      "domain": "",
+      "complexity": "",
+      "requiredModules": [],
+      "infrastructure": []
+    },
+    "architecture": {
+      "pattern": "",
+      "backend": "",
+      "frontend": "",
+      "database": "",
+      "auth": "",
+      "deployment": ""
+    },
+    "existingProject": {
+      "isExistingProject": false,
+      "detectedStack": [],
+      "availableCommands": [],
+      "currentTaskRoute": "",
+      "lastAnalysisSummary": ""
+    },
+    "currentNode": "",
+    "gateResults": {
+      "strategy": "",
+      "architecture": "",
+      "tests": "",
+      "review": "",
+      "security": "",
+      "dependencies": "",
+      "hardening": "",
+      "deploymentReadiness": ""
+    },
+    "verificationHistory": [],
+    "decisionLog": [],
+    "artifactHashes": {},
+    "lastSuccessfulState": "",
+    "artifacts": [],
+    "completedModules": [],
+    "failedValidations": [],
+    "blockers": [],
+    "nextAction": ""
+  }
+}

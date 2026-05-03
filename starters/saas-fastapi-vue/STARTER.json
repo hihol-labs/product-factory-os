@@ -1,0 +1,13 @@
+{
+  "id": "saas-fastapi-vue",
+  "productType": "saas",
+  "stack": ["FastAPI", "PostgreSQL", "Vue", "TypeScript", "Docker"],
+  "folders": ["backend/app", "backend/tests", "frontend/src", "frontend/tests", "infra", "docs"],
+  "commands": {
+    "backendTest": "pytest",
+    "frontendTest": "npm test",
+    "build": "docker compose build"
+  },
+  "requiredArtifacts": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "TEST_PLAN.md", "QUALITY_GATES.md"]
+}
+

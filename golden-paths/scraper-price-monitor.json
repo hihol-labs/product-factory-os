@@ -1,0 +1,10 @@
+{
+  "id": "scraper-price-monitor",
+  "prompt": "Создай парсер мониторинга цен конкурентов",
+  "productType": "data_scraper",
+  "starter": "scraper-python",
+  "route": "/project -> /kickstart",
+  "requiredArtifacts": ["MARKET_BRIEF.md", "DATA_CLASSIFICATION.md", "PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "TEST_PLAN.md"],
+  "minimumGates": ["architecture", "tests", "review", "security", "hardening"]
+}
+

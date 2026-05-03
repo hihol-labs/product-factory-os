@@ -1,0 +1,49 @@
+{
+  "name": "product-factory-os",
+  "version": "0.5.0",
+  "description": "Product Factory OS methodology plugin for Codex: a deterministic product generation runtime that classifies product ideas, selects templates, compiles blueprints into execution graphs, builds, tests, validates, prepares deployment, and saves reloadable state.",
+  "author": {
+    "name": "hihol-labs",
+    "email": "hihol-labs@users.noreply.github.com",
+    "url": "https://github.com/hihol-labs"
+  },
+  "homepage": "https://github.com/hihol-labs/product-factory-os",
+  "repository": "https://github.com/hihol-labs/product-factory-os",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "methodology",
+    "project-lifecycle",
+    "ai-coding",
+    "testing",
+    "deployment",
+    "code-review",
+    "open-core",
+    "product-factory",
+    "startup-studio"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Product Factory OS",
+    "shortDescription": "A Product Factory OS workflow from rough idea to deploy-ready product.",
+    "longDescription": "Product Factory OS turns Codex into a deterministic Product Factory OS: route the request, classify product type, select a reusable template, compile product blueprints into execution graphs, build in gated modules, test, review, harden, prepare deployment, and preserve reloadable state.",
+    "developerName": "hihol-labs",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Code Review",
+      "Project Planning"
+    ],
+    "websiteURL": "https://github.com/hihol-labs/product-factory-os",
+    "privacyPolicyURL": "https://github.com/hihol-labs/product-factory-os",
+    "termsOfServiceURL": "https://github.com/hihol-labs/product-factory-os",
+    "defaultPrompt": [
+      "Turn my app idea into a Product Factory OS execution graph.",
+      "Review this project before I ship.",
+      "Save the current session context."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

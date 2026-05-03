@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "description": "Optional soft hooks for Product Factory OS. The methodology works without hooks; hooks add routing reminders and lightweight context diagnostics.",
+  "hooks": [
+    {
+      "name": "route-reminder",
+      "type": "soft-reminder",
+      "command": "python3 hooks/route-reminder.py",
+      "description": "Suggests /project or /task routes from a user prompt."
+    },
+    {
+      "name": "preflight-context",
+      "type": "diagnostic",
+      "command": "python3 hooks/preflight-context.py",
+      "description": "Prints discovered planning docs and memory index for the current project."
+    }
+  ]
+}

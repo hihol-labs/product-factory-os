@@ -1,0 +1,13 @@
+{
+  "id": "api-fastapi",
+  "productType": "api_service",
+  "stack": ["FastAPI", "Pydantic", "PostgreSQL", "pytest", "Docker"],
+  "folders": ["app/api", "app/services", "app/models", "tests", "infra"],
+  "commands": {
+    "test": "pytest",
+    "run": "uvicorn app.main:app --reload",
+    "build": "docker build ."
+  },
+  "requiredArtifacts": ["PRODUCT_BLUEPRINT.md", "PROJECT_ARCHITECTURE.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md"]
+}
+

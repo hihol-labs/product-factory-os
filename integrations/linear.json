@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "target": "linear",
+  "objects": ["project", "issue", "label"],
+  "mapping": {
+    "executionNode": "issue",
+    "currentStage": "workflow state",
+    "blocker": "blocked label",
+    "gate": "issue checklist"
+  }
+}
+

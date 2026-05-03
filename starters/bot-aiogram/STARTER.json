@@ -1,0 +1,13 @@
+{
+  "id": "bot-aiogram",
+  "productType": "messaging_bot",
+  "stack": ["Python", "aiogram", "PostgreSQL_or_SQLite", "Docker"],
+  "folders": ["bot", "bot/handlers", "bot/services", "tests", "infra"],
+  "commands": {
+    "test": "pytest",
+    "run": "python -m bot",
+    "build": "docker build ."
+  },
+  "requiredArtifacts": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "TEST_PLAN.md", "THREAT_MODEL.md"]
+}
+

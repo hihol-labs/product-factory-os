@@ -1,0 +1,10 @@
+{
+  "id": "internal-automation-ops",
+  "prompt": "Создай внутренний инструмент автоматизации операционных задач",
+  "productType": "internal_automation",
+  "starter": "internal-automation",
+  "route": "/project -> /kickstart",
+  "requiredArtifacts": ["BUSINESS_MODEL.md", "PRODUCT_BLUEPRINT.md", "THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "TEST_PLAN.md", "QUALITY_GATES.md"],
+  "minimumGates": ["strategy", "architecture", "tests", "review", "security", "hardening"]
+}
+

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "targets": {
+    "docker": ["Dockerfile", "compose_or_run_command", "env_vars", "health_check"],
+    "vps": ["process_manager", "reverse_proxy", "env_vars", "logs", "rollback"],
+    "vercel": ["build_command", "output_directory", "env_vars", "routing"],
+    "netlify": ["build_command", "publish_directory", "env_vars", "redirects"],
+    "aws": ["service_choice", "env_vars", "secrets", "logs", "rollback"],
+    "gcp": ["service_choice", "env_vars", "secrets", "logs", "rollback"],
+    "azure": ["service_choice", "env_vars", "secrets", "logs", "rollback"]
+  },
+  "readinessChecks": [
+    "dependencies_checked",
+    "env_vars_documented",
+    "build_command_known",
+    "health_check_defined",
+    "rollback_or_recovery_defined",
+    "secrets_not_committed"
+  ]
+}
+

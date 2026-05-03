@@ -1,0 +1,5 @@
+migration preflight
+backup or backup rationale
+verification result
+rollback notes
+

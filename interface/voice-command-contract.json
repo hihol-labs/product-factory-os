@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "input": {
+    "type": "voice_transcript_or_text",
+    "examples": [
+      "создай SaaS для учета подписок",
+      "сделай Telegram бот для продаж",
+      "создай CLI для проверки ссылок"
+    ]
+  },
+  "output": {
+    "route": "/project -> /kickstart",
+    "intentFields": ["raw", "productTypeHint", "nextCommand"]
+  }
+}
+

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "target": "notion",
+  "objects": ["project page", "task database", "decision log"],
+  "mapping": {
+    "PFO_REPORT.md": "project page",
+    "decisionLog": "decision log",
+    "executionNode": "task database row",
+    "gateResults": "project status properties"
+  }
+}
+

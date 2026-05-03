@@ -1,0 +1,25 @@
+name: Validate Product Factory Project
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate PFO state
+        run: python3 /home/hihol/projects/product-factory-os/scripts/validate_state.py .codex-memory/STATE.json
+
+      - name: Validate execution graph
+        run: |
+          if [ -f EXECUTION_GRAPH.md ]; then
+            python3 /home/hihol/projects/product-factory-os/scripts/validate_execution_graph.py EXECUTION_GRAPH.md
+          fi
+
+      - name: Validate project compliance
+        run: python3 /home/hihol/projects/product-factory-os/scripts/validate_project.py .
+

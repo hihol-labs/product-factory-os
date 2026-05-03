@@ -1,0 +1,176 @@
+---
+name: blueprint
+description: Planning-only workflow that compiles an idea into PFO product documents without implementation.
+argument-hint: product idea plus constraints
+license: MIT
+metadata:
+  category: planning
+  tags: [blueprint, architecture, prd, planning]
+---
+
+# Blueprint
+
+Create Product Factory OS planning documents and stop before code.
+
+## Inputs To Collect
+
+Ask only for details that change the plan:
+
+- Product goal and primary user
+- Must-have user flows
+- Data that must be stored
+- Authentication and roles
+- External integrations
+- Deployment target and budget
+- Deadline or first milestone
+- Non-goals and constraints
+
+If the user says "you decide", choose a conservative default and record it as `Assumption: user deferred`.
+
+## Process
+
+1. Read existing docs if present.
+2. Load PFO runtime contracts when present:
+   - `routing/product-classifier.json`
+   - `templates/product-templates.json`
+   - `core/product-compiler.md`
+   - `pipelines/execution-pipeline.json`
+   - `execution/state-machine.json`
+   - `memory/session-state.schema.json`
+   - `docs/rubrics/strategy.md`
+   - `docs/rubrics/testing.md`
+3. Ask only clarifying questions that affect architecture, scope, data, auth, deployment, budget, or deadline.
+4. Confirm the captured understanding.
+5. Generate documents in this order:
+   - `DISCOVERY.md`
+   - `MARKET_BRIEF.md` when strategy risk is non-trivial
+   - `ICP.md` when users/customers matter
+   - `BUSINESS_MODEL.md` when revenue, cost saving, or value capture matters
+   - `GO_TO_MARKET.md` when launch or user acquisition matters
+   - `PRD.md`
+   - `PRODUCT_BLUEPRINT.md`
+   - `PROJECT_ARCHITECTURE.md`
+   - `THREAT_MODEL.md` when sensitive data, auth, integrations, admin, or payments exist
+   - `DATA_CLASSIFICATION.md` when user, business, scraped, or platform data is stored
+   - `TEST_PLAN.md`
+   - `QUALITY_GATES.md`
+   - `BUILD_PLAN.md`
+   - `EXECUTION_GRAPH.md`
+   - `IMPLEMENTATION_PLAN.md`
+   - `README.md`
+   - `CODEX.md`
+6. Run `/review` on the documents.
+
+## Overwrite Policy
+
+Before changing an existing planning document, list found files and ask:
+
+```text
+I found existing planning docs. Should I supplement missing docs or replace the set?
+```
+
+Default to supplement. Do not silently replace user-authored documents.
+
+## Document Requirements
+
+- `PRD.md`: user stories, acceptance criteria, non-goals, launch criteria.
+- `PRODUCT_BLUEPRINT.md`: product classification, business logic, entities, modules, interfaces, dependencies, infrastructure.
+- `PROJECT_ARCHITECTURE.md`: stack, data model, APIs, auth, integrations, deployment.
+- `THREAT_MODEL.md`: assets, actors, trust boundaries, abuse cases, controls.
+- `DATA_CLASSIFICATION.md`: data inventory, sensitivity, retention, storage, access.
+- `TEST_PLAN.md`: product-type test matrix, critical flows, negative cases, CI.
+- `QUALITY_GATES.md`: gate results, evidence, blockers, accepted risk.
+- `BUILD_PLAN.md`: module order, dependencies, verification, exit criteria.
+- `EXECUTION_GRAPH.md`: nodes, transitions, validation checkpoints, repair paths.
+- `IMPLEMENTATION_PLAN.md`: ordered steps, touched files, verification per step.
+- `CODEX.md`: project context, decisions, status table, session-save rule.
+
+## Required Document Shape
+
+`DISCOVERY.md`:
+
+- Problem
+- Users
+- Alternatives
+- Positioning
+- MVP scope
+- Risks
+
+`PRD.md`:
+
+- Goals
+- Non-goals
+- Personas
+- User stories grouped by priority
+- Acceptance criteria
+- Launch criteria
+
+`PROJECT_ARCHITECTURE.md`:
+
+- Stack and rationale
+- Data model or no-DB rationale
+- API, pages, commands, or handlers
+- Auth and permissions
+- Integrations
+- Deployment topology
+- Risks and tradeoffs
+
+`PRODUCT_BLUEPRINT.md`:
+
+- Product classification output
+- Business logic
+- Users and roles
+- Core entities
+- Modules selected from the template library
+- Interfaces
+- Infrastructure
+- Risks and assumptions
+
+`BUILD_PLAN.md`:
+
+- Ordered module build steps
+- Module dependencies
+- Files likely touched
+- Verification per module
+- Exit criteria
+
+`EXECUTION_GRAPH.md`:
+
+- Current state and next state
+- Nodes
+- Transitions
+- Validation checkpoints
+- Repair paths for failed gates
+
+`IMPLEMENTATION_PLAN.md`:
+
+- 5 to 12 ordered steps
+- Files likely touched
+- Tests or verification command for each step
+- Exit criteria for each step
+
+`CODEX.md`:
+
+- Project summary
+- Current decisions
+- Development commands
+- Status table
+- Rule: save context with `/session-save` after significant work
+
+## Rules
+
+- Do not scaffold or write application code.
+- Ask before overwriting existing documents.
+- Keep names and entities consistent across all documents.
+- Treat `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md` as the Product Compiler outputs.
+- Do not move to implementation until the execution graph can reach `PLAN_READY`.
+- Stop with `BLOCKED` if the user refuses to answer a question that determines architecture or data safety.
+- If `/review` returns `BLOCKED`, offer doc fixes before implementation.
+
+## Done Criteria
+
+- All required documents exist.
+- `/review` status is `PASSED` or `PASSED_WITH_WARNINGS`.
+- Product type, template modules, architecture pattern, and execution graph are explicit.
+- Remaining assumptions are explicitly listed.
+- The user has a clear next route: `/kickstart`, `/guide`, or manual review.

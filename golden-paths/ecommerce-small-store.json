@@ -1,0 +1,10 @@
+{
+  "id": "ecommerce-small-store",
+  "prompt": "Создай интернет-магазин для небольшого каталога товаров",
+  "productType": "ecommerce",
+  "starter": "ecommerce-fastapi-vue",
+  "route": "/project -> /kickstart",
+  "requiredArtifacts": ["MARKET_BRIEF.md", "ICP.md", "BUSINESS_MODEL.md", "THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "TEST_PLAN.md", "QUALITY_GATES.md"],
+  "minimumGates": ["strategy", "architecture", "tests", "review", "security", "dependencies", "hardening"]
+}
+
