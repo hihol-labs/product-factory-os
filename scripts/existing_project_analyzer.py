@@ -280,8 +280,10 @@ def security_findings(project: Path) -> list[str]:
     findings = []
     if os.environ.get("NODE_TLS_REJECT_UNAUTHORIZED") == "0":
         findings.append("NODE_TLS_REJECT_UNAUTHORIZED=0 is set in the execution environment.")
-    if (project / ".env.local").is_file():
-        findings.append(".env.local exists; ensure secrets are not committed and use .env.example for documentation.")
+    gitignore = (project / ".gitignore").read_text(encoding="utf-8") if (project / ".gitignore").is_file() else ""
+    ignored_env_local = any(line.strip() == ".env.local" for line in gitignore.splitlines())
+    if (project / ".env.local").is_file() and not ignored_env_local:
+        findings.append(".env.local exists but is not explicitly ignored by .gitignore.")
     return findings
 
 
