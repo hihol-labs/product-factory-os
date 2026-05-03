@@ -288,6 +288,9 @@ def security_findings(project: Path) -> list[str]:
 
 
 def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any]) -> dict[str, Any]:
+    has_strategy_artifacts = (project / "CODEX.md").is_file() and (project / ".codex-memory" / "MEMORY.md").is_file()
+    has_architecture_artifacts = (project / "PFO_AUDIT.md").is_file() or (project / "docs" / "ARCHITECTURE.md").is_file()
+
     state["sessionState"] = "ACTIVE"
     state["currentStage"] = "REVIEWING" if analysis["gateRuns"] else "EXISTING_PROJECT_ANALYZED"
     state["intent"] = f"Existing project `{project.name}` analyzed by Product Factory OS."
@@ -301,8 +304,8 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
         "lastAnalysisSummary": analysis["summary"],
     }
     gate_results = state.setdefault("gateResults", {})
-    gate_results["strategy"] = "PASS_WITH_WARNINGS"
-    gate_results["architecture"] = "PASS_WITH_WARNINGS"
+    gate_results["strategy"] = "PASS" if has_strategy_artifacts else "PASS_WITH_WARNINGS"
+    gate_results["architecture"] = "PASS" if has_architecture_artifacts else "PASS_WITH_WARNINGS"
     gate_results["dependencies"] = "NOT_RUN"
     gate_results["hardening"] = "NOT_RUN"
     gate_results["security"] = "BLOCKED" if analysis["securityFindings"] else "PASS"
