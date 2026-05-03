@@ -40,6 +40,9 @@ jobs:
       - name: Validate bootstrapped PFO project
         run: python3 scripts/validate_project.py /tmp/smoke-pfo-product
 
+      - name: Analyze existing project smoke
+        run: python3 scripts/pfo.py analyze /tmp/smoke-pfo-product --report
+
       - name: Generate bootstrapped PFO report
         run: python3 scripts/pfo_report.py /tmp/smoke-pfo-product
 

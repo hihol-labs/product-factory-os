@@ -58,6 +58,8 @@ PFO теперь имеет исполняемый CLI:
 ```bash
 python3 scripts/pfo.py new my-product --idea "SaaS для учета подписок"
 python3 scripts/pfo.py adopt
+python3 scripts/pfo.py adopt ../existing-product --analyze --run-gates
+python3 scripts/pfo.py analyze ../existing-product --run-gates --report
 python3 scripts/pfo.py plan ../my-product
 python3 scripts/pfo.py build ../my-product
 python3 scripts/pfo.py test ../my-product
@@ -82,6 +84,8 @@ Starter packs находятся в `starters/`. Golden paths находятся
 - `packaging/` — install/update helper.
 - `marketplace/` — local marketplace metadata.
 - `integrations/` — контракты GitHub, Linear и Notion.
+
+Для существующих проектов `pfo analyze` определяет monorepo, стек, package manager, доступные scripts, архитектурные признаки, security findings и optional gate results, затем сохраняет это в `.codex-memory/STATE.json` и `PFO_EXISTING_PROJECT_ANALYSIS.json`.
 
 ## Open Core И Монетизация
 

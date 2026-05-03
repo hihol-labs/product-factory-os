@@ -97,6 +97,7 @@ REQUIRED_FILES = [
     "scripts/run_fixtures.py",
     "scripts/meta_review.py",
     "scripts/adoption_check.py",
+    "scripts/existing_project_analyzer.py",
     "scripts/validate_execution_graph.py",
     "scripts/validate_state.py",
     "scripts/validate_runtime.py",

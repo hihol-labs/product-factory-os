@@ -55,6 +55,7 @@ def main() -> None:
     for script in [
         "pfo.py",
         "pfo_runner.py",
+        "existing_project_analyzer.py",
         "validate_project.py",
         "voice_intent.py",
         "voice_transcribe.py",

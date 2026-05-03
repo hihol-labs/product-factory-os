@@ -39,6 +39,7 @@ Runtime scripts live in `scripts/`:
 
 - `pfo.py`: unified CLI
 - `pfo_runner.py`: execution step runner
+- `existing_project_analyzer.py`: existing-project stack, command, gate, security, and state analyzer
 - `validate_project.py`: generated-project validator
 - `voice_intent.py`: voice/text intent normalizer
 - `pfo_metrics.py`: workspace metrics

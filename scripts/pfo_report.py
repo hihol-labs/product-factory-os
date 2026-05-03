@@ -15,13 +15,16 @@ def main() -> None:
     starter_path = project / ".pfo-starter.json"
     if starter_path.is_file():
         starter = json.loads(starter_path.read_text(encoding="utf-8"))
+    classification = state.get("classification", {})
+    existing = state.get("existingProject", {})
 
     report = [
         "# Product Factory OS Report",
         "",
         f"Project: `{project.name}`",
         f"Starter: `{starter.get('id', '')}`",
-        f"Product Type: `{starter.get('productType', state.get('productTypeHint', ''))}`",
+        f"Product Type: `{starter.get('productType', classification.get('productType', state.get('productTypeHint', '')))}`",
+        f"Architecture: `{state.get('architecture', {}).get('pattern', '')}`",
         "",
         "## State",
         "",
@@ -29,6 +32,12 @@ def main() -> None:
         f"- Current node: `{state.get('currentNode', '')}`",
         f"- Last successful state: `{state.get('lastSuccessfulState', '')}`",
         f"- Next action: {state.get('nextAction', '')}",
+        "",
+        "## Existing Project Analysis",
+        "",
+        f"- Detected stack: {', '.join(existing.get('detectedStack', [])) or 'none'}",
+        f"- Available commands: {', '.join(existing.get('availableCommands', [])) or 'none'}",
+        f"- Summary: {existing.get('lastAnalysisSummary', '')}",
         "",
         "## Gates",
         "",
@@ -57,4 +66,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -142,6 +142,8 @@ CODEX.md
 
 ```bash
 python3 scripts/pfo.py new my-product --idea "voice transcript or product idea"
+python3 scripts/pfo.py adopt ../existing-product --analyze --run-gates
+python3 scripts/pfo.py analyze ../existing-product --run-gates --report
 python3 scripts/pfo.py validate ../my-product
 python3 scripts/pfo.py status ../my-product
 python3 scripts/pfo.py resume ../my-product

@@ -66,6 +66,8 @@ Product Factory OS includes an executable runtime CLI:
 ```bash
 python3 scripts/pfo.py new my-product --idea "SaaS for subscription tracking"
 python3 scripts/pfo.py adopt
+python3 scripts/pfo.py adopt ../existing-product --analyze --run-gates
+python3 scripts/pfo.py analyze ../existing-product --run-gates --report
 python3 scripts/pfo.py plan ../my-product
 python3 scripts/pfo.py build ../my-product
 python3 scripts/pfo.py test ../my-product
@@ -90,6 +92,8 @@ Additional platform extensions:
 - `packaging/`: install/update helper.
 - `marketplace/`: local marketplace metadata.
 - `integrations/`: GitHub, Linear, and Notion payload contracts.
+
+For existing projects, `pfo analyze` detects monorepos, stack, package manager, available scripts, architecture hints, security findings, and optional gate results, then writes them into `.codex-memory/STATE.json` and `PFO_EXISTING_PROJECT_ANALYSIS.json`.
 
 ## Open Core And Commercial Extensions
 

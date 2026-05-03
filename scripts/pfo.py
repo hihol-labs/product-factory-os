@@ -31,10 +31,33 @@ def cmd_new(args: argparse.Namespace) -> int:
 
 
 def cmd_adopt(args: argparse.Namespace) -> int:
-    argv = ["--workspace", str(args.workspace), "--write"]
+    argv = ["--write"]
+    if args.project:
+        argv.extend(["--project", str(args.project)])
+    else:
+        argv.extend(["--workspace", str(args.workspace)])
     if args.json:
         argv.append("--json")
-    return run_script("adoption_check.py", argv)
+    code = run_script("adoption_check.py", argv)
+    if code == 0 and args.analyze and args.project:
+        analyze_args = [str(args.project)]
+        if args.run_gates:
+            analyze_args.append("--run-gates")
+        return run_script("existing_project_analyzer.py", analyze_args)
+    return code
+
+
+def cmd_analyze(args: argparse.Namespace) -> int:
+    argv = [str(args.project)]
+    if args.run_gates:
+        argv.append("--run-gates")
+    if args.json:
+        argv.append("--json")
+    argv.extend(["--timeout", str(args.timeout)])
+    code = run_script("existing_project_analyzer.py", argv)
+    if code == 0 and args.report:
+        return run_script("pfo_report.py", [str(args.project)])
+    return code
 
 
 def cmd_status(args: argparse.Namespace) -> int:
@@ -114,9 +137,20 @@ def build_parser() -> argparse.ArgumentParser:
     new.set_defaults(func=cmd_new)
 
     adopt = sub.add_parser("adopt", help="Adopt existing workspace projects into PFO.")
+    adopt.add_argument("project", type=Path, nargs="?")
     adopt.add_argument("--workspace", type=Path, default=WORKSPACE)
     adopt.add_argument("--json", action="store_true")
+    adopt.add_argument("--analyze", action="store_true", help="Run existing-project analyzer after adopting a single project.")
+    adopt.add_argument("--run-gates", action="store_true", help="Run detected gates during analysis.")
     adopt.set_defaults(func=cmd_adopt)
+
+    analyze = sub.add_parser("analyze", help="Analyze an existing project, detect stack/commands, run gates, and update PFO state.")
+    analyze.add_argument("project", type=Path)
+    analyze.add_argument("--run-gates", action="store_true")
+    analyze.add_argument("--timeout", type=int, default=90)
+    analyze.add_argument("--json", action="store_true")
+    analyze.add_argument("--report", action="store_true", help="Regenerate PFO_REPORT.md after analysis.")
+    analyze.set_defaults(func=cmd_analyze)
 
     for name, func in [
         ("status", cmd_status),

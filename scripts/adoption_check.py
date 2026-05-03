@@ -60,6 +60,22 @@ def status_for(path: Path) -> dict[str, object]:
     }
 
 
+def infer_existing_project_summary(path: Path) -> str:
+    stack = []
+    if (path / "package.json").is_file():
+        stack.append("Node.js")
+    if (path / "pnpm-lock.yaml").is_file():
+        stack.append("pnpm")
+    if (path / "turbo.json").is_file():
+        stack.append("Turborepo")
+    if (path / "apps").is_dir() and (path / "packages").is_dir():
+        stack.append("monorepo")
+    if (path / "pyproject.toml").is_file():
+        stack.append("Python")
+    suffix = f" Detected stack hints: {', '.join(stack)}." if stack else ""
+    return "Adopted with minimal Product Factory OS state. Run `pfo analyze <project> --run-gates` before major work." + suffix
+
+
 def write_adoption_files(path: Path) -> None:
     codex = path / "CODEX.md"
     memory_dir = path / ".codex-memory"
@@ -86,7 +102,7 @@ def write_adoption_files(path: Path) -> None:
                 {
                     "sessionState": "ADOPTED",
                     "currentStage": "IDLE",
-                    "intent": "Existing project adopted into Product Factory OS Product Factory OS.",
+                    "intent": "Existing project adopted into Product Factory OS.",
                     "classification": {
                         "productType": "",
                         "domain": "",
@@ -107,7 +123,7 @@ def write_adoption_files(path: Path) -> None:
                         "detectedStack": [],
                         "availableCommands": [],
                         "currentTaskRoute": "",
-                        "lastAnalysisSummary": "Adopted with minimal Product Factory OS state. Run /task to classify work and inspect the repository before changes.",
+                        "lastAnalysisSummary": infer_existing_project_summary(path),
                     },
                     "currentNode": "",
                     "gateResults": {
@@ -128,7 +144,7 @@ def write_adoption_files(path: Path) -> None:
                     "completedModules": [],
                     "failedValidations": [],
                     "blockers": [],
-                    "nextAction": "Classify product and create missing PFO planning artifacts before major work.",
+                    "nextAction": "Run existing-project analyzer before major work.",
                 },
                 indent=2,
                 ensure_ascii=False,
@@ -141,11 +157,12 @@ def write_adoption_files(path: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Check or bootstrap Product Factory OS adoption for workspace projects.")
     parser.add_argument("--workspace", type=Path, default=WORKSPACE)
+    parser.add_argument("--project", type=Path, help="Check or adopt a single existing project root.")
     parser.add_argument("--write", action="store_true", help="Create CODEX.md and .codex-memory/MEMORY.md where missing.")
     parser.add_argument("--json", action="store_true", help="Print JSON instead of a table.")
     args = parser.parse_args()
 
-    projects = project_dirs(args.workspace)
+    projects = [args.project.resolve()] if args.project else project_dirs(args.workspace)
     if args.write:
         for project in projects:
             write_adoption_files(project)
