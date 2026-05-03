@@ -71,7 +71,17 @@ def state_json(project_name: str, idea: str) -> str:
             "decisionLog": [],
             "artifactHashes": {},
             "lastSuccessfulState": "BOOTSTRAPPED",
-            "artifacts": ["CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json"],
+            "artifacts": [
+                "CODEX.md",
+                ".pfo/PROJECT_CONTRACT.md",
+                ".pfo/DATA_POLICY.md",
+                ".pfo/GOLDEN_FLOWS.md",
+                ".pfo/FORBIDDEN_CHANGES.md",
+                ".pfo/FALLBACK_POLICY.md",
+                ".pfo/SCOPE_LOCK.md",
+                ".codex-memory/MEMORY.md",
+                ".codex-memory/STATE.json",
+            ],
             "completedModules": [],
             "failedValidations": [],
             "blockers": [],
@@ -115,6 +125,14 @@ def select_starter(idea: str) -> dict:
 def scaffold(project: Path, starter: dict) -> None:
     for folder in starter.get("folders", []):
         (project / folder).mkdir(parents=True, exist_ok=True)
+    pfo_dir = project / ".pfo"
+    pfo_dir.mkdir(exist_ok=True)
+    pfo_templates = ROOT / "docs" / "templates" / "pfo"
+    if pfo_templates.is_dir():
+        for source in pfo_templates.glob("*.md"):
+            target = pfo_dir / source.name
+            if not target.exists():
+                shutil.copyfile(source, target)
     write_once(project / ".pfo-starter.json", json.dumps(starter, indent=2, ensure_ascii=False) + "\n")
     write_once(project / ".env.example", "# Product Factory OS environment variables\n")
     workflow_dir = project / ".github" / "workflows"
@@ -164,6 +182,12 @@ New product work starts from:
 Product Factory OS must create and maintain:
 
 ```text
+.pfo/PROJECT_CONTRACT.md
+.pfo/DATA_POLICY.md
+.pfo/GOLDEN_FLOWS.md
+.pfo/FORBIDDEN_CHANGES.md
+.pfo/FALLBACK_POLICY.md
+.pfo/SCOPE_LOCK.md
 DISCOVERY.md
 PRD.md
 PRODUCT_BLUEPRINT.md
@@ -179,7 +203,11 @@ IMPLEMENTATION_PLAN.md
 - Voice or natural-language commands are accepted as the primary interface.
 - Codex performs routing automatically.
 - Implementation follows `EXECUTION_GRAPH.md` node by node.
+- Every task must respect `.pfo/SCOPE_LOCK.md`.
+- Real production data must follow `.pfo/DATA_POLICY.md`.
+- Fallbacks must follow `.pfo/FALLBACK_POLICY.md` and must not silently replace real output.
 - Tests, review, security, dependency, and hardening gates block deployment when they fail.
+- Golden flows in `.pfo/GOLDEN_FLOWS.md` block deployment when touched and unverified.
 - Session state is saved after significant milestones.
 
 ## Memory

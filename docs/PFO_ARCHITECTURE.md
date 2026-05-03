@@ -139,7 +139,23 @@ Deployment is blocked unless:
 
 - Architecture matches implementation.
 - Changed behavior has tests or a documented non-production limitation.
+- Project `.pfo/` contracts pass: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, and no silent substitution.
 - Security review has no Critical findings.
 - Dependency review has no Critical findings or accepted risk.
 - Deployment readiness includes env vars, build command, health check, and rollback or recovery notes.
 - Strategy, testing, PFO, and security rubrics pass for their applicable scope.
+
+## Project Contract Layer
+
+Product Factory OS owns the universal mechanism, not project-specific truth.
+
+Every generated or adopted project receives a `.pfo/` directory:
+
+- `PROJECT_CONTRACT.md`
+- `DATA_POLICY.md`
+- `GOLDEN_FLOWS.md`
+- `FORBIDDEN_CHANGES.md`
+- `FALLBACK_POLICY.md`
+- `SCOPE_LOCK.md`
+
+The runtime gate `scripts/pfo_contract_gate.py` reads those files, classifies the current diff, and blocks unsafe silent substitutions. This keeps PFO reusable for any product while letting each product define its own invariants.

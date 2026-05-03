@@ -1,0 +1,263 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import argparse
+import json
+import re
+import subprocess
+import sys
+from typing import Any
+
+REQUIRED_CONTRACTS = [
+    ".pfo/PROJECT_CONTRACT.md",
+    ".pfo/DATA_POLICY.md",
+    ".pfo/GOLDEN_FLOWS.md",
+    ".pfo/FORBIDDEN_CHANGES.md",
+    ".pfo/FALLBACK_POLICY.md",
+    ".pfo/SCOPE_LOCK.md",
+]
+
+TEST_PATH_MARKERS = (
+    "/test/",
+    "/tests/",
+    "__tests__",
+    ".test.",
+    ".spec.",
+    "/fixtures/",
+    "/mocks/",
+    "/examples/",
+)
+
+RISK_RULES: list[tuple[str, tuple[str, ...]]] = [
+    ("dependency_change", ("package.json", "lock", "requirements.txt", "pyproject.toml", "go.mod", "cargo.toml")),
+    ("business_logic_change", ("service", "domain", "usecase", "handler", "route", "controller", "job", "workflow")),
+    ("data_source_change", ("source", "database", "db", "sql", "supabase", "postgres", "query", "schema", "migration")),
+    ("provider_integration_change", ("openai", "anthropic", "llm", "provider", "api_key", "webhook", "client")),
+    ("user_facing_output_change", ("page", "component", "template", "message", "response", "copy", "ui", "frontend")),
+    ("security_change", ("auth", "token", "secret", "permission", "policy", "security", "csrf", "cors")),
+    ("deployment_change", ("docker", "deploy", "compose", "k8s", "terraform", "vercel", "netlify", "ci", "workflow")),
+]
+
+SUBSTITUTION_TERMS = (
+    "fake",
+    "mock",
+    "stub",
+    "dummy",
+    "hardcoded",
+    "synthetic",
+    "placeholder",
+    "fallback",
+    "заглуш",
+    "фейк",
+    "мок",
+    "тестов",
+)
+
+TRANSPARENT_TERMS = (
+    "unavailable",
+    "degraded",
+    "error",
+    "retry",
+    "queue",
+    "cache",
+    "fixture",
+    "test",
+    "недоступ",
+    "ошиб",
+    "повтор",
+    "очеред",
+)
+
+
+def fail(message: str) -> None:
+    print(f"ERROR: {message}")
+    sys.exit(1)
+
+
+def run_git(project: Path, args: list[str]) -> str:
+    completed = subprocess.run(
+        ["git", *args],
+        cwd=project,
+        text=True,
+        capture_output=True,
+    )
+    if completed.returncode != 0:
+        return ""
+    return completed.stdout
+
+
+def changed_files(project: Path) -> list[str]:
+    output = run_git(project, ["diff", "--name-only"])
+    staged = run_git(project, ["diff", "--cached", "--name-only"])
+    names = {line.strip() for line in (output + "\n" + staged).splitlines() if line.strip()}
+    return sorted(names)
+
+
+def diff_text(project: Path) -> str:
+    unstaged = run_git(project, ["diff", "--", "."])
+    staged = run_git(project, ["diff", "--cached", "--", "."])
+    return "\n".join(part for part in [unstaged, staged] if part)
+
+
+def is_test_path(path: str) -> bool:
+    normalized = "/" + path.lower().replace("\\", "/")
+    return any(marker in normalized for marker in TEST_PATH_MARKERS)
+
+
+def addition_lines(diff: str) -> list[tuple[str, str]]:
+    current = ""
+    result: list[tuple[str, str]] = []
+    for line in diff.splitlines():
+        if line.startswith("+++ b/"):
+            current = line[6:]
+            continue
+        if line.startswith("+") and not line.startswith("+++"):
+            result.append((current, line[1:]))
+    return result
+
+
+def classify_risks(files: list[str], diff: str) -> list[str]:
+    corpus = "\n".join(files) + "\n" + diff
+    lowered = corpus.lower()
+    risks = set()
+    for risk, markers in RISK_RULES:
+        if any(marker in lowered for marker in markers):
+            risks.add(risk)
+    if files and all(is_test_path(path) for path in files):
+        risks.add("test_only_change")
+    if files and all(path.lower().endswith((".md", ".txt", ".rst")) for path in files):
+        risks.add("documentation_change")
+    return sorted(risks)
+
+
+def parse_forbidden_terms(path: Path) -> list[str]:
+    if not path.is_file():
+        return []
+    terms: list[str] = []
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line.startswith("- "):
+            continue
+        text = line[2:].strip().strip(".")
+        if text and "replace this line" not in text.lower():
+            terms.append(text.lower())
+    return terms
+
+
+def missing_contracts(project: Path) -> list[str]:
+    return [rel for rel in REQUIRED_CONTRACTS if not (project / rel).is_file()]
+
+
+def has_placeholder_contracts(project: Path) -> list[str]:
+    placeholders: list[str] = []
+    for rel in REQUIRED_CONTRACTS:
+        path = project / rel
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8").lower()
+        if "replace this line" in text:
+            placeholders.append(rel)
+    return placeholders
+
+
+def detect_substitution_violations(project: Path, diff: str) -> list[str]:
+    violations: list[str] = []
+    forbidden_terms = parse_forbidden_terms(project / ".pfo" / "FORBIDDEN_CHANGES.md")
+    for path, line in addition_lines(diff):
+        lowered = line.lower()
+        if is_test_path(path):
+            continue
+        if any(term in lowered for term in SUBSTITUTION_TERMS):
+            if not any(term in lowered for term in TRANSPARENT_TERMS):
+                violations.append(f"{path}: added possible silent substitution: {line[:160]}")
+        for term in forbidden_terms:
+            if len(term) > 12 and term in lowered:
+                violations.append(f"{path}: added project-forbidden behavior: {term[:120]}")
+    return violations
+
+
+def evaluate(project: Path) -> dict[str, Any]:
+    files = changed_files(project)
+    diff = diff_text(project)
+    missing = missing_contracts(project)
+    placeholders = has_placeholder_contracts(project)
+    risks = classify_risks(files, diff)
+    substitution_violations = detect_substitution_violations(project, diff)
+
+    blockers: list[str] = []
+    warnings: list[str] = []
+    if missing:
+        blockers.extend([f"missing contract: {item}" for item in missing])
+    if placeholders:
+        warnings.extend([f"placeholder contract content: {item}" for item in placeholders])
+    blockers.extend(substitution_violations)
+
+    if "dependency_change" in risks and (
+        "data_source_change" in risks or "user_facing_output_change" in risks
+    ):
+        warnings.append(
+            "dependency diff also touches data sources or user-facing output; verify Scope Lock explicitly."
+        )
+
+    status = "PASS"
+    if blockers:
+        status = "BLOCKED"
+    elif warnings:
+        status = "PASS_WITH_WARNINGS"
+
+    return {
+        "status": status,
+        "changedFiles": files,
+        "riskClasses": risks,
+        "missingContracts": missing,
+        "placeholderContracts": placeholders,
+        "blockers": blockers,
+        "warnings": warnings,
+        "gates": {
+            "scopeLock": "BLOCKED" if missing or substitution_violations else ("PASS_WITH_WARNINGS" if warnings else "PASS"),
+            "dataAuthenticity": "BLOCKED" if substitution_violations else "PASS",
+            "goldenFlows": "BLOCKED" if ".pfo/GOLDEN_FLOWS.md" in missing else ("PASS_WITH_WARNINGS" if ".pfo/GOLDEN_FLOWS.md" in placeholders else "PASS"),
+            "regressionContract": "BLOCKED" if ".pfo/PROJECT_CONTRACT.md" in missing else ("PASS_WITH_WARNINGS" if ".pfo/PROJECT_CONTRACT.md" in placeholders else "PASS"),
+            "fallbackPolicy": "BLOCKED" if ".pfo/FALLBACK_POLICY.md" in missing or substitution_violations else "PASS",
+            "diffRisk": "PASS_WITH_WARNINGS" if warnings else "PASS",
+            "noSilentSubstitution": "BLOCKED" if substitution_violations else "PASS",
+        },
+    }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Run Product Factory OS project contract gates.")
+    parser.add_argument("project", type=Path)
+    parser.add_argument("--json", action="store_true")
+    parser.add_argument("--write", action="store_true", help="Write PFO_CONTRACT_GATE.json into the project.")
+    parser.add_argument("--strict", action="store_true", help="Return non-zero on warnings as well as blockers.")
+    args = parser.parse_args()
+
+    project = args.project.resolve()
+    if not project.is_dir():
+        fail(f"project does not exist: {project}")
+
+    result = evaluate(project)
+    if args.write:
+        (project / "PFO_CONTRACT_GATE.json").write_text(
+            json.dumps(result, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+
+    if args.json:
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+    else:
+        print(f"{result['status']}: PFO contract gate")
+        if result["riskClasses"]:
+            print("Risks: " + ", ".join(result["riskClasses"]))
+        for item in result["warnings"]:
+            print(f"WARNING: {item}")
+        for item in result["blockers"]:
+            print(f"BLOCKER: {item}")
+
+    if result["status"] == "BLOCKED" or (args.strict and result["status"] != "PASS"):
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
+

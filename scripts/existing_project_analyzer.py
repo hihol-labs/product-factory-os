@@ -5,10 +5,12 @@ import json
 import os
 import subprocess
 import sys
+import shutil
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TIMEOUT = 90
+PFO_TEMPLATE_DIR = ROOT / "docs" / "templates" / "pfo"
 
 
 def fail(message: str) -> None:
@@ -28,7 +30,22 @@ def write_json(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def ensure_pfo_contracts(project: Path) -> list[str]:
+    created: list[str] = []
+    pfo_dir = project / ".pfo"
+    pfo_dir.mkdir(exist_ok=True)
+    if not PFO_TEMPLATE_DIR.is_dir():
+        return created
+    for source in PFO_TEMPLATE_DIR.glob("*.md"):
+        target = pfo_dir / source.name
+        if not target.exists():
+            shutil.copyfile(source, target)
+            created.append(str(target.relative_to(project)))
+    return created
+
+
 def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
+    ensure_pfo_contracts(project)
     state_path = project / ".codex-memory" / "STATE.json"
     if state_path.is_file():
         return state_path, read_json(state_path)
@@ -56,7 +73,17 @@ def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
     state["intent"] = "Existing project adopted into Product Factory OS."
     state["existingProject"]["isExistingProject"] = True
     state["lastSuccessfulState"] = "ADOPTED"
-    state["artifacts"] = ["CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json"]
+    state["artifacts"] = [
+        "CODEX.md",
+        ".pfo/PROJECT_CONTRACT.md",
+        ".pfo/DATA_POLICY.md",
+        ".pfo/GOLDEN_FLOWS.md",
+        ".pfo/FORBIDDEN_CHANGES.md",
+        ".pfo/FALLBACK_POLICY.md",
+        ".pfo/SCOPE_LOCK.md",
+        ".codex-memory/MEMORY.md",
+        ".codex-memory/STATE.json",
+    ]
     state["nextAction"] = "Run existing-project analyzer."
     write_json(state_path, state)
     return state_path, state
@@ -276,6 +303,40 @@ def run_gate(project: Path, gate: dict[str, Any], timeout: int) -> dict[str, Any
     return result
 
 
+def run_contract_gate(project: Path) -> dict[str, Any]:
+    command = [sys.executable, str(ROOT / "scripts" / "pfo_contract_gate.py"), str(project), "--write", "--json"]
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired:
+        return {
+            "status": "BLOCKED",
+            "summary": "PFO contract gate timed out.",
+            "blockers": ["PFO contract gate timed out."],
+            "warnings": [],
+            "riskClasses": [],
+            "gates": {},
+        }
+    if completed.stdout.strip():
+        try:
+            return json.loads(completed.stdout)
+        except json.JSONDecodeError:
+            pass
+    return {
+        "status": "PASS" if completed.returncode == 0 else "BLOCKED",
+        "summary": (completed.stdout + completed.stderr).strip()[-1000:],
+        "blockers": [] if completed.returncode == 0 else [(completed.stdout + completed.stderr).strip()],
+        "warnings": [],
+        "riskClasses": [],
+        "gates": {},
+    }
+
+
 def security_findings(project: Path) -> list[str]:
     findings = []
     if os.environ.get("NODE_TLS_REJECT_UNAUTHORIZED") == "0":
@@ -309,6 +370,8 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
     gate_results["dependencies"] = "NOT_RUN"
     gate_results["hardening"] = "NOT_RUN"
     gate_results["security"] = "BLOCKED" if analysis["securityFindings"] else "PASS"
+    for key, value in analysis.get("contractGate", {}).get("gates", {}).items():
+        gate_results[key] = value
 
     ran = {item["gate"]: item for item in analysis["gateRuns"]}
     if "build" in ran:
@@ -319,7 +382,11 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
         gate_results["tests"] = "PASS" if ran["tests"]["status"] == "PASS" else "BLOCKED"
     else:
         gate_results["tests"] = "NOT_CONFIGURED"
-    deployment_blocked = any(item["status"] != "PASS" for item in analysis["gateRuns"]) or bool(analysis["securityFindings"])
+    deployment_blocked = (
+        any(item["status"] != "PASS" for item in analysis["gateRuns"])
+        or bool(analysis["securityFindings"])
+        or analysis.get("contractGate", {}).get("status") == "BLOCKED"
+    )
     gate_results["deploymentReadiness"] = "BLOCKED" if deployment_blocked else "PASS"
 
     blockers = []
@@ -327,6 +394,7 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
         if item["status"] != "PASS":
             blockers.append(f"{item['command']} -> {item['summary']}")
     blockers.extend(analysis["securityFindings"])
+    blockers.extend(analysis.get("contractGate", {}).get("blockers", []))
     if gate_results["tests"] == "NOT_CONFIGURED":
         blockers.append("No root test/typecheck script was detected.")
     state["blockers"] = blockers
@@ -336,7 +404,11 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
         else "Project gates passed; continue with task-specific PFO execution graph."
     )
     state.setdefault("artifacts", [])
-    for artifact in ["PFO_EXISTING_PROJECT_ANALYSIS.json", "PFO_REPORT.md"]:
+    for artifact in [
+        "PFO_EXISTING_PROJECT_ANALYSIS.json",
+        "PFO_CONTRACT_GATE.json",
+        "PFO_REPORT.md",
+    ]:
         if artifact not in state["artifacts"]:
             state["artifacts"].append(artifact)
     state.setdefault("verificationHistory", []).append(
@@ -356,6 +428,7 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
 
 
 def analyze(project: Path, run_gates: bool, timeout: int) -> dict[str, Any]:
+    created_contracts = ensure_pfo_contracts(project)
     package_files = list_package_files(project)
     packages = [read_json(path) for path in package_files]
     root_package = read_json(project / "package.json")
@@ -365,6 +438,7 @@ def analyze(project: Path, run_gates: bool, timeout: int) -> dict[str, Any]:
     gates = select_gates(root_package, manager) if run_gates else []
     gate_runs = [run_gate(project, gate, timeout) for gate in gates]
     security = security_findings(project)
+    contract_gate = run_contract_gate(project)
     classification = classify(stack, project)
     arch = architecture(stack, project)
     summary = (
@@ -381,6 +455,8 @@ def analyze(project: Path, run_gates: bool, timeout: int) -> dict[str, Any]:
         "selectedGates": [{"gate": item["gate"], "script": item["script"], "command": " ".join(item["command"])} for item in gates],
         "gateRuns": gate_runs,
         "securityFindings": security,
+        "contractGate": contract_gate,
+        "createdContracts": created_contracts,
         "classification": classification,
         "architecture": arch,
         "summary": summary,

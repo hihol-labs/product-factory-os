@@ -54,6 +54,13 @@
       "security": "",
       "dependencies": "",
       "hardening": "",
+      "scopeLock": "",
+      "dataAuthenticity": "",
+      "goldenFlows": "",
+      "regressionContract": "",
+      "fallbackPolicy": "",
+      "diffRisk": "",
+      "noSilentSubstitution": "",
       "deploymentReadiness": ""
     },
     "verificationHistory": [],

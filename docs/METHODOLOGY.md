@@ -38,6 +38,12 @@ Existing project task
 Before substantial changes, the project must have:
 
 - `CODEX.md`
+- `.pfo/PROJECT_CONTRACT.md`
+- `.pfo/DATA_POLICY.md`
+- `.pfo/GOLDEN_FLOWS.md`
+- `.pfo/FORBIDDEN_CHANGES.md`
+- `.pfo/FALLBACK_POLICY.md`
+- `.pfo/SCOPE_LOCK.md`
 - `.codex-memory/MEMORY.md`
 - `.codex-memory/STATE.json`
 
@@ -63,6 +69,12 @@ If any are missing, run `/adopt` first.
 - `README.md`: local setup, scripts, environment variables, deployment notes
 - `CODEX_GUIDE.md`: step-by-step prompts and operating rules for Codex
 - `CODEX.md`: current project context, decisions, status table, session memory rule
+- `.pfo/PROJECT_CONTRACT.md`: project-owned product invariants and behavior contracts
+- `.pfo/DATA_POLICY.md`: real-vs-synthetic data rules and required evidence
+- `.pfo/GOLDEN_FLOWS.md`: critical user journeys that block deploy when touched and unverified
+- `.pfo/FORBIDDEN_CHANGES.md`: changes that require explicit scope approval
+- `.pfo/FALLBACK_POLICY.md`: allowed/forbidden degraded-mode behavior
+- `.pfo/SCOPE_LOCK.md`: current task boundaries and forbidden change areas
 
 ## Gate Status
 
@@ -83,6 +95,7 @@ Scores can be useful as summaries, but they must not replace the status enum.
 - `execution/state-machine.json`: valid workflow transitions.
 - `memory/session-state.schema.json`: reloadable state format.
 - `deployment/deployment-targets.json`: deploy-readiness abstraction.
+- `scripts/pfo_contract_gate.py`: project-contract gate for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution.
 
 ## Rubrics
 
@@ -103,4 +116,6 @@ Canonical checklists live under `docs/rubrics/`:
 - Prefer narrow, verifiable implementation steps.
 - Keep planning documents and code synchronized.
 - Treat tests and review as part of implementation, not cleanup.
+- Treat project-owned `.pfo/` contracts as runtime guardrails, not documentation decoration.
+- If a real source or provider is unavailable, fail transparently or use an approved degraded mode; never silently invent production output.
 - Preserve session memory so the next session resumes with context.

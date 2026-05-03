@@ -101,6 +101,17 @@ def cmd_validate(args: argparse.Namespace) -> int:
     return run_script("validate_project.py", [str(args.project)])
 
 
+def cmd_contracts(args: argparse.Namespace) -> int:
+    argv = [str(args.project)]
+    if args.json:
+        argv.append("--json")
+    if args.write:
+        argv.append("--write")
+    if args.strict:
+        argv.append("--strict")
+    return run_script("pfo_contract_gate.py", argv)
+
+
 def cmd_resume(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
@@ -159,6 +170,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("test", cmd_test),
         ("review", cmd_review),
         ("validate", cmd_validate),
+        ("contracts", cmd_contracts),
         ("resume", cmd_resume),
         ("report", cmd_report),
     ]:
@@ -166,6 +178,10 @@ def build_parser() -> argparse.ArgumentParser:
         item.add_argument("project", type=Path)
         if name == "plan":
             item.add_argument("--note", default="")
+        if name == "contracts":
+            item.add_argument("--json", action="store_true")
+            item.add_argument("--write", action="store_true")
+            item.add_argument("--strict", action="store_true")
         item.set_defaults(func=func)
 
     voice = sub.add_parser("voice", help="Normalize a voice command into PFO intent.")

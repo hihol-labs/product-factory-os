@@ -50,6 +50,7 @@ PFO добавляет:
 - `execution/state-machine.json` — контролируемые переходы workflow.
 - `memory/session-state.schema.json` — формат восстановления состояния.
 - `deployment/deployment-targets.json` — deploy readiness checks.
+- `.pfo/*` project contracts — универсальные guardrails проекта: scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk и no silent substitution.
 
 ## Runtime CLI
 
@@ -65,6 +66,7 @@ python3 scripts/pfo.py build ../my-product
 python3 scripts/pfo.py test ../my-product
 python3 scripts/pfo.py review ../my-product
 python3 scripts/pfo.py validate ../my-product
+python3 scripts/pfo.py contracts ../my-product --write
 python3 scripts/pfo.py status ../my-product
 python3 scripts/pfo.py resume ../my-product
 python3 scripts/pfo.py report ../my-product
@@ -75,7 +77,7 @@ python3 scripts/pfo.py export ../my-product --target github
 
 Starter packs находятся в `starters/`. Golden paths находятся в `golden-paths/`.
 
-Сгенерированные проекты получают `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile` и `PFO_REPORT.md`.
+Сгенерированные проекты получают `.pfo/` contracts, `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile` и `PFO_REPORT.md`.
 
 Дополнительные расширения платформы:
 
@@ -86,6 +88,8 @@ Starter packs находятся в `starters/`. Golden paths находятся
 - `integrations/` — контракты GitHub, Linear и Notion.
 
 Для существующих проектов `pfo analyze` определяет monorepo, стек, package manager, доступные scripts, архитектурные признаки, security findings и optional gate results, затем сохраняет это в `.codex-memory/STATE.json` и `PFO_EXISTING_PROJECT_ANALYSIS.json`.
+
+`pfo analyze` также создает/проверяет `.pfo/` project contracts и запускает `pfo_contract_gate.py`, чтобы не допустить тихую подмену реальных данных, выход за scope задачи или изменение пользовательского поведения под видом узкой правки.
 
 ## Open Core И Монетизация
 
@@ -128,7 +132,8 @@ python3 scripts/meta_review.py
 3. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md` и `EXECUTION_GRAPH.md` согласованы.
 4. Для изменённого поведения есть тесты.
 5. Review status не равен `BLOCKED`.
-6. Контекст сессии сохранён через `/session-save`.
+6. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
+7. Контекст сессии сохранён через `/session-save`.
 
 ## Документация
 
@@ -169,6 +174,12 @@ python3 /home/hihol/projects/product-factory-os/scripts/pfo_new_project.py my-pr
 
 ```text
 CODEX.md
+.pfo/PROJECT_CONTRACT.md
+.pfo/DATA_POLICY.md
+.pfo/GOLDEN_FLOWS.md
+.pfo/FORBIDDEN_CHANGES.md
+.pfo/FALLBACK_POLICY.md
+.pfo/SCOPE_LOCK.md
 .codex-memory/MEMORY.md
 .codex-memory/STATE.json
 ```

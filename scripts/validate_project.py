@@ -7,6 +7,14 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = ["CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json"]
+REQUIRED_PFO = [
+    ".pfo/PROJECT_CONTRACT.md",
+    ".pfo/DATA_POLICY.md",
+    ".pfo/GOLDEN_FLOWS.md",
+    ".pfo/FORBIDDEN_CHANGES.md",
+    ".pfo/FALLBACK_POLICY.md",
+    ".pfo/SCOPE_LOCK.md",
+]
 
 
 def fail(message: str) -> None:
@@ -31,6 +39,10 @@ def main() -> None:
             fail(f"{project} is missing {rel}")
 
     run([sys.executable, "scripts/validate_state.py", str(project / ".codex-memory" / "STATE.json")])
+    for rel in REQUIRED_PFO:
+        if not (project / rel).is_file():
+            fail(f"{project} is missing {rel}")
+    run([sys.executable, "scripts/pfo_contract_gate.py", str(project)])
     if (project / ".pfo-starter.json").is_file():
         run([sys.executable, "scripts/validate_starter_compliance.py", str(project)])
     graph = project / "EXECUTION_GRAPH.md"

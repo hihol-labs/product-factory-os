@@ -24,6 +24,7 @@ This is an initial methodology scaffold. It contains:
 - Workspace-default policy for `/home/hihol/projects`
 - A structure validator for repository health checks
 - Product Factory OS runtime contracts for classification, templates, state machine, execution pipeline, memory, deployment, and voice-first interface
+- Project-level `.pfo/` contracts for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution
 
 ## Quick Start
 
@@ -58,6 +59,7 @@ PFO adds deterministic execution contracts:
 - `pipelines/execution-pipeline.json`: defines required stages and artifacts.
 - `memory/session-state.schema.json`: defines reloadable state.
 - `deployment/deployment-targets.json`: defines deploy-readiness checks.
+- `.pfo/*` project contracts: define product-owned invariants that PFO validates without hardcoding product-specific rules.
 
 ## Runtime CLI
 
@@ -73,6 +75,7 @@ python3 scripts/pfo.py build ../my-product
 python3 scripts/pfo.py test ../my-product
 python3 scripts/pfo.py review ../my-product
 python3 scripts/pfo.py validate ../my-product
+python3 scripts/pfo.py contracts ../my-product --write
 python3 scripts/pfo.py status ../my-product
 python3 scripts/pfo.py resume ../my-product
 python3 scripts/pfo.py report ../my-product
@@ -83,7 +86,7 @@ python3 scripts/pfo.py export ../my-product --target github
 
 Starter packs live in `starters/`. Golden paths live in `golden-paths/`.
 
-Generated projects receive `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile`, and `PFO_REPORT.md`.
+Generated projects receive `.pfo/` contracts, `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile`, and `PFO_REPORT.md`.
 
 Additional platform extensions:
 
@@ -94,6 +97,8 @@ Additional platform extensions:
 - `integrations/`: GitHub, Linear, and Notion payload contracts.
 
 For existing projects, `pfo analyze` detects monorepos, stack, package manager, available scripts, architecture hints, security findings, and optional gate results, then writes them into `.codex-memory/STATE.json` and `PFO_EXISTING_PROJECT_ANALYSIS.json`.
+
+`pfo analyze` also creates/checks `.pfo/` contracts and runs `pfo_contract_gate.py` to catch scope drift, fake data substitution, unsafe fallbacks, risky diffs, and unverified golden-flow changes.
 
 ## Open Core And Commercial Extensions
 
