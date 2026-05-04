@@ -39,14 +39,17 @@ Announce the selected mode and why.
    - `docs/rubrics/strategy.md`
 3. If docs are missing, run discovery and blueprint work.
 4. Ensure Product Compiler outputs exist: `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md`.
-5. Run `/review` before writing application code.
-6. Scaffold project structure, tooling, environment examples, and test framework.
-7. Implement modules from `BUILD_PLAN.md` and `EXECUTION_GRAPH.md` step by step.
-8. After each behavior change, run or create tests via `/test`.
-9. Review significant changes with `/review`.
-10. Before production work, run `/security-audit`, `/deps-audit`, and `/harden`.
-11. Deploy only after explicit user confirmation.
-12. Run `/session-save`.
+5. Use `/mcp-docs` when dependency, SDK, framework, or platform details may be stale.
+6. Run `/review` before writing application code.
+7. Scaffold project structure, tooling, environment examples, and test framework.
+8. Implement modules from `BUILD_PLAN.md` and `EXECUTION_GRAPH.md` step by step.
+9. After each behavior change, run or create tests via `/test`.
+10. For user-facing browser flows, run `/browser-check` before ship readiness.
+11. Review significant changes with `/review`.
+12. Before production work, run `/security-audit`, `/deps-audit`, and `/harden`.
+13. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external roadmap sync is in scope.
+14. Deploy only after explicit user confirmation.
+15. Run `/session-save`.
 
 ## Phase Details
 
@@ -100,6 +103,7 @@ Before deploy:
 - `/security-audit` has no Critical findings.
 - `/deps-audit` has no Critical findings or accepted risk.
 - `/harden` has no Critical production gaps.
+- `/browser-check` has no blocking user-facing failures when a browser UI exists.
 - `EXECUTION_GRAPH.md` has reached `READY_FOR_DEPLOY`.
 - User explicitly confirms target environment.
 

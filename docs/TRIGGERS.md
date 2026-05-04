@@ -24,6 +24,8 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | `/doc` | update docs, README, API docs | обнови документацию, README, API docs |
 | `/explain` | explain code, how does this work | объясни код, как это работает |
 | `/perf` | slow, optimize, bottleneck | медленно, оптимизируй, узкое место |
+| `/mcp-docs` | latest docs, current API, SDK docs, framework version | свежая документация, актуальный API, документация SDK |
+| `/browser-check` | open localhost, browser smoke, visual QA, check UI | открой localhost, проверь UI, browser smoke, визуальная проверка |
 
 ## Quality And Operations
 
@@ -36,6 +38,8 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | `/infra` | infrastructure, Terraform, Docker, Kubernetes | инфраструктура, Terraform, Docker, Kubernetes |
 | `/deploy` | deploy, release, ship to production | деплой, релиз, выкатить |
 | `/migrate` | migration, schema change, database upgrade | миграция, схема БД, обновить базу |
+| `/github-workflow` | PR, pull request, GitHub Actions, CI, issue, release branch | PR, pull request, GitHub Actions, CI, issue, релизная ветка |
+| `/tool-sync` | sync Linear, Notion, Google Drive, export project state | синхронизируй Linear, Notion, Google Drive, экспорт состояния |
 
 ## Strategy And Memory
 

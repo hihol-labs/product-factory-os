@@ -21,6 +21,10 @@
 - Automatic starter selection, scaffold expansion, generated CI templates, starter compliance validation, and `PFO_REPORT.md` generation.
 - Real starter skeleton files, execution graph generator, static dashboard, local voice-to-text adapter, benchmark suite, packaging helper, marketplace metadata, and GitHub/Linear/Notion export contracts.
 - Open-core strategy, commercial boundary, pricing, packs, cloud, governance, security, and code-of-conduct docs.
+- Connector-aware PFO routes for `/mcp-docs`, `/browser-check`, `/github-workflow`, and `/tool-sync`.
+- Researcher, UX reviewer, release manager, integration engineer, and data reviewer agent roles.
+- OpenAI/MCP integration map for Context7, Browser Use, GitHub, Codex Security, Linear, Notion, and Google Drive.
+- Google Drive integration export contract.
 
 ### Changed
 
@@ -30,6 +34,7 @@
 - Workspace policy now documents mandatory voice-first PFO routing for new projects.
 - `/task` and `/adopt` now enforce existing-project PFO state and memory checks.
 - Strategy, review, test, security, hardening, backend, frontend, and operations roles now use deeper production-grade contracts.
+- Kickstart, task routing, review, security audit, and deploy skills now route connector-assisted gates explicitly.
 
 ## [0.4.0] - 2026-05-02
 

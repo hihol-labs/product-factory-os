@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "providers": {
+    "context7": {
+      "purpose": "fresh library and framework documentation",
+      "usedBy": ["mcp-docs", "bugfix", "refactor", "infra", "deploy", "deps-audit", "harden"]
+    },
+    "browser-use": {
+      "purpose": "local browser smoke testing and UX verification",
+      "usedBy": ["browser-check", "review", "test", "harden", "deploy"]
+    },
+    "github": {
+      "purpose": "issues, pull requests, review comments, CI, and release workflow",
+      "usedBy": ["github-workflow", "tool-sync", "review", "deploy"]
+    },
+    "codex-security": {
+      "purpose": "full security scan phases for repository, PR, branch, or diff",
+      "usedBy": ["security-audit", "harden", "review"]
+    },
+    "linear": {
+      "purpose": "project and issue synchronization",
+      "usedBy": ["tool-sync", "strategy", "session-save"]
+    },
+    "google-drive": {
+      "purpose": "Docs, Sheets, and Slides summaries or stakeholder artifacts",
+      "usedBy": ["tool-sync", "doc", "strategy", "session-save"]
+    },
+    "notion": {
+      "purpose": "project pages, task databases, and decision logs",
+      "usedBy": ["tool-sync", "strategy", "session-save"]
+    }
+  }
+}

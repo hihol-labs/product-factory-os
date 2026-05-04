@@ -18,6 +18,11 @@
     "testing",
     "deployment",
     "code-review",
+    "mcp",
+    "browser-testing",
+    "github",
+    "linear",
+    "google-drive",
     "open-core",
     "product-factory",
     "startup-studio"
@@ -34,7 +39,9 @@
       "Interactive",
       "Write",
       "Code Review",
-      "Project Planning"
+      "Project Planning",
+      "Testing",
+      "Integrations"
     ],
     "websiteURL": "https://github.com/hihol-labs/product-factory-os",
     "privacyPolicyURL": "https://github.com/hihol-labs/product-factory-os",

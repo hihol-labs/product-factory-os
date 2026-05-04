@@ -31,6 +31,7 @@ interface/
            -> agents/
            -> deployment/
            -> memory/
+           -> integrations/
 ```
 
 ## Executable Runtime
@@ -110,6 +111,15 @@ Uses `memory/session-state.schema.json` as the canonical reloadable state contra
 
 Uses `deployment/deployment-targets.json` to prepare deploy-ready artifacts for Docker, VPS, Vercel, Netlify, AWS, GCP, and Azure.
 
+### 9. Connector And MCP Layer
+
+Uses `integrations/mcp-capabilities.json` and `docs/OPENAI_MCP_INTEGRATIONS.md` to bind external tools to named PFO skills:
+
+- `/mcp-docs` for Context7 and current documentation lookup.
+- `/browser-check` for Browser Use smoke testing.
+- `/github-workflow` for issues, PRs, CI, and release workflow.
+- `/tool-sync` for Linear, Notion, Google Drive, and export-only payloads.
+
 ## Required PFO Artifacts
 
 Every full-cycle PFO project should maintain:
@@ -143,6 +153,8 @@ Deployment is blocked unless:
 - Security review has no Critical findings.
 - Dependency review has no Critical findings or accepted risk.
 - Deployment readiness includes env vars, build command, health check, and rollback or recovery notes.
+- Browser-facing products have no blocking `/browser-check` findings before deploy readiness.
+- GitHub, Linear, Notion, or Google Drive sync status is explicit when external tracking is in scope.
 - Strategy, testing, PFO, and security rubrics pass for their applicable scope.
 
 ## Project Contract Layer

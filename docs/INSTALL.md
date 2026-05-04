@@ -150,7 +150,14 @@ python3 scripts/pfo.py resume ../my-product
 python3 scripts/pfo.py report ../my-product
 python3 scripts/pfo.py metrics
 python3 scripts/pfo.py export ../my-product --target github
+python3 scripts/pfo.py export ../my-product --target google-drive
 ```
+
+## OpenAI And MCP Integrations
+
+Connector-aware workflows are documented in `docs/OPENAI_MCP_INTEGRATIONS.md`.
+
+Use `/mcp-docs` for Context7 documentation checks, `/browser-check` for local UI smoke tests, `/github-workflow` for PR/CI/release work, and `/tool-sync` for Linear, Notion, Google Drive, or export-only synchronization.
 
 ## Benchmarks
 

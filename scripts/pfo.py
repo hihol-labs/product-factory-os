@@ -195,7 +195,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     export = sub.add_parser("export", help="Export project state for external tools.")
     export.add_argument("project", type=Path)
-    export.add_argument("--target", choices=["github", "linear", "notion"], required=True)
+    export.add_argument("--target", choices=["github", "linear", "notion", "google-drive"], required=True)
     export.set_defaults(func=cmd_export)
 
     return parser

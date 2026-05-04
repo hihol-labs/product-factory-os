@@ -8,14 +8,15 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 ## Что Внутри
 
-- 23 skills для создания проектов, ежедневной разработки, качества, операций, стратегии и памяти
-- 6 agent-role описаний для архитектуры, ревью, тестов, аналитики, безопасности и операций
+- 27 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти и connector workflows
+- 15 agent-role описаний для архитектуры, ревью, тестов, аналитики, безопасности, релизов, UX, данных и интеграций
 - Контракты skills: входы, выходы, side effects и idempotency
 - Call graph, чтобы цепочки не становились хаотичными
 - Trigger registry для маршрутизации естественного языка
 - Rubrics для review, security, dependency audit и production readiness
 - Fixtures и scripts для проверки методологии
 - Workspace-default правила для `/home/hihol/projects`
+- Маршруты OpenAI/Codex plugin и MCP для Context7, Browser Use, GitHub, Codex Security, Linear, Notion и Google Drive
 - PFO runtime contracts: classifier, template library, product compiler, state machine, execution pipeline, memory schema, deployment abstraction и voice-first interface
 
 ## Быстрый Старт
@@ -73,6 +74,7 @@ python3 scripts/pfo.py report ../my-product
 python3 scripts/pfo.py voice "создай Telegram бот для продаж"
 python3 scripts/pfo.py metrics
 python3 scripts/pfo.py export ../my-product --target github
+python3 scripts/pfo.py export ../my-product --target google-drive
 ```
 
 Starter packs находятся в `starters/`. Golden paths находятся в `golden-paths/`.
@@ -85,7 +87,7 @@ Starter packs находятся в `starters/`. Golden paths находятся
 - `benchmarks/` — benchmark suite для prompt-классификации.
 - `packaging/` — install/update helper.
 - `marketplace/` — local marketplace metadata.
-- `integrations/` — контракты GitHub, Linear и Notion.
+- `integrations/` — контракты GitHub, Linear, Notion, Google Drive и MCP capabilities.
 
 Для существующих проектов `pfo analyze` определяет monorepo, стек, package manager, доступные scripts, архитектурные признаки, security findings и optional gate results, затем сохраняет это в `.codex-memory/STATE.json` и `PFO_EXISTING_PROJECT_ANALYSIS.json`.
 
@@ -110,6 +112,7 @@ Product Factory OS использует open-core модель:
 - [GitHub Launch Checklist](docs/GITHUB_LAUNCH.md)
 - [Initial Roadmap Issues](docs/GITHUB_ISSUES.md)
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
+- [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
 
 ## Проверка
 

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "target": "google-drive",
+  "objects": ["document", "spreadsheet", "slide deck", "folder"],
+  "mapping": {
+    "PFO_REPORT.md": "status document",
+    "PRD.md": "product requirements document",
+    "EXECUTION_GRAPH.md": "execution tracker sheet",
+    "QUALITY_GATES.md": "quality gate review document",
+    "decisionLog": "decision register"
+  }
+}

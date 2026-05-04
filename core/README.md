@@ -16,6 +16,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - Compile product intent into build artifacts.
 - Execute modules through a state machine.
 - Block unsafe transitions through quality gates.
+- Use MCP and OpenAI/Codex plugin routes for current documentation, browser smoke checks, GitHub workflow, security scans, and external tool sync.
 - Save reloadable project state after every major milestone.
 
 ## Core Artifacts
@@ -24,4 +25,3 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - `BUILD_PLAN.md`: ordered module build plan with dependencies and verification.
 - `EXECUTION_GRAPH.md`: build nodes, transitions, checkpoints, and gate rules.
 - `.codex-memory/STATE.json`: reloadable machine-readable session state.
-

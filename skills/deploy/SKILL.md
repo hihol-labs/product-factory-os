@@ -21,6 +21,8 @@ Check:
 - Current git status and target commit
 - Tests or accepted test gap
 - Review status is not `BLOCKED`
+- Browser-facing flows have no blocking `/browser-check` failures when applicable
+- GitHub CI or equivalent release verification is known when `/github-workflow` is in scope
 - Required env vars are documented
 - Rollback path exists
 
@@ -41,7 +43,8 @@ Proceed only after explicit confirmation.
 3. Apply deployment steps.
 4. Run health checks.
 5. Verify the main user flow when possible.
-6. Save session context.
+6. Run `/tool-sync` or `/github-workflow` when external release status must be updated.
+7. Save session context.
 
 ## Verification
 
