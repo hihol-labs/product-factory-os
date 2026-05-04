@@ -11,6 +11,8 @@
 - Add semantic validation for example execution graphs.
 - Add v2 classifier, template, state, strategy, testing, security, and PFO review contracts.
 - Add executable runtime CLI, runner, project validator, voice intent normalizer, metrics, starter packs, release check, and golden paths.
+- Add connector-aware skills for Context7 MCP documentation, browser smoke checks, GitHub PR/CI workflow, and external tool sync.
+- Add researcher, UX reviewer, release manager, integration engineer, and data reviewer roles.
 
 ## 0.2.0
 

@@ -46,9 +46,11 @@ Return one:
    - execution graph semantics
    - state consistency
    - gate traceability
-5. Apply checks as binary pass/fail at Critical tier.
-6. Produce findings first.
-7. Set gate status from rubric results.
+5. For browser-facing changes, require `/browser-check` evidence before deploy readiness.
+6. For SDK, framework, or platform questions, use `/mcp-docs` before flagging documentation-sensitive findings.
+7. Apply checks as binary pass/fail at Critical tier.
+8. Produce findings first.
+9. Set gate status from rubric results.
 
 ## Scope Rules
 

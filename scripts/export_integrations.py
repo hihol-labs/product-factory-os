@@ -12,7 +12,7 @@ def load_state(project: Path) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Export PFO project state as integration payloads.")
     parser.add_argument("project", type=Path)
-    parser.add_argument("--target", choices=["github", "linear", "notion"], required=True)
+    parser.add_argument("--target", choices=["github", "linear", "notion", "google-drive"], required=True)
     args = parser.parse_args()
     project = args.project.resolve()
     state = load_state(project)
@@ -35,4 +35,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

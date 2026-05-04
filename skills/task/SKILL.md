@@ -58,6 +58,8 @@ EXISTING_PROJECT_DETECTED
 - Documentation, README, API docs -> `/doc`
 - Explain code or architecture -> `/explain`
 - Slow behavior or resource use -> `/perf`
+- Current framework, SDK, or API documentation needed -> `/mcp-docs`
+- Browser UI smoke test or visual QA -> `/browser-check`
 - General quality review -> `/review`
 - Security concerns -> `/security-audit`
 - Dependency, license, CVE concerns -> `/deps-audit`
@@ -65,6 +67,8 @@ EXISTING_PROJECT_DETECTED
 - Production readiness -> `/harden`
 - Database schema/data change -> `/migrate`
 - Deploy/release -> `/deploy`
+- GitHub issue, PR, CI, or release workflow -> `/github-workflow`
+- Linear, Notion, Google Drive, or integration export -> `/tool-sync`
 - Product/strategy decision -> `/advisor` or `/strategy`
 
 ## Rules

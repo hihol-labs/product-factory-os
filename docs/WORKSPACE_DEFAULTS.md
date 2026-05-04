@@ -81,6 +81,13 @@ EXISTING_PROJECT_DETECTED
 
 For non-trivial existing-project changes, create or update the relevant `EXECUTION_GRAPH.md` node. Tiny direct fixes may use the daily-work skill directly only after PFO adoption status and memory state are checked.
 
+Connector-aware work routes through explicit skills:
+
+- Fresh library, SDK, framework, or platform docs -> `/mcp-docs`
+- Browser UI smoke or visual QA -> `/browser-check`
+- GitHub issue, PR, CI, or release workflow -> `/github-workflow`
+- Linear, Notion, Google Drive, or export sync -> `/tool-sync`
+
 ## Precedence
 
 1. Workspace root `CODEX.md` mandatory Product Factory OS rule for new project creation.

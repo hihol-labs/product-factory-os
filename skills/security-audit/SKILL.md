@@ -16,6 +16,12 @@ The canonical rubric lives in `docs/rubrics/security.md`. Use it as the source o
 
 Use `docs/templates/THREAT_MODEL.md` and `docs/templates/DATA_CLASSIFICATION.md` for non-trivial SaaS, API, e-commerce, mini app, internal automation, and bot projects.
 
+When a full repository, PR, branch, or working-tree security scan is requested, prefer the Codex Security plugin workflow when available:
+
+```text
+threat model -> finding discovery -> validation -> attack-path analysis -> final report
+```
+
 ## Review Areas
 
 - Authentication and authorization
@@ -49,3 +55,4 @@ Return `BLOCKED` when Critical findings exist.
 - Prefer exploitability and impact over theoretical noise.
 - If the rubric and this skill conflict, follow the rubric and update this skill later.
 - Return `BLOCKED` if a product handles sensitive data and has no threat model or data classification before deploy readiness.
+- Use plugin-assisted findings as candidates until they are validated against local code paths.

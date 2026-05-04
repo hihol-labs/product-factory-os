@@ -12,14 +12,15 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 This is an initial methodology scaffold. It contains:
 
-- 23 skills for creation, daily work, quality, operations, strategy, and memory
-- Agent role descriptions for heavy review, architecture, test, analysis, and security work
+- 27 skills for creation, daily work, quality, operations, strategy, memory, and connector workflows
+- 15 agent role descriptions for heavy review, architecture, test, analysis, security, release, UX, data, and integration work
 - Skill contracts with inputs, outputs, side effects, and idempotency notes
 - A call graph that keeps workflow chaining bounded
 - Trigger registry and quality rubrics for review, security, dependency, and production checks
 - Smoke fixtures for the main routing scenarios
 - Golden-path example for a tutor booking app
 - Optional soft hooks for route reminders and preflight context
+- OpenAI/Codex plugin and MCP integration routes for Context7, Browser Use, GitHub, Codex Security, Linear, Notion, and Google Drive
 - GitHub Actions workflow for validation
 - Workspace-default policy for `/home/hihol/projects`
 - A structure validator for repository health checks
@@ -82,6 +83,7 @@ python3 scripts/pfo.py report ../my-product
 python3 scripts/pfo.py voice "создай Telegram бот для продаж"
 python3 scripts/pfo.py metrics
 python3 scripts/pfo.py export ../my-product --target github
+python3 scripts/pfo.py export ../my-product --target google-drive
 ```
 
 Starter packs live in `starters/`. Golden paths live in `golden-paths/`.
@@ -94,7 +96,7 @@ Additional platform extensions:
 - `benchmarks/`: prompt benchmark suite.
 - `packaging/`: install/update helper.
 - `marketplace/`: local marketplace metadata.
-- `integrations/`: GitHub, Linear, and Notion payload contracts.
+- `integrations/`: GitHub, Linear, Notion, Google Drive, and MCP capability contracts.
 
 For existing projects, `pfo analyze` detects monorepos, stack, package manager, available scripts, architecture hints, security findings, and optional gate results, then writes them into `.codex-memory/STATE.json` and `PFO_EXISTING_PROJECT_ANALYSIS.json`.
 
@@ -119,6 +121,7 @@ See:
 - [GitHub Launch Checklist](docs/GITHUB_LAUNCH.md)
 - [Initial Roadmap Issues](docs/GITHUB_ISSUES.md)
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
+- [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
 
 ## Repository Layout
 

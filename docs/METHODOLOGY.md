@@ -11,12 +11,15 @@ Product Factory OS is built around small gates instead of one large generation p
 5. Ask only the clarifying questions that change the build.
 6. Produce documents before code.
 7. Review the documents before implementation.
-8. Implement execution graph nodes in small steps.
-9. Add tests for every behavior change.
-10. Review before commit or deploy.
-11. Harden production-facing services.
-12. Deploy only after explicit confirmation.
-13. Save reloadable session memory.
+8. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
+9. Implement execution graph nodes in small steps.
+10. Add tests for every behavior change.
+11. Run `/browser-check` for browser-facing critical flows.
+12. Review before commit or deploy.
+13. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
+14. Harden production-facing services.
+15. Deploy only after explicit confirmation.
+16. Save reloadable session memory.
 
 ## Existing Project Lifecycle
 
@@ -95,6 +98,7 @@ Scores can be useful as summaries, but they must not replace the status enum.
 - `execution/state-machine.json`: valid workflow transitions.
 - `memory/session-state.schema.json`: reloadable state format.
 - `deployment/deployment-targets.json`: deploy-readiness abstraction.
+- `integrations/mcp-capabilities.json`: MCP and OpenAI/Codex plugin capability map.
 - `scripts/pfo_contract_gate.py`: project-contract gate for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution.
 
 ## Rubrics

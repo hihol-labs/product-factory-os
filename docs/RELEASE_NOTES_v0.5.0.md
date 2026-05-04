@@ -8,7 +8,8 @@ Initial public runtime release.
 - Product classification for SaaS, bots, APIs, web apps, landing pages, CLI tools, mini apps, e-commerce, scrapers, and internal automation.
 - Product compiler flow: idea -> blueprint -> build plan -> execution graph.
 - State machine, execution pipeline, memory schema, deployment checks, and voice-first command contract.
-- 23 Codex skills and 10 agent role contracts.
+- 27 Codex skills and 15 agent role contracts.
+- OpenAI/Codex plugin and MCP routes for Context7 documentation, Browser Use smoke tests, GitHub PR/CI workflow, Codex Security scans, Linear, Notion, and Google Drive sync.
 - Runtime CLI with `new`, `adopt`, `plan`, `build`, `test`, `review`, `validate`, `status`, `resume`, `report`, `voice`, `metrics`, and `export`.
 - Starter packs and golden paths for the main product categories.
 - Open-core and commercial boundary documentation.
