@@ -10,3 +10,9 @@ Initial candidates:
 - Marketplace starter
 - Scraper with queues, proxies, monitoring
 
+Premium packs must still pass the open-source runtime contract:
+
+- starter metadata validates;
+- `pfo new -> pfo plan -> pfo validate` works;
+- route snapshots or golden-path coverage exist;
+- `.pfo/` contracts remain project-owned and visible to the user.

@@ -80,6 +80,7 @@ def main() -> None:
         "python3 scripts/run_fixtures.py",
         "python3 scripts/validate_execution_graph.py",
         "python3 scripts/validate_runtime.py",
+        "python3 scripts/validate_hooks.py",
         "python3 scripts/meta_review.py",
     ]:
         if command not in install:
@@ -103,8 +104,8 @@ def main() -> None:
         )
 
     routes = fenced_routes()
-    if len(routes) < 8:
-        fail("expected at least 8 routing fixtures for 0.5.0")
+    if len(routes) < 25:
+        fail("expected broad routing fixture coverage for product-runtime maturity")
 
     for fixture, route in routes.items():
         if not route.startswith("/project") and not route.startswith("/task"):

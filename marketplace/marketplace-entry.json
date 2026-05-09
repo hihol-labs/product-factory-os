@@ -1,6 +1,7 @@
 {
   "name": "product-factory-os",
   "displayName": "Product Factory OS",
+  "version": "0.6.0",
   "source": {
     "source": "local",
     "path": "./product-factory-os"
@@ -10,5 +11,16 @@
     "authentication": "ON_INSTALL"
   },
   "category": "Productivity",
-  "capabilities": ["Product Planning", "Code Generation", "Testing", "Deployment", "Memory", "Integrations", "Browser QA"]
+  "capabilities": [
+    "Product Planning",
+    "Execution Graph",
+    "Code Generation",
+    "Testing",
+    "Deployment",
+    "Memory",
+    "Integrations",
+    "Browser QA",
+    "Hook Gates",
+    "Route Snapshots"
+  ]
 }

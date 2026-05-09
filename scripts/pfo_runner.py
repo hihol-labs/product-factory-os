@@ -30,7 +30,7 @@ def next_graph_node(project: Path, current: str) -> str:
     for line in text.splitlines():
         if line.startswith("| N"):
             cells = [cell.strip() for cell in line.strip("|").split("|")]
-            if cells:
+            if cells and cells[0].startswith("N") and cells[0][1:].isdigit():
                 nodes.append(cells[0])
     if not nodes:
         return ""
@@ -71,4 +71,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

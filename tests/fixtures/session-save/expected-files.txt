@@ -1,0 +1,2 @@
+.codex-memory/MEMORY.md
+.codex-memory/STATE.json

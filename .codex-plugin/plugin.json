@@ -1,7 +1,7 @@
 {
   "name": "product-factory-os",
-  "version": "0.5.0",
-  "description": "Product Factory OS methodology plugin for Codex: a deterministic product generation runtime that classifies product ideas, selects templates, compiles blueprints into execution graphs, builds, tests, validates, prepares deployment, and saves reloadable state.",
+  "version": "0.6.0",
+  "description": "Product Factory OS methodology plugin for Codex: a deterministic product generation runtime that classifies product ideas, selects templates, compiles blueprints into execution graphs, installs hook guardrails, builds, tests, validates, prepares deployment, and saves reloadable state.",
   "author": {
     "name": "hihol-labs",
     "email": "hihol-labs@users.noreply.github.com",

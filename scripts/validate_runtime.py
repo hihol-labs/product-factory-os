@@ -66,6 +66,7 @@ def main() -> None:
         "pfo_report.py",
         "generate_execution_graph.py",
         "run_benchmarks.py",
+        "validate_hooks.py",
         "export_integrations.py",
     ]:
         if not (ROOT / "scripts" / script).is_file():

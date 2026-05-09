@@ -13,6 +13,7 @@ Paid local/professional layer:
 - Advanced benchmark packs
 - Private template registry
 - Pro dashboard features
+- Extended hook policies and organization-specific route snapshots
 
 ### PFO Cloud
 
@@ -52,6 +53,8 @@ Implementation and enablement:
 
 The open source repository may describe commercial extensions, but should not include closed commercial source code.
 
+The open source runtime remains sufficient to bootstrap, plan, validate, and gate local projects. Commercial extensions should add scale, collaboration, policy, premium templates, or managed execution; they should not be required for the basic `pfo new -> pfo plan -> pfo validate` loop.
+
 Recommended private/commercial repositories:
 
 ```text
@@ -60,4 +63,3 @@ pfo-cloud
 pfo-enterprise
 pfo-customer-templates
 ```
-

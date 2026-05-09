@@ -14,12 +14,26 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - Call graph, чтобы цепочки не становились хаотичными
 - Trigger registry для маршрутизации естественного языка
 - Rubrics для review, security, dependency audit и production readiness
-- Fixtures и scripts для проверки методологии
+- Route snapshots и fixtures для проверки всех skill routes
+- Hook parity layer: route reminders, preflight context, skill completeness, commit completeness и review-before-commit gates
 - Workspace-default правила для `/home/hihol/projects`
 - Маршруты OpenAI/Codex plugin и MCP для Context7, Browser Use, GitHub, Codex Security, Linear, Notion и Google Drive
 - PFO runtime contracts: classifier, template library, product compiler, state machine, execution pipeline, memory schema, deployment abstraction и voice-first interface
 
 ## Быстрый Старт
+
+### Установка И Проверка
+
+```bash
+git clone https://github.com/hihol-labs/product-factory-os.git
+cd product-factory-os
+bash packaging/install.sh --install-hooks
+python3 scripts/pfo.py new smoke-product --workspace /tmp --idea "Smoke SaaS product"
+python3 scripts/pfo.py plan /tmp/smoke-product
+python3 scripts/pfo.py validate /tmp/smoke-product
+```
+
+Эта проверка проходит структуру репозитория, routing fixtures, hook contracts, выбор starter pack, генерацию planning artifacts, генерацию execution graph и валидацию сгенерированного проекта.
 
 Опишите идею:
 
@@ -81,6 +95,8 @@ Starter packs находятся в `starters/`. Golden paths находятся
 
 Сгенерированные проекты получают `.pfo/` contracts, `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile` и `PFO_REPORT.md`.
 
+`pfo plan` создает недостающие `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md` и `QUALITY_GATES.md` на основе выбранного starter, но не перезаписывает уже существующие файлы.
+
 Дополнительные расширения платформы:
 
 - `dashboard/` — статический dashboard.
@@ -102,6 +118,26 @@ Product Factory OS использует open-core модель:
 
 Продукты, созданные через PFO, принадлежат их авторам. Использование PFO не требует открывать сгенерированные продукты.
 
+## Чего PFO Не Делает
+
+- Не заменяет senior architecture/security/legal/compliance review для регулируемых или высокорисковых продуктов.
+- Не деплоит, не мигрирует и не меняет production-инфраструктуру молча. Production-impacting операции требуют явного подтверждения.
+- Не выдумывает production data, ответы провайдеров или реальные источники данных; fallback должен быть явно разрешен.
+- Не гарантирует, что каждый сгенерированный проект сразу production-ready. PFO дает gates, contracts и evidence requirements, которые нужно пройти.
+- Не требует открывать исходный код продуктов, созданных через PFO.
+- Пока не является hosted team platform. Hosted dashboard, managed execution, team workspaces и enterprise policy относятся к open-core/commercial roadmap.
+
+## Путь К 1.0
+
+PFO готова к `1.0.0`, когда runtime можно стабильно использовать для новых и существующих проектов:
+
+1. Стабильные skill и hook contracts, route snapshots для каждого skill.
+2. Стабильная CLI-семантика для `new`, `plan`, `build`, `test`, `review`, `validate`, `analyze`, `contracts`, `resume`, `report` и `export`.
+3. Сгенерированные проекты проходят validation после bootstrap и после `pfo plan`.
+4. Starter packs и golden paths покрывают поддерживаемые типы продуктов.
+5. `.pfo/` contract gates блокируют scope drift, fake data substitution, unsafe fallbacks и непроверенные golden-flow изменения.
+6. CI запускает structure, fixture, hook, runtime, benchmark, generated-project и meta-review checks.
+
 См.:
 
 - [Open Core Strategy](docs/OPEN_CORE.md)
@@ -111,6 +147,7 @@ Product Factory OS использует open-core модель:
 - [PFO Cloud](docs/CLOUD.md)
 - [GitHub Launch Checklist](docs/GITHUB_LAUNCH.md)
 - [Initial Roadmap Issues](docs/GITHUB_ISSUES.md)
+- [v0.6.0 Release Notes](docs/RELEASE_NOTES_v0.6.0.md)
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
 - [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
 
@@ -122,6 +159,7 @@ python3 scripts/run_fixtures.py
 python3 scripts/validate_execution_graph.py
 python3 scripts/validate_state.py /path/to/project/.codex-memory/STATE.json
 python3 scripts/validate_runtime.py
+python3 scripts/validate_hooks.py
 python3 scripts/run_benchmarks.py
 python3 scripts/meta_review.py
 ```
@@ -143,7 +181,7 @@ python3 scripts/meta_review.py
 - [Methodology](docs/METHODOLOGY.md)
 - [Skill Contracts](docs/SKILL_CONTRACTS.md)
 - [Triggers](docs/TRIGGERS.md)
-- [Install And Local Testing](docs/INSTALL.md)
+- [Install And Onboarding](docs/INSTALL.md)
 - [Workspace Defaults](docs/WORKSPACE_DEFAULTS.md)
 - [Roadmap](docs/ROADMAP.md)
 - [PFO Architecture](docs/PFO_ARCHITECTURE.md)
@@ -162,7 +200,8 @@ python3 scripts/meta_review.py
 Bootstrap helper:
 
 ```bash
-python3 /home/hihol/projects/product-factory-os/scripts/pfo_new_project.py my-product --idea "голосовая команда или идея продукта"
+python3 /home/hihol/projects/product-factory-os/scripts/pfo.py new my-product --idea "голосовая команда или идея продукта"
+python3 /home/hihol/projects/product-factory-os/scripts/pfo.py plan /home/hihol/projects/my-product
 ```
 
 ## Существующие Проекты

@@ -28,11 +28,17 @@ jobs:
       - name: Validate runtime assets
         run: python3 scripts/validate_runtime.py
 
+      - name: Validate hook contracts
+        run: python3 scripts/validate_hooks.py
+
       - name: Run benchmark suite
         run: python3 scripts/run_benchmarks.py
 
       - name: Smoke-test PFO project bootstrap
         run: python3 scripts/pfo_new_project.py smoke-pfo-product --workspace /tmp --idea "Smoke SaaS product"
+
+      - name: Smoke-test PFO plan generation
+        run: python3 scripts/pfo.py plan /tmp/smoke-pfo-product --note "CI smoke"
 
       - name: Validate bootstrapped PFO state
         run: python3 scripts/validate_state.py /tmp/smoke-pfo-product/.codex-memory/STATE.json

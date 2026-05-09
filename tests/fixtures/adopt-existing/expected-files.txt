@@ -1,4 +1,3 @@
 CODEX.md
 .codex-memory/MEMORY.md
 initial session note
-

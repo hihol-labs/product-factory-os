@@ -255,7 +255,7 @@ def main() -> None:
     print(f"OK: bootstrapped {project}")
     print(f"Starter: {starter['id']}")
     print("Route: /project -> /kickstart")
-    print("Next: create PRODUCT_BLUEPRINT.md, BUILD_PLAN.md, and EXECUTION_GRAPH.md")
+    print(f"Next: python3 {ROOT / 'scripts' / 'pfo.py'} plan {project}")
 
 
 if __name__ == "__main__":

@@ -40,4 +40,5 @@ Every pack should define:
 - Security requirements
 - Deployment path
 - Upgrade notes
-
+- `pfo plan` artifact expectations
+- Golden-path or route-snapshot coverage

@@ -10,3 +10,4 @@ python3 scripts/pfo.py metrics --workspace /home/hihol/projects > dashboard/metr
 
 The page is dependency-free and can be extended into a richer local UI.
 
+Dashboard metrics are a read-only projection of local PFO state. They do not replace `pfo validate`, `.pfo/` contract gates, hook validation, or release checks.

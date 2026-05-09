@@ -11,4 +11,3 @@ Expected route:
 ```text
 /project redirects to /task -> /bugfix
 ```
-

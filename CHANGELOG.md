@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.6.0] - 2026-05-09
+
+### Added
+
+- Stronger install/onboarding path with smoke-tested `pfo new -> pfo plan -> pfo validate`.
+- Hook parity layer: route reminders, preflight context, skill completeness, commit completeness, and review-before-commit gates.
+- Hook documentation and `scripts/validate_hooks.py`.
+- Route snapshot contract covering every PFO skill.
+- Expanded routing fixtures for discovery, guide, review, test, refactor, docs, explain, performance, dependency audit, hardening, infra, browser checks, MCP docs, GitHub workflow, tool sync, strategy, advisor, and session save.
+- Explicit "What This Does NOT Do" docs in English and Russian.
+- Versioned path to `1.0.0` with 0.6/0.7/0.8/0.9 milestones.
+- Documentation consistency pass across README, workspace defaults, core runtime docs, open-core/commercial docs, starter/golden-path docs, marketplace metadata, and public roadmap issues.
+
+### Changed
+
+- `pfo plan` now generates missing `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, and `QUALITY_GATES.md` while preserving existing files.
+- Generated-project validation now requires planning artifacts once a project reaches `PLAN_READY` or later.
+- CI now validates hook contracts and smoke-tests plan generation after project bootstrap.
+- Runtime validation now includes hook validation support.
+- Packaging installer now validates fixtures/hooks and can copy hooks into the local Codex hook directory.
+
 ## [0.5.0] - 2026-05-02
 
 ### Added

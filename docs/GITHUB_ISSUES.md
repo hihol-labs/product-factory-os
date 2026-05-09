@@ -1,16 +1,16 @@
-# Initial GitHub Issues
+# Public Roadmap Issues
 
-Use these as the first public roadmap issues.
+Use these as public roadmap issues after the `0.6.0` runtime-hardening pass.
 
-## 1. Harden installer and update flow
+## 1. Harden installer update flow
 
 Labels: `type:roadmap`, `area:runtime`
 
 Acceptance:
 
-- `packaging/install.sh` supports install and update modes.
-- The install docs cover local and cloned usage.
-- A smoke test verifies install from GitHub.
+- `packaging/install.sh` supports update mode in addition to current install/hook-copy behavior.
+- The install docs cover local, cloned, and released usage.
+- A smoke test verifies install from GitHub release artifacts.
 
 ## 2. Add plugin packaging and publishing workflow
 
@@ -29,6 +29,7 @@ Labels: `type:feature`, `area:runtime`
 Acceptance:
 
 - Generated projects validate `QUALITY_GATES.md`, starter compliance, and state consistency.
+- `pfo new -> pfo plan -> pfo validate` passes for every open-source starter pack.
 - Validation reports actionable failures.
 
 ## 4. Build a full generated SaaS reference project
@@ -68,6 +69,26 @@ Acceptance:
 
 - Marketplace metadata checklist exists.
 - Release process references publishing steps.
+
+## 9. Promote hook parity to default local workflow
+
+Labels: `type:feature`, `area:hooks`
+
+Acceptance:
+
+- `scripts/validate_hooks.py` runs in CI.
+- Hook installation is documented for Codex Desktop and CLI-like environments.
+- Route snapshots remain mandatory for every skill.
+
+## 10. Expand runtime executor beyond state recording
+
+Labels: `type:feature`, `area:runtime`
+
+Acceptance:
+
+- `pfo build`, `pfo test`, and `pfo review` can execute or propose concrete commands from starter contracts.
+- Execution history records command, result, duration, and evidence.
+- Failed nodes produce repair paths in state.
 
 ## 8. Add cloud/team workspace design draft
 

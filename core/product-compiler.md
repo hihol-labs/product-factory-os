@@ -1,6 +1,6 @@
 # Product Compiler
 
-The product compiler turns a raw idea into deterministic build artifacts.
+The product compiler turns a raw idea into deterministic build artifacts. In the local runtime, `pfo plan <project>` writes missing compiler artifacts while preserving existing user-authored files.
 
 ## Compilation Stages
 
@@ -78,3 +78,12 @@ Write `EXECUTION_GRAPH.md` with:
 - Validation checkpoints
 - Rollback or repair action for failed gates
 
+### 7. Test And Gate Plan
+
+Write `TEST_PLAN.md` and `QUALITY_GATES.md` with:
+
+- Product-type test matrix
+- Critical smoke path
+- Required quality gates
+- Evidence slots
+- Accepted-risk section

@@ -11,4 +11,3 @@ Expected route:
 ```text
 /task -> /migrate
 ```
-

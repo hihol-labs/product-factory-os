@@ -42,6 +42,7 @@ Runtime scripts live in `scripts/`:
 - `pfo_runner.py`: execution step runner
 - `existing_project_analyzer.py`: existing-project stack, command, gate, security, and state analyzer
 - `validate_project.py`: generated-project validator
+- `validate_hooks.py`: hook contract validator
 - `voice_intent.py`: voice/text intent normalizer
 - `pfo_metrics.py`: workspace metrics
 - `release_check.py`: release validation
@@ -156,6 +157,18 @@ Deployment is blocked unless:
 - Browser-facing products have no blocking `/browser-check` findings before deploy readiness.
 - GitHub, Linear, Notion, or Google Drive sync status is explicit when external tracking is in scope.
 - Strategy, testing, PFO, and security rubrics pass for their applicable scope.
+
+## Hook And Snapshot Layer
+
+PFO uses `hooks/hooks.json` and `tests/snapshots/route-snapshots.json` to keep natural-language routing, skill docs, fixtures, and runtime behavior aligned.
+
+- `route-reminder.py` suggests routes before Codex drifts into ad hoc work.
+- `preflight-context.py` surfaces PFO docs, state, memory, and `.pfo/` contracts.
+- `skill-completeness.py` verifies every skill has docs, triggers, fixtures, and route snapshots.
+- `commit-completeness.py` checks methodology diffs for supporting artifacts.
+- `review-before-commit.py` runs fast validators before methodology commits.
+
+The release bar for PFO is: every skill has a route snapshot, every route snapshot has a fixture, and CI validates both.
 
 ## Project Contract Layer
 

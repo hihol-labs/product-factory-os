@@ -28,6 +28,7 @@ def main() -> None:
     run([sys.executable, "scripts/run_fixtures.py"])
     run([sys.executable, "scripts/validate_execution_graph.py"])
     run([sys.executable, "scripts/validate_runtime.py"])
+    run([sys.executable, "scripts/validate_hooks.py"])
     run([sys.executable, "scripts/run_benchmarks.py"])
     run([sys.executable, "scripts/meta_review.py"])
     print(f"OK: release checks passed for {version}")

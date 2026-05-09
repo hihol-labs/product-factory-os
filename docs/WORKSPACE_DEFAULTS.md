@@ -30,7 +30,9 @@ Voice and natural-language commands are first-class input. The user does not nee
 To bootstrap a new project directory with Product Factory OS adoption files:
 
 ```bash
-python3 /home/hihol/projects/product-factory-os/scripts/pfo_new_project.py <project-name> --idea "<voice transcript or product idea>"
+python3 /home/hihol/projects/product-factory-os/scripts/pfo.py new <project-name> --idea "<voice transcript or product idea>"
+python3 /home/hihol/projects/product-factory-os/scripts/pfo.py plan /home/hihol/projects/<project-name>
+python3 /home/hihol/projects/product-factory-os/scripts/pfo.py validate /home/hihol/projects/<project-name>
 ```
 
 The bootstrap creates:
@@ -39,9 +41,26 @@ The bootstrap creates:
 CODEX.md
 .codex-memory/MEMORY.md
 .codex-memory/STATE.json
+.pfo/
+.pfo-starter.json
+.env.example
+.github/workflows/validate.yml
+justfile
+PFO_REPORT.md
 ```
 
-For non-trivial products, Product Factory OS may also create strategy, security, testing, and gate artifacts:
+`pfo plan` creates the core planning artifacts while preserving files that already exist:
+
+```text
+PRODUCT_BLUEPRINT.md
+PROJECT_ARCHITECTURE.md
+BUILD_PLAN.md
+EXECUTION_GRAPH.md
+TEST_PLAN.md
+QUALITY_GATES.md
+```
+
+For non-trivial products, Product Factory OS may also create strategy and security artifacts:
 
 ```text
 MARKET_BRIEF.md
@@ -50,8 +69,6 @@ BUSINESS_MODEL.md
 GO_TO_MARKET.md
 THREAT_MODEL.md
 DATA_CLASSIFICATION.md
-TEST_PLAN.md
-QUALITY_GATES.md
 ```
 
 For every existing project, Product Factory OS is also mandatory:
@@ -67,6 +84,12 @@ Before major work in an existing project, run adoption checks:
 - Does it have planning docs when the task is non-trivial?
 
 If not, use `/adopt` before substantial implementation.
+
+Hooks are optional but recommended in this workspace. They provide route reminders, preflight context, skill completeness checks, commit completeness checks, and review-before-commit validation. Install them from the methodology repo with:
+
+```bash
+bash packaging/install.sh --install-hooks
+```
 
 Existing-project state path:
 
@@ -106,6 +129,8 @@ The intended marketplace entry is:
 ```json
 {
   "name": "product-factory-os",
+  "displayName": "Product Factory OS",
+  "version": "0.6.0",
   "source": {
     "source": "local",
     "path": "./product-factory-os"
@@ -114,6 +139,18 @@ The intended marketplace entry is:
     "installation": "AVAILABLE",
     "authentication": "ON_INSTALL"
   },
-  "category": "Productivity"
+  "category": "Productivity",
+  "capabilities": [
+    "Product Planning",
+    "Execution Graph",
+    "Code Generation",
+    "Testing",
+    "Deployment",
+    "Memory",
+    "Integrations",
+    "Browser QA",
+    "Hook Gates",
+    "Route Snapshots"
+  ]
 }
 ```
