@@ -11,6 +11,8 @@ Includes:
 - Open source runtime
 - Basic starter packs
 - Local validators
+- Local hook gates
+- Route snapshots and fixtures
 - Local dashboard shell
 - Local state and memory
 
@@ -52,4 +54,3 @@ Includes:
 - Custom packs
 - Support SLA
 - Onboarding
-

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "Optional soft hooks for Product Factory OS. The methodology works without hooks; hooks add routing reminders and lightweight context diagnostics.",
+  "description": "Product Factory OS hooks for automatic workspace adoption, routing reminders, context diagnostics, and methodology completeness gates.",
   "hooks": [
     {
       "name": "route-reminder",
@@ -10,9 +10,27 @@
     },
     {
       "name": "preflight-context",
-      "type": "diagnostic",
+      "type": "auto-adopt-diagnostic",
       "command": "python3 hooks/preflight-context.py",
-      "description": "Prints discovered planning docs and memory index for the current project."
+      "description": "Auto-adopts first-level workspace projects when needed, then prints discovered docs and memory state."
+    },
+    {
+      "name": "skill-completeness",
+      "type": "enforcement",
+      "command": "python3 hooks/skill-completeness.py",
+      "description": "Checks that every skill has contracts, triggers, and route snapshots."
+    },
+    {
+      "name": "commit-completeness",
+      "type": "enforcement",
+      "command": "python3 hooks/commit-completeness.py",
+      "description": "Checks staged methodology diffs for required supporting artifacts before commit."
+    },
+    {
+      "name": "review-before-commit",
+      "type": "enforcement",
+      "command": "python3 hooks/review-before-commit.py",
+      "description": "Runs fast PFO validation gates before committing methodology changes."
     }
   ]
 }

@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_FILES = [
     ".codex-plugin/plugin.json",
     ".github/workflows/validate.yml",
+    "install.sh",
     "README.md",
     "README.ru.md",
     "CODE_OF_CONDUCT.md",
@@ -29,6 +30,8 @@ REQUIRED_FILES = [
     "docs/CLOUD.md",
     "docs/GO_TO_MARKET_OPEN_CORE.md",
     "docs/OPENAI_MCP_INTEGRATIONS.md",
+    "docs/RELEASE_NOTES_v0.6.1.md",
+    "docs/RELEASE_NOTES_v0.6.0.md",
     "docs/gates/README.md",
     "docs/gates/scope-lock.md",
     "docs/gates/data-authenticity-gate.md",
@@ -67,6 +70,7 @@ REQUIRED_FILES = [
     "templates/generated-ci/validate.yml",
     "templates/generated-ci/justfile",
     "docs/templates/IMPLEMENTATION_PLAN.md",
+    "docs/templates/AGENTS.md",
     "docs/templates/CODEX.md",
     "docs/examples/golden-path-booking-app/README.md",
     "docs/examples/golden-path-booking-app/DISCOVERY.md",
@@ -79,8 +83,12 @@ REQUIRED_FILES = [
     "docs/examples/golden-path-booking-app/CODEX.md",
     "docs/examples/golden-path-booking-app/CODEX_GUIDE.md",
     "hooks/hooks.json",
+    "hooks/README.md",
     "hooks/route-reminder.py",
     "hooks/preflight-context.py",
+    "hooks/skill-completeness.py",
+    "hooks/commit-completeness.py",
+    "hooks/review-before-commit.py",
     "core/README.md",
     "core/product-compiler.md",
     "routing/product-classifier.json",
@@ -111,8 +119,11 @@ REQUIRED_FILES = [
     "starters/README.md",
     "golden-paths/README.md",
     "tests/README.md",
+    "tests/snapshots/route-snapshots.json",
     "scripts/run_fixtures.py",
     "scripts/meta_review.py",
+    "scripts/validate_hooks.py",
+    "scripts/install_workspace.py",
     "scripts/adoption_check.py",
     "scripts/existing_project_analyzer.py",
     "scripts/validate_execution_graph.py",
@@ -187,8 +198,26 @@ REQUIRED_FIXTURES = [
     "new-project",
     "existing-bug",
     "planning-only",
+    "discover",
+    "guide-existing-docs",
+    "review-quality",
+    "test-existing-feature",
+    "refactor-module",
+    "doc-readme",
+    "explain-code",
+    "perf-bottleneck",
     "deploy-production",
     "security-audit",
+    "deps-audit",
+    "harden-service",
+    "infra-generate",
+    "browser-check",
+    "mcp-docs",
+    "github-workflow",
+    "tool-sync",
+    "strategy-replan",
+    "advisor-decision",
+    "session-save",
     "adopt-existing",
     "migration",
     "pfo-bot",
@@ -317,7 +346,7 @@ def main() -> None:
 
     hooks = json.loads((ROOT / "hooks/hooks.json").read_text())
     hook_names = {hook.get("name") for hook in hooks.get("hooks", [])}
-    for expected_hook in ["route-reminder", "preflight-context"]:
+    for expected_hook in ["route-reminder", "preflight-context", "skill-completeness", "commit-completeness", "review-before-commit"]:
         if expected_hook not in hook_names:
             fail(f"hooks/hooks.json is missing hook {expected_hook}")
 
@@ -402,6 +431,12 @@ def main() -> None:
         for name in ["idea.md", "expected-files.txt", "notes.md"]:
             if not (fixture_dir / name).is_file():
                 fail(f"fixture {fixture} is missing {name}")
+
+    snapshots = json.loads((ROOT / "tests" / "snapshots" / "route-snapshots.json").read_text())
+    snapshot_fixtures = {item.get("fixture") for item in snapshots.get("snapshots", [])}
+    for fixture in REQUIRED_FIXTURES:
+        if fixture not in snapshot_fixtures:
+            fail(f"route snapshots are missing fixture {fixture}")
 
     print(
         f"OK: {len(REQUIRED_SKILLS)} skills, {len(REQUIRED_AGENTS)} agents, "

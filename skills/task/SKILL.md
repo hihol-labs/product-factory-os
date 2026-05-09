@@ -17,9 +17,11 @@ Use this skill for work on an existing repository.
 Before routing substantial work, ensure the repository is PFO-managed:
 
 ```text
+AGENTS.md
 CODEX.md
 .codex-memory/MEMORY.md
 .codex-memory/STATE.json
+.pfo/
 ```
 
 If any are missing, route to `/adopt` first.

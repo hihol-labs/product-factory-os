@@ -12,6 +12,7 @@ PFO Cloud is the hosted control plane for Product Factory OS.
 - PFO report
 - Metrics
 - GitHub repository connection
+- Route snapshot and hook-gate status
 
 ## Later Scope
 
@@ -23,6 +24,7 @@ PFO Cloud is the hosted control plane for Product Factory OS.
 - Organization memory
 - Audit logs
 - Managed runners
+- Organization-specific hook policies
 
 ## Data Model
 
@@ -34,4 +36,5 @@ PFO Cloud is the hosted control plane for Product Factory OS.
 - Gate result
 - Integration connection
 - Template pack
-
+- Route snapshot
+- Hook gate result

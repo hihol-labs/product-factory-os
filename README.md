@@ -10,16 +10,16 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 ## Status
 
-This is an initial methodology scaffold. It contains:
+This is a Codex-native methodology runtime. It contains:
 
 - 27 skills for creation, daily work, quality, operations, strategy, memory, and connector workflows
 - 15 agent role descriptions for heavy review, architecture, test, analysis, security, release, UX, data, and integration work
 - Skill contracts with inputs, outputs, side effects, and idempotency notes
 - A call graph that keeps workflow chaining bounded
 - Trigger registry and quality rubrics for review, security, dependency, and production checks
-- Smoke fixtures for the main routing scenarios
+- Route snapshots and smoke fixtures for every skill route
 - Golden-path example for a tutor booking app
-- Optional soft hooks for route reminders and preflight context
+- Workspace hook layer for auto-adoption, route reminders, preflight context, skill completeness, commit completeness, and review-before-commit gates
 - OpenAI/Codex plugin and MCP integration routes for Context7, Browser Use, GitHub, Codex Security, Linear, Notion, and Google Drive
 - GitHub Actions workflow for validation
 - Workspace-default policy for `/home/hihol/projects`
@@ -28,6 +28,28 @@ This is an initial methodology scaffold. It contains:
 - Project-level `.pfo/` contracts for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution
 
 ## Quick Start
+
+### Install
+
+```bash
+git clone https://github.com/hihol-labs/product-factory-os.git
+cd product-factory-os
+bash install.sh
+```
+
+That one command validates PFO, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md` / `CODEX.md` / `PFO_WORKSPACE.json`, and adopts existing first-level projects in the workspace.
+
+If the repository is not cloned inside your projects workspace, pass the workspace once:
+
+```bash
+bash install.sh --workspace ~/Projects
+```
+
+After that, open any project in the workspace with Codex. Existing projects already have PFO runtime files; new projects can be created with:
+
+```bash
+pfo new my-product --idea "SaaS for subscription tracking"
+```
 
 Use natural language first:
 
@@ -67,14 +89,14 @@ PFO adds deterministic execution contracts:
 Product Factory OS includes an executable runtime CLI:
 
 ```bash
-python3 scripts/pfo.py new my-product --idea "SaaS for subscription tracking"
-python3 scripts/pfo.py adopt
-python3 scripts/pfo.py adopt ../existing-product --analyze --run-gates
-python3 scripts/pfo.py analyze ../existing-product --run-gates --report
-python3 scripts/pfo.py plan ../my-product
-python3 scripts/pfo.py build ../my-product
-python3 scripts/pfo.py test ../my-product
-python3 scripts/pfo.py review ../my-product
+pfo new my-product --idea "SaaS for subscription tracking"
+pfo adopt
+pfo adopt ../existing-product --analyze --run-gates
+pfo analyze ../existing-product --run-gates --report
+pfo plan ../my-product
+pfo build ../my-product
+pfo test ../my-product
+pfo review ../my-product
 python3 scripts/pfo.py validate ../my-product
 python3 scripts/pfo.py contracts ../my-product --write
 python3 scripts/pfo.py status ../my-product
@@ -89,6 +111,8 @@ python3 scripts/pfo.py export ../my-product --target google-drive
 Starter packs live in `starters/`. Golden paths live in `golden-paths/`.
 
 Generated projects receive `.pfo/` contracts, `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile`, and `PFO_REPORT.md`.
+
+`pfo plan` now creates missing `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, and `QUALITY_GATES.md` from the selected starter while preserving existing files.
 
 Additional platform extensions:
 
@@ -111,6 +135,26 @@ Product Factory OS uses an open-core model:
 
 Products generated with PFO belong to their authors. Using PFO does not require generated products to be open source.
 
+## What This Does NOT Do
+
+- It does not replace senior architecture, security, legal, or compliance review for regulated products.
+- It does not silently deploy, migrate, or mutate production infrastructure. Production-impacting operations require explicit confirmation.
+- It does not invent production data, fake provider responses, or replace unavailable real sources without an approved fallback.
+- It does not guarantee that every generated project is production-ready. It provides gates, contracts, and evidence requirements that must be satisfied.
+- It does not require products generated with PFO to be open source.
+- It is not a hosted team platform yet. Hosted dashboards, managed execution, team workspaces, and enterprise policy belong to the open-core/commercial roadmap.
+
+## Path To 1.0
+
+PFO reaches `1.0.0` when the runtime is stable enough to rely on across new and existing projects:
+
+1. Stable skill and hook contracts with route snapshots for every skill.
+2. Stable CLI semantics for `new`, `plan`, `build`, `test`, `review`, `validate`, `analyze`, `contracts`, `resume`, `report`, and `export`.
+3. Generated projects validate after bootstrap and after `pfo plan`.
+4. Starter packs and golden paths cover the supported product types.
+5. `.pfo/` contract gates block scope drift, fake data substitution, unsafe fallbacks, and unverified golden-flow changes.
+6. CI runs structure, fixture, hook, runtime, benchmark, generated-project, and meta-review checks.
+
 See:
 
 - [Open Core Strategy](docs/OPEN_CORE.md)
@@ -120,6 +164,8 @@ See:
 - [PFO Cloud](docs/CLOUD.md)
 - [GitHub Launch Checklist](docs/GITHUB_LAUNCH.md)
 - [Initial Roadmap Issues](docs/GITHUB_ISSUES.md)
+- [v0.6.1 Release Notes](docs/RELEASE_NOTES_v0.6.1.md)
+- [v0.6.0 Release Notes](docs/RELEASE_NOTES_v0.6.0.md)
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
 - [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
 
@@ -139,9 +185,10 @@ execution/                  State machine contract
 memory/                     Reloadable session-state schema
 deployment/                 Deployment abstraction layer
 interface/                  Voice-first input/output contract
-hooks/                      Hook configuration placeholder
+hooks/                      Hook contracts and local enforcement helpers
 scripts/                    Validation scripts
-tests/fixtures/             Methodology smoke fixtures
+tests/fixtures/             Methodology route fixtures
+tests/snapshots/            Machine-readable route snapshots
 .github/workflows/          CI validation workflow
 ```
 
@@ -154,7 +201,8 @@ Every major project step should pass:
 3. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md` agree.
 4. Tests exist for changed behavior.
 5. Review status is not `BLOCKED`.
-6. Session state is saved before stopping.
+6. `.pfo/` contract gates do not report scope, data, fallback, golden-flow, or silent-substitution violations.
+7. Session state is saved before stopping.
 
 ## Validation
 
@@ -164,6 +212,7 @@ python3 scripts/run_fixtures.py
 python3 scripts/validate_execution_graph.py
 python3 scripts/validate_state.py /path/to/project/.codex-memory/STATE.json
 python3 scripts/validate_runtime.py
+python3 scripts/validate_hooks.py
 python3 scripts/run_benchmarks.py
 python3 scripts/meta_review.py
 ```
@@ -180,14 +229,15 @@ See [docs/MASTER_PROMPT.ru.md](docs/MASTER_PROMPT.ru.md) for the Russian Product
 
 ## Workspace Defaults
 
-See [docs/WORKSPACE_DEFAULTS.md](docs/WORKSPACE_DEFAULTS.md). In this workspace, `/home/hihol/projects/CODEX.md` makes Product Factory OS the default methodology for new work and adoption checks.
+See [docs/WORKSPACE_DEFAULTS.md](docs/WORKSPACE_DEFAULTS.md). `bash install.sh` writes workspace `AGENTS.md`, `CODEX.md`, and `PFO_WORKSPACE.json`, making Product Factory OS the default methodology for new and existing project work.
 
 New projects in `/home/hihol/projects` are bootstrapped and executed through Product Factory OS automatically. Voice or natural-language commands route to `/project -> /kickstart` by default.
 
 Bootstrap helper:
 
 ```bash
-python3 /home/hihol/projects/product-factory-os/scripts/pfo_new_project.py my-product --idea "voice transcript or product idea"
+pfo new my-product --idea "voice transcript or product idea"
+pfo plan /home/hihol/projects/my-product
 ```
 
 Existing projects in `/home/hihol/projects` also use Product Factory OS:
@@ -196,7 +246,7 @@ Existing projects in `/home/hihol/projects` also use Product Factory OS:
 /task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save
 ```
 
-Use `/adopt` first when `CODEX.md`, `.codex-memory/MEMORY.md`, or `.codex-memory/STATE.json` is missing.
+Use `/adopt` first when `AGENTS.md`, `CODEX.md`, `.codex-memory/`, or `.pfo/` contracts are missing.
 
 ## Golden Path
 

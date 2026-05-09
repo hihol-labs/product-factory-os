@@ -31,10 +31,10 @@ Enable:
 
 ## Release
 
-Create the first release from tag `v0.5.0` with notes from:
+Create the next release from tag `v0.6.1` with notes from:
 
 ```text
-docs/RELEASE_NOTES_v0.5.0.md
+docs/RELEASE_NOTES_v0.6.1.md
 ```
 
 ## Roadmap Issues
@@ -71,7 +71,7 @@ gh repo edit hihol-labs/product-factory-os \
   --add-topic open-core \
   --add-topic developer-tools
 
-gh release create v0.5.0 --repo hihol-labs/product-factory-os \
-  --title "Product Factory OS v0.5.0" \
-  --notes-file docs/RELEASE_NOTES_v0.5.0.md
+gh release create v0.6.1 --repo hihol-labs/product-factory-os \
+  --title "Product Factory OS v0.6.1" \
+  --notes-file docs/RELEASE_NOTES_v0.6.1.md
 ```

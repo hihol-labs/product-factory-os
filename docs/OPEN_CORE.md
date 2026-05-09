@@ -13,6 +13,8 @@ The open source core includes:
 - Product compiler contracts
 - State machine
 - Validators
+- Hook contracts and local hook scripts
+- Route snapshots and methodology fixtures
 - Basic starter packs
 - Basic golden paths
 - Local dashboard shell
@@ -22,6 +24,15 @@ The open source core includes:
 - Quality rubrics
 - Local memory/state format
 - Local integration export contracts
+
+As of `0.6.1`, the open-source runtime also includes the one-command workspace install and smoke-tested project path:
+
+```text
+bash install.sh
+pfo new -> pfo plan -> pfo validate
+```
+
+This path is intentionally open source because trust in the product-runtime depends on local reproducibility.
 
 ## Commercial Extensions
 
@@ -51,4 +62,3 @@ The PFO runtime is licensed separately from products created with it. Generated 
 Open source code lives in this repository.
 
 Commercial code, private premium packs, hosted services, customer data, and proprietary templates should live outside the open source repository unless intentionally published.
-

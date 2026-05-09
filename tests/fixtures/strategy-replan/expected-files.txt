@@ -1,0 +1,4 @@
+MARKET_BRIEF.md
+ICP.md
+GO_TO_MARKET.md
+ADR or strategy update

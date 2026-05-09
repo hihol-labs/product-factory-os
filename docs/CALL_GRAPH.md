@@ -46,6 +46,9 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /deploy
   -> /github-workflow
   -> /tool-sync
+  -> /session-save
+  -> /strategy
+  -> /advisor
 
 /strategy
   -> /advisor

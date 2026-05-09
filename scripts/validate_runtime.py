@@ -66,7 +66,9 @@ def main() -> None:
         "pfo_report.py",
         "generate_execution_graph.py",
         "run_benchmarks.py",
+        "validate_hooks.py",
         "export_integrations.py",
+        "install_workspace.py",
     ]:
         if not (ROOT / "scripts" / script).is_file():
             fail(f"missing runtime script {script}")

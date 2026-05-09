@@ -1,19 +1,5 @@
 # Roadmap
 
-## 0.5.0
-
-- Add Product Factory OS runtime contracts.
-- Add product classifier for SaaS, bots, APIs, web apps, landing pages, CLI tools, mini apps, e-commerce, scrapers, and internal automation.
-- Add template library, product compiler, execution pipeline, state machine, memory schema, deployment abstraction, and voice-first interface.
-- Add PFO master prompt in Russian.
-- Expand core creation skills around `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md`.
-- Add orchestrator, backend-builder, frontend-builder, and memory-agent roles.
-- Add semantic validation for example execution graphs.
-- Add v2 classifier, template, state, strategy, testing, security, and PFO review contracts.
-- Add executable runtime CLI, runner, project validator, voice intent normalizer, metrics, starter packs, release check, and golden paths.
-- Add connector-aware skills for Context7 MCP documentation, browser smoke checks, GitHub PR/CI workflow, and external tool sync.
-- Add researcher, UX reviewer, release manager, integration engineer, and data reviewer roles.
-
 ## 0.2.0
 
 - Expand key lifecycle skills with gates and failure handling.
@@ -38,11 +24,62 @@
 - Add release script that verifies version, changelog, and manifest consistency.
 - Add marketplace metadata notes.
 
+## 0.5.0
+
+- Add Product Factory OS runtime contracts.
+- Add product classifier for SaaS, bots, APIs, web apps, landing pages, CLI tools, mini apps, e-commerce, scrapers, and internal automation.
+- Add template library, product compiler, execution pipeline, state machine, memory schema, deployment abstraction, and voice-first interface.
+- Add PFO master prompt in Russian.
+- Expand core creation skills around `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md`.
+- Add orchestrator, backend-builder, frontend-builder, and memory-agent roles.
+- Add semantic validation for example execution graphs.
+- Add v2 classifier, template, state, strategy, testing, security, and PFO review contracts.
+- Add executable runtime CLI, runner, project validator, voice intent normalizer, metrics, starter packs, release check, and golden paths.
+- Add connector-aware skills for Context7 MCP documentation, browser smoke checks, GitHub PR/CI workflow, and external tool sync.
+- Add researcher, UX reviewer, release manager, integration engineer, and data reviewer roles.
+
+## 0.6.0
+
+- Promote install/onboarding from local notes to a full smoke-tested workflow.
+- Add route snapshots for every skill.
+- Add hook validation and enforcement hook contracts.
+- Make `pfo plan` generate missing planning artifacts and execution graph skeletons.
+
+## 0.6.1
+
+- Add one-command `bash install.sh` workspace install.
+- Install `pfo` command wrapper, hooks, workspace policy files, and project adoption by default.
+- Add `AGENTS.md` support for workspace and project-level Codex instructions.
+- Auto-adopt first-level workspace projects from the preflight hook when runtime files are missing.
+
+## 0.7.0
+
+- Add generated-project validators for starter-specific commands and required artifacts.
+- Expand `pfo_runner.py` from state recorder to node executor with explicit command plans.
+- Add snapshot fixtures for starter-specific golden paths.
+
+## 0.8.0
+
+- Add richer existing-project state repair, analyzer evidence, and migration reports for partially adopted projects.
+- Add connector-backed export smoke tests where local connector access exists.
+- Add browser-facing generated-project smoke checks for UI starters.
+
+## 0.9.0
+
+- Freeze public skill, hook, runtime JSON, and CLI contracts.
+- Run dogfood projects through all supported product types.
+- Prepare `1.0.0` release notes, migration notes, and marketplace metadata.
+
 ## 1.0.0
 
-- Stable skill contracts.
-- Stable trigger registry.
-- Full fixture set for every skill category.
-- Documented release process.
+Release criteria:
+
+- Stable skill contracts and trigger registry.
+- Hook parity with the methodology: route reminders, preflight context, skill completeness, commit completeness, and review-before-commit gates.
+- Route snapshot coverage for every skill.
+- Stable runtime CLI semantics for `new`, `adopt`, `analyze`, `plan`, `build`, `test`, `review`, `validate`, `contracts`, `resume`, `report`, `voice`, `metrics`, and `export`.
+- `pfo new -> pfo plan -> pfo validate` works for every starter pack.
 - Runtime validation for generated project execution graphs.
-- Rich generated-project validators for `QUALITY_GATES.md`, starter instantiation, and full template compliance.
+- Rich generated-project validators for `QUALITY_GATES.md`, starter instantiation, `.pfo/` contracts, and full template compliance.
+- Documented release process and rollback policy.
+- CI covers structure, fixtures, hooks, runtime assets, benchmarks, generated-project bootstrap, generated-project planning, analyzer smoke, report generation, and meta-review.

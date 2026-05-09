@@ -1,22 +1,13 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import json
 import re
 import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures"
-
-EXPECTED_ROUTES = {
-    "new-project": "/project -> /kickstart",
-    "existing-bug": "/project redirects to /task -> /bugfix",
-    "planning-only": "/project -> /blueprint",
-    "deploy-production": "/task -> /deploy",
-    "security-audit": "/task -> /security-audit",
-    "adopt-existing": "/task -> /adopt",
-    "migration": "/task -> /migrate",
-    "pfo-bot": "/project -> /kickstart",
-}
+SNAPSHOTS = ROOT / "tests" / "snapshots" / "route-snapshots.json"
 
 
 def fail(message: str) -> None:
@@ -32,8 +23,11 @@ def extract_expected_route(text: str) -> str:
 
 
 def main() -> None:
+    snapshots = json.loads(SNAPSHOTS.read_text(encoding="utf-8")).get("snapshots", [])
     checked = 0
-    for name, expected in EXPECTED_ROUTES.items():
+    for item in snapshots:
+        name = item["fixture"]
+        expected = item["expectedRoute"]
         idea_path = FIXTURES / name / "idea.md"
         if not idea_path.is_file():
             fail(f"missing fixture idea file: {idea_path.relative_to(ROOT)}")
@@ -62,6 +56,19 @@ def main() -> None:
     )
     if "/project" not in pfo_reminder.stdout:
         fail("route-reminder hook did not suggest /project for PFO bot prompt")
+
+    for item in snapshots:
+        if item.get("reminderPrompt"):
+            reminder = subprocess.run(
+                [sys.executable, "hooks/route-reminder.py", item["reminderPrompt"]],
+                cwd=ROOT,
+                check=False,
+                text=True,
+                capture_output=True,
+            )
+            expected_skill = item["skill"]
+            if expected_skill not in reminder.stdout:
+                fail(f"route-reminder hook did not suggest {expected_skill} for fixture {item['fixture']}")
 
     print(f"OK: {checked} fixture routes and hook reminder match expectations")
 

@@ -123,3 +123,13 @@ Canonical checklists live under `docs/rubrics/`:
 - Treat project-owned `.pfo/` contracts as runtime guardrails, not documentation decoration.
 - If a real source or provider is unavailable, fail transparently or use an approved degraded mode; never silently invent production output.
 - Preserve session memory so the next session resumes with context.
+
+## Non-Goals
+
+Product Factory OS is an execution framework, not magic product liability insurance.
+
+- It does not replace expert review for regulated, safety-critical, financial, medical, legal, or security-sensitive systems.
+- It does not silently call cloud APIs, deploy, migrate databases, rotate DNS, or mutate production.
+- It does not treat generated starter code as production-ready until tests, review, security, dependency, hardening, deployment, and `.pfo/` gates are explicit.
+- It does not invent production data or provider behavior when a real source is unavailable.
+- It does not remove human ownership of product strategy, compliance posture, pricing, or launch risk.

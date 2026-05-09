@@ -2,7 +2,7 @@
 
 ## Positioning
 
-Product Factory OS is an open source runtime for turning ideas into production-ready software with Codex.
+Product Factory OS is an open source runtime for turning ideas into validated, deploy-ready software with Codex.
 
 ## First Audience
 
@@ -25,8 +25,10 @@ Product Factory OS is an open source runtime for turning ideas into production-r
 ## Proof Points
 
 - Time from idea to scaffold
+- Time from scaffold to `pfo plan`
 - Time from idea to first passing validation
+- Route snapshot coverage
+- Hook gate pass rate
 - Gate pass rate
 - Number of generated products
 - Before/after delivery comparison
-

@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED = ["CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json"]
+REQUIRED = ["AGENTS.md", "CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json"]
 REQUIRED_PFO = [
     ".pfo/PROJECT_CONTRACT.md",
     ".pfo/DATA_POLICY.md",
@@ -50,6 +50,28 @@ def main() -> None:
         run([sys.executable, "scripts/validate_execution_graph.py", str(graph)])
 
     state = json.loads((project / ".codex-memory" / "STATE.json").read_text(encoding="utf-8"))
+    planned_or_later = {
+        "PLAN_READY",
+        "BUILDING",
+        "TESTING",
+        "REVIEWING",
+        "SECURITY_REVIEW",
+        "DEPENDENCY_REVIEW",
+        "HARDENING",
+        "READY_FOR_DEPLOY",
+        "DEPLOYED",
+    }
+    if state.get("currentStage") in planned_or_later:
+        for rel in [
+            "PRODUCT_BLUEPRINT.md",
+            "PROJECT_ARCHITECTURE.md",
+            "BUILD_PLAN.md",
+            "EXECUTION_GRAPH.md",
+            "TEST_PLAN.md",
+            "QUALITY_GATES.md",
+        ]:
+            if not (project / rel).is_file():
+                fail(f"planned project is missing {rel}")
     if state.get("currentStage") in ["READY_FOR_DEPLOY", "DEPLOYED"]:
         for rel in ["QUALITY_GATES.md", "TEST_PLAN.md"]:
             if not (project / rel).is_file():

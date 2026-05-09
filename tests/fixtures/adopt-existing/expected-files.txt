@@ -1,4 +1,6 @@
+AGENTS.md
 CODEX.md
 .codex-memory/MEMORY.md
+.codex-memory/STATE.json
+.pfo/PROJECT_CONTRACT.md
 initial session note
-

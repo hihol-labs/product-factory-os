@@ -5,7 +5,7 @@
 | `/project` | Product idea | Route decision | None | Safe |
 | `/task` | Existing-project task | Route decision | None | Safe |
 | `/discover` | Idea or problem | `DISCOVERY.md` | Writes docs | Ask before overwrite |
-| `/blueprint` | Idea plus clarifications | Planning documents plus `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md` | Writes docs | Ask before overwrite |
+| `/blueprint` | Idea plus clarifications | Planning documents plus `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, `QUALITY_GATES.md` | Writes docs | Ask before overwrite |
 | `/guide` | Existing planning docs | `CODEX_GUIDE.md` | Writes docs | Safe if generated from same inputs |
 | `/kickstart` | Idea or approved PFO docs | Project docs, scaffold, code, state updates | Writes code/docs/memory | Stateful |
 | `/review` | Project path or changed files | Review report | Read-only by default | Safe |
@@ -28,4 +28,4 @@
 | `/session-save` | Session summary and PFO state | Memory files and `.codex-memory/STATE.json` | Writes memory docs/state | Creates or updates state |
 | `/advisor` | Decision or question | Analysis report | None | Safe |
 | `/strategy` | Existing project context | Strategy docs/backlog | Writes docs | Safe with review |
-| `/adopt` | Existing repository | `CODEX.md`, memory bootstrap | Writes project metadata | Marker-based |
+| `/adopt` | Existing repository | `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts when required | Writes project metadata | Marker-based |

@@ -16,11 +16,13 @@ Add Product Factory OS context to an existing project.
 
 1. Inspect repository structure, stack, scripts, and docs.
 2. Detect whether the project has PFO adoption files:
+   - `AGENTS.md`
    - `CODEX.md`
    - `.codex-memory/MEMORY.md`
    - `.codex-memory/STATE.json`
-3. Create or update `CODEX.md` with a marked Product Factory OS section.
-4. Create `.codex-memory/` and initial state.
+   - `.pfo/` contracts
+3. Create or update `AGENTS.md` and `CODEX.md` with marked Product Factory OS sections.
+4. Create `.codex-memory/`, `.pfo/`, and initial state.
 5. Record stack, available commands, known docs, and current task route in `.codex-memory/STATE.json`.
 6. Add missing Product Compiler docs only when needed for the requested change:
    - `PRODUCT_BLUEPRINT.md`
@@ -45,5 +47,6 @@ EXISTING_PROJECT_DETECTED
 - Marker-based idempotency: re-running should not duplicate sections.
 - Do not reverse-engineer huge docs without user approval.
 - Do not alter application behavior.
+- Do not overwrite existing project-local instructions; append/update marked PFO sections.
 - Do not skip `.codex-memory/STATE.json`.
 - Do not start major implementation until the existing project has been analyzed and the task route is classified.
