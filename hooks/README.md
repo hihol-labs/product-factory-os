@@ -1,13 +1,13 @@
 # Product Factory OS Hooks
 
-Hooks are optional, but they are the recommended way to keep Codex on the Product Factory OS path when prompts are ambiguous or when methodology files are changing.
+Hooks are installed by default by `bash install.sh`. They keep Codex on the Product Factory OS path when prompts are ambiguous, when an existing project needs adoption, or when methodology files are changing.
 
 ## Hook Layers
 
 | Layer | Hook | Purpose | Blocks |
 |---|---|---|---|
 | Routing | `route-reminder.py` | Maps natural language to `/project`, `/task`, and specialized PFO skills. | No |
-| Context | `preflight-context.py` | Prints discovered PFO docs, state, memory, and `.pfo/` contracts. | No |
+| Context | `preflight-context.py` | Auto-adopts first-level workspace projects when needed, then prints discovered PFO docs, state, memory, and `.pfo/` contracts. | No |
 | Skill completeness | `skill-completeness.py` | Verifies that skills have contracts, trigger entries, fixtures, and route snapshots. | Yes when used as a gate |
 | Commit completeness | `commit-completeness.py` | Checks staged methodology diffs for supporting docs, snapshots, and changelog updates. | Yes |
 | Review before commit | `review-before-commit.py` | Runs fast validators before methodology changes are committed. | Yes |
@@ -27,10 +27,10 @@ python3 scripts/validate_hooks.py
 The plugin manifest points to `hooks/hooks.json`. For local development, run:
 
 ```bash
-bash packaging/install.sh --install-hooks
+bash install.sh
 ```
 
-The installer copies the hook scripts into `${CODEX_HOME:-$HOME/.codex}/hooks/product-factory-os/` and leaves registration explicit. This avoids silently changing global Codex behavior on a user's machine.
+The installer copies hook scripts into `${CODEX_HOME:-$HOME/.codex}/hooks/product-factory-os/` and writes workspace policy files so Codex has the same PFO rule at workspace and project level.
 
 ## Policy
 

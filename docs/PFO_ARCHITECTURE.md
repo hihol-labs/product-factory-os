@@ -39,6 +39,7 @@ interface/
 Runtime scripts live in `scripts/`:
 
 - `pfo.py`: unified CLI
+- `install_workspace.py`: one-command workspace installer for policy files, hooks, command wrapper, and existing-project adoption
 - `pfo_runner.py`: execution step runner
 - `existing_project_analyzer.py`: existing-project stack, command, gate, security, and state analyzer
 - `validate_project.py`: generated-project validator

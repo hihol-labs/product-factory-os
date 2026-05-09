@@ -86,7 +86,7 @@ def main() -> None:
         if command not in install:
             fail(f"docs/INSTALL.md must document {command}")
 
-    if "CODEX.md" not in workspace_defaults or "PFO_WORKSPACE.json" not in workspace_defaults:
+    if "AGENTS.md" not in workspace_defaults or "CODEX.md" not in workspace_defaults or "PFO_WORKSPACE.json" not in workspace_defaults:
         fail("docs/WORKSPACE_DEFAULTS.md must document workspace policy files")
     if "EXISTING_PROJECT_DETECTED" not in workspace_defaults or "TASK_CLASSIFIED" not in workspace_defaults:
         fail("docs/WORKSPACE_DEFAULTS.md must document existing-project PFO state path")
@@ -97,7 +97,8 @@ def main() -> None:
 
     workspace_policy = ROOT.parent / "PFO_WORKSPACE.json"
     workspace_codex = ROOT.parent / "CODEX.md"
-    if not workspace_policy.is_file() or not workspace_codex.is_file():
+    workspace_agents = ROOT.parent / "AGENTS.md"
+    if not workspace_policy.is_file() or not workspace_codex.is_file() or not workspace_agents.is_file():
         warn(
             "workspace root policy files are absent; this is expected for a standalone GitHub clone",
             warnings,

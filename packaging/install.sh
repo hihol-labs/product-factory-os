@@ -3,17 +3,26 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 WORKSPACE="$(dirname "$ROOT")"
-INSTALL_HOOKS=0
+INSTALL_HOOKS=1
+ADOPT_WORKSPACE=1
+INSTALL_BIN=1
+WRITE_WORKSPACE_POLICY=1
 SKIP_CHECKS=0
 
 usage() {
   cat <<'EOF'
-Usage: bash packaging/install.sh [options]
+Usage: bash install.sh [options]
+
+Installs Product Factory OS as the default Codex runtime for a workspace.
 
 Options:
-  --workspace PATH    Workspace used by PFO commands. Default: parent of repo.
-  --install-hooks     Copy hook scripts to ${CODEX_HOME:-$HOME/.codex}/hooks/product-factory-os.
-  --skip-checks       Skip validation checks.
+  --workspace PATH       Workspace used by PFO commands. Default: parent of repo.
+  --install-hooks        Kept for compatibility; hooks are installed by default.
+  --no-hooks             Do not install hooks.
+  --no-adopt             Do not adopt existing first-level workspace projects.
+  --no-bin               Do not install the pfo command wrapper into ~/.local/bin.
+  --no-workspace-policy  Do not write workspace CODEX.md, AGENTS.md, and PFO_WORKSPACE.json.
+  --skip-checks          Skip validation checks.
   -h, --help          Show this help.
 EOF
 }
@@ -26,6 +35,22 @@ while [[ $# -gt 0 ]]; do
       ;;
     --install-hooks)
       INSTALL_HOOKS=1
+      shift
+      ;;
+    --no-hooks)
+      INSTALL_HOOKS=0
+      shift
+      ;;
+    --no-adopt)
+      ADOPT_WORKSPACE=0
+      shift
+      ;;
+    --no-bin)
+      INSTALL_BIN=0
+      shift
+      ;;
+    --no-workspace-policy)
+      WRITE_WORKSPACE_POLICY=0
       shift
       ;;
     --skip-checks)
@@ -51,19 +76,18 @@ if [[ "$SKIP_CHECKS" -eq 0 ]]; then
   python3 "$ROOT/scripts/validate_hooks.py"
 fi
 
-if [[ "$INSTALL_HOOKS" -eq 1 ]]; then
-  CODEX_HOME_DIR="${CODEX_HOME:-$HOME/.codex}"
-  HOOK_TARGET="$CODEX_HOME_DIR/hooks/product-factory-os"
-  mkdir -p "$HOOK_TARGET"
-  cp "$ROOT/hooks/"*.py "$HOOK_TARGET/"
-  cp "$ROOT/hooks/hooks.json" "$HOOK_TARGET/hooks.json"
-  chmod +x "$HOOK_TARGET/"*.py
-  echo "Installed PFO hooks into $HOOK_TARGET"
-  echo "Register hooks explicitly from hooks/hooks.json if your Codex build requires manual hook registration."
+INSTALL_ARGS=(--workspace "$WORKSPACE")
+if [[ "$INSTALL_HOOKS" -eq 0 ]]; then
+  INSTALL_ARGS+=(--no-hooks)
+fi
+if [[ "$ADOPT_WORKSPACE" -eq 0 ]]; then
+  INSTALL_ARGS+=(--no-adopt)
+fi
+if [[ "$INSTALL_BIN" -eq 0 ]]; then
+  INSTALL_ARGS+=(--no-bin)
+fi
+if [[ "$WRITE_WORKSPACE_POLICY" -eq 0 ]]; then
+  INSTALL_ARGS+=(--no-workspace-policy)
 fi
 
-echo "Product Factory OS repository: $ROOT"
-echo "Workspace: $WORKSPACE"
-echo "Smoke test:"
-echo "  python3 $ROOT/scripts/pfo.py new smoke-product --workspace /tmp --idea \"Smoke SaaS product\""
-echo "  python3 $ROOT/scripts/pfo.py plan /tmp/smoke-product"
+python3 "$ROOT/scripts/install_workspace.py" "${INSTALL_ARGS[@]}"

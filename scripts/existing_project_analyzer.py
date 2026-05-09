@@ -52,6 +52,7 @@ def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
 
     memory = project / ".codex-memory" / "MEMORY.md"
     codex = project / "CODEX.md"
+    agents = project / "AGENTS.md"
     memory.parent.mkdir(parents=True, exist_ok=True)
     if not memory.is_file():
         memory.write_text("# Memory\n\n", encoding="utf-8")
@@ -64,6 +65,13 @@ def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
             "- Save significant session context in `.codex-memory/`.\n",
             encoding="utf-8",
         )
+    if not agents.is_file():
+        agents.write_text(
+            "# AGENTS\n\n"
+            "This project is adopted into Product Factory OS.\n\n"
+            "Before substantial implementation, run `pfo adopt . --analyze` or `pfo analyze .` and follow `.pfo/` contracts.\n",
+            encoding="utf-8",
+        )
 
     state = json.loads((ROOT / "memory" / "session-state.schema.json").read_text(encoding="utf-8"))[
         "stateTemplate"
@@ -74,6 +82,7 @@ def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
     state["existingProject"]["isExistingProject"] = True
     state["lastSuccessfulState"] = "ADOPTED"
     state["artifacts"] = [
+        "AGENTS.md",
         "CODEX.md",
         ".pfo/PROJECT_CONTRACT.md",
         ".pfo/DATA_POLICY.md",

@@ -1,7 +1,7 @@
 {
   "name": "product-factory-os",
   "displayName": "Product Factory OS",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "source": {
     "source": "local",
     "path": "./product-factory-os"
@@ -21,6 +21,7 @@
     "Integrations",
     "Browser QA",
     "Hook Gates",
-    "Route Snapshots"
+    "Route Snapshots",
+    "Workspace Auto-Adoption"
   ]
 }

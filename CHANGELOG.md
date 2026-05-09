@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.6.1] - 2026-05-09
+
+### Added
+
+- One-command `bash install.sh` workspace installer.
+- `scripts/install_workspace.py` for workspace policy, hook install, `pfo` command wrapper, and existing-project adoption.
+- Project-level `AGENTS.md` generation for new and adopted projects.
+- Workspace-level `AGENTS.md`, `CODEX.md`, and `PFO_WORKSPACE.json` managed runtime block.
+- Preflight hook auto-adoption for first-level projects inside the configured workspace.
+
+### Changed
+
+- Installer now installs hooks, writes workspace policy, creates the `pfo` command, and adopts existing projects by default.
+- Existing-project adoption now creates `.pfo/` contracts and preserves existing local instructions by appending managed PFO blocks.
+- Generated-project validation now requires `AGENTS.md`.
+- Install docs now use the short `git clone`, `cd`, `bash install.sh` path.
+
 ## [0.6.0] - 2026-05-09
 
 ### Added

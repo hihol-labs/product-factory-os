@@ -27,7 +27,7 @@ def write_once(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def state_json(project_name: str, idea: str) -> str:
+def state_json(project_name: str, idea: str, methodology: Path) -> str:
     starter = select_starter(idea)
     return json.dumps(
         {
@@ -72,6 +72,7 @@ def state_json(project_name: str, idea: str) -> str:
             "artifactHashes": {},
             "lastSuccessfulState": "BOOTSTRAPPED",
             "artifacts": [
+                "AGENTS.md",
                 "CODEX.md",
                 ".pfo/PROJECT_CONTRACT.md",
                 ".pfo/DATA_POLICY.md",
@@ -87,7 +88,7 @@ def state_json(project_name: str, idea: str) -> str:
             "blockers": [],
             "nextAction": "Route the voice/text idea through /project -> /kickstart and create Product Factory OS compiler artifacts.",
             "project": project_name,
-            "methodology": "/home/hihol/projects/product-factory-os",
+            "methodology": str(methodology),
             "starter": starter["id"],
             "productTypeHint": starter["productType"],
         },
@@ -157,13 +158,13 @@ def scaffold(project: Path, starter: dict) -> None:
     )
 
 
-def codex_md(project_name: str, idea: str) -> str:
+def codex_md(project_name: str, idea: str, methodology: Path) -> str:
     return f"""# CODEX
 
 This project is automatically governed by Product Factory OS from:
 
 ```text
-/home/hihol/projects/product-factory-os
+{methodology}
 ```
 
 ## Project
@@ -216,6 +217,19 @@ Update `.codex-memory/STATE.json` and `.codex-memory/MEMORY.md` after significan
 """
 
 
+def agents_md(project_name: str, idea: str, methodology: Path) -> str:
+    return f"""# AGENTS
+
+This project is automatically governed by Product Factory OS.
+
+- Project: {project_name}
+- Initial idea: {idea or "not captured yet"}
+- Methodology: {methodology}
+
+Use `/project -> /kickstart` for new product work and `/task` routes for ongoing changes. Respect `.pfo/` contracts, update `.codex-memory/STATE.json`, and run the smallest relevant verification before finishing.
+"""
+
+
 def memory_md(project_name: str, idea: str) -> str:
     summary = idea or "Product Factory OS project bootstrapped."
     return f"""# Memory
@@ -247,9 +261,10 @@ def main() -> None:
     memory_dir.mkdir(exist_ok=True)
     starter = select_starter(args.idea)
 
-    write_once(project / "CODEX.md", codex_md(project_name, args.idea))
+    write_once(project / "CODEX.md", codex_md(project_name, args.idea, methodology))
+    write_once(project / "AGENTS.md", agents_md(project_name, args.idea, methodology))
     write_once(memory_dir / "MEMORY.md", memory_md(project_name, args.idea))
-    write_once(memory_dir / "STATE.json", state_json(project_name, args.idea))
+    write_once(memory_dir / "STATE.json", state_json(project_name, args.idea, methodology))
     scaffold(project, starter)
 
     print(f"OK: bootstrapped {project}")

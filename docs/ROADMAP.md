@@ -45,6 +45,13 @@
 - Add hook validation and enforcement hook contracts.
 - Make `pfo plan` generate missing planning artifacts and execution graph skeletons.
 
+## 0.6.1
+
+- Add one-command `bash install.sh` workspace install.
+- Install `pfo` command wrapper, hooks, workspace policy files, and project adoption by default.
+- Add `AGENTS.md` support for workspace and project-level Codex instructions.
+- Auto-adopt first-level workspace projects from the preflight hook when runtime files are missing.
+
 ## 0.7.0
 
 - Add generated-project validators for starter-specific commands and required artifacts.
@@ -53,7 +60,7 @@
 
 ## 0.8.0
 
-- Add richer existing-project adoption with `.pfo/` contract creation, state repair, and analyzer evidence.
+- Add richer existing-project state repair, analyzer evidence, and migration reports for partially adopted projects.
 - Add connector-backed export smoke tests where local connector access exists.
 - Add browser-facing generated-project smoke checks for UI starters.
 

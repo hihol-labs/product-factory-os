@@ -1,6 +1,6 @@
 # Public Roadmap Issues
 
-Use these as public roadmap issues after the `0.6.0` runtime-hardening pass.
+Use these as public roadmap issues after the `0.6.1` workspace-runtime install pass.
 
 ## 1. Harden installer update flow
 
@@ -8,7 +8,7 @@ Labels: `type:roadmap`, `area:runtime`
 
 Acceptance:
 
-- `packaging/install.sh` supports update mode in addition to current install/hook-copy behavior.
+- `install.sh` supports update mode in addition to current install/adopt behavior.
 - The install docs cover local, cloned, and released usage.
 - A smoke test verifies install from GitHub release artifacts.
 

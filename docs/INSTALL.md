@@ -5,18 +5,16 @@ Product Factory OS is a Codex plugin-style repository plus an executable local r
 ```bash
 git clone https://github.com/hihol-labs/product-factory-os.git
 cd product-factory-os
-bash packaging/install.sh --install-hooks
-python3 scripts/pfo.py new smoke-product --workspace /tmp --idea "Smoke SaaS product"
-python3 scripts/pfo.py plan /tmp/smoke-product
-python3 scripts/pfo.py validate /tmp/smoke-product
+bash install.sh
 ```
 
-Expected result:
+If the repository is not cloned inside your projects workspace:
 
-```text
-OK: plan stage recorded
-OK: validated PFO project /tmp/smoke-product
+```bash
+bash install.sh --workspace ~/Projects
 ```
+
+The installer validates the repository, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, and `PFO_WORKSPACE.json`, then adopts existing first-level projects by creating missing project-level `AGENTS.md`, `CODEX.md`, `.codex-memory/`, and `.pfo/` files.
 
 The repository can be used in two modes:
 
@@ -74,17 +72,17 @@ hooks: ./hooks/hooks.json
 
 ## Hook Installation
 
-Hooks are optional but recommended for daily work:
+Hooks are installed by default:
 
 ```bash
-bash packaging/install.sh --install-hooks
+bash install.sh
 python3 scripts/validate_hooks.py
 ```
 
 Installed hook layers:
 
 - `route-reminder.py`: suggests `/project`, `/task`, or a specialized PFO skill.
-- `preflight-context.py`: prints discovered docs, state, memory, and `.pfo/` contracts.
+- `preflight-context.py`: auto-adopts first-level workspace projects when needed, then prints discovered docs, state, memory, and `.pfo/` contracts.
 - `skill-completeness.py`: checks skills against contracts, triggers, fixtures, and route snapshots.
 - `commit-completeness.py`: checks staged methodology diffs for supporting artifacts.
 - `review-before-commit.py`: runs fast PFO validators before committing methodology changes.
@@ -155,26 +153,27 @@ From the methodology repository:
 python3 scripts/adoption_check.py
 ```
 
-To create minimal `CODEX.md` and `.codex-memory/MEMORY.md` files for all first-level projects in the workspace:
+To create or refresh PFO runtime files for all first-level projects in the workspace:
 
 ```bash
-python3 scripts/adoption_check.py --write
+pfo adopt
 ```
 
-Use `--write` only when you intentionally want to onboard existing projects into the workspace defaults.
+This creates missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, and `.pfo/` contracts without overwriting existing project instructions.
 
 ## New Project Bootstrap
 
 New projects in `/home/hihol/projects` are Product Factory OS projects by default. To create the directory and initial PFO adoption files:
 
 ```bash
-python3 scripts/pfo.py new my-product --idea "voice transcript or product idea"
+pfo new my-product --idea "voice transcript or product idea"
 ```
 
 This creates:
 
 ```text
 CODEX.md
+AGENTS.md
 .codex-memory/MEMORY.md
 .codex-memory/STATE.json
 .pfo/
@@ -186,8 +185,8 @@ justfile
 Then generate executable planning artifacts:
 
 ```bash
-python3 scripts/pfo.py plan ../my-product
-python3 scripts/pfo.py validate ../my-product
+pfo plan ../my-product
+pfo validate ../my-product
 ```
 
 `pfo plan` creates missing `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, and `QUALITY_GATES.md` while preserving files that already exist.
@@ -195,20 +194,20 @@ python3 scripts/pfo.py validate ../my-product
 ## Runtime CLI
 
 ```bash
-python3 scripts/pfo.py new my-product --idea "voice transcript or product idea"
-python3 scripts/pfo.py adopt ../existing-product --analyze --run-gates
-python3 scripts/pfo.py analyze ../existing-product --run-gates --report
-python3 scripts/pfo.py plan ../my-product
-python3 scripts/pfo.py build ../my-product
-python3 scripts/pfo.py test ../my-product
-python3 scripts/pfo.py review ../my-product
-python3 scripts/pfo.py validate ../my-product
-python3 scripts/pfo.py status ../my-product
-python3 scripts/pfo.py resume ../my-product
-python3 scripts/pfo.py report ../my-product
-python3 scripts/pfo.py metrics
-python3 scripts/pfo.py export ../my-product --target github
-python3 scripts/pfo.py export ../my-product --target google-drive
+pfo new my-product --idea "voice transcript or product idea"
+pfo adopt ../existing-product --analyze --run-gates
+pfo analyze ../existing-product --run-gates --report
+pfo plan ../my-product
+pfo build ../my-product
+pfo test ../my-product
+pfo review ../my-product
+pfo validate ../my-product
+pfo status ../my-product
+pfo resume ../my-product
+pfo report ../my-product
+pfo metrics
+pfo export ../my-product --target github
+pfo export ../my-product --target google-drive
 ```
 
 ## OpenAI And MCP Integrations

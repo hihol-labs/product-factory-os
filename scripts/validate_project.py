@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED = ["CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json"]
+REQUIRED = ["AGENTS.md", "CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json"]
 REQUIRED_PFO = [
     ".pfo/PROJECT_CONTRACT.md",
     ".pfo/DATA_POLICY.md",

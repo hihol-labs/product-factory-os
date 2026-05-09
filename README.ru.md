@@ -15,25 +15,34 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - Trigger registry для маршрутизации естественного языка
 - Rubrics для review, security, dependency audit и production readiness
 - Route snapshots и fixtures для проверки всех skill routes
-- Hook parity layer: route reminders, preflight context, skill completeness, commit completeness и review-before-commit gates
+- Workspace hook layer: auto-adoption, route reminders, preflight context, skill completeness, commit completeness и review-before-commit gates
 - Workspace-default правила для `/home/hihol/projects`
 - Маршруты OpenAI/Codex plugin и MCP для Context7, Browser Use, GitHub, Codex Security, Linear, Notion и Google Drive
 - PFO runtime contracts: classifier, template library, product compiler, state machine, execution pipeline, memory schema, deployment abstraction и voice-first interface
 
 ## Быстрый Старт
 
-### Установка И Проверка
+### Установка
 
 ```bash
 git clone https://github.com/hihol-labs/product-factory-os.git
 cd product-factory-os
-bash packaging/install.sh --install-hooks
-python3 scripts/pfo.py new smoke-product --workspace /tmp --idea "Smoke SaaS product"
-python3 scripts/pfo.py plan /tmp/smoke-product
-python3 scripts/pfo.py validate /tmp/smoke-product
+bash install.sh
 ```
 
-Эта проверка проходит структуру репозитория, routing fixtures, hook contracts, выбор starter pack, генерацию planning artifacts, генерацию execution graph и валидацию сгенерированного проекта.
+Эта одна команда валидирует PFO, ставит команду `pfo`, устанавливает hooks, пишет workspace-файлы `AGENTS.md` / `CODEX.md` / `PFO_WORKSPACE.json` и автоматически адаптирует уже существующие проекты первого уровня в workspace.
+
+Если репозиторий скачан не внутри папки проектов, укажите workspace один раз:
+
+```bash
+bash install.sh --workspace ~/Projects
+```
+
+После этого открывайте любой проект в workspace через Codex. Для существующих проектов PFO runtime уже подключен; новые проекты создаются так:
+
+```bash
+pfo new my-product --idea "SaaS для учета подписок"
+```
 
 Опишите идею:
 
@@ -72,22 +81,22 @@ PFO добавляет:
 PFO теперь имеет исполняемый CLI:
 
 ```bash
-python3 scripts/pfo.py new my-product --idea "SaaS для учета подписок"
-python3 scripts/pfo.py adopt
-python3 scripts/pfo.py adopt ../existing-product --analyze --run-gates
-python3 scripts/pfo.py analyze ../existing-product --run-gates --report
-python3 scripts/pfo.py plan ../my-product
-python3 scripts/pfo.py build ../my-product
-python3 scripts/pfo.py test ../my-product
-python3 scripts/pfo.py review ../my-product
-python3 scripts/pfo.py validate ../my-product
-python3 scripts/pfo.py contracts ../my-product --write
-python3 scripts/pfo.py status ../my-product
-python3 scripts/pfo.py resume ../my-product
-python3 scripts/pfo.py report ../my-product
-python3 scripts/pfo.py voice "создай Telegram бот для продаж"
-python3 scripts/pfo.py metrics
-python3 scripts/pfo.py export ../my-product --target github
+pfo new my-product --idea "SaaS для учета подписок"
+pfo adopt
+pfo adopt ../existing-product --analyze --run-gates
+pfo analyze ../existing-product --run-gates --report
+pfo plan ../my-product
+pfo build ../my-product
+pfo test ../my-product
+pfo review ../my-product
+pfo validate ../my-product
+pfo contracts ../my-product --write
+pfo status ../my-product
+pfo resume ../my-product
+pfo report ../my-product
+pfo voice "создай Telegram бот для продаж"
+pfo metrics
+pfo export ../my-product --target github
 python3 scripts/pfo.py export ../my-product --target google-drive
 ```
 
@@ -147,6 +156,7 @@ PFO готова к `1.0.0`, когда runtime можно стабильно и
 - [PFO Cloud](docs/CLOUD.md)
 - [GitHub Launch Checklist](docs/GITHUB_LAUNCH.md)
 - [Initial Roadmap Issues](docs/GITHUB_ISSUES.md)
+- [v0.6.1 Release Notes](docs/RELEASE_NOTES_v0.6.1.md)
 - [v0.6.0 Release Notes](docs/RELEASE_NOTES_v0.6.0.md)
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
 - [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
@@ -200,8 +210,8 @@ python3 scripts/meta_review.py
 Bootstrap helper:
 
 ```bash
-python3 /home/hihol/projects/product-factory-os/scripts/pfo.py new my-product --idea "голосовая команда или идея продукта"
-python3 /home/hihol/projects/product-factory-os/scripts/pfo.py plan /home/hihol/projects/my-product
+pfo new my-product --idea "голосовая команда или идея продукта"
+pfo plan /home/hihol/projects/my-product
 ```
 
 ## Существующие Проекты
@@ -216,6 +226,7 @@ python3 /home/hihol/projects/product-factory-os/scripts/pfo.py plan /home/hihol/
 
 ```text
 CODEX.md
+AGENTS.md
 .pfo/PROJECT_CONTRACT.md
 .pfo/DATA_POLICY.md
 .pfo/GOLDEN_FLOWS.md
@@ -226,4 +237,4 @@ CODEX.md
 .codex-memory/STATE.json
 ```
 
-Если этих файлов нет, сначала используется `/adopt`.
+Если этих файлов нет, `bash install.sh` или preflight hook создают их автоматически; вручную можно запустить `pfo adopt <project> --analyze`.

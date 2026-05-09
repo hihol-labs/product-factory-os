@@ -19,7 +19,7 @@ This is a Codex-native methodology runtime. It contains:
 - Trigger registry and quality rubrics for review, security, dependency, and production checks
 - Route snapshots and smoke fixtures for every skill route
 - Golden-path example for a tutor booking app
-- Optional hook parity layer for route reminders, preflight context, skill completeness, commit completeness, and review-before-commit gates
+- Workspace hook layer for auto-adoption, route reminders, preflight context, skill completeness, commit completeness, and review-before-commit gates
 - OpenAI/Codex plugin and MCP integration routes for Context7, Browser Use, GitHub, Codex Security, Linear, Notion, and Google Drive
 - GitHub Actions workflow for validation
 - Workspace-default policy for `/home/hihol/projects`
@@ -29,18 +29,27 @@ This is a Codex-native methodology runtime. It contains:
 
 ## Quick Start
 
-### Install And Verify
+### Install
 
 ```bash
 git clone https://github.com/hihol-labs/product-factory-os.git
 cd product-factory-os
-bash packaging/install.sh --install-hooks
-python3 scripts/pfo.py new smoke-product --workspace /tmp --idea "Smoke SaaS product"
-python3 scripts/pfo.py plan /tmp/smoke-product
-python3 scripts/pfo.py validate /tmp/smoke-product
+bash install.sh
 ```
 
-This verifies the repository, hook contracts, starter selection, planning artifact generation, execution graph generation, and generated-project validation.
+That one command validates PFO, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md` / `CODEX.md` / `PFO_WORKSPACE.json`, and adopts existing first-level projects in the workspace.
+
+If the repository is not cloned inside your projects workspace, pass the workspace once:
+
+```bash
+bash install.sh --workspace ~/Projects
+```
+
+After that, open any project in the workspace with Codex. Existing projects already have PFO runtime files; new projects can be created with:
+
+```bash
+pfo new my-product --idea "SaaS for subscription tracking"
+```
 
 Use natural language first:
 
@@ -80,14 +89,14 @@ PFO adds deterministic execution contracts:
 Product Factory OS includes an executable runtime CLI:
 
 ```bash
-python3 scripts/pfo.py new my-product --idea "SaaS for subscription tracking"
-python3 scripts/pfo.py adopt
-python3 scripts/pfo.py adopt ../existing-product --analyze --run-gates
-python3 scripts/pfo.py analyze ../existing-product --run-gates --report
-python3 scripts/pfo.py plan ../my-product
-python3 scripts/pfo.py build ../my-product
-python3 scripts/pfo.py test ../my-product
-python3 scripts/pfo.py review ../my-product
+pfo new my-product --idea "SaaS for subscription tracking"
+pfo adopt
+pfo adopt ../existing-product --analyze --run-gates
+pfo analyze ../existing-product --run-gates --report
+pfo plan ../my-product
+pfo build ../my-product
+pfo test ../my-product
+pfo review ../my-product
 python3 scripts/pfo.py validate ../my-product
 python3 scripts/pfo.py contracts ../my-product --write
 python3 scripts/pfo.py status ../my-product
@@ -155,6 +164,7 @@ See:
 - [PFO Cloud](docs/CLOUD.md)
 - [GitHub Launch Checklist](docs/GITHUB_LAUNCH.md)
 - [Initial Roadmap Issues](docs/GITHUB_ISSUES.md)
+- [v0.6.1 Release Notes](docs/RELEASE_NOTES_v0.6.1.md)
 - [v0.6.0 Release Notes](docs/RELEASE_NOTES_v0.6.0.md)
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
 - [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
@@ -219,15 +229,15 @@ See [docs/MASTER_PROMPT.ru.md](docs/MASTER_PROMPT.ru.md) for the Russian Product
 
 ## Workspace Defaults
 
-See [docs/WORKSPACE_DEFAULTS.md](docs/WORKSPACE_DEFAULTS.md). In this workspace, `/home/hihol/projects/CODEX.md` makes Product Factory OS the default methodology for new work and adoption checks.
+See [docs/WORKSPACE_DEFAULTS.md](docs/WORKSPACE_DEFAULTS.md). `bash install.sh` writes workspace `AGENTS.md`, `CODEX.md`, and `PFO_WORKSPACE.json`, making Product Factory OS the default methodology for new and existing project work.
 
 New projects in `/home/hihol/projects` are bootstrapped and executed through Product Factory OS automatically. Voice or natural-language commands route to `/project -> /kickstart` by default.
 
 Bootstrap helper:
 
 ```bash
-python3 /home/hihol/projects/product-factory-os/scripts/pfo.py new my-product --idea "voice transcript or product idea"
-python3 /home/hihol/projects/product-factory-os/scripts/pfo.py plan /home/hihol/projects/my-product
+pfo new my-product --idea "voice transcript or product idea"
+pfo plan /home/hihol/projects/my-product
 ```
 
 Existing projects in `/home/hihol/projects` also use Product Factory OS:
@@ -236,7 +246,7 @@ Existing projects in `/home/hihol/projects` also use Product Factory OS:
 /task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save
 ```
 
-Use `/adopt` first when `CODEX.md`, `.codex-memory/MEMORY.md`, or `.codex-memory/STATE.json` is missing.
+Use `/adopt` first when `AGENTS.md`, `CODEX.md`, `.codex-memory/`, or `.pfo/` contracts are missing.
 
 ## Golden Path
 

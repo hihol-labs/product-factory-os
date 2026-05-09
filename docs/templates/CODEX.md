@@ -17,7 +17,7 @@ Before significant edits, read and respect:
 - `.pfo/FALLBACK_POLICY.md`
 - `.pfo/SCOPE_LOCK.md`
 
-Run `python3 /home/hihol/projects/product-factory-os/scripts/pfo.py contracts . --write` during review.
+Run `pfo contracts . --write` during review.
 
 ## Status
 

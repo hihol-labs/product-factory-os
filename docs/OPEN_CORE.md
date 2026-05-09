@@ -25,9 +25,10 @@ The open source core includes:
 - Local memory/state format
 - Local integration export contracts
 
-As of `0.6.0`, the open-source runtime also includes the smoke-tested path:
+As of `0.6.1`, the open-source runtime also includes the one-command workspace install and smoke-tested project path:
 
 ```text
+bash install.sh
 pfo new -> pfo plan -> pfo validate
 ```
 

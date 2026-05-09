@@ -3,10 +3,16 @@
 Install or refresh the local Product Factory OS checkout:
 
 ```bash
-bash packaging/install.sh --workspace /home/hihol/projects --install-hooks
+bash install.sh
 ```
 
-The installer validates runtime contracts, routing fixtures, and hook metadata. With `--install-hooks`, it copies hook scripts into `${CODEX_HOME:-$HOME/.codex}/hooks/product-factory-os/` but does not silently mutate global Codex settings.
+If the repository is outside the workspace:
+
+```bash
+bash install.sh --workspace ~/Projects
+```
+
+The installer validates runtime contracts, installs the `pfo` command wrapper, installs hooks, writes workspace policy files, and adopts existing first-level projects by creating `AGENTS.md`, `CODEX.md`, `.codex-memory/`, and `.pfo/` contracts where missing.
 
 Run release checks:
 

@@ -28,4 +28,4 @@
 | `/session-save` | Session summary and PFO state | Memory files and `.codex-memory/STATE.json` | Writes memory docs/state | Creates or updates state |
 | `/advisor` | Decision or question | Analysis report | None | Safe |
 | `/strategy` | Existing project context | Strategy docs/backlog | Writes docs | Safe with review |
-| `/adopt` | Existing repository | `CODEX.md`, `.codex-memory/`, `.pfo/` contracts when required | Writes project metadata | Marker-based |
+| `/adopt` | Existing repository | `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts when required | Writes project metadata | Marker-based |
