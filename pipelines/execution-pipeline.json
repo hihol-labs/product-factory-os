@@ -5,10 +5,15 @@
     "PRODUCT_CLASSIFICATION",
     "ARCHITECTURE_SELECTION",
     "BLUEPRINT_GENERATION",
+    "PHASE_DISCUSSION",
     "EXECUTION_PLAN_GENERATION",
+    "UNIT_CONTEXT_MANIFEST",
     "MODULAR_BUILD",
+    "UNIT_VERIFICATION",
     "TEST_GENERATION",
     "VALIDATION_GATES",
+    "DRIFT_RECOVERY_CHECK",
+    "LEARNING_EXTRACTION",
     "DEPLOYMENT_READINESS",
     "SESSION_PERSISTENCE"
   ],
@@ -17,17 +22,23 @@
     "PRODUCT_CLASSIFICATION": ["PRODUCT_BLUEPRINT.md"],
     "ARCHITECTURE_SELECTION": ["PROJECT_ARCHITECTURE.md"],
     "BLUEPRINT_GENERATION": ["PRD.md", "PRODUCT_BLUEPRINT.md"],
+    "PHASE_DISCUSSION": ["PHASE_CONTEXT.md"],
     "EXECUTION_PLAN_GENERATION": ["BUILD_PLAN.md", "EXECUTION_GRAPH.md", "IMPLEMENTATION_PLAN.md"],
-    "MODULAR_BUILD": ["source_files", "CODEX.md"],
+    "UNIT_CONTEXT_MANIFEST": [".pfo/UNIT_CONTEXT_MANIFEST.json"],
+    "MODULAR_BUILD": ["source_files", "CODEX.md", "dispatch_journal_entry"],
+    "UNIT_VERIFICATION": ["verification_log", "PFO_RECOVERY.md when blocked"],
     "TEST_GENERATION": ["test_files", "verification_log"],
     "VALIDATION_GATES": ["review_report", "security_report", "dependency_report"],
+    "DRIFT_RECOVERY_CHECK": ["state_reconciliation", "drift_check_log"],
+    "LEARNING_EXTRACTION": [".codex-memory/LEARNINGS.md"],
     "DEPLOYMENT_READINESS": ["deployment_plan", ".env.example", "health_check", "rollback_notes"],
-    "SESSION_PERSISTENCE": [".codex-memory/STATE.json", ".codex-memory/MEMORY.md"]
+    "SESSION_PERSISTENCE": [".codex-memory/STATE.json", ".codex-memory/MEMORY.md", "PFO_BRIEF.html when requested"]
   },
   "noSkipRules": [
     "MODULAR_BUILD requires BLUEPRINT_GENERATION and EXECUTION_PLAN_GENERATION artifacts.",
+    "Autonomous or delegated execution requires UNIT_CONTEXT_MANIFEST.",
+    "UNIT_VERIFICATION must fail closed when evidence is missing or ambiguous.",
     "READY_FOR_DEPLOY requires passing validation gates.",
     "SESSION_PERSISTENCE runs after every major milestone."
   ]
 }
-

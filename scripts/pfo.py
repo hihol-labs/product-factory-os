@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import argparse
+from datetime import datetime, timezone
+from html import escape
 import json
 import subprocess
 import sys
@@ -24,6 +26,63 @@ def load_state(project: Path) -> dict:
 def save_state(project: Path, state: dict) -> None:
     state_path = project / ".codex-memory" / "STATE.json"
     state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def add_artifact(state: dict, artifact: str) -> None:
+    artifacts = set(state.get("artifacts", []))
+    artifacts.add(artifact)
+    state["artifacts"] = sorted(artifacts)
+
+
+def ensure_autonomy_state(state: dict) -> None:
+    state.setdefault("currentPhase", "")
+    state.setdefault(
+        "currentUnit",
+        {"id": "", "goal": "", "status": "", "owner": "", "startedAt": "", "completedAt": ""},
+    )
+    state.setdefault(
+        "unitContextManifest",
+        {
+            "path": ".pfo/UNIT_CONTEXT_MANIFEST.json",
+            "version": 1,
+            "unitId": "",
+            "requiredInputs": [],
+            "allowedWriteAreas": [],
+            "forbiddenChanges": [],
+            "dependencies": [],
+            "verificationCommands": [],
+            "gates": [],
+            "recovery": "",
+        },
+    )
+    state.setdefault("dispatchJournal", [])
+    state.setdefault("capturedNotes", [])
+    state.setdefault("driftChecks", [])
+    state.setdefault("knowledgeLog", [])
+    state.setdefault("briefArtifacts", [])
+    state.setdefault(
+        "recoveryState",
+        {"status": "", "reason": "", "retryCount": 0, "nextRepairAction": ""},
+    )
+    state.setdefault(
+        "telemetry",
+        {
+            "unitCount": 0,
+            "verificationCount": 0,
+            "lastCommand": "",
+            "lastDurationSeconds": None,
+            "tokenNotes": "",
+            "costNotes": "",
+        },
+    )
+    state.setdefault(
+        "worktreeIsolation",
+        {"enabled": False, "strategy": "", "activeBranch": "", "activeWorktree": "", "mergeStatus": ""},
+    )
 
 
 def load_starter(project: Path, state: dict) -> dict:
@@ -179,10 +238,11 @@ def generated_build_plan(starter: dict) -> str:
 | Step | Module | Dependencies | Files Likely Touched | Verification | Exit Criteria |
 |---:|---|---|---|---|---|
 | 1 | Starter baseline and contracts | CODEX.md, `.pfo/` | starter files, `.env.example`, CI | `python3 scripts/pfo.py validate <project>` | project validates under PFO |
-| 2 | Product domain model | PRODUCT_BLUEPRINT.md | backend, database, shared types | `{test_command}` | core entities covered by tests |
-| 3 | Primary user flow | domain model | frontend, API, bot, or CLI handlers | smoke path from TEST_PLAN.md | golden flow documented and verified |
-| 4 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
-| 5 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
+| 2 | Phase decisions and unit manifest | PRODUCT_BLUEPRINT.md, PHASE_CONTEXT.md | BUILD_PLAN.md, EXECUTION_GRAPH.md, `.pfo/UNIT_CONTEXT_MANIFEST.json` | `pfo manifest <project>` | execution unit has scoped context |
+| 3 | Product domain model | PRODUCT_BLUEPRINT.md | backend, database, shared types | `{test_command}` | core entities covered by tests |
+| 4 | Primary user flow | domain model | frontend, API, bot, or CLI handlers | smoke path from TEST_PLAN.md | golden flow documented and verified |
+| 5 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
+| 6 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
 
 ## Cross-Module Dependencies
 
@@ -259,6 +319,8 @@ def generated_quality_gates() -> str:
 | Architecture | PENDING | PRODUCT_BLUEPRINT.md, PROJECT_ARCHITECTURE.md, BUILD_PLAN.md |  |
 | Tests | PENDING | TEST_PLAN.md and test command output |  |
 | Review | PENDING | `/review` result |  |
+| Unit Context Manifest | PENDING | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
+| Work Verification | PENDING | `pfo verify-work` evidence |  |
 | Security | PENDING | `/security-audit` or accepted not-applicable note |  |
 | Dependencies | PENDING | `/deps-audit` or accepted not-applicable note |  |
 | Hardening | PENDING | `/harden` or accepted non-production note |  |
@@ -270,6 +332,7 @@ def generated_quality_gates() -> str:
 | Diff Risk | PENDING | `PFO_CONTRACT_GATE.json` when generated |  |
 | No Silent Substitution | PENDING | diff scan, project contracts |  |
 | Deployment Readiness | PENDING | env vars, build, health check, rollback notes |  |
+| Learning Extraction | PENDING | `.codex-memory/LEARNINGS.md` when applicable |  |
 
 ## Accepted Risks
 
@@ -278,6 +341,159 @@ None yet.
 ## Next Gate
 
 Run `/review`, `/test`, `/security-audit`, `/deps-audit`, and `/harden` as applicable before deploy readiness.
+"""
+
+
+def generated_phase_context(state: dict, phase: str, note: str) -> str:
+    intent = state.get("intent") or "TBD"
+    return f"""# Phase Context
+
+Phase: {phase}
+Captured: {now_iso()}
+
+## Intent
+
+{intent}
+
+## Decisions
+
+- {note or "TBD: capture implementation decisions before detailed planning."}
+
+## Assumptions
+
+- Defaults are allowed only when they do not change product behavior, data rules, or user-facing flows.
+- Any unclear API, UI, data, fallback, or integration behavior must be resolved before execution.
+
+## Open Questions
+
+- TBD
+
+## Planning Impact
+
+- Update `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, and `.pfo/UNIT_CONTEXT_MANIFEST.json` with decisions from this file.
+"""
+
+
+def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str) -> dict:
+    node = unit_id or state.get("currentNode") or "N1"
+    return {
+        "version": 1,
+        "unitId": node,
+        "goal": goal or f"Execute Product Factory OS unit {node}.",
+        "createdAt": now_iso(),
+        "requiredInputs": [
+            "CODEX.md",
+            ".codex-memory/STATE.json",
+            ".pfo/PROJECT_CONTRACT.md",
+            ".pfo/SCOPE_LOCK.md",
+            "PRODUCT_BLUEPRINT.md",
+            "BUILD_PLAN.md",
+            "EXECUTION_GRAPH.md",
+            "PHASE_CONTEXT.md when present",
+        ],
+        "allowedWriteAreas": [
+            "files listed by the active execution graph node",
+            "tests for changed behavior",
+            "PFO_REPORT.md",
+            ".codex-memory/STATE.json",
+            ".codex-memory/MEMORY.md",
+        ],
+        "forbiddenChanges": [
+            "scope outside `.pfo/SCOPE_LOCK.md`",
+            "silent production data substitution",
+            "unapproved deployment, migration, DNS, or production mutation",
+            "golden-flow behavior changes without verification evidence",
+        ],
+        "dependencies": [],
+        "verificationCommands": [
+            "project test command from TEST_PLAN.md",
+            "python3 scripts/pfo_contract_gate.py <project> when running from PFO root",
+        ],
+        "gates": [
+            "scopeLock",
+            "dataAuthenticity",
+            "goldenFlows",
+            "regressionContract",
+            "fallbackPolicy",
+            "diffRisk",
+            "noSilentSubstitution",
+        ],
+        "recovery": "If verification is missing or ambiguous, mark RECOVERY_REQUIRED and create PFO_RECOVERY.md.",
+        "project": str(project),
+    }
+
+
+def generated_recovery_doc(state: dict, reason: str) -> str:
+    return f"""# PFO Recovery
+
+Created: {now_iso()}
+
+## Reason
+
+{reason or "Verification evidence is missing or ambiguous."}
+
+## Current State
+
+- Stage: `{state.get("currentStage", "")}`
+- Node: `{state.get("currentNode", "")}`
+- Unit: `{state.get("currentUnit", {}).get("id", "")}`
+
+## Repair Plan
+
+1. Re-read required inputs from `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+2. Identify the smallest failing gate or missing artifact.
+3. Repair only the affected files.
+4. Re-run the declared verification command.
+5. Update `.codex-memory/STATE.json` and `PFO_REPORT.md`.
+"""
+
+
+def generated_brief_html(project: Path, state: dict, mode: str) -> str:
+    gates = state.get("gateResults", {})
+    gate_rows = "\n".join(
+        f"<tr><td>{escape(str(name))}</td><td>{escape(str(status))}</td></tr>"
+        for name, status in gates.items()
+    )
+    blockers = state.get("blockers", [])
+    blocker_items = "\n".join(f"<li>{escape(str(item))}</li>" for item in blockers) or "<li>none</li>"
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PFO Brief - {escape(project.name)}</title>
+  <style>
+    body {{ font-family: Arial, sans-serif; margin: 32px; color: #171717; background: #f7f7f4; }}
+    main {{ max-width: 980px; margin: 0 auto; }}
+    h1 {{ font-size: 32px; margin-bottom: 4px; }}
+    h2 {{ margin-top: 28px; font-size: 18px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }}
+    .card {{ background: #fff; border: 1px solid #d8d8d0; border-radius: 8px; padding: 14px; }}
+    table {{ width: 100%; border-collapse: collapse; background: #fff; }}
+    th, td {{ border: 1px solid #d8d8d0; padding: 8px; text-align: left; }}
+    th {{ background: #eeeeE8; }}
+    code {{ background: #eeeeE8; padding: 2px 4px; border-radius: 4px; }}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Product Factory OS Brief</h1>
+  <p>{escape(mode)} brief for <code>{escape(project.name)}</code>, generated {escape(now_iso())}.</p>
+  <section class="grid">
+    <div class="card"><strong>Stage</strong><br>{escape(str(state.get("currentStage", "")))}</div>
+    <div class="card"><strong>Node</strong><br>{escape(str(state.get("currentNode", "")))}</div>
+    <div class="card"><strong>Next</strong><br>{escape(str(state.get("nextAction", "")))}</div>
+    <div class="card"><strong>Last Good</strong><br>{escape(str(state.get("lastSuccessfulState", "")))}</div>
+  </section>
+  <h2>Gates</h2>
+  <table><thead><tr><th>Gate</th><th>Status</th></tr></thead><tbody>{gate_rows}</tbody></table>
+  <h2>Blockers</h2>
+  <ul>{blocker_items}</ul>
+  <h2>Dispatch Journal</h2>
+  <pre>{escape(json.dumps(state.get("dispatchJournal", [])[-10:], indent=2, ensure_ascii=False))}</pre>
+</main>
+</body>
+</html>
 """
 
 
@@ -318,13 +534,16 @@ def cmd_analyze(args: argparse.Namespace) -> int:
 def cmd_status(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
+    ensure_autonomy_state(state)
     print(json.dumps({
         "project": str(project),
         "currentStage": state.get("currentStage"),
         "currentNode": state.get("currentNode"),
+        "currentUnit": state.get("currentUnit", {}),
         "nextAction": state.get("nextAction"),
         "blockers": state.get("blockers", []),
         "gateResults": state.get("gateResults", {}),
+        "recoveryState": state.get("recoveryState", {}),
     }, indent=2, ensure_ascii=False))
     return 0
 
@@ -332,6 +551,7 @@ def cmd_status(args: argparse.Namespace) -> int:
 def cmd_plan(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
+    ensure_autonomy_state(state)
     starter = load_starter(project, state)
     written = []
     for path, text in [
@@ -373,6 +593,52 @@ def cmd_plan(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_discuss(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    phase = args.phase or state.get("currentPhase") or "phase-1"
+    path = project / "PHASE_CONTEXT.md"
+    if write_if_missing(path, generated_phase_context(state, phase, args.note)):
+        print("Generated: PHASE_CONTEXT.md")
+    else:
+        print("Generated: none; existing PHASE_CONTEXT.md preserved")
+    state["currentPhase"] = phase
+    state["currentStage"] = "PHASE_DISCUSSION"
+    state.setdefault("decisionLog", []).append({"event": "phase discussion", "phase": phase, "note": args.note})
+    add_artifact(state, "PHASE_CONTEXT.md")
+    state["nextAction"] = "Review PHASE_CONTEXT.md, resolve open questions, then run `pfo plan` and `pfo manifest`."
+    save_state(project, state)
+    return 0
+
+
+def cmd_manifest(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    manifest = generated_unit_manifest(project, state, args.unit, args.goal)
+    pfo_dir = project / ".pfo"
+    pfo_dir.mkdir(exist_ok=True)
+    manifest_path = pfo_dir / "UNIT_CONTEXT_MANIFEST.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    state["currentStage"] = "UNIT_CONTEXT_READY"
+    state["currentNode"] = manifest["unitId"]
+    state["currentUnit"] = {
+        "id": manifest["unitId"],
+        "goal": manifest["goal"],
+        "status": "READY",
+        "owner": "PFO",
+        "startedAt": "",
+        "completedAt": "",
+    }
+    state["unitContextManifest"] = manifest
+    add_artifact(state, ".pfo/UNIT_CONTEXT_MANIFEST.json")
+    state["nextAction"] = f"Execute unit {manifest['unitId']} using `.pfo/UNIT_CONTEXT_MANIFEST.json`."
+    save_state(project, state)
+    print("OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json")
+    return 0
+
+
 def cmd_build(args: argparse.Namespace) -> int:
     return run_script("pfo_runner.py", [str(args.project), "--mode", "build"])
 
@@ -383,6 +649,89 @@ def cmd_test(args: argparse.Namespace) -> int:
 
 def cmd_review(args: argparse.Namespace) -> int:
     return run_script("pfo_runner.py", [str(args.project), "--mode", "review"])
+
+
+def cmd_verify_work(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    state["currentStage"] = "VERIFYING_WORK"
+    state.setdefault("verificationHistory", []).append(
+        {
+            "mode": "verify-work",
+            "stage": "VERIFYING_WORK",
+            "node": state.get("currentNode", ""),
+            "evidence": args.evidence,
+            "recordedAt": now_iso(),
+        }
+    )
+    state["telemetry"]["verificationCount"] = int(state["telemetry"].get("verificationCount") or 0) + 1
+    if args.pass_gate:
+        state["gateResults"]["review"] = "PASSED"
+        state["lastSuccessfulState"] = "VERIFYING_WORK"
+        state["nextAction"] = "Run tests and quality gates, then proceed to review or next unit."
+    else:
+        state["currentStage"] = "RECOVERY_REQUIRED"
+        state["recoveryState"] = {
+            "status": "REQUIRED",
+            "reason": args.evidence or "Verification evidence missing or ambiguous.",
+            "retryCount": int(state.get("recoveryState", {}).get("retryCount") or 0),
+            "nextRepairAction": "Create or execute the smallest repair plan, then rerun verify-work.",
+        }
+        (project / "PFO_RECOVERY.md").write_text(generated_recovery_doc(state, args.evidence), encoding="utf-8")
+        add_artifact(state, "PFO_RECOVERY.md")
+        state["nextAction"] = "Repair the failed or unclear verification path from PFO_RECOVERY.md."
+        print("Generated: PFO_RECOVERY.md")
+    save_state(project, state)
+    print(f"OK: verification recorded as {state['currentStage']}")
+    return 0
+
+
+def cmd_learnings(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    memory_dir = project / ".codex-memory"
+    memory_dir.mkdir(exist_ok=True)
+    path = memory_dir / "LEARNINGS.md"
+    entry = (
+        f"\n## {now_iso()}\n\n"
+        f"- Decision: {args.decision or 'TBD'}\n"
+        f"- Lesson: {args.lesson or 'TBD'}\n"
+        f"- Pattern: {args.pattern or 'TBD'}\n"
+        f"- Surprise: {args.surprise or 'TBD'}\n"
+    )
+    if not path.exists():
+        path.write_text("# Learnings\n", encoding="utf-8")
+    path.write_text(path.read_text(encoding="utf-8") + entry, encoding="utf-8")
+    state.setdefault("knowledgeLog", []).append(
+        {
+            "decision": args.decision,
+            "lesson": args.lesson,
+            "pattern": args.pattern,
+            "surprise": args.surprise,
+            "recordedAt": now_iso(),
+        }
+    )
+    add_artifact(state, ".codex-memory/LEARNINGS.md")
+    state["nextAction"] = "Use recorded learnings when planning the next unit or milestone."
+    save_state(project, state)
+    print("OK: appended .codex-memory/LEARNINGS.md")
+    return 0
+
+
+def cmd_brief(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    path = project / "PFO_BRIEF.html"
+    path.write_text(generated_brief_html(project, state, args.mode), encoding="utf-8")
+    state.setdefault("briefArtifacts", []).append(str(path))
+    add_artifact(state, "PFO_BRIEF.html")
+    state["nextAction"] = "Review PFO_BRIEF.html for status, gates, blockers, and dispatch history."
+    save_state(project, state)
+    print(f"OK: wrote {path}")
+    return 0
 
 
 def cmd_validate(args: argparse.Namespace) -> int:
@@ -451,6 +800,18 @@ def build_parser() -> argparse.ArgumentParser:
     analyze.add_argument("--report", action="store_true", help="Regenerate PFO_REPORT.md after analysis.")
     analyze.set_defaults(func=cmd_analyze)
 
+    discuss = sub.add_parser("discuss", help="Capture phase decisions before detailed planning.")
+    discuss.add_argument("project", type=Path)
+    discuss.add_argument("--phase", default="")
+    discuss.add_argument("--note", default="")
+    discuss.set_defaults(func=cmd_discuss)
+
+    manifest = sub.add_parser("manifest", help="Write a task-scoped unit context manifest.")
+    manifest.add_argument("project", type=Path)
+    manifest.add_argument("--unit", default="")
+    manifest.add_argument("--goal", default="")
+    manifest.set_defaults(func=cmd_manifest)
+
     for name, func in [
         ("status", cmd_status),
         ("plan", cmd_plan),
@@ -471,6 +832,25 @@ def build_parser() -> argparse.ArgumentParser:
             item.add_argument("--write", action="store_true")
             item.add_argument("--strict", action="store_true")
         item.set_defaults(func=func)
+
+    verify_work = sub.add_parser("verify-work", help="Record post-unit verification; fail closed by default.")
+    verify_work.add_argument("project", type=Path)
+    verify_work.add_argument("--evidence", default="")
+    verify_work.add_argument("--pass-gate", action="store_true", help="Mark verification as passed when evidence is definitive.")
+    verify_work.set_defaults(func=cmd_verify_work)
+
+    learnings = sub.add_parser("learnings", help="Append durable decisions, lessons, patterns, and surprises.")
+    learnings.add_argument("project", type=Path)
+    learnings.add_argument("--decision", default="")
+    learnings.add_argument("--lesson", default="")
+    learnings.add_argument("--pattern", default="")
+    learnings.add_argument("--surprise", default="")
+    learnings.set_defaults(func=cmd_learnings)
+
+    brief = sub.add_parser("brief", help="Generate a self-contained HTML project brief.")
+    brief.add_argument("project", type=Path)
+    brief.add_argument("--mode", choices=["diagram", "plan", "diff", "recap", "table", "slides"], default="recap")
+    brief.set_defaults(func=cmd_brief)
 
     voice = sub.add_parser("voice", help="Normalize a voice command into PFO intent.")
     voice.add_argument("text")

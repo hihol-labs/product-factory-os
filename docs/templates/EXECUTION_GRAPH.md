@@ -9,8 +9,8 @@ NEXT_STATE:
 
 ## Nodes
 
-| Node | Module Or Stage | Inputs | Outputs | Validation |
-|---|---|---|---|---|
+| Node | Module Or Stage | Inputs | Outputs | Validation | Dependencies |
+|---|---|---|---|---|---|
 
 ## Transitions
 
@@ -19,6 +19,7 @@ NEXT_STATE:
 
 ## Validation Checkpoints
 
+- Unit Context Manifest:
 - Architecture Validation:
 - Dependency Check:
 - Test Coverage Check:
@@ -27,3 +28,5 @@ NEXT_STATE:
 
 ## Repair Paths
 
+- Missing or ambiguous verification evidence -> `RECOVERY_REQUIRED` -> `PFO_RECOVERY.md`.
+- Scope, data, fallback, or golden-flow contract failure -> repair before next unit.

@@ -5,6 +5,26 @@ import json
 import sys
 
 
+def ensure_autonomy_state(state: dict) -> None:
+    state.setdefault("currentPhase", "")
+    state.setdefault(
+        "currentUnit",
+        {"id": "", "goal": "", "status": "", "owner": "", "startedAt": "", "completedAt": ""},
+    )
+    state.setdefault("dispatchJournal", [])
+    state.setdefault(
+        "telemetry",
+        {
+            "unitCount": 0,
+            "verificationCount": 0,
+            "lastCommand": "",
+            "lastDurationSeconds": None,
+            "tokenNotes": "",
+            "costNotes": "",
+        },
+    )
+
+
 def fail(message: str) -> None:
     print(f"ERROR: {message}")
     sys.exit(1)
@@ -48,12 +68,25 @@ def main() -> None:
 
     project = args.project.resolve()
     state_path, state = load_state(project)
+    ensure_autonomy_state(state)
     history = state.setdefault("verificationHistory", [])
 
     if args.mode == "build":
-        node = next_graph_node(project, state.get("currentNode", ""))
+        node = state.get("currentNode", "") if state.get("currentStage") == "UNIT_CONTEXT_READY" else ""
+        node = node or next_graph_node(project, state.get("currentNode", ""))
         state["currentNode"] = node
-        state["currentStage"] = "BUILDING" if node else "READY_FOR_DEPLOY"
+        state["currentStage"] = "UNIT_DISPATCHED" if node else "READY_FOR_DEPLOY"
+        if node:
+            state["currentUnit"] = {
+                "id": node,
+                "goal": f"Implement execution graph node {node}.",
+                "status": "DISPATCHED",
+                "owner": "PFO",
+                "startedAt": "",
+                "completedAt": "",
+            }
+            state["dispatchJournal"].append({"unit": node, "mode": "build", "status": "DISPATCHED"})
+            state["telemetry"]["unitCount"] = int(state["telemetry"].get("unitCount") or 0) + 1
         state["nextAction"] = f"Implement execution graph node {node}." if node else "Run deployment readiness gates."
     elif args.mode == "test":
         state["currentStage"] = "TESTING"

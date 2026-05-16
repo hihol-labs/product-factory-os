@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "unitId": "",
+  "goal": "",
+  "createdAt": "",
+  "requiredInputs": [
+    "CODEX.md",
+    ".codex-memory/STATE.json",
+    ".pfo/PROJECT_CONTRACT.md",
+    ".pfo/SCOPE_LOCK.md",
+    "PRODUCT_BLUEPRINT.md",
+    "BUILD_PLAN.md",
+    "EXECUTION_GRAPH.md"
+  ],
+  "allowedWriteAreas": [],
+  "forbiddenChanges": [
+    "scope outside .pfo/SCOPE_LOCK.md",
+    "silent production data substitution",
+    "unapproved production mutation"
+  ],
+  "dependencies": [],
+  "verificationCommands": [],
+  "gates": [
+    "scopeLock",
+    "dataAuthenticity",
+    "goldenFlows",
+    "regressionContract",
+    "fallbackPolicy",
+    "diffRisk",
+    "noSilentSubstitution"
+  ],
+  "recovery": "If verification is missing or ambiguous, mark RECOVERY_REQUIRED and create PFO_RECOVERY.md."
+}

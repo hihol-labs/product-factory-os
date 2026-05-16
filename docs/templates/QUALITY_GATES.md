@@ -8,6 +8,8 @@
 | Architecture |  |  |  |
 | Tests |  |  |  |
 | Review |  |  |  |
+| Unit Context Manifest |  | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
+| Work Verification |  | verification log / command output |  |
 | Security |  |  |  |
 | Dependencies |  |  |  |
 | Hardening |  |  |  |
@@ -19,6 +21,7 @@
 | Diff Risk |  | `PFO_CONTRACT_GATE.json` |  |
 | No Silent Substitution |  | diff scan, project contracts |  |
 | Deployment Readiness |  |  |  |
+| Learning Extraction |  | `.codex-memory/LEARNINGS.md` when applicable |  |
 
 ## Accepted Risks
 

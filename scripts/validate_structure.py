@@ -22,6 +22,7 @@ REQUIRED_FILES = [
     "docs/CALL_GRAPH.md",
     "docs/TRIGGERS.md",
     "docs/ROADMAP.md",
+    "docs/GSD_INTEGRATION.md",
     "docs/WORKSPACE_DEFAULTS.md",
     "docs/OPEN_CORE.md",
     "docs/COMMERCIAL.md",
@@ -61,6 +62,10 @@ REQUIRED_FILES = [
     "docs/templates/DATA_CLASSIFICATION.md",
     "docs/templates/TEST_PLAN.md",
     "docs/templates/QUALITY_GATES.md",
+    "docs/templates/PHASE_CONTEXT.md",
+    "docs/templates/UNIT_CONTEXT_MANIFEST.json",
+    "docs/templates/PFO_RECOVERY.md",
+    "docs/templates/LEARNINGS.md",
     "docs/templates/pfo/PROJECT_CONTRACT.md",
     "docs/templates/pfo/DATA_POLICY.md",
     "docs/templates/pfo/GOLDEN_FLOWS.md",
@@ -303,11 +308,16 @@ def main() -> None:
         "EXISTING_PROJECT_ANALYZED",
         "TASK_CLASSIFIED",
         "CLASSIFIED",
+        "PHASE_DISCUSSION",
         "PLAN_READY",
+        "UNIT_CONTEXT_READY",
+        "UNIT_DISPATCHED",
         "BUILDING",
+        "VERIFYING_WORK",
         "SECURITY_REVIEW",
         "DEPENDENCY_REVIEW",
         "HARDENING",
+        "RECOVERY_REQUIRED",
         "REPAIRING",
         "ROLLBACK_READY",
         "READY_FOR_DEPLOY",
@@ -335,7 +345,15 @@ def main() -> None:
             fail(f"memory schema is missing required field {field}")
 
     pipeline = json.loads((ROOT / "pipelines/execution-pipeline.json").read_text())
-    for stage in ["PRODUCT_CLASSIFICATION", "EXECUTION_PLAN_GENERATION", "VALIDATION_GATES", "SESSION_PERSISTENCE"]:
+    for stage in [
+        "PRODUCT_CLASSIFICATION",
+        "PHASE_DISCUSSION",
+        "UNIT_CONTEXT_MANIFEST",
+        "EXECUTION_PLAN_GENERATION",
+        "UNIT_VERIFICATION",
+        "VALIDATION_GATES",
+        "SESSION_PERSISTENCE",
+    ]:
         if stage not in pipeline.get("pipeline", []):
             fail(f"execution pipeline is missing stage {stage}")
 

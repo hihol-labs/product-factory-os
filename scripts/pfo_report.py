@@ -30,8 +30,10 @@ def main() -> None:
         "",
         f"- Current stage: `{state.get('currentStage', '')}`",
         f"- Current node: `{state.get('currentNode', '')}`",
+        f"- Current unit: `{state.get('currentUnit', {}).get('id', '')}`",
         f"- Last successful state: `{state.get('lastSuccessfulState', '')}`",
         f"- Next action: {state.get('nextAction', '')}",
+        f"- Recovery: `{state.get('recoveryState', {}).get('status', '')}` {state.get('recoveryState', {}).get('reason', '')}",
         "",
         "## Existing Project Analysis",
         "",
@@ -60,6 +62,23 @@ def main() -> None:
     ])
     history = state.get("verificationHistory", [])
     report.extend([f"- {item}" for item in history] or ["- none"])
+    report.extend([
+        "",
+        "## Dispatch Journal",
+        "",
+    ])
+    dispatches = state.get("dispatchJournal", [])
+    report.extend([f"- {item}" for item in dispatches] or ["- none"])
+    telemetry = state.get("telemetry", {})
+    report.extend([
+        "",
+        "## Telemetry",
+        "",
+        f"- Units: `{telemetry.get('unitCount', 0)}`",
+        f"- Verifications: `{telemetry.get('verificationCount', 0)}`",
+        f"- Token notes: {telemetry.get('tokenNotes', '') or 'none'}",
+        f"- Cost notes: {telemetry.get('costNotes', '') or 'none'}",
+    ])
     (project / "PFO_REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
     print(f"OK: wrote {project / 'PFO_REPORT.md'}")
 

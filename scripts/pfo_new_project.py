@@ -56,7 +56,28 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "currentTaskRoute": "",
                 "lastAnalysisSummary": "",
             },
+            "currentPhase": "",
             "currentNode": "",
+            "currentUnit": {
+                "id": "",
+                "goal": "",
+                "status": "",
+                "owner": "",
+                "startedAt": "",
+                "completedAt": "",
+            },
+            "unitContextManifest": {
+                "path": ".pfo/UNIT_CONTEXT_MANIFEST.json",
+                "version": 1,
+                "unitId": "",
+                "requiredInputs": [],
+                "allowedWriteAreas": [],
+                "forbiddenChanges": [],
+                "dependencies": [],
+                "verificationCommands": [],
+                "gates": [],
+                "recovery": "",
+            },
             "gateResults": {
                 "strategy": "",
                 "architecture": "",
@@ -68,7 +89,9 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "deploymentReadiness": "",
             },
             "verificationHistory": [],
+            "dispatchJournal": [],
             "decisionLog": [],
+            "capturedNotes": [],
             "artifactHashes": {},
             "lastSuccessfulState": "BOOTSTRAPPED",
             "artifacts": [
@@ -85,6 +108,30 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
             ],
             "completedModules": [],
             "failedValidations": [],
+            "driftChecks": [],
+            "recoveryState": {
+                "status": "",
+                "reason": "",
+                "retryCount": 0,
+                "nextRepairAction": "",
+            },
+            "telemetry": {
+                "unitCount": 0,
+                "verificationCount": 0,
+                "lastCommand": "",
+                "lastDurationSeconds": None,
+                "tokenNotes": "",
+                "costNotes": "",
+            },
+            "knowledgeLog": [],
+            "briefArtifacts": [],
+            "worktreeIsolation": {
+                "enabled": False,
+                "strategy": "",
+                "activeBranch": "",
+                "activeWorktree": "",
+                "mergeStatus": "",
+            },
             "blockers": [],
             "nextAction": "Route the voice/text idea through /project -> /kickstart and create Product Factory OS compiler artifacts.",
             "project": project_name,
@@ -193,22 +240,29 @@ DISCOVERY.md
 PRD.md
 PRODUCT_BLUEPRINT.md
 PROJECT_ARCHITECTURE.md
+PHASE_CONTEXT.md
 BUILD_PLAN.md
 EXECUTION_GRAPH.md
 IMPLEMENTATION_PLAN.md
+.pfo/UNIT_CONTEXT_MANIFEST.json
 .codex-memory/STATE.json
+.codex-memory/LEARNINGS.md
 ```
 
 ## Operating Contract
 
 - Voice or natural-language commands are accepted as the primary interface.
 - Codex performs routing automatically.
+- Capture implementation decisions in `PHASE_CONTEXT.md` before detailed execution planning.
+- Build `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
 - Implementation follows `EXECUTION_GRAPH.md` node by node.
 - Every task must respect `.pfo/SCOPE_LOCK.md`.
 - Real production data must follow `.pfo/DATA_POLICY.md`.
 - Fallbacks must follow `.pfo/FALLBACK_POLICY.md` and must not silently replace real output.
 - Tests, review, security, dependency, and hardening gates block deployment when they fail.
 - Golden flows in `.pfo/GOLDEN_FLOWS.md` block deployment when touched and unverified.
+- Verification fails closed when evidence is missing or ambiguous.
+- Extract durable decisions, lessons, patterns, and surprises into `.codex-memory/LEARNINGS.md`.
 - Session state is saved after significant milestones.
 
 ## Memory

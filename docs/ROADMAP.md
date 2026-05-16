@@ -57,10 +57,12 @@
 - Add generated-project validators for starter-specific commands and required artifacts.
 - Expand `pfo_runner.py` from state recorder to node executor with explicit command plans.
 - Add snapshot fixtures for starter-specific golden paths.
+- Add GSD-inspired autonomous execution layer: phase discussion, unit context manifest, dispatch journal, fail-closed verification, recovery state, telemetry, learnings, and HTML briefs.
 
 ## 0.8.0
 
 - Add richer existing-project state repair, analyzer evidence, and migration reports for partially adopted projects.
+- Add drift/reconciliation checks for stale state, missing artifacts, and worktree mismatch before autonomous dispatch.
 - Add connector-backed export smoke tests where local connector access exists.
 - Add browser-facing generated-project smoke checks for UI starters.
 

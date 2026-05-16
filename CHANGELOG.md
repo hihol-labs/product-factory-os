@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- GSD-inspired autonomous execution layer: phase discussion, unit context manifest, dispatch journal, fail-closed verification, recovery state, telemetry, learnings, and HTML briefs.
+- Runtime commands: `pfo discuss`, `pfo manifest`, `pfo verify-work`, `pfo brief`, and `pfo learnings`.
+- Templates for `PHASE_CONTEXT.md`, `.pfo/UNIT_CONTEXT_MANIFEST.json`, `PFO_RECOVERY.md`, and `.codex-memory/LEARNINGS.md`.
+- Integration notes documenting what PFO adopts from GSD and what remains intentionally out of scope.
+
 ## [0.6.1] - 2026-05-09
 
 ### Added
