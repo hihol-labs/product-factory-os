@@ -83,12 +83,45 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "architecture": "",
                 "tests": "",
                 "review": "",
+                "tddRed": "",
+                "tddGreen": "",
+                "tddRefactor": "",
+                "rootCause": "",
+                "specComplianceReview": "",
+                "codeQualityReview": "",
+                "branchFinish": "",
                 "security": "",
                 "dependencies": "",
                 "hardening": "",
                 "deploymentReadiness": "",
             },
             "verificationHistory": [],
+            "tddEvidence": {
+                "red": "",
+                "green": "",
+                "refactor": "",
+                "lastRecordedAt": "",
+            },
+            "rootCause": {
+                "status": "",
+                "summary": "",
+                "evidence": "",
+                "hypothesis": "",
+                "recordedAt": "",
+            },
+            "reviewStages": {
+                "specCompliance": {"status": "", "evidence": "", "recordedAt": ""},
+                "codeQuality": {"status": "", "evidence": "", "recordedAt": ""},
+            },
+            "branchFinish": {
+                "status": "",
+                "mode": "",
+                "verification": "",
+                "remoteBranch": "",
+                "prUrl": "",
+                "cleanupDecision": "",
+                "recordedAt": "",
+            },
             "dispatchJournal": [],
             "decisionLog": [],
             "capturedNotes": [],
@@ -255,6 +288,9 @@ IMPLEMENTATION_PLAN.md
 - Codex performs routing automatically.
 - Capture implementation decisions in `PHASE_CONTEXT.md` before detailed execution planning.
 - Build `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
+- Behavior changes require TDD red/green evidence unless explicitly waived by project owner.
+- Bugfixes require root-cause evidence before implementation.
+- Reviews run in two stages: spec compliance first, code quality second.
 - Implementation follows `EXECUTION_GRAPH.md` node by node.
 - Every task must respect `.pfo/SCOPE_LOCK.md`.
 - Real production data must follow `.pfo/DATA_POLICY.md`.
@@ -262,6 +298,7 @@ IMPLEMENTATION_PLAN.md
 - Tests, review, security, dependency, and hardening gates block deployment when they fail.
 - Golden flows in `.pfo/GOLDEN_FLOWS.md` block deployment when touched and unverified.
 - Verification fails closed when evidence is missing or ambiguous.
+- Branch finish must record a PR, merge, keep, or discard decision with verification evidence.
 - Extract durable decisions, lessons, patterns, and surprises into `.codex-memory/LEARNINGS.md`.
 - Session state is saved after significant milestones.
 

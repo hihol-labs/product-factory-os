@@ -14,6 +14,7 @@ Idea
   -> Build Plan
   -> Execution Graph
   -> Unit Context Manifest
+  -> TDD And Review Gates
 ```
 
 ## Stage Contracts
@@ -106,6 +107,10 @@ Write `TEST_PLAN.md` and `QUALITY_GATES.md` with:
 
 - Product-type test matrix
 - Critical smoke path
+- TDD red/green/refactor evidence fields
+- Root-cause evidence for bugfixes
+- Spec compliance and code quality review stages
+- Branch finish decision and cleanup evidence
 - Required quality gates
 - Evidence slots
 - Accepted-risk section

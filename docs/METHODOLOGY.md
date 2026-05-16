@@ -16,15 +16,18 @@ Product Factory OS is built around small gates instead of one large generation p
 10. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
 11. Implement execution graph nodes in small, isolated units.
 12. Record dispatches, verification commands, cost or token notes, and recovery decisions.
-13. Add tests for every behavior change.
-14. Run `/browser-check` for browser-facing critical flows.
-15. Verify work fail-closed: unclear verification does not pass.
-16. Review before commit or deploy.
-17. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
-18. Extract durable learnings after completed milestones or significant repairs.
-19. Harden production-facing services.
-20. Deploy only after explicit confirmation.
-21. Save reloadable session memory.
+13. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
+14. For bugfixes, record root-cause evidence before changing code.
+15. Run `/browser-check` for browser-facing critical flows.
+16. Verify work fail-closed: unclear verification does not pass.
+17. Run two-stage review: spec compliance first, code quality second.
+18. Review before commit or deploy.
+19. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
+20. Finish branches with an explicit PR, merge, keep, or discard decision.
+21. Extract durable learnings after completed milestones or significant repairs.
+22. Harden production-facing services.
+23. Deploy only after explicit confirmation.
+24. Save reloadable session memory.
 
 ## Existing Project Lifecycle
 
@@ -72,6 +75,7 @@ If any are missing, run `/adopt` first.
 - `TEST_PLAN.md`: test matrix, critical flows, negative cases, smoke path
 - `QUALITY_GATES.md`: gate status, evidence, blockers, accepted risk
 - `PHASE_CONTEXT.md`: decisions, assumptions, open questions, planning impact
+- `ROOT_CAUSE.md`: bug reproduction, evidence, and fix hypothesis for bugfix work
 - `BUILD_PLAN.md`: ordered module build plan with dependencies and verification
 - `EXECUTION_GRAPH.md`: execution nodes, transitions, checkpoints, and repair paths
 - `IMPLEMENTATION_PLAN.md`: ordered implementation steps with verification
@@ -86,6 +90,7 @@ If any are missing, run `/adopt` first.
 - `.pfo/SCOPE_LOCK.md`: current task boundaries and forbidden change areas
 - `.pfo/UNIT_CONTEXT_MANIFEST.json`: execution-unit input, write-scope, gate, and recovery contract
 - `.codex-memory/LEARNINGS.md`: durable decisions, lessons, patterns, and surprises
+- `BRANCH_FINISH.md`: PR, merge, keep, or discard decision when branch cleanup is in scope
 
 ## Gate Status
 
@@ -122,6 +127,16 @@ Product Factory OS adopts the strongest GSD execution ideas without copying its 
 - Telemetry: record unit duration, commands, token or cost notes when available, and gate outcomes.
 - Learnings: extract reusable decisions, patterns, lessons, and surprises into project memory.
 
+## Engineering Discipline Layer
+
+Product Factory OS adopts the strongest Superpowers engineering discipline while keeping PFO artifacts as the source of truth:
+
+- TDD evidence gate: behavior changes record red evidence before implementation, green evidence after minimal implementation, and post-refactor evidence or an explicit exception.
+- Root-cause gate: bugfixes require reproduction, evidence, and a fix hypothesis before code changes.
+- Two-stage review: first verify spec compliance against the unit manifest and plan, then review code quality.
+- Strict plan granularity: executable tasks name exact files, exact commands, expected output, and exit criteria. Placeholders are plan failures.
+- Branch finish workflow: every finished branch records PR, merge, keep, or discard decision with fresh verification evidence.
+
 ## Rubrics
 
 Canonical checklists live under `docs/rubrics/`:
@@ -141,7 +156,8 @@ Canonical checklists live under `docs/rubrics/`:
 - Prefer narrow, verifiable implementation steps.
 - Prefer fresh, task-scoped context over long accumulated chat state.
 - Keep planning documents and code synchronized.
-- Treat tests and review as part of implementation, not cleanup.
+- Treat TDD evidence, tests, and two-stage review as part of implementation, not cleanup.
+- Treat bugfixes without root-cause evidence as blocked.
 - Treat unclear verification as failed until evidence exists.
 - Treat project-owned `.pfo/` contracts as runtime guardrails, not documentation decoration.
 - If a real source or provider is unavailable, fail transparently or use an approved degraded mode; never silently invent production output.

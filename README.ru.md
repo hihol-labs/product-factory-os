@@ -20,6 +20,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - Маршруты OpenAI/Codex plugin и MCP для Context7, Browser Use, GitHub, Codex Security, Linear, Notion и Google Drive
 - PFO runtime contracts: classifier, template library, product compiler, state machine, execution pipeline, memory schema, deployment abstraction и voice-first interface
 - GSD-inspired autonomous layer: phase discussion, unit context manifest, dispatch journal, fail-closed verification, recovery state, telemetry, learnings и visual briefs
+- Superpowers-inspired engineering gates: TDD evidence, root-cause discipline, two-stage review, strict executable plans и branch finish hygiene
 
 ## Быстрый Старт
 
@@ -91,13 +92,18 @@ pfo plan ../my-product
 pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
 pfo build ../my-product
 pfo test ../my-product
+pfo tdd-evidence ../my-product --red "pytest ... failed as expected" --green "pytest ... passed"
+pfo root-cause ../my-product --summary "bad value enters parser" --evidence "trace shows parser input" --hypothesis "validate before parse"
 pfo verify-work ../my-product --evidence "tests and smoke passed" --pass-gate
+pfo review-stage ../my-product --stage spec --status PASSED --evidence "matches manifest"
+pfo review-stage ../my-product --stage quality --status PASSED --evidence "tests and review clean"
 pfo review ../my-product
 pfo validate ../my-product
 pfo contracts ../my-product --write
 pfo status ../my-product
 pfo resume ../my-product
 pfo report ../my-product
+pfo finish-branch ../my-product --mode pr --verification "checks passed" --pr-url "https://github.com/..."
 pfo brief ../my-product --mode recap
 pfo learnings ../my-product --lesson "Keep provider fallback explicit"
 pfo voice "создай Telegram бот для продаж"
@@ -113,6 +119,8 @@ Starter packs находятся в `starters/`. Golden paths находятся
 `pfo plan` создает недостающие `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md` и `QUALITY_GATES.md` на основе выбранного starter, но не перезаписывает уже существующие файлы.
 
 `pfo discuss` фиксирует решения в `PHASE_CONTEXT.md`, `pfo manifest` создает `.pfo/UNIT_CONTEXT_MANIFEST.json`, `pfo verify-work` по умолчанию создает recovery-путь при неясной проверке, `pfo brief` делает локальный HTML-brief по статусу проекта.
+
+`pfo tdd-evidence`, `pfo root-cause`, `pfo review-stage` и `pfo finish-branch` добавляют строгие инженерные gates для behavior changes, bugfixes, unit review и PR/merge cleanup.
 
 Дополнительные расширения платформы:
 
@@ -190,11 +198,14 @@ python3 scripts/meta_review.py
 2. Классификация продукта и архитектурный шаблон явные.
 3. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md` и `EXECUTION_GRAPH.md` согласованы.
 4. Для автономной или delegated-работы есть `.pfo/UNIT_CONTEXT_MANIFEST.json`.
-5. Для изменённого поведения есть тесты.
-6. Verification не является неясной: missing/ambiguous evidence ведет в recovery, а не в pass.
-7. Review status не равен `BLOCKED`.
-8. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
-9. Контекст сессии сохранён через `/session-save`.
+5. Для behavior changes есть TDD red/green/refactor evidence или явное исключение.
+6. Для bugfixes есть root-cause evidence до фикса.
+7. Verification не является неясной: missing/ambiguous evidence ведет в recovery, а не в pass.
+8. Spec compliance review выполнен до code quality review.
+9. Review status не равен `BLOCKED`.
+10. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
+11. Branch finish фиксирует PR, merge, keep или discard decision, если это в scope.
+12. Контекст сессии сохранён через `/session-save`.
 
 ## Документация
 
@@ -205,6 +216,7 @@ python3 scripts/meta_review.py
 - [Workspace Defaults](docs/WORKSPACE_DEFAULTS.md)
 - [Roadmap](docs/ROADMAP.md)
 - [GSD Integration Notes](docs/GSD_INTEGRATION.md)
+- [Superpowers Integration Notes](docs/SUPERPOWERS_INTEGRATION.md)
 - [PFO Architecture](docs/PFO_ARCHITECTURE.md)
 - [Master Prompt RU](docs/MASTER_PROMPT.ru.md)
 

@@ -27,6 +27,7 @@ This is a Codex-native methodology runtime. It contains:
 - Product Factory OS runtime contracts for classification, templates, state machine, execution pipeline, memory, deployment, and voice-first interface
 - Project-level `.pfo/` contracts for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution
 - GSD-inspired autonomous layer for phase discussion, unit context manifests, dispatch journaling, fail-closed verification, recovery state, telemetry, learnings, and visual briefs
+- Superpowers-inspired engineering gates for TDD evidence, root-cause discipline, two-stage review, strict executable plans, and branch finish hygiene
 
 ## Quick Start
 
@@ -99,13 +100,18 @@ pfo plan ../my-product
 pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
 pfo build ../my-product
 pfo test ../my-product
+pfo tdd-evidence ../my-product --red "pytest ... failed as expected" --green "pytest ... passed"
+pfo root-cause ../my-product --summary "bad value enters parser" --evidence "trace shows parser input" --hypothesis "validate before parse"
 pfo verify-work ../my-product --evidence "tests and smoke passed" --pass-gate
+pfo review-stage ../my-product --stage spec --status PASSED --evidence "matches manifest"
+pfo review-stage ../my-product --stage quality --status PASSED --evidence "tests and review clean"
 pfo review ../my-product
 python3 scripts/pfo.py validate ../my-product
 python3 scripts/pfo.py contracts ../my-product --write
 python3 scripts/pfo.py status ../my-product
 python3 scripts/pfo.py resume ../my-product
 python3 scripts/pfo.py report ../my-product
+python3 scripts/pfo.py finish-branch ../my-product --mode pr --verification "checks passed" --pr-url "https://github.com/..."
 python3 scripts/pfo.py brief ../my-product --mode recap
 python3 scripts/pfo.py learnings ../my-product --lesson "Keep provider fallback explicit"
 python3 scripts/pfo.py voice "создай Telegram бот для продаж"
@@ -121,6 +127,8 @@ Generated projects receive `.pfo/` contracts, `.pfo-starter.json`, `.env.example
 `pfo plan` now creates missing `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, and `QUALITY_GATES.md` from the selected starter while preserving existing files.
 
 `pfo discuss` records decisions in `PHASE_CONTEXT.md`, `pfo manifest` writes `.pfo/UNIT_CONTEXT_MANIFEST.json`, `pfo verify-work` creates a recovery path by default when evidence is unclear, and `pfo brief` generates a local HTML project brief.
+
+`pfo tdd-evidence`, `pfo root-cause`, `pfo review-stage`, and `pfo finish-branch` add stricter engineering gates for behavior changes, bugfixes, unit review, and PR/merge cleanup.
 
 Additional platform extensions:
 
@@ -177,6 +185,7 @@ See:
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
 - [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
 - [GSD Integration Notes](docs/GSD_INTEGRATION.md)
+- [Superpowers Integration Notes](docs/SUPERPOWERS_INTEGRATION.md)
 
 ## Repository Layout
 
@@ -209,11 +218,14 @@ Every major project step should pass:
 2. Product classification and architecture template are explicit.
 3. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md` agree.
 4. Autonomous or delegated work has `.pfo/UNIT_CONTEXT_MANIFEST.json`.
-5. Tests exist for changed behavior.
-6. Verification is definitive; missing or ambiguous evidence creates recovery work.
-7. Review status is not `BLOCKED`.
-8. `.pfo/` contract gates do not report scope, data, fallback, golden-flow, or silent-substitution violations.
-9. Session state is saved before stopping.
+5. Behavior changes have TDD red/green/refactor evidence or an explicit exception.
+6. Bugfixes have root-cause evidence before the fix.
+7. Verification is definitive; missing or ambiguous evidence creates recovery work.
+8. Spec compliance review runs before code quality review.
+9. Review status is not `BLOCKED`.
+10. `.pfo/` contract gates do not report scope, data, fallback, golden-flow, or silent-substitution violations.
+11. Branch finish records PR, merge, keep, or discard decision when in scope.
+12. Session state is saved before stopping.
 
 ## Validation
 

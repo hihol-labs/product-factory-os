@@ -8,6 +8,9 @@
 - Runtime commands: `pfo discuss`, `pfo manifest`, `pfo verify-work`, `pfo brief`, and `pfo learnings`.
 - Templates for `PHASE_CONTEXT.md`, `.pfo/UNIT_CONTEXT_MANIFEST.json`, `PFO_RECOVERY.md`, and `.codex-memory/LEARNINGS.md`.
 - Integration notes documenting what PFO adopts from GSD and what remains intentionally out of scope.
+- Superpowers-inspired engineering gates: TDD evidence, root-cause discipline, two-stage review, strict executable plans, and branch finish hygiene.
+- Runtime commands: `pfo tdd-evidence`, `pfo root-cause`, `pfo review-stage`, and `pfo finish-branch`.
+- Templates for `ROOT_CAUSE.md` and `BRANCH_FINISH.md`.
 
 ## [0.6.1] - 2026-05-09
 

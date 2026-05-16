@@ -61,6 +61,30 @@ def ensure_autonomy_state(state: dict) -> None:
     )
     state.setdefault("dispatchJournal", [])
     state.setdefault("capturedNotes", [])
+    state.setdefault("tddEvidence", {"red": "", "green": "", "refactor": "", "lastRecordedAt": ""})
+    state.setdefault(
+        "rootCause",
+        {"status": "", "summary": "", "evidence": "", "hypothesis": "", "recordedAt": ""},
+    )
+    state.setdefault(
+        "reviewStages",
+        {
+            "specCompliance": {"status": "", "evidence": "", "recordedAt": ""},
+            "codeQuality": {"status": "", "evidence": "", "recordedAt": ""},
+        },
+    )
+    state.setdefault(
+        "branchFinish",
+        {
+            "status": "",
+            "mode": "",
+            "verification": "",
+            "remoteBranch": "",
+            "prUrl": "",
+            "cleanupDecision": "",
+            "recordedAt": "",
+        },
+    )
     state.setdefault("driftChecks", [])
     state.setdefault("knowledgeLog", [])
     state.setdefault("briefArtifacts", [])
@@ -83,6 +107,17 @@ def ensure_autonomy_state(state: dict) -> None:
         "worktreeIsolation",
         {"enabled": False, "strategy": "", "activeBranch": "", "activeWorktree": "", "mergeStatus": ""},
     )
+    gates = state.setdefault("gateResults", {})
+    for gate in [
+        "tddRed",
+        "tddGreen",
+        "tddRefactor",
+        "rootCause",
+        "specComplianceReview",
+        "codeQualityReview",
+        "branchFinish",
+    ]:
+        gates.setdefault(gate, "")
 
 
 def load_starter(project: Path, state: dict) -> dict:
@@ -239,10 +274,13 @@ def generated_build_plan(starter: dict) -> str:
 |---:|---|---|---|---|---|
 | 1 | Starter baseline and contracts | CODEX.md, `.pfo/` | starter files, `.env.example`, CI | `python3 scripts/pfo.py validate <project>` | project validates under PFO |
 | 2 | Phase decisions and unit manifest | PRODUCT_BLUEPRINT.md, PHASE_CONTEXT.md | BUILD_PLAN.md, EXECUTION_GRAPH.md, `.pfo/UNIT_CONTEXT_MANIFEST.json` | `pfo manifest <project>` | execution unit has scoped context |
-| 3 | Product domain model | PRODUCT_BLUEPRINT.md | backend, database, shared types | `{test_command}` | core entities covered by tests |
-| 4 | Primary user flow | domain model | frontend, API, bot, or CLI handlers | smoke path from TEST_PLAN.md | golden flow documented and verified |
-| 5 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
-| 6 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
+| 3 | TDD evidence loop | `.pfo/UNIT_CONTEXT_MANIFEST.json` | tests, minimal source files | `pfo tdd-evidence <project> --red ... --green ...` | red and green evidence recorded |
+| 4 | Product domain model | PRODUCT_BLUEPRINT.md | backend, database, shared types | `{test_command}` | core entities covered by tests |
+| 5 | Primary user flow | domain model | frontend, API, bot, or CLI handlers | smoke path from TEST_PLAN.md | golden flow documented and verified |
+| 6 | Two-stage review | implemented unit | review notes, `QUALITY_GATES.md` | `pfo review-stage <project> --stage spec ...` and `--stage quality ...` | spec and code-quality reviews recorded |
+| 7 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
+| 8 | Branch finish | quality gates | branch, PR, merge notes | `pfo finish-branch <project> --mode pr --verification ...` | merge/PR/keep/discard decision explicit |
+| 9 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
 
 ## Cross-Module Dependencies
 
@@ -258,7 +296,14 @@ def generated_build_plan(starter: dict) -> str:
 ## Gate Strategy
 
 - Run `.pfo/` contract gate on every meaningful diff.
+- Record TDD red/green/refactor evidence for behavior changes.
+- Bugfixes require root-cause evidence before the fix.
+- Review runs in two stages: spec compliance first, code quality second.
 - Deployment requires explicit user confirmation and non-blocked gates.
+
+## Task Granularity
+
+Every execution task must name exact files, exact commands, expected output, and exit criteria. Do not leave `TBD`, `TODO`, "add tests", or "handle errors" placeholders in executable tasks.
 
 ## Deferred Work
 
@@ -285,6 +330,16 @@ def generated_test_plan(starter: dict) -> str:
 | Frontend/UI | critical user flows | `{frontend}` | browser-facing changes |
 | Build | deployable artifact | `{build}` | deploy readiness |
 | PFO contracts | scope/data/fallback/golden flows | `python3 scripts/pfo_contract_gate.py <project>` | every meaningful diff |
+| TDD evidence | red, green, refactor command evidence | `pfo tdd-evidence <project> --red ... --green ...` | behavior changes |
+| Root cause | reproduction, evidence, fix hypothesis | `pfo root-cause <project> --summary ...` | bug fixes |
+
+## TDD Evidence
+
+| Step | Evidence | Command | Status |
+|---|---|---|---|
+| Red | failing test before implementation | TBD | PENDING |
+| Green | passing test after minimal implementation | TBD | PENDING |
+| Refactor | passing test after cleanup or explicit not-applicable note | TBD | PENDING |
 
 ## Critical Flows
 
@@ -319,6 +374,12 @@ def generated_quality_gates() -> str:
 | Architecture | PENDING | PRODUCT_BLUEPRINT.md, PROJECT_ARCHITECTURE.md, BUILD_PLAN.md |  |
 | Tests | PENDING | TEST_PLAN.md and test command output |  |
 | Review | PENDING | `/review` result |  |
+| TDD Red | PENDING | failing test command and expected failure |  |
+| TDD Green | PENDING | passing test command after minimal implementation |  |
+| TDD Refactor | PENDING | post-refactor passing command or not-applicable note |  |
+| Root Cause | PENDING | `ROOT_CAUSE.md` for bugfixes |  |
+| Spec Compliance Review | PENDING | unit output checked against manifest/spec |  |
+| Code Quality Review | PENDING | maintainability, simplicity, integration checks |  |
 | Unit Context Manifest | PENDING | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
 | Work Verification | PENDING | `pfo verify-work` evidence |  |
 | Security | PENDING | `/security-audit` or accepted not-applicable note |  |
@@ -332,6 +393,7 @@ def generated_quality_gates() -> str:
 | Diff Risk | PENDING | `PFO_CONTRACT_GATE.json` when generated |  |
 | No Silent Substitution | PENDING | diff scan, project contracts |  |
 | Deployment Readiness | PENDING | env vars, build, health check, rollback notes |  |
+| Branch Finish | PENDING | PR/merge/keep/discard decision with verification |  |
 | Learning Extraction | PENDING | `.codex-memory/LEARNINGS.md` when applicable |  |
 
 ## Accepted Risks
@@ -390,6 +452,7 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str)
             "BUILD_PLAN.md",
             "EXECUTION_GRAPH.md",
             "PHASE_CONTEXT.md when present",
+            "ROOT_CAUSE.md for bugfix units",
         ],
         "allowedWriteAreas": [
             "files listed by the active execution graph node",
@@ -406,10 +469,17 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str)
         ],
         "dependencies": [],
         "verificationCommands": [
+            "failing test command before implementation for behavior changes",
+            "passing test command after minimal implementation",
             "project test command from TEST_PLAN.md",
             "python3 scripts/pfo_contract_gate.py <project> when running from PFO root",
         ],
         "gates": [
+            "tddRed",
+            "tddGreen",
+            "rootCause",
+            "specComplianceReview",
+            "codeQualityReview",
             "scopeLock",
             "dataAuthenticity",
             "goldenFlows",
@@ -418,6 +488,10 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str)
             "diffRisk",
             "noSilentSubstitution",
         ],
+        "review": {
+            "specCompliance": "Check output against the unit goal, spec, and allowed scope first.",
+            "codeQuality": "Check simplicity, maintainability, tests, and integration second.",
+        },
         "recovery": "If verification is missing or ambiguous, mark RECOVERY_REQUIRED and create PFO_RECOVERY.md.",
         "project": str(project),
     }
@@ -442,9 +516,37 @@ Created: {now_iso()}
 
 1. Re-read required inputs from `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 2. Identify the smallest failing gate or missing artifact.
-3. Repair only the affected files.
-4. Re-run the declared verification command.
-5. Update `.codex-memory/STATE.json` and `PFO_REPORT.md`.
+3. If this is a bugfix, write or update `ROOT_CAUSE.md` before changing code.
+4. Repair only the affected files.
+5. Re-run the declared red/green/refactor and verification commands.
+6. Run spec compliance review, then code quality review.
+7. Update `.codex-memory/STATE.json` and `PFO_REPORT.md`.
+"""
+
+
+def generated_root_cause_doc(summary: str, evidence: str, hypothesis: str) -> str:
+    return f"""# Root Cause
+
+Recorded: {now_iso()}
+
+## Summary
+
+{summary or "TBD"}
+
+## Evidence
+
+{evidence or "TBD"}
+
+## Fix Hypothesis
+
+{hypothesis or "TBD"}
+
+## Constraints
+
+- Fix the root cause, not the symptom.
+- Change one variable at a time.
+- Add or update a regression test before implementation when feasible.
+- If three fix attempts fail, stop and question the architecture before continuing.
 """
 
 
@@ -544,6 +646,10 @@ def cmd_status(args: argparse.Namespace) -> int:
         "blockers": state.get("blockers", []),
         "gateResults": state.get("gateResults", {}),
         "recoveryState": state.get("recoveryState", {}),
+        "tddEvidence": state.get("tddEvidence", {}),
+        "rootCause": state.get("rootCause", {}),
+        "reviewStages": state.get("reviewStages", {}),
+        "branchFinish": state.get("branchFinish", {}),
     }, indent=2, ensure_ascii=False))
     return 0
 
@@ -684,6 +790,137 @@ def cmd_verify_work(args: argparse.Namespace) -> int:
         print("Generated: PFO_RECOVERY.md")
     save_state(project, state)
     print(f"OK: verification recorded as {state['currentStage']}")
+    return 0
+
+
+def cmd_tdd_evidence(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    state["currentStage"] = "TDD_EVIDENCE"
+    evidence = state["tddEvidence"]
+    if args.red:
+        evidence["red"] = args.red
+        state["gateResults"]["tddRed"] = "PASSED"
+    if args.green:
+        evidence["green"] = args.green
+        state["gateResults"]["tddGreen"] = "PASSED"
+    if args.refactor:
+        evidence["refactor"] = args.refactor
+        state["gateResults"]["tddRefactor"] = "PASSED"
+    if args.no_refactor:
+        evidence["refactor"] = "Not applicable: " + args.no_refactor
+        state["gateResults"]["tddRefactor"] = "PASSED"
+    evidence["lastRecordedAt"] = now_iso()
+    if args.red or args.green or args.refactor or args.no_refactor:
+        state.setdefault("verificationHistory", []).append(
+            {"mode": "tdd-evidence", "node": state.get("currentNode", ""), "evidence": evidence.copy()}
+        )
+    for gate, field in [("tddRed", "red"), ("tddGreen", "green")]:
+        if not evidence.get(field):
+            state["gateResults"][gate] = "BLOCKED"
+    add_artifact(state, ".codex-memory/STATE.json")
+    state["nextAction"] = "Continue only after TDD red and green evidence is recorded for changed behavior."
+    save_state(project, state)
+    print("OK: TDD evidence recorded")
+    return 0
+
+
+def cmd_root_cause(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    state["currentStage"] = "ROOT_CAUSE_ANALYSIS"
+    path = project / "ROOT_CAUSE.md"
+    path.write_text(generated_root_cause_doc(args.summary, args.evidence, args.hypothesis), encoding="utf-8")
+    state["rootCause"] = {
+        "status": "RECORDED" if args.summary and args.evidence else "INCOMPLETE",
+        "summary": args.summary,
+        "evidence": args.evidence,
+        "hypothesis": args.hypothesis,
+        "recordedAt": now_iso(),
+    }
+    state["gateResults"]["rootCause"] = "PASSED" if args.summary and args.evidence else "BLOCKED"
+    add_artifact(state, "ROOT_CAUSE.md")
+    state["nextAction"] = "Use ROOT_CAUSE.md to implement one focused fix and verify with a regression test."
+    save_state(project, state)
+    print("OK: wrote ROOT_CAUSE.md")
+    return 0
+
+
+def cmd_review_stage(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    state["currentStage"] = "TWO_STAGE_REVIEW"
+    key = "specCompliance" if args.stage == "spec" else "codeQuality"
+    gate = "specComplianceReview" if args.stage == "spec" else "codeQualityReview"
+    state["reviewStages"][key] = {
+        "status": args.status,
+        "evidence": args.evidence,
+        "recordedAt": now_iso(),
+    }
+    state["gateResults"][gate] = args.status
+    state.setdefault("verificationHistory", []).append(
+        {"mode": "review-stage", "stage": args.stage, "status": args.status, "evidence": args.evidence}
+    )
+    state["nextAction"] = (
+        "Run code quality review after spec compliance passes."
+        if args.stage == "spec" and args.status == "PASSED"
+        else "Resolve review findings or proceed to the next gate."
+    )
+    save_state(project, state)
+    print(f"OK: {args.stage} review recorded as {args.status}")
+    return 0
+
+
+def cmd_finish_branch(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    state["currentStage"] = "BRANCH_FINISH"
+    status = "PASSED" if args.verification else "BLOCKED"
+    state["branchFinish"] = {
+        "status": status,
+        "mode": args.mode,
+        "verification": args.verification,
+        "remoteBranch": args.remote_branch,
+        "prUrl": args.pr_url,
+        "cleanupDecision": args.cleanup_decision,
+        "recordedAt": now_iso(),
+    }
+    (project / "BRANCH_FINISH.md").write_text(
+        "\n".join(
+            [
+                "# Branch Finish",
+                "",
+                f"Recorded: {state['branchFinish']['recordedAt']}",
+                "",
+                "## Decision",
+                "",
+                f"- Mode: {args.mode}",
+                f"- Branch: {args.remote_branch or 'TBD'}",
+                f"- PR URL: {args.pr_url or 'TBD'}",
+                "",
+                "## Verification",
+                "",
+                args.verification or "TBD",
+                "",
+                "## Cleanup",
+                "",
+                args.cleanup_decision or "TBD",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    add_artifact(state, "BRANCH_FINISH.md")
+    state["gateResults"]["branchFinish"] = status
+    if not args.verification:
+        state.setdefault("blockers", []).append("Branch finish requires fresh verification evidence.")
+    state["nextAction"] = "Finish branch using the recorded PR/merge/keep/discard decision."
+    save_state(project, state)
+    print(f"OK: branch finish recorded as {status}")
     return 0
 
 
@@ -838,6 +1075,37 @@ def build_parser() -> argparse.ArgumentParser:
     verify_work.add_argument("--evidence", default="")
     verify_work.add_argument("--pass-gate", action="store_true", help="Mark verification as passed when evidence is definitive.")
     verify_work.set_defaults(func=cmd_verify_work)
+
+    tdd = sub.add_parser("tdd-evidence", help="Record red/green/refactor evidence for changed behavior.")
+    tdd.add_argument("project", type=Path)
+    tdd.add_argument("--red", default="", help="Failing test command and expected failure evidence.")
+    tdd.add_argument("--green", default="", help="Passing test command after minimal implementation.")
+    tdd.add_argument("--refactor", default="", help="Passing command after refactor.")
+    tdd.add_argument("--no-refactor", default="", help="Reason refactor step is not applicable.")
+    tdd.set_defaults(func=cmd_tdd_evidence)
+
+    root_cause = sub.add_parser("root-cause", help="Write ROOT_CAUSE.md and record bugfix root-cause evidence.")
+    root_cause.add_argument("project", type=Path)
+    root_cause.add_argument("--summary", default="")
+    root_cause.add_argument("--evidence", default="")
+    root_cause.add_argument("--hypothesis", default="")
+    root_cause.set_defaults(func=cmd_root_cause)
+
+    review_stage = sub.add_parser("review-stage", help="Record spec-compliance or code-quality review stage.")
+    review_stage.add_argument("project", type=Path)
+    review_stage.add_argument("--stage", choices=["spec", "quality"], required=True)
+    review_stage.add_argument("--status", choices=["BLOCKED", "PASSED_WITH_WARNINGS", "PASSED"], required=True)
+    review_stage.add_argument("--evidence", default="")
+    review_stage.set_defaults(func=cmd_review_stage)
+
+    finish_branch = sub.add_parser("finish-branch", help="Record PR, merge, keep, or discard branch finish decision.")
+    finish_branch.add_argument("project", type=Path)
+    finish_branch.add_argument("--mode", choices=["pr", "merge", "keep", "discard"], required=True)
+    finish_branch.add_argument("--verification", default="")
+    finish_branch.add_argument("--remote-branch", default="")
+    finish_branch.add_argument("--pr-url", default="")
+    finish_branch.add_argument("--cleanup-decision", default="")
+    finish_branch.set_defaults(func=cmd_finish_branch)
 
     learnings = sub.add_parser("learnings", help="Append durable decisions, lessons, patterns, and surprises.")
     learnings.add_argument("project", type=Path)

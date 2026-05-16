@@ -10,7 +10,8 @@
     ".pfo/SCOPE_LOCK.md",
     "PRODUCT_BLUEPRINT.md",
     "BUILD_PLAN.md",
-    "EXECUTION_GRAPH.md"
+    "EXECUTION_GRAPH.md",
+    "ROOT_CAUSE.md for bugfix units"
   ],
   "allowedWriteAreas": [],
   "forbiddenChanges": [
@@ -21,6 +22,11 @@
   "dependencies": [],
   "verificationCommands": [],
   "gates": [
+    "tddRed",
+    "tddGreen",
+    "rootCause",
+    "specComplianceReview",
+    "codeQualityReview",
     "scopeLock",
     "dataAuthenticity",
     "goldenFlows",
@@ -29,5 +35,9 @@
     "diffRisk",
     "noSilentSubstitution"
   ],
+  "review": {
+    "specCompliance": "Check output against the unit goal, spec, and allowed scope first.",
+    "codeQuality": "Check simplicity, maintainability, tests, and integration second."
+  },
   "recovery": "If verification is missing or ambiguous, mark RECOVERY_REQUIRED and create PFO_RECOVERY.md."
 }

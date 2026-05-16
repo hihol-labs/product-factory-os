@@ -24,7 +24,11 @@ Run `pfo contracts . --write` during review.
 - Capture phase decisions in `PHASE_CONTEXT.md` before detailed planning.
 - Create `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
 - Execute one unit at a time from the manifest, not from accumulated chat context.
+- Record TDD red/green/refactor evidence for behavior changes.
+- Write `ROOT_CAUSE.md` before bugfix implementation.
+- Run spec compliance review before code quality review.
 - Verification fails closed when evidence is missing or ambiguous.
+- Finish branches with an explicit PR, merge, keep, or discard decision.
 - Record durable decisions, lessons, patterns, and surprises in `.codex-memory/LEARNINGS.md`.
 
 ## Status

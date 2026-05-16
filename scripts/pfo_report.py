@@ -34,6 +34,7 @@ def main() -> None:
         f"- Last successful state: `{state.get('lastSuccessfulState', '')}`",
         f"- Next action: {state.get('nextAction', '')}",
         f"- Recovery: `{state.get('recoveryState', {}).get('status', '')}` {state.get('recoveryState', {}).get('reason', '')}",
+        f"- Root cause: `{state.get('rootCause', {}).get('status', '')}` {state.get('rootCause', {}).get('summary', '')}",
         "",
         "## Existing Project Analysis",
         "",
@@ -62,6 +63,35 @@ def main() -> None:
     ])
     history = state.get("verificationHistory", [])
     report.extend([f"- {item}" for item in history] or ["- none"])
+    report.extend([
+        "",
+        "## TDD Evidence",
+        "",
+    ])
+    tdd = state.get("tddEvidence", {})
+    report.extend([
+        f"- Red: {tdd.get('red', '') or 'none'}",
+        f"- Green: {tdd.get('green', '') or 'none'}",
+        f"- Refactor: {tdd.get('refactor', '') or 'none'}",
+    ])
+    review_stages = state.get("reviewStages", {})
+    report.extend([
+        "",
+        "## Review Stages",
+        "",
+        f"- Spec compliance: `{review_stages.get('specCompliance', {}).get('status', '')}` {review_stages.get('specCompliance', {}).get('evidence', '')}",
+        f"- Code quality: `{review_stages.get('codeQuality', {}).get('status', '')}` {review_stages.get('codeQuality', {}).get('evidence', '')}",
+    ])
+    branch_finish = state.get("branchFinish", {})
+    report.extend([
+        "",
+        "## Branch Finish",
+        "",
+        f"- Mode: `{branch_finish.get('mode', '')}`",
+        f"- Status: `{branch_finish.get('status', '')}`",
+        f"- Verification: {branch_finish.get('verification', '') or 'none'}",
+        f"- PR: {branch_finish.get('prUrl', '') or 'none'}",
+    ])
     report.extend([
         "",
         "## Dispatch Journal",

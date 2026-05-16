@@ -14,8 +14,10 @@ IDEA
   -> Build Plan
   -> Execution Graph
   -> Unit Context Manifest
+  -> TDD Evidence
   -> Modular Build
   -> Work Verification
+  -> Two-Stage Review
   -> Drift And Recovery Check
   -> Tests
   -> Quality Gates
@@ -152,17 +154,27 @@ Recovery covers:
 - changed golden flows without evidence
 - repeated unit failure or stuck progress
 
-### 10. Memory System
+### 10. Engineering Discipline Gates
+
+PFO keeps product strategy and project contracts as the outer lifecycle, then applies disciplined engineering gates inside each execution unit:
+
+- TDD evidence: red, green, and refactor verification for behavior changes.
+- Root cause: bugfixes require evidence and a fix hypothesis before code changes.
+- Two-stage review: spec compliance first, code quality second.
+- Strict task granularity: exact files, commands, expected output, and exit criteria.
+- Branch finish: PR, merge, keep, or discard decision with fresh verification.
+
+### 11. Memory System
 
 Uses `memory/session-state.schema.json` as the canonical reloadable state contract.
 
 It stores dispatch history, telemetry, recovery state, captured notes, and durable learnings in addition to basic stage and gate state.
 
-### 11. Deployment Abstraction Layer
+### 12. Deployment Abstraction Layer
 
 Uses `deployment/deployment-targets.json` to prepare deploy-ready artifacts for Docker, VPS, Vercel, Netlify, AWS, GCP, and Azure.
 
-### 12. Connector And MCP Layer
+### 13. Connector And MCP Layer
 
 Uses `integrations/mcp-capabilities.json` and `docs/OPENAI_MCP_INTEGRATIONS.md` to bind external tools to named PFO skills:
 
@@ -191,8 +203,10 @@ Every full-cycle PFO project should maintain:
 - `EXECUTION_GRAPH.md`
 - `IMPLEMENTATION_PLAN.md`
 - `PHASE_CONTEXT.md` when detailed implementation decisions exist
+- `ROOT_CAUSE.md` for bugfix work
 - `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution
 - `PFO_RECOVERY.md` when verification or state reconciliation blocks progress
+- `BRANCH_FINISH.md` when branch cleanup or PR/merge decisions are in scope
 - `PFO_BRIEF.html` when visual status, plan, diff, or recap review is useful
 - `.codex-memory/LEARNINGS.md` after significant milestones or repairs
 - `CODEX.md`
@@ -205,6 +219,9 @@ Deployment is blocked unless:
 
 - Architecture matches implementation.
 - Changed behavior has tests or a documented non-production limitation.
+- TDD red/green/refactor evidence is recorded for behavior changes, or an explicit exception exists.
+- Bugfixes have root-cause evidence before the fix is accepted.
+- Implementation units pass spec compliance review before code quality review.
 - Project `.pfo/` contracts pass: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, and no silent substitution.
 - Security review has no Critical findings.
 - Dependency review has no Critical findings or accepted risk.
