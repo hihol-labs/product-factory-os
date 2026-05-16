@@ -170,6 +170,8 @@ Uses `memory/session-state.schema.json` as the canonical reloadable state contra
 
 It stores dispatch history, telemetry, recovery state, captured notes, and durable learnings in addition to basic stage and gate state.
 
+Structured learnings are recorded in `.codex-memory/LEARNINGS.jsonl`. Candidate runtime improvements are proposed into `.codex-memory/LEARNING_PROPOSALS.json` and the repository-level `memory/LEARNING_REGISTRY.json`; they must pass promotion gates before changing templates, routes, gates, or skills.
+
 ### 12. Deployment Abstraction Layer
 
 Uses `deployment/deployment-targets.json` to prepare deploy-ready artifacts for Docker, VPS, Vercel, Netlify, AWS, GCP, and Azure.

@@ -157,6 +157,7 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "costNotes": "",
             },
             "knowledgeLog": [],
+            "learningProposals": [],
             "briefArtifacts": [],
             "worktreeIsolation": {
                 "enabled": False,

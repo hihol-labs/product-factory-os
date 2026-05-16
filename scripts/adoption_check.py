@@ -289,6 +289,7 @@ def write_adoption_files(path: Path, workspace: Path) -> None:
                         "costNotes": "",
                     },
                     "knowledgeLog": [],
+                    "learningProposals": [],
                     "briefArtifacts": [],
                     "worktreeIsolation": {
                         "enabled": False,

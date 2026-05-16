@@ -113,7 +113,8 @@ python3 scripts/pfo.py resume ../my-product
 python3 scripts/pfo.py report ../my-product
 python3 scripts/pfo.py finish-branch ../my-product --mode pr --verification "checks passed" --pr-url "https://github.com/..."
 python3 scripts/pfo.py brief ../my-product --mode recap
-python3 scripts/pfo.py learnings ../my-product --lesson "Keep provider fallback explicit"
+python3 scripts/pfo.py learnings ../my-product --lesson "Keep provider fallback explicit" --problem "Fallbacks drift during deploy checks" --rule "Require fallback evidence in deploy nodes" --evidence "deploy gate recovery" --confidence 0.75
+python3 scripts/pfo.py improve ../my-product --from-learnings --propose
 python3 scripts/pfo.py voice "создай Telegram бот для продаж"
 python3 scripts/pfo.py metrics
 python3 scripts/pfo.py export ../my-product --target github

@@ -105,7 +105,8 @@ pfo resume ../my-product
 pfo report ../my-product
 pfo finish-branch ../my-product --mode pr --verification "checks passed" --pr-url "https://github.com/..."
 pfo brief ../my-product --mode recap
-pfo learnings ../my-product --lesson "Keep provider fallback explicit"
+pfo learnings ../my-product --lesson "Keep provider fallback explicit" --problem "Fallbacks drift during deploy checks" --rule "Require fallback evidence in deploy nodes" --evidence "deploy gate recovery" --confidence 0.75
+pfo improve ../my-product --from-learnings --propose
 pfo voice "создай Telegram бот для продаж"
 pfo metrics
 pfo export ../my-product --target github

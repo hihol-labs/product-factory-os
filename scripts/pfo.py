@@ -87,6 +87,7 @@ def ensure_autonomy_state(state: dict) -> None:
     )
     state.setdefault("driftChecks", [])
     state.setdefault("knowledgeLog", [])
+    state.setdefault("learningProposals", [])
     state.setdefault("briefArtifacts", [])
     state.setdefault(
         "recoveryState",
@@ -925,36 +926,29 @@ def cmd_finish_branch(args: argparse.Namespace) -> int:
 
 
 def cmd_learnings(args: argparse.Namespace) -> int:
-    project = args.project.resolve()
-    state = load_state(project)
-    ensure_autonomy_state(state)
-    memory_dir = project / ".codex-memory"
-    memory_dir.mkdir(exist_ok=True)
-    path = memory_dir / "LEARNINGS.md"
-    entry = (
-        f"\n## {now_iso()}\n\n"
-        f"- Decision: {args.decision or 'TBD'}\n"
-        f"- Lesson: {args.lesson or 'TBD'}\n"
-        f"- Pattern: {args.pattern or 'TBD'}\n"
-        f"- Surprise: {args.surprise or 'TBD'}\n"
-    )
-    if not path.exists():
-        path.write_text("# Learnings\n", encoding="utf-8")
-    path.write_text(path.read_text(encoding="utf-8") + entry, encoding="utf-8")
-    state.setdefault("knowledgeLog", []).append(
-        {
-            "decision": args.decision,
-            "lesson": args.lesson,
-            "pattern": args.pattern,
-            "surprise": args.surprise,
-            "recordedAt": now_iso(),
-        }
-    )
-    add_artifact(state, ".codex-memory/LEARNINGS.md")
-    state["nextAction"] = "Use recorded learnings when planning the next unit or milestone."
-    save_state(project, state)
-    print("OK: appended .codex-memory/LEARNINGS.md")
-    return 0
+    argv = ["record", str(args.project)]
+    for flag in ["scope", "decision", "lesson", "pattern", "surprise", "problem", "rule"]:
+        value = getattr(args, flag)
+        if value:
+            argv.extend([f"--{flag}", value])
+    for evidence in args.evidence or []:
+        argv.extend(["--evidence", evidence])
+    if args.confidence is not None:
+        argv.extend(["--confidence", str(args.confidence)])
+    return run_script("pfo_learn.py", argv)
+
+
+def cmd_improve(args: argparse.Namespace) -> int:
+    if not args.from_learnings:
+        print("ERROR: improve currently requires --from-learnings")
+        return 2
+    if not args.propose:
+        print("ERROR: improve currently requires --propose")
+        return 2
+    argv = ["propose", str(args.project), "--min-confidence", str(args.min_confidence)]
+    if args.registry:
+        argv.extend(["--registry", str(args.registry)])
+    return run_script("pfo_learn.py", argv)
 
 
 def cmd_brief(args: argparse.Namespace) -> int:
@@ -1113,7 +1107,20 @@ def build_parser() -> argparse.ArgumentParser:
     learnings.add_argument("--lesson", default="")
     learnings.add_argument("--pattern", default="")
     learnings.add_argument("--surprise", default="")
+    learnings.add_argument("--scope", default="")
+    learnings.add_argument("--problem", default="")
+    learnings.add_argument("--rule", default="")
+    learnings.add_argument("--evidence", action="append", default=[])
+    learnings.add_argument("--confidence", type=float, default=None)
     learnings.set_defaults(func=cmd_learnings)
+
+    improve = sub.add_parser("improve", help="Propose PFO runtime improvements from structured learnings.")
+    improve.add_argument("project", type=Path)
+    improve.add_argument("--from-learnings", action="store_true")
+    improve.add_argument("--propose", action="store_true")
+    improve.add_argument("--min-confidence", type=float, default=0.0)
+    improve.add_argument("--registry", type=Path, default=None)
+    improve.set_defaults(func=cmd_improve)
 
     brief = sub.add_parser("brief", help="Generate a self-contained HTML project brief.")
     brief.add_argument("project", type=Path)
