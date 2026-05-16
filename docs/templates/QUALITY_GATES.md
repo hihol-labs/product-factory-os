@@ -8,6 +8,12 @@
 | Architecture |  |  |  |
 | Tests |  |  |  |
 | Review |  |  |  |
+| TDD Red |  | failing test command and expected failure |  |
+| TDD Green |  | passing test command after minimal implementation |  |
+| TDD Refactor |  | post-refactor passing command or not-applicable note |  |
+| Root Cause |  | `ROOT_CAUSE.md` for bugfixes |  |
+| Spec Compliance Review |  | unit output checked against manifest/spec |  |
+| Code Quality Review |  | maintainability, simplicity, integration checks |  |
 | Unit Context Manifest |  | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
 | Work Verification |  | verification log / command output |  |
 | Security |  |  |  |
@@ -21,6 +27,7 @@
 | Diff Risk |  | `PFO_CONTRACT_GATE.json` |  |
 | No Silent Substitution |  | diff scan, project contracts |  |
 | Deployment Readiness |  |  |  |
+| Branch Finish |  | PR/merge/keep/discard decision with verification |  |
 | Learning Extraction |  | `.codex-memory/LEARNINGS.md` when applicable |  |
 
 ## Accepted Risks

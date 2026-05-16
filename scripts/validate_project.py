@@ -54,15 +54,19 @@ def main() -> None:
         "PLAN_READY",
         "UNIT_CONTEXT_READY",
         "UNIT_DISPATCHED",
+        "ROOT_CAUSE_ANALYSIS",
+        "TDD_EVIDENCE",
         "BUILDING",
         "VERIFYING_WORK",
         "TESTING",
+        "TWO_STAGE_REVIEW",
         "REVIEWING",
         "RECOVERY_REQUIRED",
         "SECURITY_REVIEW",
         "DEPENDENCY_REVIEW",
         "HARDENING",
         "READY_FOR_DEPLOY",
+        "BRANCH_FINISH",
         "DEPLOYED",
     }
     if state.get("currentStage") in planned_or_later:
@@ -76,7 +80,15 @@ def main() -> None:
         ]:
             if not (project / rel).is_file():
                 fail(f"planned project is missing {rel}")
-    if state.get("currentStage") in {"UNIT_CONTEXT_READY", "UNIT_DISPATCHED", "BUILDING", "VERIFYING_WORK"}:
+    if state.get("currentStage") in {
+        "UNIT_CONTEXT_READY",
+        "UNIT_DISPATCHED",
+        "ROOT_CAUSE_ANALYSIS",
+        "TDD_EVIDENCE",
+        "BUILDING",
+        "VERIFYING_WORK",
+        "TWO_STAGE_REVIEW",
+    }:
         rel = ".pfo/UNIT_CONTEXT_MANIFEST.json"
         if not (project / rel).is_file():
             fail(f"unit execution project is missing {rel}")

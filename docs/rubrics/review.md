@@ -16,6 +16,8 @@ The review rubric is binary at the critical tier. One failed Critical check mean
 | C8 | Test coverage | Changed behavior has tests, or a documented reason tests are not practical yet. |
 | C9 | Build viability | The project has clear install/run commands and no known uncompilable state. |
 | C10 | Deploy safety | Deployment docs include env vars, health check, and rollback or recovery notes when deployment is in scope. |
+| C11 | Two-stage review | Implementation units pass spec compliance before code quality review. |
+| C12 | Root cause discipline | Bugfixes include root-cause evidence before the fix is accepted. |
 
 ## Important
 
@@ -29,6 +31,7 @@ The review rubric is binary at the critical tier. One failed Critical check mean
 | I6 | Maintainability | Code avoids obvious god modules, duplicated logic, and hidden coupling. |
 | I7 | Migration path | Data or API changes mention compatibility or migration strategy. |
 | I8 | Performance risk | Known scale or latency risks are acknowledged. |
+| I9 | Branch finish hygiene | PR, merge, keep, or discard decision is explicit and backed by fresh verification. |
 
 ## Nice To Have
 
@@ -60,4 +63,3 @@ Status: BLOCKED | PASSED_WITH_WARNINGS | PASSED
 
 ## Summary
 ```
-

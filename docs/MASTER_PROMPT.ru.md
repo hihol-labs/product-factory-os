@@ -230,6 +230,10 @@ BLOCKERS:
 - current phase / unit
 - unit context manifest
 - dispatch journal
+- TDD red/green/refactor evidence
+- root-cause evidence
+- spec compliance and code quality review stages
+- branch finish decision
 - gate results
 - verification history
 - decision log

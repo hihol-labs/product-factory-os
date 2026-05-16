@@ -72,6 +72,13 @@
       "architecture": "",
       "tests": "",
       "review": "",
+      "tddRed": "",
+      "tddGreen": "",
+      "tddRefactor": "",
+      "rootCause": "",
+      "specComplianceReview": "",
+      "codeQualityReview": "",
+      "branchFinish": "",
       "security": "",
       "dependencies": "",
       "hardening": "",
@@ -83,6 +90,40 @@
       "diffRisk": "",
       "noSilentSubstitution": "",
       "deploymentReadiness": ""
+    },
+    "tddEvidence": {
+      "red": "",
+      "green": "",
+      "refactor": "",
+      "lastRecordedAt": ""
+    },
+    "rootCause": {
+      "status": "",
+      "summary": "",
+      "evidence": "",
+      "hypothesis": "",
+      "recordedAt": ""
+    },
+    "reviewStages": {
+      "specCompliance": {
+        "status": "",
+        "evidence": "",
+        "recordedAt": ""
+      },
+      "codeQuality": {
+        "status": "",
+        "evidence": "",
+        "recordedAt": ""
+      }
+    },
+    "branchFinish": {
+      "status": "",
+      "mode": "",
+      "verification": "",
+      "remoteBranch": "",
+      "prUrl": "",
+      "cleanupDecision": "",
+      "recordedAt": ""
     },
     "verificationHistory": [],
     "dispatchJournal": [],

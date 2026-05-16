@@ -49,8 +49,9 @@ Return one:
 5. For browser-facing changes, require `/browser-check` evidence before deploy readiness.
 6. For SDK, framework, or platform questions, use `/mcp-docs` before flagging documentation-sensitive findings.
 7. Apply checks as binary pass/fail at Critical tier.
-8. Produce findings first.
-9. Set gate status from rubric results.
+8. Run spec compliance review before code quality review for implementation units.
+9. Produce findings first.
+10. Set gate status from rubric results.
 
 ## Scope Rules
 
@@ -59,6 +60,8 @@ Return one:
 - If reviewing the methodology repository itself, run `scripts/meta_review.py` when available and include its result.
 - If `EXECUTION_GRAPH.md` exists, run `scripts/validate_execution_graph.py` when available.
 - If `.codex-memory/STATE.json` exists, check it matches current stage, current node, gate results, and next action.
+- If TDD evidence is required, check red and green evidence before accepting the testing gate.
+- If the work is a bugfix, check `ROOT_CAUSE.md` or equivalent state evidence before accepting the fix.
 
 ## Output Format
 

@@ -202,12 +202,17 @@ pfo plan ../my-product
 pfo manifest ../my-product --unit N1
 pfo build ../my-product
 pfo test ../my-product
+pfo tdd-evidence ../my-product --red "pytest ... failed as expected" --green "pytest ... passed"
+pfo root-cause ../my-product --summary "bad value enters parser" --evidence "trace shows parser input"
 pfo verify-work ../my-product --evidence "tests passed" --pass-gate
+pfo review-stage ../my-product --stage spec --status PASSED --evidence "matches manifest"
+pfo review-stage ../my-product --stage quality --status PASSED --evidence "tests and review clean"
 pfo review ../my-product
 pfo validate ../my-product
 pfo status ../my-product
 pfo resume ../my-product
 pfo report ../my-product
+pfo finish-branch ../my-product --mode pr --verification "checks passed"
 pfo brief ../my-product --mode recap
 pfo learnings ../my-product --lesson "keep fallback explicit"
 pfo metrics

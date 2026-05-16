@@ -12,6 +12,7 @@ Use this rubric from `/test`, `/review`, and `/kickstart`.
 | T4 | Verification command | Every execution graph node has a concrete verification command or manual check. |
 | T5 | Smoke path | Deployable products have a smoke test path for startup and primary flow. |
 | T6 | Data safety | Migrations, destructive operations, and scrapers have rollback, dry-run, or fixture-based verification. |
+| T7 | TDD evidence | Behavior changes record red evidence before implementation and green evidence after minimal implementation, or an explicit owner-approved exception. |
 
 ## Important
 
@@ -22,6 +23,7 @@ Use this rubric from `/test`, `/review`, and `/kickstart`.
 | I3 | Accessibility checks | UI products include accessibility and responsive checks where practical. |
 | I4 | Security tests | Auth, permission, rate-limit, upload, and injection-sensitive flows include negative tests. |
 | I5 | CI readiness | Build and tests are runnable in CI with documented commands. |
+| I6 | Refactor evidence | Refactor steps preserve green tests or document why refactor was not applicable. |
 
 ## Product-Type Minimums
 
@@ -37,4 +39,3 @@ Use this rubric from `/test`, `/review`, and `/kickstart`.
 | E-commerce | Catalog, cart, checkout, order state, payment webhook mocks |
 | Data Scraper | Fetch retry/rate limit, parser fixtures, storage, scheduler dry run |
 | Internal Automation | Workflow state, integration mocks, audit log |
-
