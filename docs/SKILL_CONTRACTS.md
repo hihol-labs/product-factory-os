@@ -5,9 +5,9 @@
 | `/project` | Product idea | Route decision | None | Safe |
 | `/task` | Existing-project task | Route decision | None | Safe |
 | `/discover` | Idea or problem | `DISCOVERY.md` | Writes docs | Ask before overwrite |
-| `/blueprint` | Idea plus clarifications | Planning documents plus `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, `QUALITY_GATES.md` | Writes docs | Ask before overwrite |
+| `/blueprint` | Idea plus clarifications | Planning documents plus `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `PHASE_CONTEXT.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, `QUALITY_GATES.md` | Writes docs | Ask before overwrite |
 | `/guide` | Existing planning docs | `CODEX_GUIDE.md` | Writes docs | Safe if generated from same inputs |
-| `/kickstart` | Idea or approved PFO docs | Project docs, scaffold, code, state updates | Writes code/docs/memory | Stateful |
+| `/kickstart` | Idea or approved PFO docs | Project docs, scaffold, `.pfo/UNIT_CONTEXT_MANIFEST.json`, code, state updates | Writes code/docs/memory | Stateful |
 | `/review` | Project path or changed files | Review report | Read-only by default | Safe |
 | `/test` | File, module, feature | Test files or test plan | Writes tests | Safe if tests are absent |
 | `/bugfix` | Symptom, error, failing test | Root-cause fix | Writes code/tests | Stateful |
@@ -25,7 +25,7 @@
 | `/migrate` | Migration target | Applied migration/report | DB impact | Requires confirmation for prod |
 | `/github-workflow` | Issue, PR, check run, branch, or release | GitHub status, CI/PR actions, export payload | External GitHub reads/writes with approval | Stateful |
 | `/tool-sync` | PFO artifacts and target tool | Connector sync result or `.pfo-integrations/` payload | External writes only with approval | Reconcile by source artifact |
-| `/session-save` | Session summary and PFO state | Memory files and `.codex-memory/STATE.json` | Writes memory docs/state | Creates or updates state |
+| `/session-save` | Session summary and PFO state | Memory files, `.codex-memory/STATE.json`, optional `.codex-memory/LEARNINGS.md` | Writes memory docs/state | Creates or updates state |
 | `/advisor` | Decision or question | Analysis report | None | Safe |
 | `/strategy` | Existing project context | Strategy docs/backlog | Writes docs | Safe with review |
 | `/adopt` | Existing repository | `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts when required | Writes project metadata | Marker-based |

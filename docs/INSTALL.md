@@ -197,14 +197,19 @@ pfo validate ../my-product
 pfo new my-product --idea "voice transcript or product idea"
 pfo adopt ../existing-product --analyze --run-gates
 pfo analyze ../existing-product --run-gates --report
+pfo discuss ../my-product --phase phase-1
 pfo plan ../my-product
+pfo manifest ../my-product --unit N1
 pfo build ../my-product
 pfo test ../my-product
+pfo verify-work ../my-product --evidence "tests passed" --pass-gate
 pfo review ../my-product
 pfo validate ../my-product
 pfo status ../my-product
 pfo resume ../my-product
 pfo report ../my-product
+pfo brief ../my-product --mode recap
+pfo learnings ../my-product --lesson "keep fallback explicit"
 pfo metrics
 pfo export ../my-product --target github
 pfo export ../my-product --target google-drive

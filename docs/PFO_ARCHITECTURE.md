@@ -10,12 +10,17 @@ IDEA
   -> Product Classification
   -> Architecture Selection
   -> Product Blueprint
+  -> Phase Discussion
   -> Build Plan
   -> Execution Graph
+  -> Unit Context Manifest
   -> Modular Build
+  -> Work Verification
+  -> Drift And Recovery Check
   -> Tests
   -> Quality Gates
   -> Deploy Ready
+  -> Learning Extraction
   -> Session State
 ```
 
@@ -101,19 +106,63 @@ Compiles:
 Idea -> Product Blueprint -> Build Plan -> Execution Graph
 ```
 
-### 6. Execution Engine
+### 6. Phase Discussion Layer
+
+Captures the implementation decisions that usually get lost between high-level planning and code:
+
+- product behavior choices
+- UI and API shape decisions
+- data model assumptions
+- integrations and fallback boundaries
+- open questions that block planning
+
+The canonical artifact is `PHASE_CONTEXT.md`.
+
+### 7. Unit Context Manifest
+
+Before execution, each node gets a task-scoped manifest:
+
+- unit id and goal
+- required inputs and source artifacts
+- allowed write areas
+- forbidden changes
+- dependencies
+- verification commands
+- gates that must pass
+- recovery behavior
+
+The canonical artifact is `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+
+### 8. Execution Engine
 
 Uses `execution/state-machine.json` and `pipelines/execution-pipeline.json` to move through controlled states. Failed gates block forward movement and create a repair path.
 
-### 7. Memory System
+Execution should use fresh, task-scoped context per unit. Long chat history is not the execution source of truth.
+
+### 9. Verification, Drift, And Recovery
+
+Post-unit verification fails closed. PFO records unclear evidence as recovery work, not success.
+
+Recovery covers:
+
+- stale or missing state
+- missing required artifacts
+- worktree or branch mismatch
+- unsafe verification commands
+- changed golden flows without evidence
+- repeated unit failure or stuck progress
+
+### 10. Memory System
 
 Uses `memory/session-state.schema.json` as the canonical reloadable state contract.
 
-### 8. Deployment Abstraction Layer
+It stores dispatch history, telemetry, recovery state, captured notes, and durable learnings in addition to basic stage and gate state.
+
+### 11. Deployment Abstraction Layer
 
 Uses `deployment/deployment-targets.json` to prepare deploy-ready artifacts for Docker, VPS, Vercel, Netlify, AWS, GCP, and Azure.
 
-### 9. Connector And MCP Layer
+### 12. Connector And MCP Layer
 
 Uses `integrations/mcp-capabilities.json` and `docs/OPENAI_MCP_INTEGRATIONS.md` to bind external tools to named PFO skills:
 
@@ -141,6 +190,11 @@ Every full-cycle PFO project should maintain:
 - `BUILD_PLAN.md`
 - `EXECUTION_GRAPH.md`
 - `IMPLEMENTATION_PLAN.md`
+- `PHASE_CONTEXT.md` when detailed implementation decisions exist
+- `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution
+- `PFO_RECOVERY.md` when verification or state reconciliation blocks progress
+- `PFO_BRIEF.html` when visual status, plan, diff, or recap review is useful
+- `.codex-memory/LEARNINGS.md` after significant milestones or repairs
 - `CODEX.md`
 - `.codex-memory/STATE.json`
 - `.codex-memory/MEMORY.md`

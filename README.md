@@ -26,6 +26,7 @@ This is a Codex-native methodology runtime. It contains:
 - A structure validator for repository health checks
 - Product Factory OS runtime contracts for classification, templates, state machine, execution pipeline, memory, deployment, and voice-first interface
 - Project-level `.pfo/` contracts for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution
+- GSD-inspired autonomous layer for phase discussion, unit context manifests, dispatch journaling, fail-closed verification, recovery state, telemetry, learnings, and visual briefs
 
 ## Quick Start
 
@@ -93,15 +94,20 @@ pfo new my-product --idea "SaaS for subscription tracking"
 pfo adopt
 pfo adopt ../existing-product --analyze --run-gates
 pfo analyze ../existing-product --run-gates --report
+pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product
+pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
 pfo build ../my-product
 pfo test ../my-product
+pfo verify-work ../my-product --evidence "tests and smoke passed" --pass-gate
 pfo review ../my-product
 python3 scripts/pfo.py validate ../my-product
 python3 scripts/pfo.py contracts ../my-product --write
 python3 scripts/pfo.py status ../my-product
 python3 scripts/pfo.py resume ../my-product
 python3 scripts/pfo.py report ../my-product
+python3 scripts/pfo.py brief ../my-product --mode recap
+python3 scripts/pfo.py learnings ../my-product --lesson "Keep provider fallback explicit"
 python3 scripts/pfo.py voice "создай Telegram бот для продаж"
 python3 scripts/pfo.py metrics
 python3 scripts/pfo.py export ../my-product --target github
@@ -113,6 +119,8 @@ Starter packs live in `starters/`. Golden paths live in `golden-paths/`.
 Generated projects receive `.pfo/` contracts, `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile`, and `PFO_REPORT.md`.
 
 `pfo plan` now creates missing `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, and `QUALITY_GATES.md` from the selected starter while preserving existing files.
+
+`pfo discuss` records decisions in `PHASE_CONTEXT.md`, `pfo manifest` writes `.pfo/UNIT_CONTEXT_MANIFEST.json`, `pfo verify-work` creates a recovery path by default when evidence is unclear, and `pfo brief` generates a local HTML project brief.
 
 Additional platform extensions:
 
@@ -168,6 +176,7 @@ See:
 - [v0.6.0 Release Notes](docs/RELEASE_NOTES_v0.6.0.md)
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
 - [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
+- [GSD Integration Notes](docs/GSD_INTEGRATION.md)
 
 ## Repository Layout
 
@@ -199,10 +208,12 @@ Every major project step should pass:
 1. Requirements are documented.
 2. Product classification and architecture template are explicit.
 3. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md` agree.
-4. Tests exist for changed behavior.
-5. Review status is not `BLOCKED`.
-6. `.pfo/` contract gates do not report scope, data, fallback, golden-flow, or silent-substitution violations.
-7. Session state is saved before stopping.
+4. Autonomous or delegated work has `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+5. Tests exist for changed behavior.
+6. Verification is definitive; missing or ambiguous evidence creates recovery work.
+7. Review status is not `BLOCKED`.
+8. `.pfo/` contract gates do not report scope, data, fallback, golden-flow, or silent-substitution violations.
+9. Session state is saved before stopping.
 
 ## Validation
 

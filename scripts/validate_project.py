@@ -52,9 +52,13 @@ def main() -> None:
     state = json.loads((project / ".codex-memory" / "STATE.json").read_text(encoding="utf-8"))
     planned_or_later = {
         "PLAN_READY",
+        "UNIT_CONTEXT_READY",
+        "UNIT_DISPATCHED",
         "BUILDING",
+        "VERIFYING_WORK",
         "TESTING",
         "REVIEWING",
+        "RECOVERY_REQUIRED",
         "SECURITY_REVIEW",
         "DEPENDENCY_REVIEW",
         "HARDENING",
@@ -72,6 +76,10 @@ def main() -> None:
         ]:
             if not (project / rel).is_file():
                 fail(f"planned project is missing {rel}")
+    if state.get("currentStage") in {"UNIT_CONTEXT_READY", "UNIT_DISPATCHED", "BUILDING", "VERIFYING_WORK"}:
+        rel = ".pfo/UNIT_CONTEXT_MANIFEST.json"
+        if not (project / rel).is_file():
+            fail(f"unit execution project is missing {rel}")
     if state.get("currentStage") in ["READY_FOR_DEPLOY", "DEPLOYED"]:
         for rel in ["QUALITY_GATES.md", "TEST_PLAN.md"]:
             if not (project / rel).is_file():

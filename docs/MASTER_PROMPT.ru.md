@@ -227,11 +227,21 @@ BLOCKERS:
 `STATE.json` должен хранить:
 
 - current node
+- current phase / unit
+- unit context manifest
+- dispatch journal
 - gate results
 - verification history
 - decision log
+- recovery state
+- telemetry
+- drift checks
+- knowledge log
 - artifact hashes
 - last successful state
+
+Перед автономным или delegated исполнением создай `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+Если verification evidence отсутствует или неясна, статус не `PASSED`: создай recovery path.
 
 ## XI. Output Contract
 

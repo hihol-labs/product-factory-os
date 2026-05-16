@@ -10,8 +10,10 @@ Idea
   -> Product Classification
   -> Architecture Selection
   -> Product Blueprint
+  -> Phase Context
   -> Build Plan
   -> Execution Graph
+  -> Unit Context Manifest
 ```
 
 ## Stage Contracts
@@ -59,7 +61,16 @@ Write `PRODUCT_BLUEPRINT.md` with:
 - Infrastructure
 - Risks
 
-### 5. Build Plan
+### 5. Phase Context
+
+Write `PHASE_CONTEXT.md` with:
+
+- implementation decisions
+- assumptions
+- open questions
+- planning impact
+
+### 6. Build Plan
 
 Write `BUILD_PLAN.md` with:
 
@@ -69,7 +80,7 @@ Write `BUILD_PLAN.md` with:
 - Verification per module
 - Exit criteria
 
-### 6. Execution Graph
+### 7. Execution Graph
 
 Write `EXECUTION_GRAPH.md` with:
 
@@ -78,7 +89,18 @@ Write `EXECUTION_GRAPH.md` with:
 - Validation checkpoints
 - Rollback or repair action for failed gates
 
-### 7. Test And Gate Plan
+### 8. Unit Context Manifest
+
+Write `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution with:
+
+- unit id and goal
+- required inputs
+- allowed write areas
+- forbidden changes
+- verification commands
+- gates and recovery behavior
+
+### 9. Test And Gate Plan
 
 Write `TEST_PLAN.md` and `QUALITY_GATES.md` with:
 

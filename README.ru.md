@@ -19,6 +19,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - Workspace-default правила для `/home/hihol/projects`
 - Маршруты OpenAI/Codex plugin и MCP для Context7, Browser Use, GitHub, Codex Security, Linear, Notion и Google Drive
 - PFO runtime contracts: classifier, template library, product compiler, state machine, execution pipeline, memory schema, deployment abstraction и voice-first interface
+- GSD-inspired autonomous layer: phase discussion, unit context manifest, dispatch journal, fail-closed verification, recovery state, telemetry, learnings и visual briefs
 
 ## Быстрый Старт
 
@@ -85,15 +86,20 @@ pfo new my-product --idea "SaaS для учета подписок"
 pfo adopt
 pfo adopt ../existing-product --analyze --run-gates
 pfo analyze ../existing-product --run-gates --report
+pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product
+pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
 pfo build ../my-product
 pfo test ../my-product
+pfo verify-work ../my-product --evidence "tests and smoke passed" --pass-gate
 pfo review ../my-product
 pfo validate ../my-product
 pfo contracts ../my-product --write
 pfo status ../my-product
 pfo resume ../my-product
 pfo report ../my-product
+pfo brief ../my-product --mode recap
+pfo learnings ../my-product --lesson "Keep provider fallback explicit"
 pfo voice "создай Telegram бот для продаж"
 pfo metrics
 pfo export ../my-product --target github
@@ -105,6 +111,8 @@ Starter packs находятся в `starters/`. Golden paths находятся
 Сгенерированные проекты получают `.pfo/` contracts, `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile` и `PFO_REPORT.md`.
 
 `pfo plan` создает недостающие `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md` и `QUALITY_GATES.md` на основе выбранного starter, но не перезаписывает уже существующие файлы.
+
+`pfo discuss` фиксирует решения в `PHASE_CONTEXT.md`, `pfo manifest` создает `.pfo/UNIT_CONTEXT_MANIFEST.json`, `pfo verify-work` по умолчанию создает recovery-путь при неясной проверке, `pfo brief` делает локальный HTML-brief по статусу проекта.
 
 Дополнительные расширения платформы:
 
@@ -181,10 +189,12 @@ python3 scripts/meta_review.py
 1. Требования задокументированы.
 2. Классификация продукта и архитектурный шаблон явные.
 3. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md` и `EXECUTION_GRAPH.md` согласованы.
-4. Для изменённого поведения есть тесты.
-5. Review status не равен `BLOCKED`.
-6. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
-7. Контекст сессии сохранён через `/session-save`.
+4. Для автономной или delegated-работы есть `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+5. Для изменённого поведения есть тесты.
+6. Verification не является неясной: missing/ambiguous evidence ведет в recovery, а не в pass.
+7. Review status не равен `BLOCKED`.
+8. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
+9. Контекст сессии сохранён через `/session-save`.
 
 ## Документация
 
@@ -194,6 +204,7 @@ python3 scripts/meta_review.py
 - [Install And Onboarding](docs/INSTALL.md)
 - [Workspace Defaults](docs/WORKSPACE_DEFAULTS.md)
 - [Roadmap](docs/ROADMAP.md)
+- [GSD Integration Notes](docs/GSD_INTEGRATION.md)
 - [PFO Architecture](docs/PFO_ARCHITECTURE.md)
 - [Master Prompt RU](docs/MASTER_PROMPT.ru.md)
 

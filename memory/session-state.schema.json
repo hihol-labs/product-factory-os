@@ -45,7 +45,28 @@
       "currentTaskRoute": "",
       "lastAnalysisSummary": ""
     },
+    "currentPhase": "",
     "currentNode": "",
+    "currentUnit": {
+      "id": "",
+      "goal": "",
+      "status": "",
+      "owner": "",
+      "startedAt": "",
+      "completedAt": ""
+    },
+    "unitContextManifest": {
+      "path": ".pfo/UNIT_CONTEXT_MANIFEST.json",
+      "version": 1,
+      "unitId": "",
+      "requiredInputs": [],
+      "allowedWriteAreas": [],
+      "forbiddenChanges": [],
+      "dependencies": [],
+      "verificationCommands": [],
+      "gates": [],
+      "recovery": ""
+    },
     "gateResults": {
       "strategy": "",
       "architecture": "",
@@ -64,12 +85,38 @@
       "deploymentReadiness": ""
     },
     "verificationHistory": [],
+    "dispatchJournal": [],
     "decisionLog": [],
+    "capturedNotes": [],
     "artifactHashes": {},
     "lastSuccessfulState": "",
     "artifacts": [],
     "completedModules": [],
     "failedValidations": [],
+    "driftChecks": [],
+    "recoveryState": {
+      "status": "",
+      "reason": "",
+      "retryCount": 0,
+      "nextRepairAction": ""
+    },
+    "telemetry": {
+      "unitCount": 0,
+      "verificationCount": 0,
+      "lastCommand": "",
+      "lastDurationSeconds": null,
+      "tokenNotes": "",
+      "costNotes": ""
+    },
+    "knowledgeLog": [],
+    "briefArtifacts": [],
+    "worktreeIsolation": {
+      "enabled": false,
+      "strategy": "",
+      "activeBranch": "",
+      "activeWorktree": "",
+      "mergeStatus": ""
+    },
     "blockers": [],
     "nextAction": ""
   }

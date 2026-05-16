@@ -8,18 +8,23 @@ Product Factory OS is built around small gates instead of one large generation p
 2. Parse intent and classify the product type.
 3. Select a product template and architecture pattern.
 4. Compile the idea into Product Blueprint, Build Plan, and Execution Graph.
-5. Ask only the clarifying questions that change the build.
-6. Produce documents before code.
-7. Review the documents before implementation.
-8. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
-9. Implement execution graph nodes in small steps.
-10. Add tests for every behavior change.
-11. Run `/browser-check` for browser-facing critical flows.
-12. Review before commit or deploy.
-13. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
-14. Harden production-facing services.
-15. Deploy only after explicit confirmation.
-16. Save reloadable session memory.
+5. Run a phase discussion before planning detailed work.
+6. Ask only the clarifying questions that change the build.
+7. Produce documents before code.
+8. Review the documents before implementation.
+9. Build a unit context manifest before executing a node.
+10. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
+11. Implement execution graph nodes in small, isolated units.
+12. Record dispatches, verification commands, cost or token notes, and recovery decisions.
+13. Add tests for every behavior change.
+14. Run `/browser-check` for browser-facing critical flows.
+15. Verify work fail-closed: unclear verification does not pass.
+16. Review before commit or deploy.
+17. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
+18. Extract durable learnings after completed milestones or significant repairs.
+19. Harden production-facing services.
+20. Deploy only after explicit confirmation.
+21. Save reloadable session memory.
 
 ## Existing Project Lifecycle
 
@@ -66,6 +71,7 @@ If any are missing, run `/adopt` first.
 - `DATA_CLASSIFICATION.md`: data inventory, sensitivity, retention, storage, access
 - `TEST_PLAN.md`: test matrix, critical flows, negative cases, smoke path
 - `QUALITY_GATES.md`: gate status, evidence, blockers, accepted risk
+- `PHASE_CONTEXT.md`: decisions, assumptions, open questions, planning impact
 - `BUILD_PLAN.md`: ordered module build plan with dependencies and verification
 - `EXECUTION_GRAPH.md`: execution nodes, transitions, checkpoints, and repair paths
 - `IMPLEMENTATION_PLAN.md`: ordered implementation steps with verification
@@ -78,6 +84,8 @@ If any are missing, run `/adopt` first.
 - `.pfo/FORBIDDEN_CHANGES.md`: changes that require explicit scope approval
 - `.pfo/FALLBACK_POLICY.md`: allowed/forbidden degraded-mode behavior
 - `.pfo/SCOPE_LOCK.md`: current task boundaries and forbidden change areas
+- `.pfo/UNIT_CONTEXT_MANIFEST.json`: execution-unit input, write-scope, gate, and recovery contract
+- `.codex-memory/LEARNINGS.md`: durable decisions, lessons, patterns, and surprises
 
 ## Gate Status
 
@@ -101,6 +109,19 @@ Scores can be useful as summaries, but they must not replace the status enum.
 - `integrations/mcp-capabilities.json`: MCP and OpenAI/Codex plugin capability map.
 - `scripts/pfo_contract_gate.py`: project-contract gate for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution.
 
+## Autonomous Execution Layer
+
+Product Factory OS adopts the strongest GSD execution ideas without copying its product shape:
+
+- Phase discussion: capture implementation decisions and assumptions before detailed planning.
+- Unit context manifest: each execution unit declares inputs, write scope, dependencies, gates, and verification.
+- Fresh-context dispatch: agents should execute units from the manifest, not from accumulated chat context.
+- Atomic progress: every meaningful unit records dispatch, verification, and next action in state.
+- Fail-closed verification: missing or ambiguous evidence creates a repair path, not a pass.
+- Drift and recovery: stale state, missing artifacts, unexpected worktree changes, and blocked verification are first-class recovery cases.
+- Telemetry: record unit duration, commands, token or cost notes when available, and gate outcomes.
+- Learnings: extract reusable decisions, patterns, lessons, and surprises into project memory.
+
 ## Rubrics
 
 Canonical checklists live under `docs/rubrics/`:
@@ -118,8 +139,10 @@ Canonical checklists live under `docs/rubrics/`:
 - Prefer explicit user confirmation at irreversible boundaries.
 - Prefer project conventions over generic templates.
 - Prefer narrow, verifiable implementation steps.
+- Prefer fresh, task-scoped context over long accumulated chat state.
 - Keep planning documents and code synchronized.
 - Treat tests and review as part of implementation, not cleanup.
+- Treat unclear verification as failed until evidence exists.
 - Treat project-owned `.pfo/` contracts as runtime guardrails, not documentation decoration.
 - If a real source or provider is unavailable, fail transparently or use an approved degraded mode; never silently invent production output.
 - Preserve session memory so the next session resumes with context.
