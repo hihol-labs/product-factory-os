@@ -42,17 +42,18 @@ Announce the selected mode and why.
 5. Ensure Product Compiler outputs exist: `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md`.
 6. Use `/mcp-docs` when dependency, SDK, framework, or platform details may be stale.
 7. Run `/review` before writing application code.
-8. Scaffold project structure, tooling, environment examples, and test framework.
-9. Implement modules from `BUILD_PLAN.md` and `EXECUTION_GRAPH.md` step by step.
-10. After each behavior change, run or create tests via `/test`.
-11. For user-facing browser flows, run `/browser-check` before ship readiness.
-12. Capture feedback and iteration outcomes in `FEEDBACK_LOG.md` and `ITERATION_REVIEW.md` when users or tests produce signals.
-13. Promote reusable solutions into `ASSET_REGISTER.md` and `CONTENT_BACKLOG.md` when evidence exists.
-14. Review significant changes with `/review`.
-15. Before production work, run `/security-audit`, `/deps-audit`, and `/harden`.
-16. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external roadmap sync is in scope.
-17. Deploy only after explicit user confirmation.
-18. Run `/session-save`.
+8. Run `/handoff` before switching sessions, roles, delegated agents, AFK execution, compaction, or recovery.
+9. Scaffold project structure, tooling, environment examples, and test framework.
+10. Implement modules from `BUILD_PLAN.md` and `EXECUTION_GRAPH.md` step by step.
+11. After each behavior change, run or create tests via `/test`.
+12. For user-facing browser flows, run `/browser-check` before ship readiness.
+13. Capture feedback and iteration outcomes in `FEEDBACK_LOG.md` and `ITERATION_REVIEW.md` when users or tests produce signals.
+14. Promote reusable solutions into `ASSET_REGISTER.md` and `CONTENT_BACKLOG.md` when evidence exists.
+15. Review significant changes with `/review`.
+16. Before production work, run `/security-audit`, `/deps-audit`, and `/harden`.
+17. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external roadmap sync is in scope.
+18. Deploy only after explicit user confirmation.
+19. Run `/session-save`.
 
 ## Phase Details
 
@@ -74,6 +75,7 @@ Implementation can start only when:
 - `BUILD_PLAN.md` exists.
 - `EXECUTION_GRAPH.md` exists.
 - `IMPLEMENTATION_PLAN.md` exists.
+- `HANDOFF.md` exists when implementation is transferred to another session, role, delegated agent, AFK run, or recovery pass.
 - Review status is not `BLOCKED`.
 - The user has approved the plan when the project is new.
 

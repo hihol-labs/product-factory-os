@@ -55,6 +55,7 @@ IDEA -> IDEA_SCORECARD -> VALIDATION_PLAN -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> 
 - `ARCH_SELECTED`
 - `BLUEPRINT_READY`
 - `PLAN_READY`
+- `HANDOFF_READY`
 - `BUILDING`
 - `TESTING`
 - `REVIEWING`
@@ -73,7 +74,8 @@ IDEA -> IDEA_SCORECARD -> VALIDATION_PLAN -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> 
 1. Нельзя перейти к `BUILDING` без `BLUEPRINT_READY`.
 2. Нельзя перейти к `READY_FOR_DEPLOY` без `SECURITY_REVIEW`, `DEPENDENCY_REVIEW`, `HARDENING` и успешных quality gates.
 3. Нельзя перейти к `DEPLOYED` без явного подтверждения пользователя.
-4. После каждого крупного этапа состояние сохраняется.
+4. Перед передачей сессии, сменой роли, delegated/AFK исполнением, compaction или recovery нужен `HANDOFF.md`.
+5. После каждого крупного этапа состояние сохраняется.
 
 ## III. Product Classification Engine
 
@@ -257,6 +259,7 @@ BLOCKERS:
 - last successful state
 
 Перед автономным или delegated исполнением создай `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+Перед передачей другой сессии или роли создай `HANDOFF.md`.
 Если verification evidence отсутствует или неясна, статус не `PASSED`: создай recovery path.
 
 ## XI. Output Contract

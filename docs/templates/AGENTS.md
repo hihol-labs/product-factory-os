@@ -10,6 +10,7 @@ This project is governed by Product Factory OS.
 - Broad product scope requires `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md`.
 - Scope, data, fallback, and golden-flow rules live in `.pfo/`.
 - Autonomous or delegated work requires `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+- Session or role transfer requires `HANDOFF.md`.
 - Behavior changes require TDD red/green evidence.
 - Bugfixes require root-cause evidence before fixes.
 - Reviews run spec compliance first, code quality second.

@@ -32,6 +32,7 @@ Write a dated session note under a project memory location, for example:
 - Next steps
 - Files touched
 - PFO current state
+- Latest `HANDOFF.md` status when present
 - Product classification
 - Idea, validation, feedback, funnel, asset, and content status when present
 - Completed modules
@@ -101,4 +102,5 @@ Update `.codex-memory/STATE.json` using `memory/session-state.schema.json`:
 - Prefer concise, resume-friendly notes.
 - Update the memory index after creating a new session file.
 - Keep `STATE.json` reloadable and machine-readable.
+- Do not use `/session-save` as a substitute for `/handoff` when another session or role must start from a compact transfer artifact.
 - If `.codex-memory/` is not appropriate for the project, ask once and use the project-local convention the user chooses.

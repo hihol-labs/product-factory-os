@@ -19,6 +19,7 @@
 | Spec Compliance Review |  | unit output checked against manifest/spec |  |
 | Code Quality Review |  | maintainability, simplicity, integration checks |  |
 | Unit Context Manifest |  | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
+| Handoff |  | `HANDOFF.md` before session transfer, role switch, delegation, AFK, compaction, or recovery |  |
 | Work Verification |  | verification log / command output |  |
 | Security |  |  |  |
 | Dependencies |  |  |  |

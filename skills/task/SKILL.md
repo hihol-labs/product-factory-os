@@ -71,6 +71,7 @@ EXISTING_PROJECT_DETECTED
 - Deploy/release -> `/deploy`
 - GitHub issue, PR, CI, or release workflow -> `/github-workflow`
 - Linear, Notion, Google Drive, or integration export -> `/tool-sync`
+- Session transfer, role switch, delegation, AFK, compaction, or recovery transfer -> `/handoff`
 - Product/strategy decision -> `/advisor` or `/strategy`
 
 ## Rules

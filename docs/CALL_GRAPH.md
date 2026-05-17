@@ -21,6 +21,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
        -> /deps-audit
        -> /harden
        -> /deploy
+       -> /handoff
        -> /github-workflow
        -> /tool-sync
        -> /session-save
@@ -46,6 +47,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /harden
   -> /infra
   -> /deploy
+  -> /handoff
   -> /github-workflow
   -> /tool-sync
   -> /session-save
@@ -58,6 +60,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /advisor
   -> /grill-me
   -> /mcp-docs
+  -> /handoff
   -> /tool-sync
   -> /review
 
@@ -73,4 +76,5 @@ Rules:
 - Read-only audits do not apply fixes unless the user explicitly asks for remediation.
 - Product Factory OS compiler stages are internal runtime stages, not user-invoked skills.
 - Implementation proceeds by execution graph node, with repair paths for failed gates.
+- Use `/handoff` before session transfer, role switch, delegation, AFK execution, compaction, or recovery.
 - External tools are invoked only through explicit skills such as `/mcp-docs`, `/market-scan`, `/browser-check`, `/github-workflow`, or `/tool-sync`.

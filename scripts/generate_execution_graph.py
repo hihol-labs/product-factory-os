@@ -56,6 +56,7 @@ def main() -> None:
         "- Idea Gate: required before broad BUILD scope.",
         "- Market Validation: required when market risk is material.",
         "- Feedback/Funnel Check: required for iteration, acquisition, or conversion work.",
+        "- Handoff: required before session transfer, role switch, delegation, AFK, compaction, or recovery.",
         "- Dependency Check: required before READY_FOR_DEPLOY.",
         "- Test Coverage Check: required after behavior nodes.",
         "- Security Review: required before deploy-ready.",

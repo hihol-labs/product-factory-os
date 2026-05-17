@@ -154,13 +154,26 @@ Before execution, each node gets a task-scoped manifest:
 
 The canonical artifact is `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 
-### 9. Execution Engine
+### 9. Handoff Layer
+
+Before session transfer, role switch, delegated execution, AFK work, compaction, or recovery, PFO writes a compact transfer packet:
+
+- current state, node, unit, and next action
+- final decisions only
+- required inputs
+- allowed and forbidden scope
+- verification commands
+- blockers and first action
+
+The canonical artifact is `HANDOFF.md`.
+
+### 10. Execution Engine
 
 Uses `execution/state-machine.json` and `pipelines/execution-pipeline.json` to move through controlled states. Failed gates block forward movement and create a repair path.
 
 Execution should use fresh, task-scoped context per unit. Long chat history is not the execution source of truth.
 
-### 10. Verification, Drift, And Recovery
+### 11. Verification, Drift, And Recovery
 
 Post-unit verification fails closed. PFO records unclear evidence as recovery work, not success.
 
@@ -173,7 +186,7 @@ Recovery covers:
 - changed golden flows without evidence
 - repeated unit failure or stuck progress
 
-### 11. Engineering Discipline v2 Gates
+### 12. Engineering Discipline v2 Gates
 
 PFO keeps product strategy and project contracts as the outer lifecycle, then applies disciplined engineering gates inside each execution unit:
 
@@ -184,7 +197,7 @@ PFO keeps product strategy and project contracts as the outer lifecycle, then ap
 - Branch finish: PR, merge, keep, or discard decision with fresh verification.
 - Enforcement: `scripts/validate_plan_quality.py` runs directly and through `scripts/validate_project.py`.
 
-### 12. Memory System
+### 13. Memory System
 
 Uses `memory/session-state.schema.json` as the canonical reloadable state contract.
 
@@ -194,11 +207,11 @@ Structured learnings are recorded in `.codex-memory/LEARNINGS.jsonl`. Candidate 
 
 Reusable assets are recorded in `ASSET_REGISTER.md`. Publishable lessons, case studies, and checklists are recorded in `CONTENT_BACKLOG.md` only when they are tied to evidence and approved data boundaries.
 
-### 13. Deployment Abstraction Layer
+### 14. Deployment Abstraction Layer
 
 Uses `deployment/deployment-targets.json` to prepare deploy-ready artifacts for Docker, VPS, Vercel, Netlify, AWS, GCP, and Azure.
 
-### 14. Connector And MCP Layer
+### 15. Connector And MCP Layer
 
 Uses `integrations/mcp-capabilities.json` and `docs/OPENAI_MCP_INTEGRATIONS.md` to bind external tools to named PFO skills:
 
@@ -233,6 +246,7 @@ Every full-cycle PFO project should maintain:
 - `EXECUTION_GRAPH.md`
 - `IMPLEMENTATION_PLAN.md`
 - `PHASE_CONTEXT.md` when detailed implementation decisions exist
+- `HANDOFF.md` before session transfer, role switch, delegated execution, AFK, compaction, or recovery
 - `ROOT_CAUSE.md` for bugfix work
 - `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution
 - `PFO_RECOVERY.md` when verification or state reconciliation blocks progress

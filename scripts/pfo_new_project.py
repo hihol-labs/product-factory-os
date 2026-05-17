@@ -78,6 +78,15 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "gates": [],
                 "recovery": "",
             },
+            "handoff": {
+                "path": "HANDOFF.md",
+                "status": "",
+                "fromRole": "",
+                "toRole": "",
+                "reason": "",
+                "createdAt": "",
+                "nextAction": "",
+            },
             "gateResults": {
                 "ideaGate": "",
                 "marketValidation": "",
@@ -94,6 +103,7 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "specComplianceReview": "",
                 "codeQualityReview": "",
                 "branchFinish": "",
+                "handoff": "",
                 "security": "",
                 "dependencies": "",
                 "hardening": "",
@@ -292,6 +302,7 @@ BUILD_PLAN.md
 EXECUTION_GRAPH.md
 IMPLEMENTATION_PLAN.md
 .pfo/UNIT_CONTEXT_MANIFEST.json
+HANDOFF.md when transfer is in scope
 .codex-memory/STATE.json
 .codex-memory/LEARNINGS.md
 ```
@@ -304,6 +315,7 @@ IMPLEMENTATION_PLAN.md
 - Validate risky assumptions in `VALIDATION_PLAN.md`.
 - Capture implementation decisions in `PHASE_CONTEXT.md` before detailed execution planning.
 - Build `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
+- Write `HANDOFF.md` before switching sessions, roles, delegated agents, AFK execution, compaction, or recovery.
 - Behavior changes require TDD red/green evidence unless explicitly waived by project owner.
 - Bugfixes require root-cause evidence before implementation.
 - Reviews run in two stages: spec compliance first, code quality second.
@@ -335,7 +347,7 @@ This project is automatically governed by Product Factory OS.
 - Initial idea: {idea or "not captured yet"}
 - Methodology: {methodology}
 
-Use `/project -> /kickstart` for new product work and `/task` routes for ongoing changes. Respect `.pfo/` contracts, update `.codex-memory/STATE.json`, and run the smallest relevant verification before finishing.
+Use `/project -> /kickstart` for new product work and `/task` routes for ongoing changes. Write `HANDOFF.md` before session or role transfer. Respect `.pfo/` contracts, update `.codex-memory/STATE.json`, and run the smallest relevant verification before finishing.
 """
 
 

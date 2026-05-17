@@ -13,6 +13,7 @@
 - Templates for `ROOT_CAUSE.md` and `BRANCH_FINISH.md`.
 - `/market-scan` skill for Last30Days-backed public market/community signal research before discovery, blueprint, and strategy decisions.
 - Market and validation templates now capture recent community signals, complaints, alternatives, source links, engagement, and confidence.
+- `/handoff` skill, `HANDOFF.md` template, state tracking, route fixture, and `pfo handoff` command for session, role, delegation, AFK, compaction, and recovery transfers.
 
 ## [0.6.1] - 2026-05-09
 

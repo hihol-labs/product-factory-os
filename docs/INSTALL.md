@@ -201,6 +201,7 @@ pfo analyze ../existing-product --run-gates --report
 pfo discuss ../my-product --phase phase-1
 pfo plan ../my-product
 pfo manifest ../my-product --unit N1
+pfo handoff ../my-product --from-role planner --to-role implementer --reason role-switch
 pfo build ../my-product
 pfo test ../my-product
 pfo tdd-evidence ../my-product --red "pytest ... failed as expected" --green "pytest ... passed"

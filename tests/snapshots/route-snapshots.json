@@ -26,6 +26,7 @@
     {"skill": "/migrate", "fixture": "migration", "expectedRoute": "/task -> /migrate", "reminderPrompt": "database migration schema change"},
     {"skill": "/github-workflow", "fixture": "github-workflow", "expectedRoute": "/task -> /github-workflow", "reminderPrompt": "GitHub Actions PR CI"},
     {"skill": "/tool-sync", "fixture": "tool-sync", "expectedRoute": "/task -> /tool-sync", "reminderPrompt": "sync Linear Notion Google Drive"},
+    {"skill": "/handoff", "fixture": "handoff", "expectedRoute": "/task -> /handoff", "reminderPrompt": "handoff transfer context before next session"},
     {"skill": "/session-save", "fixture": "session-save", "expectedRoute": "/task -> /session-save", "reminderPrompt": "save session remember context"},
     {"skill": "/advisor", "fixture": "advisor-decision", "expectedRoute": "/task -> /advisor", "reminderPrompt": "advise compare options tradeoff"},
     {"skill": "/grill-me", "fixture": "grill-me", "expectedRoute": "/task -> /grill-me", "reminderPrompt": "grill me stress-test this architecture plan"},

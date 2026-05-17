@@ -106,6 +106,8 @@ EXISTING_PROJECT_DETECTED
 
 For non-trivial existing-project changes, create or update the relevant `EXECUTION_GRAPH.md` node. Tiny direct fixes may use the daily-work skill directly only after PFO adoption status and memory state are checked.
 
+Before session transfer, role switch, delegated execution, AFK work, compaction, or recovery, write `HANDOFF.md` with `/handoff`.
+
 Connector-aware work routes through explicit skills:
 
 - Fresh library, SDK, framework, or platform docs -> `/mcp-docs`

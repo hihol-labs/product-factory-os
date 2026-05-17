@@ -94,6 +94,7 @@ def main() -> None:
         "EXECUTION_GRAPH.md",
         "TEST_PLAN.md",
         "QUALITY_GATES.md",
+        "HANDOFF.md",
         "IMPLEMENTATION_PLAN.md",
         "AGENTS.md",
         "CODEX.md",

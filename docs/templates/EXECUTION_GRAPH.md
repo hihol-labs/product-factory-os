@@ -20,6 +20,7 @@ NEXT_STATE:
 ## Validation Checkpoints
 
 - Unit Context Manifest:
+- Handoff:
 - Idea Gate:
 - Market Validation:
 - Feedback/Funnel Check:

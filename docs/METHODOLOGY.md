@@ -15,23 +15,24 @@ Product Factory OS is built around small gates instead of one large generation p
 9. Produce documents before code.
 10. Review the documents before implementation.
 11. Build a unit context manifest before executing a node.
-12. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
-13. Implement execution graph nodes in small, isolated units.
-14. Record dispatches, verification commands, cost or token notes, and recovery decisions.
-15. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
-16. For bugfixes, record root-cause evidence before changing code.
-17. Run `/browser-check` for browser-facing critical flows.
-18. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
-19. Verify work fail-closed: unclear verification does not pass.
-20. Run two-stage review: spec compliance first, code quality second.
-21. Review before commit or deploy.
-22. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
-23. Finish branches with an explicit PR, merge, keep, or discard decision.
-24. Extract durable learnings after completed milestones or significant repairs.
-25. Promote repeatable solutions into assets and content candidates.
-26. Harden production-facing services.
-27. Deploy only after explicit confirmation.
-28. Save reloadable session memory.
+12. Write `/handoff` before session transfer, role switch, delegated execution, AFK, compaction, or recovery.
+13. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
+14. Implement execution graph nodes in small, isolated units.
+15. Record dispatches, verification commands, cost or token notes, and recovery decisions.
+16. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
+17. For bugfixes, record root-cause evidence before changing code.
+18. Run `/browser-check` for browser-facing critical flows.
+19. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
+20. Verify work fail-closed: unclear verification does not pass.
+21. Run two-stage review: spec compliance first, code quality second.
+22. Review before commit or deploy.
+23. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
+24. Finish branches with an explicit PR, merge, keep, or discard decision.
+25. Extract durable learnings after completed milestones or significant repairs.
+26. Promote repeatable solutions into assets and content candidates.
+27. Harden production-facing services.
+28. Deploy only after explicit confirmation.
+29. Save reloadable session memory.
 
 ## Existing Project Lifecycle
 
@@ -84,6 +85,7 @@ If any are missing, run `/adopt` first.
 - `TEST_PLAN.md`: test matrix, critical flows, negative cases, smoke path
 - `QUALITY_GATES.md`: gate status, evidence, blockers, accepted risk
 - `PHASE_CONTEXT.md`: decisions, assumptions, open questions, planning impact
+- `HANDOFF.md`: transfer packet for session, role, delegation, AFK, compaction, or recovery handoff
 - `ROOT_CAUSE.md`: bug reproduction, evidence, and fix hypothesis for bugfix work
 - `BUILD_PLAN.md`: ordered module build plan with dependencies and verification
 - `EXECUTION_GRAPH.md`: execution nodes, transitions, checkpoints, and repair paths

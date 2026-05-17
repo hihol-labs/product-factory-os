@@ -66,6 +66,18 @@ def ensure_autonomy_state(state: dict) -> None:
             "recovery": "",
         },
     )
+    state.setdefault(
+        "handoff",
+        {
+            "path": "HANDOFF.md",
+            "status": "",
+            "fromRole": "",
+            "toRole": "",
+            "reason": "",
+            "createdAt": "",
+            "nextAction": "",
+        },
+    )
     state.setdefault("dispatchJournal", [])
     state.setdefault("capturedNotes", [])
     state.setdefault("tddEvidence", {"red": "", "green": "", "refactor": "", "lastRecordedAt": ""})
@@ -128,6 +140,7 @@ def ensure_autonomy_state(state: dict) -> None:
         "specComplianceReview",
         "codeQualityReview",
         "branchFinish",
+        "handoff",
         "assetExtraction",
         "contentPipeline",
     ]:
@@ -290,15 +303,16 @@ def generated_build_plan(starter: dict) -> str:
 | 2 | Idea and validation gate | initial intent | IDEA_SCORECARD.md, VALIDATION_PLAN.md | review scorecard decision | weak ideas are killed or narrowed before build |
 | 3 | GTM and feedback model | validation plan | GO_TO_MARKET.md, FUNNEL_MODEL.md, FEEDBACK_LOG.md | measurable signal and funnel bottleneck named | market test can be measured |
 | 4 | Phase decisions and unit manifest | PRODUCT_BLUEPRINT.md, PHASE_CONTEXT.md | BUILD_PLAN.md, EXECUTION_GRAPH.md, `.pfo/UNIT_CONTEXT_MANIFEST.json` | `pfo manifest <project>` | execution unit has scoped context |
-| 5 | TDD evidence loop | `.pfo/UNIT_CONTEXT_MANIFEST.json` | tests, minimal source files | `pfo tdd-evidence <project> --red ... --green ...` | red and green evidence recorded |
-| 6 | Product domain model | PRODUCT_BLUEPRINT.md | backend, database, shared types | `{test_command}` | core entities covered by tests |
-| 7 | Primary user flow | domain model | frontend, API, bot, or CLI handlers | smoke path from TEST_PLAN.md | golden flow documented and verified |
-| 8 | Feedback-driven iteration | primary flow | FEEDBACK_LOG.md, ITERATION_REVIEW.md | iteration decision recorded | changes are tied to signal, not activity |
-| 9 | Asset and content extraction | completed milestone | ASSET_REGISTER.md, CONTENT_BACKLOG.md | reusable asset candidate recorded | repeatable solutions become assets |
-| 10 | Two-stage review | implemented unit | review notes, `QUALITY_GATES.md` | `pfo review-stage <project> --stage spec ...` and `--stage quality ...` | spec and code-quality reviews recorded |
-| 11 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
-| 12 | Branch finish | quality gates | branch, PR, merge notes | `pfo finish-branch <project> --mode pr --verification ...` | merge/PR/keep/discard decision explicit |
-| 13 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
+| 5 | Handoff gate | plan, manifest, state | HANDOFF.md | `pfo handoff <project>` when transfer is needed | next actor can start without chat history |
+| 6 | TDD evidence loop | `.pfo/UNIT_CONTEXT_MANIFEST.json` | tests, minimal source files | `pfo tdd-evidence <project> --red ... --green ...` | red and green evidence recorded |
+| 7 | Product domain model | PRODUCT_BLUEPRINT.md | backend, database, shared types | `{test_command}` | core entities covered by tests |
+| 8 | Primary user flow | domain model | frontend, API, bot, or CLI handlers | smoke path from TEST_PLAN.md | golden flow documented and verified |
+| 9 | Feedback-driven iteration | primary flow | FEEDBACK_LOG.md, ITERATION_REVIEW.md | iteration decision recorded | changes are tied to signal, not activity |
+| 10 | Asset and content extraction | completed milestone | ASSET_REGISTER.md, CONTENT_BACKLOG.md | reusable asset candidate recorded | repeatable solutions become assets |
+| 11 | Two-stage review | implemented unit | review notes, `QUALITY_GATES.md` | `pfo review-stage <project> --stage spec ...` and `--stage quality ...` | spec and code-quality reviews recorded |
+| 12 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
+| 13 | Branch finish | quality gates | branch, PR, merge notes | `pfo finish-branch <project> --mode pr --verification ...` | merge/PR/keep/discard decision explicit |
+| 14 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
 
 ## Executable Tasks
 
@@ -677,6 +691,7 @@ def generated_quality_gates() -> str:
 | Spec Compliance Review | PENDING | unit output checked against manifest/spec |  |
 | Code Quality Review | PENDING | maintainability, simplicity, integration checks |  |
 | Unit Context Manifest | PENDING | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
+| Handoff | PENDING | `HANDOFF.md` before session transfer, role switch, delegation, AFK, compaction, or recovery |  |
 | Work Verification | PENDING | `pfo verify-work` evidence |  |
 | Security | PENDING | `/security-audit` or accepted not-applicable note |  |
 | Dependencies | PENDING | `/deps-audit` or accepted not-applicable note |  |
@@ -731,6 +746,7 @@ Captured: {now_iso()}
 ## Planning Impact
 
 - Update `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, and `.pfo/UNIT_CONTEXT_MANIFEST.json` with decisions from this file.
+- Write `HANDOFF.md` before session transfer, role switch, delegated execution, AFK, compaction, or recovery.
 """
 
 
@@ -764,6 +780,7 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "EXECUTION_GRAPH.md",
             "FEEDBACK_LOG.md and FUNNEL_MODEL.md when user acquisition or iteration is in scope",
             "PHASE_CONTEXT.md when present",
+            "HANDOFF.md when switching sessions, roles, delegated agents, AFK execution, compaction, or recovery",
             "ROOT_CAUSE.md for bugfix units",
         ],
         "allowedWriteAreas": [
@@ -792,6 +809,7 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "rootCause",
             "specComplianceReview",
             "codeQualityReview",
+            "handoff",
             "scopeLock",
             "dataAuthenticity",
             "goldenFlows",
@@ -820,6 +838,95 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
         "recovery": "If verification is missing or ambiguous, mark RECOVERY_REQUIRED and create PFO_RECOVERY.md.",
         "project": str(project),
     }
+
+
+def markdown_list(values: list, fallback: str) -> str:
+    items = [str(value).strip() for value in values if str(value).strip()]
+    if not items:
+        return f"- {fallback}"
+    return "\n".join(f"- {item}" for item in items)
+
+
+def generated_handoff_doc(project: Path, state: dict, from_role: str, to_role: str, reason: str, note: str) -> str:
+    manifest = state.get("unitContextManifest", {}) if isinstance(state.get("unitContextManifest"), dict) else {}
+    current_unit = state.get("currentUnit", {}) if isinstance(state.get("currentUnit"), dict) else {}
+    decisions = []
+    for item in state.get("decisionLog", [])[-8:]:
+        if isinstance(item, dict):
+            parts = [str(item.get("event", "")).strip()]
+            for key in ["phase", "mode", "status", "note"]:
+                value = str(item.get(key, "")).strip()
+                if value:
+                    parts.append(f"{key}: {value}")
+            decisions.append(" | ".join(part for part in parts if part))
+        else:
+            decisions.append(str(item))
+    required_inputs = [
+        "CODEX.md",
+        ".codex-memory/STATE.json",
+        ".pfo/PROJECT_CONTRACT.md",
+        ".pfo/SCOPE_LOCK.md",
+        "BUILD_PLAN.md",
+        "EXECUTION_GRAPH.md",
+        "PHASE_CONTEXT.md when present",
+        ".pfo/UNIT_CONTEXT_MANIFEST.json when present",
+    ]
+    required_inputs.extend(manifest.get("requiredInputs", []) if isinstance(manifest.get("requiredInputs"), list) else [])
+    verification = manifest.get("verificationCommands", []) if isinstance(manifest.get("verificationCommands"), list) else []
+    allowed = manifest.get("allowedWriteAreas", []) if isinstance(manifest.get("allowedWriteAreas"), list) else []
+    forbidden = manifest.get("forbiddenChanges", []) if isinstance(manifest.get("forbiddenChanges"), list) else []
+    blockers = state.get("blockers", []) if isinstance(state.get("blockers"), list) else []
+    goal = current_unit.get("goal") or manifest.get("goal") or state.get("intent") or "Continue the active Product Factory OS task."
+    next_action = note or state.get("nextAction") or "Read this handoff, then continue from the active PFO state."
+    return f"""# Handoff
+
+Created: {now_iso()}
+From: {from_role or "current-session"}
+To: {to_role or "next-session"}
+Reason: {reason or "session-transfer"}
+
+## Current State
+
+- Project: `{project}`
+- Stage: `{state.get("currentStage", "")}`
+- Node: `{state.get("currentNode", "")}`
+- Unit: `{current_unit.get("id", "")}`
+- Next action: {state.get("nextAction", "") or "TBD"}
+
+## Goal
+
+{goal}
+
+## Decisions
+
+{markdown_list(decisions, "No durable decisions recorded yet.")}
+
+## Scope
+
+### Allowed Write Areas
+
+{markdown_list(allowed, "Use the active execution graph node and .pfo/SCOPE_LOCK.md.")}
+
+### Forbidden Changes
+
+{markdown_list(forbidden, "Do not change production data, deployment, migrations, DNS, or out-of-scope files without approval.")}
+
+## Required Inputs
+
+{markdown_list(sorted(set(required_inputs)), "Read CODEX.md and .codex-memory/STATE.json first.")}
+
+## Verification
+
+{markdown_list(verification, "Use TEST_PLAN.md, QUALITY_GATES.md, and the smallest project verification command.")}
+
+## Risks And Blockers
+
+{markdown_list(blockers, "No blockers recorded.")}
+
+## First Action
+
+{next_action}
+"""
 
 
 def generated_recovery_doc(state: dict, reason: str) -> str:
@@ -971,6 +1078,7 @@ def cmd_status(args: argparse.Namespace) -> int:
         "blockers": state.get("blockers", []),
         "gateResults": state.get("gateResults", {}),
         "recoveryState": state.get("recoveryState", {}),
+        "handoff": state.get("handoff", {}),
         "tddEvidence": state.get("tddEvidence", {}),
         "rootCause": state.get("rootCause", {}),
         "reviewStages": state.get("reviewStages", {}),
@@ -1081,6 +1189,42 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     state["nextAction"] = f"Execute unit {manifest['unitId']} using `.pfo/UNIT_CONTEXT_MANIFEST.json`."
     save_state(project, state)
     print("OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json")
+    return 0
+
+
+def cmd_handoff(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    path = project / "HANDOFF.md"
+    path.write_text(
+        generated_handoff_doc(project, state, args.from_role, args.to_role, args.reason, args.note),
+        encoding="utf-8",
+    )
+    state["currentStage"] = "HANDOFF_READY"
+    state["handoff"] = {
+        "path": "HANDOFF.md",
+        "status": "READY",
+        "fromRole": args.from_role,
+        "toRole": args.to_role,
+        "reason": args.reason,
+        "createdAt": now_iso(),
+        "nextAction": args.note or state.get("nextAction", ""),
+    }
+    state.setdefault("gateResults", {})["handoff"] = "PASSED"
+    state.setdefault("decisionLog", []).append(
+        {
+            "event": "handoff created",
+            "from": args.from_role,
+            "to": args.to_role,
+            "reason": args.reason,
+            "note": args.note,
+        }
+    )
+    add_artifact(state, "HANDOFF.md")
+    state["nextAction"] = "Start the next session by reading HANDOFF.md, then .codex-memory/STATE.json."
+    save_state(project, state)
+    print("OK: wrote HANDOFF.md")
     return 0
 
 
@@ -1324,6 +1468,8 @@ def cmd_resume(args: argparse.Namespace) -> int:
     print("CURRENT STATE:", state.get("currentStage", ""))
     print("CURRENT NODE:", state.get("currentNode", ""))
     print("NEXT ACTION:", state.get("nextAction", ""))
+    if (project / "HANDOFF.md").is_file():
+        print("HANDOFF:", "HANDOFF.md")
     return 0
 
 
@@ -1374,6 +1520,14 @@ def build_parser() -> argparse.ArgumentParser:
     discuss.add_argument("--phase", default="")
     discuss.add_argument("--note", default="")
     discuss.set_defaults(func=cmd_discuss)
+
+    handoff = sub.add_parser("handoff", help="Write a session-to-session handoff artifact.")
+    handoff.add_argument("project", type=Path)
+    handoff.add_argument("--from-role", default="current-session")
+    handoff.add_argument("--to-role", default="next-session")
+    handoff.add_argument("--reason", default="session-transfer")
+    handoff.add_argument("--note", default="")
+    handoff.set_defaults(func=cmd_handoff)
 
     manifest = sub.add_parser("manifest", help="Write a task-scoped unit context manifest.")
     manifest.add_argument("project", type=Path)

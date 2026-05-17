@@ -10,6 +10,7 @@ ROUTES = [
     (r"\b(i have docs|existing docs|make prompts|execution guide|codex guide)\b|есть документаци|сделай гайд|промпты для реализации", "/project -> /guide"),
     (r"\b(new project|build an app|create mvp|start a service|build (a )?(saas|bot|scraper|cli|api)|product factory|full cycle|end to end)\b|нов(ый|ое) проект|создай приложение|хочу mvp|сделай (saas|бот|парсер|api|cli)|фабрик[ау] продукт|полный цикл", "/project -> /kickstart"),
     (r"\b(adopt existing|onboard repo|legacy project|connect methodology)\b|подключи методологию|адаптируй репозиторий|существующ(ий|его) проект", "/task -> /adopt"),
+    (r"\b(handoff|transfer context|switch sessions?|compact context|delegate to next agent|afk run|role switch)\b|handoff|передай контекст|нов(ая|ую) сесси|смена роли|делегируй агенту|afk", "/task -> /handoff"),
     (r"\b(save session|remember context|persist state)\b|сохрани сессию|запомни контекст|сохрани контекст", "/task -> /session-save"),
     (r"\b(strategy|replan|roadmap|pivot|launch plan|funnel|feedback loop|content backlog|product iteration)\b|стратеги|перепланируй|roadmap|pivot|план запуска|воронк|обратн(ая|ую) связь|контент|итераци", "/task -> /strategy"),
     (r"\b(advise|compare options|tradeoff|recommend)\b|посоветуй|сравни варианты|компромисс|рекоменд", "/task -> /advisor"),

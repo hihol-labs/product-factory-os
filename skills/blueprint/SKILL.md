@@ -68,6 +68,7 @@ If the user says "you decide", choose a conservative default and record it as `A
    - `BUILD_PLAN.md`
    - `EXECUTION_GRAPH.md`
    - `IMPLEMENTATION_PLAN.md`
+   - `HANDOFF.md` when implementation will start in another session or role
    - `README.md`
    - `CODEX.md`
 6. Run `/review` on the documents.
@@ -102,7 +103,8 @@ Default to supplement. Do not silently replace user-authored documents.
 - `BUILD_PLAN.md`: module order, dependencies, verification, exit criteria.
 - `EXECUTION_GRAPH.md`: nodes, transitions, validation checkpoints, repair paths.
 - `IMPLEMENTATION_PLAN.md`: ordered steps, touched files, verification per step.
-- `CODEX.md`: project context, decisions, status table, session-save rule.
+- `HANDOFF.md`: compact transfer packet for session, role, delegation, AFK, compaction, or recovery handoff.
+- `CODEX.md`: project context, decisions, status table, handoff and session-save rules.
 
 ## Required Document Shape
 
@@ -176,7 +178,7 @@ Default to supplement. Do not silently replace user-authored documents.
 - Current decisions
 - Development commands
 - Status table
-- Rule: save context with `/session-save` after significant work
+- Rule: use `/handoff` before session or role transfer; save context with `/session-save` after significant work
 
 ## Rules
 
