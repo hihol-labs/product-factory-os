@@ -42,6 +42,18 @@
     "feedbackLoop",
     "funnel"
   ],
+  "engineeringDiscipline": {
+    "behaviorChange": false,
+    "bugfix": false,
+    "strictPlan": true,
+    "requiresTdd": "behavior changes",
+    "requiresRootCause": "bugfix units",
+    "reviewOrder": [
+      "specCompliance",
+      "codeQuality"
+    ],
+    "branchFinish": "PR, merge, keep, or discard with fresh verification"
+  },
   "review": {
     "specCompliance": "Check output against the unit goal, spec, and allowed scope first.",
     "codeQuality": "Check simplicity, maintainability, tests, and integration second."

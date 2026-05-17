@@ -48,6 +48,7 @@ def main() -> None:
     graph = project / "EXECUTION_GRAPH.md"
     if graph.is_file():
         run([sys.executable, "scripts/validate_execution_graph.py", str(graph)])
+    run([sys.executable, "scripts/validate_plan_quality.py", str(project)])
 
     state = json.loads((project / ".codex-memory" / "STATE.json").read_text(encoding="utf-8"))
     planned_or_later = {

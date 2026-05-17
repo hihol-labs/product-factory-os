@@ -56,6 +56,13 @@ def ensure_autonomy_state(state: dict) -> None:
             "dependencies": [],
             "verificationCommands": [],
             "gates": [],
+            "engineeringDiscipline": {
+                "behaviorChange": False,
+                "bugfix": False,
+                "strictPlan": True,
+                "requiresTdd": "behavior changes",
+                "requiresRootCause": "bugfix units",
+            },
             "recovery": "",
         },
     )
@@ -292,6 +299,21 @@ def generated_build_plan(starter: dict) -> str:
 | 11 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
 | 12 | Branch finish | quality gates | branch, PR, merge notes | `pfo finish-branch <project> --mode pr --verification ...` | merge/PR/keep/discard decision explicit |
 | 13 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
+
+## Executable Tasks
+
+Every executable task must include:
+
+- Current idea/validation decision when the task expands product scope.
+- Exact files to create or modify.
+- Exact verification command.
+- Expected output or failure mode.
+- TDD red and green evidence for behavior changes.
+- Root-cause evidence for bugfixes.
+- Spec compliance review before code quality review.
+- Branch finish decision: PR, merge, keep, or discard.
+
+Do not leave `TBD`, `TODO`, "add tests", "handle errors", or "similar to previous task" placeholders in executable tasks.
 
 ## Cross-Module Dependencies
 
@@ -712,8 +734,19 @@ Captured: {now_iso()}
 """
 
 
-def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str) -> dict:
+def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str, behavior_change: bool = False, bugfix: bool = False) -> dict:
     node = unit_id or state.get("currentNode") or "N1"
+    existing = state.get("existingProject", {})
+    existing_route = existing.get("currentTaskRoute", "") if isinstance(existing, dict) else ""
+    route = " ".join(
+        [
+            str(state.get("currentTaskRoute", "")),
+            str(existing_route),
+            goal,
+        ]
+    ).lower()
+    inferred_bugfix = bugfix or "/bugfix" in route or "bugfix" in route
+    inferred_behavior_change = behavior_change or inferred_bugfix or "/kickstart" in route
     return {
         "version": 1,
         "unitId": node,
@@ -771,6 +804,15 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str)
             "feedbackLoop",
             "funnel",
         ],
+        "engineeringDiscipline": {
+            "behaviorChange": inferred_behavior_change,
+            "bugfix": inferred_bugfix,
+            "strictPlan": True,
+            "requiresTdd": "behavior changes",
+            "requiresRootCause": "bugfix units",
+            "reviewOrder": ["specCompliance", "codeQuality"],
+            "branchFinish": "PR, merge, keep, or discard with fresh verification",
+        },
         "review": {
             "specCompliance": "Check output against the unit goal, spec, and allowed scope first.",
             "codeQuality": "Check simplicity, maintainability, tests, and integration second.",
@@ -1019,7 +1061,7 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
     ensure_autonomy_state(state)
-    manifest = generated_unit_manifest(project, state, args.unit, args.goal)
+    manifest = generated_unit_manifest(project, state, args.unit, args.goal, args.behavior_change, args.bugfix)
     pfo_dir = project / ".pfo"
     pfo_dir.mkdir(exist_ok=True)
     manifest_path = pfo_dir / "UNIT_CONTEXT_MANIFEST.json"
@@ -1337,6 +1379,8 @@ def build_parser() -> argparse.ArgumentParser:
     manifest.add_argument("project", type=Path)
     manifest.add_argument("--unit", default="")
     manifest.add_argument("--goal", default="")
+    manifest.add_argument("--behavior-change", action="store_true", help="Require TDD evidence for this unit.")
+    manifest.add_argument("--bugfix", action="store_true", help="Require ROOT_CAUSE.md before implementation.")
     manifest.set_defaults(func=cmd_manifest)
 
     for name, func in [

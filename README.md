@@ -27,7 +27,7 @@ This is a Codex-native methodology runtime. It contains:
 - Product Factory OS runtime contracts for classification, templates, state machine, execution pipeline, memory, deployment, and voice-first interface
 - Project-level `.pfo/` contracts for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution
 - GSD-inspired autonomous layer for phase discussion, unit context manifests, dispatch journaling, fail-closed verification, recovery state, telemetry, learnings, and visual briefs
-- Superpowers-inspired engineering gates for TDD evidence, root-cause discipline, two-stage review, strict executable plans, and branch finish hygiene
+- Engineering Discipline v2 gates inspired by Superpowers: TDD evidence, root-cause discipline, two-stage review, strict executable plans, and branch finish hygiene
 
 ## Quick Start
 
@@ -105,6 +105,7 @@ pfo root-cause ../my-product --summary "bad value enters parser" --evidence "tra
 pfo verify-work ../my-product --evidence "tests and smoke passed" --pass-gate
 pfo review-stage ../my-product --stage spec --status PASSED --evidence "matches manifest"
 pfo review-stage ../my-product --stage quality --status PASSED --evidence "tests and review clean"
+python3 scripts/validate_plan_quality.py ../my-product
 pfo review ../my-product
 python3 scripts/pfo.py validate ../my-product
 python3 scripts/pfo.py contracts ../my-product --write

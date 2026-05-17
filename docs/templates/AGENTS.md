@@ -13,6 +13,7 @@ This project is governed by Product Factory OS.
 - Behavior changes require TDD red/green evidence.
 - Bugfixes require root-cause evidence before fixes.
 - Reviews run spec compliance first, code quality second.
+- Engineering Discipline v2 is enforced by `scripts/validate_plan_quality.py` when PFO validation runs.
 - Verification fails closed when evidence is missing or ambiguous.
 - Iteration must reference feedback, metric, validation, or strategy evidence.
 

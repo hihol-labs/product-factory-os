@@ -20,7 +20,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - Маршруты OpenAI/Codex plugin и MCP для Context7, Browser Use, GitHub, Codex Security, Linear, Notion и Google Drive
 - PFO runtime contracts: classifier, template library, product compiler, state machine, execution pipeline, memory schema, deployment abstraction и voice-first interface
 - GSD-inspired autonomous layer: phase discussion, unit context manifest, dispatch journal, fail-closed verification, recovery state, telemetry, learnings и visual briefs
-- Superpowers-inspired engineering gates: TDD evidence, root-cause discipline, two-stage review, strict executable plans и branch finish hygiene
+- Engineering Discipline v2 gates по мотивам Superpowers: TDD evidence, root-cause discipline, two-stage review, strict executable plans и branch finish hygiene
 
 ## Быстрый Старт
 
@@ -99,6 +99,7 @@ pfo root-cause ../my-product --summary "bad value enters parser" --evidence "tra
 pfo verify-work ../my-product --evidence "tests and smoke passed" --pass-gate
 pfo review-stage ../my-product --stage spec --status PASSED --evidence "matches manifest"
 pfo review-stage ../my-product --stage quality --status PASSED --evidence "tests and review clean"
+python3 scripts/validate_plan_quality.py ../my-product
 pfo review ../my-product
 pfo validate ../my-product
 pfo contracts ../my-product --write

@@ -42,6 +42,16 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | `/github-workflow` | PR, pull request, GitHub Actions, CI, issue, release branch | PR, pull request, GitHub Actions, CI, issue, релизная ветка |
 | `/tool-sync` | sync Linear, Notion, Google Drive, export project state | синхронизируй Linear, Notion, Google Drive, экспорт состояния |
 
+## Engineering Discipline v2
+
+| Pattern | Route / Command | English | Russian |
+|---|---|---|---|
+| TDD evidence | `/test`, `/bugfix`, `pfo tdd-evidence` | TDD, red green refactor, behavior change evidence | TDD, red green refactor, доказательства изменения поведения |
+| Root cause | `/bugfix`, `pfo root-cause` | root cause, reproduce before fix, regression proof | root cause, сначала воспроизведи, регрессионная проверка |
+| Strict executable plan | `/blueprint`, `/kickstart`, `scripts/validate_plan_quality.py` | strict plan, exact files, exact commands, no TODO/TBD | строгий план, точные файлы, точные команды, без TODO/TBD |
+| Two-stage review | `/review`, `pfo review-stage` | spec compliance first, code quality second | сначала соответствие спецификации, потом качество кода |
+| Branch finish | `/github-workflow`, `pfo finish-branch` | finish branch, PR merge keep discard, fresh verification | завершить ветку, PR merge keep discard, свежая проверка |
+
 ## Strategy And Memory
 
 | Skill | English | Russian |

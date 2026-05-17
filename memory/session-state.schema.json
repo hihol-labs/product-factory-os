@@ -65,6 +65,13 @@
       "dependencies": [],
       "verificationCommands": [],
       "gates": [],
+      "engineeringDiscipline": {
+        "behaviorChange": false,
+        "bugfix": false,
+        "strictPlan": true,
+        "requiresTdd": "behavior changes",
+        "requiresRootCause": "bugfix units"
+      },
       "recovery": ""
     },
     "gateResults": {

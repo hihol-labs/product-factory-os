@@ -30,7 +30,8 @@ Use this skill when Product Factory OS state needs to connect to GitHub work.
    - CI checks -> verification history
    - review comments -> repair actions
    - release notes -> completed modules and accepted risks
-5. Update integration payloads with `python3 scripts/pfo.py export <project> --target github` when a file export is requested.
+5. Before branch completion, record `pfo finish-branch <project> --mode pr|merge|keep|discard --verification ...`.
+6. Update integration payloads with `python3 scripts/pfo.py export <project> --target github` when a file export is requested.
 
 ## Output
 
@@ -50,4 +51,5 @@ NEXT ACTION:
 - Do not push, merge, close issues, resolve review threads, or create production releases without explicit user intent.
 - Do not hide failing CI behind documentation-only status.
 - Keep local worktree changes scoped to the active execution node.
+- Do not mark branch work finished without fresh verification and `BRANCH_FINISH.md` when branch finish is in scope.
 - If GitHub is unavailable, produce `.pfo-integrations/github.json` and state that live sync was not performed.

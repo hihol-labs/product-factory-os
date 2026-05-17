@@ -146,6 +146,7 @@ REQUIRED_FILES = [
     "scripts/validate_state.py",
     "scripts/validate_runtime.py",
     "scripts/validate_project.py",
+    "scripts/validate_plan_quality.py",
     "scripts/pfo_contract_gate.py",
     "scripts/validate_starter_compliance.py",
     "scripts/pfo.py",

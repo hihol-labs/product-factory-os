@@ -25,6 +25,7 @@ The canonical testing rubric lives in `docs/rubrics/testing.md`.
 7. Add contract tests for API, bot, CLI, webhook, queue, or integration boundaries.
 8. Run the smallest relevant test command, then broader tests if risk warrants it.
 9. Update `TEST_PLAN.md` and record green/refactor evidence in `QUALITY_GATES.md` or `.codex-memory/STATE.json`.
+10. Run or satisfy `scripts/validate_plan_quality.py <project>` before accepting a behavior-change gate.
 
 ## Rules
 
@@ -34,4 +35,5 @@ The canonical testing rubric lives in `docs/rubrics/testing.md`.
 - Report commands run and failures that remain.
 - Do not mark a gate as passing without a command or explicit manual check.
 - Do not count a new behavior test as valid unless it was observed failing before implementation, or the exception is explicit.
+- Engineering Discipline v2 blocks behavior changes without TDD red and green evidence.
 - For production-facing products, ensure a smoke path exists before deploy readiness.

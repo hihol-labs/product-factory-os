@@ -171,7 +171,7 @@ Recovery covers:
 - changed golden flows without evidence
 - repeated unit failure or stuck progress
 
-### 11. Engineering Discipline Gates
+### 11. Engineering Discipline v2 Gates
 
 PFO keeps product strategy and project contracts as the outer lifecycle, then applies disciplined engineering gates inside each execution unit:
 
@@ -180,6 +180,7 @@ PFO keeps product strategy and project contracts as the outer lifecycle, then ap
 - Two-stage review: spec compliance first, code quality second.
 - Strict task granularity: exact files, commands, expected output, and exit criteria.
 - Branch finish: PR, merge, keep, or discard decision with fresh verification.
+- Enforcement: `scripts/validate_plan_quality.py` runs directly and through `scripts/validate_project.py`.
 
 ### 12. Memory System
 

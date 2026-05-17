@@ -19,6 +19,9 @@ jobs:
       - name: Validate structure
         run: python3 scripts/validate_structure.py
 
+      - name: Validate Engineering Discipline v2 wiring
+        run: python3 scripts/validate_plan_quality.py --self-check
+
       - name: Run routing fixtures
         run: python3 scripts/run_fixtures.py
 

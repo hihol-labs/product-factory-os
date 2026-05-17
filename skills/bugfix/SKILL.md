@@ -21,12 +21,14 @@ Fix the root cause, not just the symptom.
 5. Make the smallest correct fix.
 6. Verify the regression test passes.
 7. Run spec compliance review, then code quality review for the touched unit.
-8. Summarize root cause and verification.
+8. Run or satisfy `scripts/validate_plan_quality.py <project>`.
+9. Summarize root cause and verification.
 
 ## Rules
 
 - Do not apply broad rewrites while fixing a narrow bug.
 - Do not fix before root-cause evidence exists.
+- Engineering Discipline v2 blocks bugfix work without `ROOT_CAUSE.md` and root-cause state evidence.
 - If three fix attempts fail, stop and question the architecture before continuing.
 - Preserve user changes in the worktree.
 - If the symptom points to production data, ask before destructive inspection or mutation.
