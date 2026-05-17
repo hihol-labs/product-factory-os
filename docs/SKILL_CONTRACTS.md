@@ -27,5 +27,6 @@
 | `/tool-sync` | PFO artifacts and target tool | Connector sync result or `.pfo-integrations/` payload | External writes only with approval | Reconcile by source artifact |
 | `/session-save` | Session summary and PFO state | Memory files, `.codex-memory/STATE.json`, optional `.codex-memory/LEARNINGS.md` | Writes memory docs/state | Creates or updates state |
 | `/advisor` | Decision or question | Analysis report | None | Safe |
+| `/grill-me` | Plan, design, strategy, architecture, migration, deploy, or decision | One-question-at-a-time decision stress test with recommended answers | None | Safe |
 | `/strategy` | Existing project context | Strategy, validation, funnel, feedback, asset, and backlog docs | Writes docs | Safe with review |
 | `/adopt` | Existing repository | `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts when required | Writes project metadata | Marker-based |

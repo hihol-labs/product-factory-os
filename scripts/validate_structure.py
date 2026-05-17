@@ -189,6 +189,7 @@ REQUIRED_SKILLS = [
     "tool-sync",
     "session-save",
     "advisor",
+    "grill-me",
     "strategy",
     "adopt",
 ]
@@ -234,6 +235,7 @@ REQUIRED_FIXTURES = [
     "tool-sync",
     "strategy-replan",
     "advisor-decision",
+    "grill-me",
     "session-save",
     "adopt-existing",
     "migration",

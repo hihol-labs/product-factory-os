@@ -27,6 +27,7 @@
     {"skill": "/tool-sync", "fixture": "tool-sync", "expectedRoute": "/task -> /tool-sync", "reminderPrompt": "sync Linear Notion Google Drive"},
     {"skill": "/session-save", "fixture": "session-save", "expectedRoute": "/task -> /session-save", "reminderPrompt": "save session remember context"},
     {"skill": "/advisor", "fixture": "advisor-decision", "expectedRoute": "/task -> /advisor", "reminderPrompt": "advise compare options tradeoff"},
+    {"skill": "/grill-me", "fixture": "grill-me", "expectedRoute": "/task -> /grill-me", "reminderPrompt": "grill me stress-test this architecture plan"},
     {"skill": "/strategy", "fixture": "strategy-replan", "expectedRoute": "/task -> /strategy", "reminderPrompt": "strategy replan roadmap pivot"},
     {"skill": "/adopt", "fixture": "adopt-existing", "expectedRoute": "/task -> /adopt", "reminderPrompt": "adopt existing repo"}
   ]

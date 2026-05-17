@@ -12,6 +12,7 @@ ROUTES = [
     (r"\b(save session|remember context|persist state)\b|сохрани сессию|запомни контекст|сохрани контекст", "/task -> /session-save"),
     (r"\b(strategy|replan|roadmap|pivot|launch plan|funnel|feedback loop|content backlog|product iteration)\b|стратеги|перепланируй|roadmap|pivot|план запуска|воронк|обратн(ая|ую) связь|контент|итераци", "/task -> /strategy"),
     (r"\b(advise|compare options|tradeoff|recommend)\b|посоветуй|сравни варианты|компромисс|рекоменд", "/task -> /advisor"),
+    (r"\b(grill me|stress[- ]test|challenge my (plan|design)|hard questions)\b|прожарь|стресс.?тест|проверь дизайн|жестк(ие|их) вопрос", "/task -> /grill-me"),
     (r"\b(stack trace|failing test|bug|error)\b|стек.?трейс|падает|ошибка|баг", "/task -> /bugfix"),
     (r"\b(add tests|test coverage|write tests|failing tests)\b|добавь тесты|покрытие|тесты падают", "/task -> /test"),
     (r"\b(refactor|cleanup|simplify|clean up)\b|рефакторинг|почисти код|упрости", "/task -> /refactor"),

@@ -49,9 +49,11 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /session-save
   -> /strategy
   -> /advisor
+  -> /grill-me
 
 /strategy
   -> /advisor
+  -> /grill-me
   -> /mcp-docs
   -> /tool-sync
   -> /review
