@@ -9,6 +9,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> template selection
   -> /kickstart
        -> /discover
+       -> /market-scan
        -> /blueprint
        -> product compiler
        -> execution graph
@@ -24,6 +25,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
        -> /tool-sync
        -> /session-save
   -> /blueprint
+       -> /market-scan
        -> product compiler
        -> execution graph
        -> /review
@@ -52,6 +54,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /grill-me
 
 /strategy
+  -> /market-scan
   -> /advisor
   -> /grill-me
   -> /mcp-docs
@@ -70,4 +73,4 @@ Rules:
 - Read-only audits do not apply fixes unless the user explicitly asks for remediation.
 - Product Factory OS compiler stages are internal runtime stages, not user-invoked skills.
 - Implementation proceeds by execution graph node, with repair paths for failed gates.
-- External tools are invoked only through explicit skills such as `/mcp-docs`, `/browser-check`, `/github-workflow`, or `/tool-sync`.
+- External tools are invoked only through explicit skills such as `/mcp-docs`, `/market-scan`, `/browser-check`, `/github-workflow`, or `/tool-sync`.

@@ -123,6 +123,8 @@ Prevents broad build scope from hiding weak demand. It records:
 - feedback sources
 - funnel bottlenecks
 
+When product, ICP, competitor, launch, or roadmap risk depends on current public demand, PFO routes through `/market-scan` before scoring or replanning. `/market-scan` uses Last30Days when available and normalizes recent community signals into `MARKET_BRIEF.md`, `VALIDATION_PLAN.md`, and related strategy artifacts.
+
 Canonical artifacts are `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, and `FUNNEL_MODEL.md`.
 
 ### 7. Phase Discussion Layer
@@ -201,6 +203,7 @@ Uses `deployment/deployment-targets.json` to prepare deploy-ready artifacts for 
 Uses `integrations/mcp-capabilities.json` and `docs/OPENAI_MCP_INTEGRATIONS.md` to bind external tools to named PFO skills:
 
 - `/mcp-docs` for Context7 and current documentation lookup.
+- `/market-scan` for Last30Days-backed public market and community signal research.
 - `/browser-check` for Browser Use smoke testing.
 - `/github-workflow` for issues, PRs, CI, and release workflow.
 - `/tool-sync` for Linear, Notion, Google Drive, and export-only payloads.

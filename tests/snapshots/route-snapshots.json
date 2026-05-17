@@ -5,6 +5,7 @@
     {"skill": "/project", "fixture": "new-project", "expectedRoute": "/project -> /kickstart", "reminderPrompt": "new project booking app"},
     {"skill": "/task", "fixture": "existing-bug", "expectedRoute": "/project redirects to /task -> /bugfix", "reminderPrompt": "stack trace error in existing API"},
     {"skill": "/discover", "fixture": "discover", "expectedRoute": "/project -> /discover", "reminderPrompt": "validate idea and target users"},
+    {"skill": "/market-scan", "fixture": "market-scan", "expectedRoute": "/project -> /discover -> /market-scan", "reminderPrompt": "last 30 days market scan for user complaints"},
     {"skill": "/blueprint", "fixture": "planning-only", "expectedRoute": "/project -> /blueprint", "reminderPrompt": "plan only architecture first"},
     {"skill": "/guide", "fixture": "guide-existing-docs", "expectedRoute": "/project -> /guide", "reminderPrompt": "I have docs make prompts"},
     {"skill": "/kickstart", "fixture": "pfo-bot", "expectedRoute": "/project -> /kickstart", "reminderPrompt": "build bot end to end"},

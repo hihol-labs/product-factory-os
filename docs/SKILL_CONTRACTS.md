@@ -5,6 +5,7 @@
 | `/project` | Product idea | Route decision | None | Safe |
 | `/task` | Existing-project task | Route decision | None | Safe |
 | `/discover` | Idea or problem | `DISCOVERY.md`, `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md` | Writes docs | Ask before overwrite |
+| `/market-scan` | Idea, problem, segment, competitor, or launch question | Fresh public market/community signals normalized into `MARKET_BRIEF.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, or `CONTENT_BACKLOG.md` | External public research, writes docs when approved | Append dated evidence |
 | `/blueprint` | Idea plus clarifications | Planning documents plus `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FUNNEL_MODEL.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `PHASE_CONTEXT.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, `QUALITY_GATES.md` | Writes docs | Ask before overwrite |
 | `/guide` | Existing planning docs | `CODEX_GUIDE.md` | Writes docs | Safe if generated from same inputs |
 | `/kickstart` | Idea or approved PFO docs | Project docs, scaffold, `.pfo/UNIT_CONTEXT_MANIFEST.json`, code, state updates | Writes code/docs/memory | Stateful |

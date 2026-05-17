@@ -10,6 +10,7 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | `/project` | product factory, generate product, build SaaS, build bot, build scraper, build CLI | фабрика продуктов, сделай SaaS, сделай бота, сделай парсер, CLI инструмент |
 | `/discover` | validate idea, product discovery, target users, market | проверь идею, discovery, аудит рынка, целевая аудитория |
 | `/discover` | score idea, test hypothesis, kill weak ideas, validation plan | оцени идею, проверь гипотезу, отсеять слабые идеи |
+| `/market-scan` | last 30 days, market scan, recent community signals, competitor buzz | последние 30 дней, свежие сигналы рынка, что говорят пользователи, жалобы пользователей |
 | `/blueprint` | plan only, architecture first, write docs | только план, сначала архитектура, подготовь документацию |
 | `/guide` | I have docs, make prompts, execution guide | есть документация, сделай гайд, промпты для реализации |
 | `/kickstart` | build end to end, full cycle, from idea to shipped | полный цикл, от идеи до релиза, сделай проект целиком |

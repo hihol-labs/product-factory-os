@@ -24,6 +24,7 @@ Ask only for details that change the plan:
 - External integrations
 - Deployment target and budget
 - Deadline or first milestone
+- Fresh market or community signal need when public demand, competitors, launch, ICP, or roadmap risk matters
 - First channel, offer, funnel, or feedback source when launch matters
 - Non-goals and constraints
 
@@ -41,9 +42,10 @@ If the user says "you decide", choose a conservative default and record it as `A
    - `memory/session-state.schema.json`
    - `docs/rubrics/strategy.md`
    - `docs/rubrics/testing.md`
-3. Ask only clarifying questions that affect architecture, scope, data, auth, deployment, budget, or deadline.
-4. Confirm the captured understanding.
-5. Generate documents in this order:
+3. Run `/market-scan` before strategy documents when fresh public market, competitor, ICP, launch, or user/community signals can change the plan.
+4. Ask only clarifying questions that affect architecture, scope, data, auth, deployment, budget, or deadline.
+5. Confirm the captured understanding.
+6. Generate documents in this order:
    - `DISCOVERY.md`
    - `IDEA_SCORECARD.md`
    - `VALIDATION_PLAN.md`
@@ -85,6 +87,7 @@ Default to supplement. Do not silently replace user-authored documents.
 - `PRD.md`: user stories, acceptance criteria, non-goals, launch criteria.
 - `IDEA_SCORECARD.md`: evidence-backed KILL, TEST, or BUILD decision.
 - `VALIDATION_PLAN.md`: riskiest assumptions, experiments, expected signals, and exit decision.
+- `MARKET_BRIEF.md`: problem, segment, alternatives, differentiation, recent community signals, top complaints, and evidence links.
 - `FUNNEL_MODEL.md`: traffic, lead, activation, conversion, retention stages and bottleneck.
 - `FEEDBACK_LOG.md`: feedback sources, evidence, patterns, and triggered decisions.
 - `ITERATION_REVIEW.md`: inputs, changes, outcome, and keep/revert/iterate/pivot/stop decision.
@@ -182,6 +185,7 @@ Default to supplement. Do not silently replace user-authored documents.
 - Keep names and entities consistent across all documents.
 - Treat `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md` as the Product Compiler outputs.
 - Treat `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md` as gates before broad build scope.
+- Treat `/market-scan` output as evidence for strategy artifacts, not as permission to skip validation experiments.
 - Do not move to implementation until the execution graph can reach `PLAN_READY`.
 - Stop with `BLOCKED` if the user refuses to answer a question that determines architecture or data safety.
 - If `/review` returns `BLOCKED`, offer doc fixes before implementation.
@@ -191,6 +195,7 @@ Default to supplement. Do not silently replace user-authored documents.
 - All required documents exist.
 - `/review` status is `PASSED` or `PASSED_WITH_WARNINGS`.
 - Idea gate, validation plan, funnel, feedback, and asset/content assumptions are explicit when applicable.
+- Fresh market or community signal gaps are explicit when they affect product or launch risk.
 - Product type, template modules, architecture pattern, and execution graph are explicit.
 - Remaining assumptions are explicitly listed.
 - The user has a clear next route: `/kickstart`, `/guide`, or manual review.
