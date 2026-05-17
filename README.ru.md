@@ -8,7 +8,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 ## Что Внутри
 
-- 28 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти и connector workflows
+- 29 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research и connector workflows
 - 15 agent-role описаний для архитектуры, ревью, тестов, аналитики, безопасности, релизов, UX, данных и интеграций
 - Контракты skills: входы, выходы, side effects и idempotency
 - Call graph, чтобы цепочки не становились хаотичными
@@ -17,7 +17,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - Route snapshots и fixtures для проверки всех skill routes
 - Workspace hook layer: auto-adoption, route reminders, preflight context, skill completeness, commit completeness и review-before-commit gates
 - Workspace-default правила для `/home/hihol/projects`
-- Маршруты OpenAI/Codex plugin и MCP для Context7, Browser Use, GitHub, Codex Security, Linear, Notion и Google Drive
+- Маршруты OpenAI/Codex plugin, MCP и research для Context7, Last30Days, Browser Use, GitHub, Codex Security, Linear, Notion и Google Drive
 - PFO runtime contracts: classifier, template library, product compiler, state machine, execution pipeline, memory schema, deployment abstraction и voice-first interface
 - GSD-inspired autonomous layer: phase discussion, unit context manifest, dispatch journal, fail-closed verification, recovery state, telemetry, learnings и visual briefs
 - Engineering Discipline v2 gates по мотивам Superpowers: TDD evidence, root-cause discipline, two-stage review, strict executable plans и branch finish hygiene

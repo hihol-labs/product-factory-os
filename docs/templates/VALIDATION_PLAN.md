@@ -17,6 +17,10 @@
 - Alternatives:
 - Search or demand signal:
 - Buyer/user quotes:
+- Last 30 Days Signal:
+- Source:
+- Engagement:
+- Confidence:
 - Pricing or budget signal:
 
 ## Decision Log

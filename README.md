@@ -12,7 +12,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 This is a Codex-native methodology runtime. It contains:
 
-- 28 skills for creation, daily work, quality, operations, strategy, memory, and connector workflows
+- 29 skills for creation, daily work, quality, operations, strategy, memory, research, and connector workflows
 - 15 agent role descriptions for heavy review, architecture, test, analysis, security, release, UX, data, and integration work
 - Skill contracts with inputs, outputs, side effects, and idempotency notes
 - A call graph that keeps workflow chaining bounded
@@ -20,7 +20,7 @@ This is a Codex-native methodology runtime. It contains:
 - Route snapshots and smoke fixtures for every skill route
 - Golden-path example for a tutor booking app
 - Workspace hook layer for auto-adoption, route reminders, preflight context, skill completeness, commit completeness, and review-before-commit gates
-- OpenAI/Codex plugin and MCP integration routes for Context7, Browser Use, GitHub, Codex Security, Linear, Notion, and Google Drive
+- OpenAI/Codex plugin, MCP, and research routes for Context7, Last30Days, Browser Use, GitHub, Codex Security, Linear, Notion, and Google Drive
 - GitHub Actions workflow for validation
 - Workspace-default policy for `/home/hihol/projects`
 - A structure validator for repository health checks

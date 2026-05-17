@@ -37,8 +37,9 @@ As needed:
 
 1. Read current docs and project state.
 2. Apply `docs/rubrics/strategy.md`.
-3. Identify gaps across product, tech, delivery, operations, monetization, acquisition, and go-to-market.
-4. Define or update:
+3. Run `/market-scan` when roadmap, pivot, launch, ICP, competitor, pricing, or feedback decisions depend on fresh public market/community signals.
+4. Identify gaps across product, tech, delivery, operations, monetization, acquisition, and go-to-market.
+5. Define or update:
    - problem
    - ICP
    - value proposition
@@ -52,10 +53,10 @@ As needed:
    - asset and content candidates
    - launch success metrics
    - strategic risk matrix
-5. Generate options and tradeoffs.
-6. Record the chosen direction as an ADR.
-7. Update backlog and launch plan.
-8. Update `.codex-memory/STATE.json` decision log when present.
+6. Generate options and tradeoffs.
+7. Record the chosen direction as an ADR.
+8. Update backlog and launch plan.
+9. Update `.codex-memory/STATE.json` decision log when present.
 
 ## Rules
 
@@ -63,3 +64,4 @@ As needed:
 - Do not rewrite history; append dated decisions.
 - Do not allow large implementation work to start when strategy Critical checks fail for a non-trivial product.
 - Do not count activity as progress unless it changes a signal, gate, decision, or reusable asset.
+- Do not treat recent social buzz as validated demand. Convert it into `VALIDATION_PLAN.md` experiments and decision criteria.

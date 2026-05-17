@@ -11,6 +11,8 @@
 - Superpowers-inspired engineering gates: TDD evidence, root-cause discipline, two-stage review, strict executable plans, and branch finish hygiene.
 - Runtime commands: `pfo tdd-evidence`, `pfo root-cause`, `pfo review-stage`, and `pfo finish-branch`.
 - Templates for `ROOT_CAUSE.md` and `BRANCH_FINISH.md`.
+- `/market-scan` skill for Last30Days-backed public market/community signal research before discovery, blueprint, and strategy decisions.
+- Market and validation templates now capture recent community signals, complaints, alternatives, source links, engagement, and confidence.
 
 ## [0.6.1] - 2026-05-09
 

@@ -12,16 +12,19 @@ metadata:
 
 Create `DISCOVERY.md`, `IDEA_SCORECARD.md`, and `VALIDATION_PLAN.md` for a product idea.
 
+Use `/market-scan` before scoring when the idea has public market risk, competitor risk, ICP uncertainty, launch uncertainty, or depends on current user/community demand.
+
 ## Process
 
 1. Clarify target user, painful problem, current alternatives, budget, timeline, and success metric.
-2. Score the idea by pain, urgency, segment clarity, willingness to pay or adopt, audience access, validation speed, complexity, and strategic fit.
-3. Decide `KILL`, `TEST`, or `BUILD`.
-4. Identify user segments and primary persona.
-5. Summarize alternatives and differentiation.
-6. Define the riskiest assumptions and validation experiments.
-7. Prioritize features with MoSCoW and a lightweight RICE score.
-8. Define the MVP scope, non-goals, and kill criteria.
+2. Run `/market-scan` when fresh public market or community signals can affect the score.
+3. Score the idea by pain, urgency, segment clarity, willingness to pay or adopt, audience access, validation speed, complexity, and strategic fit.
+4. Decide `KILL`, `TEST`, or `BUILD`.
+5. Identify user segments and primary persona.
+6. Summarize alternatives and differentiation.
+7. Define the riskiest assumptions and validation experiments.
+8. Prioritize features with MoSCoW and a lightweight RICE score.
+9. Define the MVP scope, non-goals, and kill criteria.
 
 ## Output
 
@@ -60,5 +63,6 @@ Write or update:
 
 - If facts are unknown, mark them as assumptions.
 - Do not invent market numbers without research.
+- Do not invent recent social, competitor, or community signals. Use `/market-scan` or mark evidence as missing.
 - Do not let `BUILD` scope pass when the scorecard still says `KILL`.
 - Ask before overwriting existing discovery or validation docs.

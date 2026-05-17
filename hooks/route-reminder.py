@@ -4,6 +4,7 @@ import sys
 
 
 ROUTES = [
+    (r"\b(last 30 days|market scan|recent community signals|fresh market signals|social signals|competitor buzz|user complaints|reddit|hacker news|polymarket|youtube sentiment)\b|последние 30 дней|свеж(ие|ий) сигнал|сигнал(ы)? рынка|что говорят пользователи|жалоб(ы|ах) пользовател|обсужда(ют|ния) пользовател", "/project -> /discover -> /market-scan"),
     (r"\b(validate idea|score idea|test hypothesis|kill weak ideas|product discovery|target users|market research|competitor|icp)\b|проверь идею|оцени идею|проверь гипотез|отсе(й|ять) слаб|discovery|аудит рынка|целевая аудитория|конкурент", "/project -> /discover"),
     (r"\b(plan only|architecture first|docs first|planning only|write docs)\b|только план|сначала архитектур|код пока не пишем|подготовь документаци", "/project -> /blueprint"),
     (r"\b(i have docs|existing docs|make prompts|execution guide|codex guide)\b|есть документаци|сделай гайд|промпты для реализации", "/project -> /guide"),

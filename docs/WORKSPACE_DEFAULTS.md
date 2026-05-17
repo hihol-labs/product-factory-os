@@ -109,6 +109,7 @@ For non-trivial existing-project changes, create or update the relevant `EXECUTI
 Connector-aware work routes through explicit skills:
 
 - Fresh library, SDK, framework, or platform docs -> `/mcp-docs`
+- Fresh public market, competitor, ICP, launch, or community signals -> `/market-scan`
 - Browser UI smoke or visual QA -> `/browser-check`
 - GitHub issue, PR, CI, or release workflow -> `/github-workflow`
 - Linear, Notion, Google Drive, or export sync -> `/tool-sync`
