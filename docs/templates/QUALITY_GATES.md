@@ -4,7 +4,11 @@
 
 | Gate | Status | Evidence | Blockers |
 |---|---|---|---|
+| Idea Gate |  | `IDEA_SCORECARD.md` KILL/TEST/BUILD decision |  |
+| Market Validation |  | `VALIDATION_PLAN.md` experiments and signals |  |
 | Strategy |  |  |  |
+| Feedback Loop |  | `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md` |  |
+| Funnel |  | `FUNNEL_MODEL.md` metrics or not-applicable note |  |
 | Architecture |  |  |  |
 | Tests |  |  |  |
 | Review |  |  |  |
@@ -29,6 +33,8 @@
 | Deployment Readiness |  |  |  |
 | Branch Finish |  | PR/merge/keep/discard decision with verification |  |
 | Learning Extraction |  | `.codex-memory/LEARNINGS.md` when applicable |  |
+| Asset Extraction |  | `ASSET_REGISTER.md` when applicable |  |
+| Content Pipeline |  | `CONTENT_BACKLOG.md` when applicable |  |
 
 ## Accepted Risks
 

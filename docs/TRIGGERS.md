@@ -9,6 +9,7 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | `/project` | new project, build an app, start a service, create MVP | новый проект, создай приложение, хочу MVP, стартуем проект |
 | `/project` | product factory, generate product, build SaaS, build bot, build scraper, build CLI | фабрика продуктов, сделай SaaS, сделай бота, сделай парсер, CLI инструмент |
 | `/discover` | validate idea, product discovery, target users, market | проверь идею, discovery, аудит рынка, целевая аудитория |
+| `/discover` | score idea, test hypothesis, kill weak ideas, validation plan | оцени идею, проверь гипотезу, отсеять слабые идеи |
 | `/blueprint` | plan only, architecture first, write docs | только план, сначала архитектура, подготовь документацию |
 | `/guide` | I have docs, make prompts, execution guide | есть документация, сделай гайд, промпты для реализации |
 | `/kickstart` | build end to end, full cycle, from idea to shipped | полный цикл, от идеи до релиза, сделай проект целиком |
@@ -48,4 +49,5 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | `/session-save` | save session, remember context | сохрани сессию, запомни контекст |
 | `/advisor` | advise, compare options, tradeoff | посоветуй, сравни варианты, компромисс |
 | `/strategy` | replan, roadmap, pivot, launch plan | перепланируй, roadmap, pivot, launch plan |
+| `/strategy` | funnel, feedback loop, content backlog, product iteration | воронка, обратная связь, контент, итерация продукта |
 | `/adopt` | adopt existing repo, onboard project | подключи методологию, адаптируй репозиторий |

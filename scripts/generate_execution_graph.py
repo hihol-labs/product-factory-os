@@ -44,7 +44,7 @@ def main() -> None:
     for node, module in nodes:
         lines.append(f"| {node} | {module} | BUILD_PLAN.md | module output | verification command |")
     lines.extend(["", "## Transitions", "", "| From | To | Requires | On Failure |", "|---|---|---|---|"])
-    lines.append("| PLAN_READY | N1 | review not blocked | fix planning docs |")
+    lines.append("| PLAN_READY | N1 | idea gate not KILL and review not blocked | fix planning or validation docs |")
     for idx, (node, _) in enumerate(nodes):
         target = nodes[idx + 1][0] if idx + 1 < len(nodes) else "READY_FOR_DEPLOY"
         lines.append(f"| {node} | {target} | {node} verified | repair {node} |")
@@ -53,6 +53,9 @@ def main() -> None:
         "## Validation Checkpoints",
         "",
         "- Architecture Validation: required before N1.",
+        "- Idea Gate: required before broad BUILD scope.",
+        "- Market Validation: required when market risk is material.",
+        "- Feedback/Funnel Check: required for iteration, acquisition, or conversion work.",
         "- Dependency Check: required before READY_FOR_DEPLOY.",
         "- Test Coverage Check: required after behavior nodes.",
         "- Security Review: required before deploy-ready.",
@@ -61,6 +64,7 @@ def main() -> None:
         "## Repair Paths",
         "",
         "Failed validation returns to the failed node with a repair action.",
+        "Weak idea or missing market signal returns to IDEA_SCORECARD.md and VALIDATION_PLAN.md.",
     ])
     (project / "EXECUTION_GRAPH.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"OK: wrote {project / 'EXECUTION_GRAPH.md'}")
@@ -68,4 +72,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -6,28 +6,32 @@ Product Factory OS is built around small gates instead of one large generation p
 
 1. Route the request.
 2. Parse intent and classify the product type.
-3. Select a product template and architecture pattern.
-4. Compile the idea into Product Blueprint, Build Plan, and Execution Graph.
-5. Run a phase discussion before planning detailed work.
-6. Ask only the clarifying questions that change the build.
-7. Produce documents before code.
-8. Review the documents before implementation.
-9. Build a unit context manifest before executing a node.
-10. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
-11. Implement execution graph nodes in small, isolated units.
-12. Record dispatches, verification commands, cost or token notes, and recovery decisions.
-13. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
-14. For bugfixes, record root-cause evidence before changing code.
-15. Run `/browser-check` for browser-facing critical flows.
-16. Verify work fail-closed: unclear verification does not pass.
-17. Run two-stage review: spec compliance first, code quality second.
-18. Review before commit or deploy.
-19. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
-20. Finish branches with an explicit PR, merge, keep, or discard decision.
-21. Extract durable learnings after completed milestones or significant repairs.
-22. Harden production-facing services.
-23. Deploy only after explicit confirmation.
-24. Save reloadable session memory.
+3. Score the idea and decide `KILL`, `TEST`, or `BUILD`.
+4. Define validation experiments for the riskiest assumptions.
+5. Select a product template and architecture pattern.
+6. Compile the idea into Product Blueprint, Build Plan, and Execution Graph.
+7. Run a phase discussion before planning detailed work.
+8. Ask only the clarifying questions that change the build.
+9. Produce documents before code.
+10. Review the documents before implementation.
+11. Build a unit context manifest before executing a node.
+12. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
+13. Implement execution graph nodes in small, isolated units.
+14. Record dispatches, verification commands, cost or token notes, and recovery decisions.
+15. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
+16. For bugfixes, record root-cause evidence before changing code.
+17. Run `/browser-check` for browser-facing critical flows.
+18. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
+19. Verify work fail-closed: unclear verification does not pass.
+20. Run two-stage review: spec compliance first, code quality second.
+21. Review before commit or deploy.
+22. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
+23. Finish branches with an explicit PR, merge, keep, or discard decision.
+24. Extract durable learnings after completed milestones or significant repairs.
+25. Promote repeatable solutions into assets and content candidates.
+26. Harden production-facing services.
+27. Deploy only after explicit confirmation.
+28. Save reloadable session memory.
 
 ## Existing Project Lifecycle
 
@@ -63,10 +67,15 @@ If any are missing, run `/adopt` first.
 ## Core Documents
 
 - `DISCOVERY.md`: market, users, alternatives, positioning, MVP scope
+- `IDEA_SCORECARD.md`: idea score, evidence, weaknesses, and KILL/TEST/BUILD decision
+- `VALIDATION_PLAN.md`: riskiest assumptions, experiments, expected signals, and exit decision
 - `MARKET_BRIEF.md`: problem, segment, alternatives, differentiation, market entry
 - `ICP.md`: primary user, buyer, jobs, pain signals, adoption trigger
 - `BUSINESS_MODEL.md`: value capture, pricing or ROI, cost drivers
 - `GO_TO_MARKET.md`: channel, offer, activation path, feedback loop, metrics
+- `FUNNEL_MODEL.md`: traffic, lead, activation, conversion, retention stages and bottleneck
+- `FEEDBACK_LOG.md`: feedback sources, evidence, patterns, and triggered decisions
+- `ITERATION_REVIEW.md`: iteration inputs, changes, outcomes, and keep/revert/iterate decision
 - `PRD.md`: user stories, acceptance criteria, non-goals, launch criteria
 - `PRODUCT_BLUEPRINT.md`: product classification, business logic, entities, modules, interfaces, dependencies, infrastructure
 - `PROJECT_ARCHITECTURE.md`: stack, data model, APIs, auth, deployment topology
@@ -90,6 +99,8 @@ If any are missing, run `/adopt` first.
 - `.pfo/SCOPE_LOCK.md`: current task boundaries and forbidden change areas
 - `.pfo/UNIT_CONTEXT_MANIFEST.json`: execution-unit input, write-scope, gate, and recovery contract
 - `.codex-memory/LEARNINGS.md`: durable decisions, lessons, patterns, and surprises
+- `ASSET_REGISTER.md`: repeatable product, process, template, offer, or automation assets
+- `CONTENT_BACKLOG.md`: publishable learnings and case-study candidates tied to evidence
 - `BRANCH_FINISH.md`: PR, merge, keep, or discard decision when branch cleanup is in scope
 
 ## Gate Status
@@ -126,6 +137,7 @@ Product Factory OS adopts the strongest GSD execution ideas without copying its 
 - Drift and recovery: stale state, missing artifacts, unexpected worktree changes, and blocked verification are first-class recovery cases.
 - Telemetry: record unit duration, commands, token or cost notes when available, and gate outcomes.
 - Learnings: extract reusable decisions, patterns, lessons, and surprises into project memory.
+- Assetization: convert proven repeatable solutions into reusable assets and content candidates.
 
 ## Engineering Discipline Layer
 
@@ -156,6 +168,9 @@ Canonical checklists live under `docs/rubrics/`:
 - Prefer narrow, verifiable implementation steps.
 - Prefer fresh, task-scoped context over long accumulated chat state.
 - Keep planning documents and code synchronized.
+- Kill weak ideas before they become build scope.
+- Treat validation signals and feedback as the source of product iteration.
+- Treat content and reusable assets as outputs of evidence, not activity.
 - Treat TDD evidence, tests, and two-stage review as part of implementation, not cleanup.
 - Treat bugfixes without root-cause evidence as blocked.
 - Treat unclear verification as failed until evidence exists.

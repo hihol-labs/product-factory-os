@@ -79,7 +79,11 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "recovery": "",
             },
             "gateResults": {
+                "ideaGate": "",
+                "marketValidation": "",
                 "strategy": "",
+                "feedbackLoop": "",
+                "funnel": "",
                 "architecture": "",
                 "tests": "",
                 "review": "",
@@ -93,6 +97,8 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "security": "",
                 "dependencies": "",
                 "hardening": "",
+                "assetExtraction": "",
+                "contentPipeline": "",
                 "deploymentReadiness": "",
             },
             "verificationHistory": [],
@@ -271,6 +277,13 @@ Product Factory OS must create and maintain:
 .pfo/FALLBACK_POLICY.md
 .pfo/SCOPE_LOCK.md
 DISCOVERY.md
+IDEA_SCORECARD.md
+VALIDATION_PLAN.md
+FEEDBACK_LOG.md
+ITERATION_REVIEW.md
+FUNNEL_MODEL.md
+ASSET_REGISTER.md
+CONTENT_BACKLOG.md
 PRD.md
 PRODUCT_BLUEPRINT.md
 PROJECT_ARCHITECTURE.md
@@ -287,6 +300,8 @@ IMPLEMENTATION_PLAN.md
 
 - Voice or natural-language commands are accepted as the primary interface.
 - Codex performs routing automatically.
+- Score ideas before broad build scope in `IDEA_SCORECARD.md`.
+- Validate risky assumptions in `VALIDATION_PLAN.md`.
 - Capture implementation decisions in `PHASE_CONTEXT.md` before detailed execution planning.
 - Build `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
 - Behavior changes require TDD red/green evidence unless explicitly waived by project owner.
@@ -299,6 +314,8 @@ IMPLEMENTATION_PLAN.md
 - Tests, review, security, dependency, and hardening gates block deployment when they fail.
 - Golden flows in `.pfo/GOLDEN_FLOWS.md` block deployment when touched and unverified.
 - Verification fails closed when evidence is missing or ambiguous.
+- Product iterations must reference feedback, metrics, validation evidence, or a recorded strategy decision.
+- Reusable solutions should be promoted into `ASSET_REGISTER.md`; publishable lessons go into `CONTENT_BACKLOG.md`.
 - Branch finish must record a PR, merge, keep, or discard decision with verification evidence.
 - Extract durable decisions, lessons, patterns, and surprises into `.codex-memory/LEARNINGS.md`.
 - Session state is saved after significant milestones.

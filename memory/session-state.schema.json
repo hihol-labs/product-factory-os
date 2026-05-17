@@ -68,7 +68,11 @@
       "recovery": ""
     },
     "gateResults": {
+      "ideaGate": "",
+      "marketValidation": "",
       "strategy": "",
+      "feedbackLoop": "",
+      "funnel": "",
       "architecture": "",
       "tests": "",
       "review": "",
@@ -89,6 +93,8 @@
       "fallbackPolicy": "",
       "diffRisk": "",
       "noSilentSubstitution": "",
+      "assetExtraction": "",
+      "contentPipeline": "",
       "deploymentReadiness": ""
     },
     "tddEvidence": {

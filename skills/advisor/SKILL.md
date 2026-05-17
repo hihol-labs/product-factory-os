@@ -12,7 +12,7 @@ metadata:
 
 Analyze without editing files.
 
-Use `docs/rubrics/strategy.md` for product/market/launch decisions and `docs/rubrics/review.md` for engineering readiness decisions.
+Use `docs/rubrics/strategy.md` for product, idea-gate, validation, funnel, feedback, asset, content, market, and launch decisions. Use `docs/rubrics/review.md` for engineering readiness decisions.
 
 ## Process
 
@@ -21,7 +21,7 @@ Use `docs/rubrics/strategy.md` for product/market/launch decisions and `docs/rub
 3. Compare impact, risk, cost, reversibility, time, strategic fit, and validation path.
 4. Give a recommendation with assumptions.
 5. Name what would change the recommendation.
-6. Identify the next artifact that should change if the decision is accepted.
+6. Identify the next artifact that should change if the decision is accepted, such as `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FUNNEL_MODEL.md`, `ITERATION_REVIEW.md`, `ASSET_REGISTER.md`, or `CONTENT_BACKLOG.md`.
 
 ## Rules
 
