@@ -7,12 +7,14 @@ This project is governed by Product Factory OS.
 - New product work routes through `/project -> /kickstart`.
 - Existing project work routes through `/task`.
 - Significant work updates `.codex-memory/STATE.json`.
+- Broad product scope requires `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md`.
 - Scope, data, fallback, and golden-flow rules live in `.pfo/`.
 - Autonomous or delegated work requires `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 - Behavior changes require TDD red/green evidence.
 - Bugfixes require root-cause evidence before fixes.
 - Reviews run spec compliance first, code quality second.
 - Verification fails closed when evidence is missing or ambiguous.
+- Iteration must reference feedback, metric, validation, or strategy evidence.
 
 ## Before Substantial Work
 

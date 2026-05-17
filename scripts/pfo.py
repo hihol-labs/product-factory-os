@@ -110,6 +110,10 @@ def ensure_autonomy_state(state: dict) -> None:
     )
     gates = state.setdefault("gateResults", {})
     for gate in [
+        "ideaGate",
+        "marketValidation",
+        "feedbackLoop",
+        "funnel",
         "tddRed",
         "tddGreen",
         "tddRefactor",
@@ -117,6 +121,8 @@ def ensure_autonomy_state(state: dict) -> None:
         "specComplianceReview",
         "codeQualityReview",
         "branchFinish",
+        "assetExtraction",
+        "contentPipeline",
     ]:
         gates.setdefault(gate, "")
 
@@ -274,19 +280,24 @@ def generated_build_plan(starter: dict) -> str:
 | Step | Module | Dependencies | Files Likely Touched | Verification | Exit Criteria |
 |---:|---|---|---|---|---|
 | 1 | Starter baseline and contracts | CODEX.md, `.pfo/` | starter files, `.env.example`, CI | `python3 scripts/pfo.py validate <project>` | project validates under PFO |
-| 2 | Phase decisions and unit manifest | PRODUCT_BLUEPRINT.md, PHASE_CONTEXT.md | BUILD_PLAN.md, EXECUTION_GRAPH.md, `.pfo/UNIT_CONTEXT_MANIFEST.json` | `pfo manifest <project>` | execution unit has scoped context |
-| 3 | TDD evidence loop | `.pfo/UNIT_CONTEXT_MANIFEST.json` | tests, minimal source files | `pfo tdd-evidence <project> --red ... --green ...` | red and green evidence recorded |
-| 4 | Product domain model | PRODUCT_BLUEPRINT.md | backend, database, shared types | `{test_command}` | core entities covered by tests |
-| 5 | Primary user flow | domain model | frontend, API, bot, or CLI handlers | smoke path from TEST_PLAN.md | golden flow documented and verified |
-| 6 | Two-stage review | implemented unit | review notes, `QUALITY_GATES.md` | `pfo review-stage <project> --stage spec ...` and `--stage quality ...` | spec and code-quality reviews recorded |
-| 7 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
-| 8 | Branch finish | quality gates | branch, PR, merge notes | `pfo finish-branch <project> --mode pr --verification ...` | merge/PR/keep/discard decision explicit |
-| 9 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
+| 2 | Idea and validation gate | initial intent | IDEA_SCORECARD.md, VALIDATION_PLAN.md | review scorecard decision | weak ideas are killed or narrowed before build |
+| 3 | GTM and feedback model | validation plan | GO_TO_MARKET.md, FUNNEL_MODEL.md, FEEDBACK_LOG.md | measurable signal and funnel bottleneck named | market test can be measured |
+| 4 | Phase decisions and unit manifest | PRODUCT_BLUEPRINT.md, PHASE_CONTEXT.md | BUILD_PLAN.md, EXECUTION_GRAPH.md, `.pfo/UNIT_CONTEXT_MANIFEST.json` | `pfo manifest <project>` | execution unit has scoped context |
+| 5 | TDD evidence loop | `.pfo/UNIT_CONTEXT_MANIFEST.json` | tests, minimal source files | `pfo tdd-evidence <project> --red ... --green ...` | red and green evidence recorded |
+| 6 | Product domain model | PRODUCT_BLUEPRINT.md | backend, database, shared types | `{test_command}` | core entities covered by tests |
+| 7 | Primary user flow | domain model | frontend, API, bot, or CLI handlers | smoke path from TEST_PLAN.md | golden flow documented and verified |
+| 8 | Feedback-driven iteration | primary flow | FEEDBACK_LOG.md, ITERATION_REVIEW.md | iteration decision recorded | changes are tied to signal, not activity |
+| 9 | Asset and content extraction | completed milestone | ASSET_REGISTER.md, CONTENT_BACKLOG.md | reusable asset candidate recorded | repeatable solutions become assets |
+| 10 | Two-stage review | implemented unit | review notes, `QUALITY_GATES.md` | `pfo review-stage <project> --stage spec ...` and `--stage quality ...` | spec and code-quality reviews recorded |
+| 11 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
+| 12 | Branch finish | quality gates | branch, PR, merge notes | `pfo finish-branch <project> --mode pr --verification ...` | merge/PR/keep/discard decision explicit |
+| 13 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
 
 ## Cross-Module Dependencies
 
 - Implementation order follows `EXECUTION_GRAPH.md`.
 - Any change touching a golden flow must update `.pfo/GOLDEN_FLOWS.md` evidence.
+- Build scope must follow `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md` decisions.
 
 ## Test Strategy
 
@@ -297,6 +308,7 @@ def generated_build_plan(starter: dict) -> str:
 ## Gate Strategy
 
 - Run `.pfo/` contract gate on every meaningful diff.
+- Do not expand implementation from TEST to BUILD without validation evidence.
 - Record TDD red/green/refactor evidence for behavior changes.
 - Bugfixes require root-cause evidence before the fix.
 - Review runs in two stages: spec compliance first, code quality second.
@@ -364,6 +376,263 @@ TBD by product type.
 """
 
 
+def generated_idea_scorecard(state: dict) -> str:
+    idea = state.get("intent") or "Product idea not captured yet."
+    return f"""# Idea Scorecard
+
+## Candidate Idea
+
+{idea}
+
+## Target Segment
+
+TBD
+
+## Problem Evidence
+
+TBD
+
+## Score
+
+| Criterion | Score 1-5 | Evidence | Notes |
+|---|---:|---|---|
+| Pain intensity |  |  |  |
+| Segment clarity |  |  |  |
+| Urgency |  |  |  |
+| Willingness to pay or adopt |  |  |  |
+| Audience access |  |  |  |
+| Validation speed |  |  |  |
+| Build complexity |  |  |  |
+| Strategic fit |  |  |  |
+
+## Decision
+
+```text
+STATUS: TEST
+RATIONALE: Initial idea requires market and user validation before broad build scope.
+```
+
+## Weaknesses To Test First
+
+- TBD
+
+## Kill Criteria
+
+- No painful problem evidence from the target segment.
+- No realistic path to first users or internal adopters.
+- Validation cost is higher than the value of the next decision.
+
+## Next Validation Step
+
+Create or update `VALIDATION_PLAN.md`.
+"""
+
+
+def generated_validation_plan(state: dict) -> str:
+    idea = state.get("intent") or "Product idea not captured yet."
+    return f"""# Validation Plan
+
+## Core Hypothesis
+
+{idea}
+
+## Riskiest Assumptions
+
+| Assumption | Risk | Evidence Needed | Owner | Deadline |
+|---|---|---|---|---|
+| Target segment has the problem | high | interview, signup, usage, or purchase intent signal | TBD | TBD |
+| MVP scope can produce a useful outcome | medium | prototype test or workflow completion signal | TBD | TBD |
+| Acquisition path reaches the segment | medium | channel test or direct outreach response | TBD | TBD |
+
+## Experiments
+
+| Experiment | Method | Expected Signal | Actual Signal | Decision |
+|---|---|---|---|---|
+| Problem interview | 5 target users | repeated painful problem signal | TBD | TBD |
+| Offer test | landing page, message, or direct pitch | lead, reply, or qualified demo request | TBD | TBD |
+| Manual concierge test | deliver outcome manually | user completes target workflow | TBD | TBD |
+
+## Market Signals
+
+- Alternatives: TBD
+- Search or demand signal: TBD
+- Buyer/user quotes: TBD
+- Pricing or budget signal: TBD
+
+## Decision Log
+
+| Date | Decision | Evidence | Next Step |
+|---|---|---|---|
+
+## Exit Decision
+
+```text
+CONTINUE | PIVOT | STOP
+```
+"""
+
+
+def generated_feedback_log() -> str:
+    return """# Feedback Log
+
+## Sources
+
+| Source | Segment | Channel | Date |
+|---|---|---|---|
+
+## Feedback
+
+| Date | User Or Source | Signal | Evidence | Severity | Product Area | Follow-Up |
+|---|---|---|---|---|---|---|
+
+## Patterns
+
+TBD
+
+## Open Questions
+
+TBD
+
+## Decisions Triggered
+
+| Decision | Evidence | Artifact To Update |
+|---|---|---|
+"""
+
+
+def generated_iteration_review() -> str:
+    return """# Iteration Review
+
+## Iteration Window
+
+TBD
+
+## Goal
+
+TBD
+
+## Inputs
+
+- Feedback: `FEEDBACK_LOG.md`
+- Metrics: TBD
+- Validation evidence: `VALIDATION_PLAN.md`
+- Strategic decision: `PHASE_CONTEXT.md` or ADR
+
+## Changes Made
+
+| Change | Reason | Evidence | Verification |
+|---|---|---|---|
+
+## Outcome
+
+| Metric Or Signal | Before | After | Interpretation |
+|---|---:|---:|---|
+
+## Decision
+
+```text
+KEEP | REVERT | ITERATE | PIVOT | STOP
+```
+
+## Next Iteration
+
+TBD
+"""
+
+
+def generated_funnel_model() -> str:
+    return """# Funnel Model
+
+## Goal
+
+TBD
+
+## Offer
+
+TBD
+
+## Funnel Stages
+
+| Stage | User Action | Current Rate | Target Rate | Instrumentation | Bottleneck |
+|---|---|---:|---:|---|---|
+| Traffic | TBD |  |  | TBD |  |
+| Lead | TBD |  |  | TBD |  |
+| Activation | TBD |  |  | TBD |  |
+| Conversion | TBD |  |  | TBD |  |
+| Retention | TBD |  |  | TBD |  |
+
+## Primary Bottleneck
+
+TBD
+
+## Experiment Backlog
+
+| Experiment | Stage | Hypothesis | Metric | Decision |
+|---|---|---|---|---|
+"""
+
+
+def generated_asset_register() -> str:
+    return """# Asset Register
+
+## Reusable Assets
+
+| Asset | Source | Type | Reuse Target | Owner | Status |
+|---|---|---|---|---|---|
+
+## Asset Types
+
+- Product pattern
+- Starter module
+- Template
+- Checklist
+- Offer
+- Case study
+- Research note
+- Automation workflow
+
+## Promotion Criteria
+
+- Repeated use or strong evidence.
+- Clear owner and scope.
+- Documented limitations.
+- Verification or example exists.
+
+## Candidates To Promote
+
+TBD
+"""
+
+
+def generated_content_backlog() -> str:
+    return """# Content Backlog
+
+## Content Sources
+
+- Decisions from `PHASE_CONTEXT.md`
+- Learnings from `.codex-memory/LEARNINGS.md`
+- Validation evidence from `VALIDATION_PLAN.md`
+- Customer patterns from `FEEDBACK_LOG.md`
+- Assets from `ASSET_REGISTER.md`
+
+## Backlog
+
+| Idea | Source Evidence | Format | Audience | Offer Tie-In | Status |
+|---|---|---|---|---|---|
+
+## Published Content
+
+| Content | URL Or Location | Source Asset | Result |
+|---|---|---|---|
+
+## Rules
+
+- Do not turn private user data into content without explicit approval.
+- Tie content to evidence, not internal activity.
+- Prefer reusable insights, checklists, teardown notes, and case studies.
+"""
+
+
 def generated_quality_gates() -> str:
     return """# Quality Gates
 
@@ -371,7 +640,11 @@ def generated_quality_gates() -> str:
 
 | Gate | Status | Evidence | Blockers |
 |---|---|---|---|
+| Idea Gate | PENDING | IDEA_SCORECARD.md decision is KILL, TEST, or BUILD |  |
+| Market Validation | PENDING | VALIDATION_PLAN.md signals and exit decision |  |
 | Strategy | PENDING | DISCOVERY.md / MARKET_BRIEF.md when applicable |  |
+| Feedback Loop | PENDING | FEEDBACK_LOG.md and ITERATION_REVIEW.md when users exist |  |
+| Funnel | PENDING | FUNNEL_MODEL.md for acquisition or conversion work |  |
 | Architecture | PENDING | PRODUCT_BLUEPRINT.md, PROJECT_ARCHITECTURE.md, BUILD_PLAN.md |  |
 | Tests | PENDING | TEST_PLAN.md and test command output |  |
 | Review | PENDING | `/review` result |  |
@@ -396,6 +669,8 @@ def generated_quality_gates() -> str:
 | Deployment Readiness | PENDING | env vars, build, health check, rollback notes |  |
 | Branch Finish | PENDING | PR/merge/keep/discard decision with verification |  |
 | Learning Extraction | PENDING | `.codex-memory/LEARNINGS.md` when applicable |  |
+| Asset Extraction | PENDING | ASSET_REGISTER.md updated after useful repeatable solutions |  |
+| Content Pipeline | PENDING | CONTENT_BACKLOG.md updated when learnings can become public content |  |
 
 ## Accepted Risks
 
@@ -449,9 +724,12 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str)
             ".codex-memory/STATE.json",
             ".pfo/PROJECT_CONTRACT.md",
             ".pfo/SCOPE_LOCK.md",
+            "IDEA_SCORECARD.md",
+            "VALIDATION_PLAN.md",
             "PRODUCT_BLUEPRINT.md",
             "BUILD_PLAN.md",
             "EXECUTION_GRAPH.md",
+            "FEEDBACK_LOG.md and FUNNEL_MODEL.md when user acquisition or iteration is in scope",
             "PHASE_CONTEXT.md when present",
             "ROOT_CAUSE.md for bugfix units",
         ],
@@ -488,6 +766,10 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str)
             "fallbackPolicy",
             "diffRisk",
             "noSilentSubstitution",
+            "ideaGate",
+            "marketValidation",
+            "feedbackLoop",
+            "funnel",
         ],
         "review": {
             "specCompliance": "Check output against the unit goal, spec, and allowed scope first.",
@@ -662,6 +944,13 @@ def cmd_plan(args: argparse.Namespace) -> int:
     starter = load_starter(project, state)
     written = []
     for path, text in [
+        (project / "IDEA_SCORECARD.md", generated_idea_scorecard(state)),
+        (project / "VALIDATION_PLAN.md", generated_validation_plan(state)),
+        (project / "FEEDBACK_LOG.md", generated_feedback_log()),
+        (project / "ITERATION_REVIEW.md", generated_iteration_review()),
+        (project / "FUNNEL_MODEL.md", generated_funnel_model()),
+        (project / "ASSET_REGISTER.md", generated_asset_register()),
+        (project / "CONTENT_BACKLOG.md", generated_content_backlog()),
         (project / "PRODUCT_BLUEPRINT.md", generated_blueprint(project, state, starter)),
         (project / "PROJECT_ARCHITECTURE.md", generated_architecture(starter)),
         (project / "BUILD_PLAN.md", generated_build_plan(starter)),
@@ -681,6 +970,13 @@ def cmd_plan(args: argparse.Namespace) -> int:
     state["architecture"]["backend"] = state["architecture"].get("backend") or ", ".join(starter.get("stack", []))
     artifacts = set(state.get("artifacts", []))
     artifacts.update([
+        "IDEA_SCORECARD.md",
+        "VALIDATION_PLAN.md",
+        "FEEDBACK_LOG.md",
+        "ITERATION_REVIEW.md",
+        "FUNNEL_MODEL.md",
+        "ASSET_REGISTER.md",
+        "CONTENT_BACKLOG.md",
         "PRODUCT_BLUEPRINT.md",
         "PROJECT_ARCHITECTURE.md",
         "BUILD_PLAN.md",
@@ -689,7 +985,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
         "QUALITY_GATES.md",
     ])
     state["artifacts"] = sorted(artifacts)
-    state["nextAction"] = "Review generated planning artifacts, resolve TBD fields, then run /review before build."
+    state["nextAction"] = "Resolve idea, validation, feedback, funnel, and build TBD fields, then run /review before build."
     state.setdefault("decisionLog", []).append({"event": "pfo plan requested", "note": args.note})
     save_state(project, state)
     print("OK: plan stage recorded")

@@ -8,6 +8,8 @@ The product compiler turns a raw idea into deterministic build artifacts. In the
 Idea
   -> Intent Model
   -> Product Classification
+  -> Idea Scorecard
+  -> Validation Plan
   -> Architecture Selection
   -> Product Blueprint
   -> Phase Context
@@ -15,6 +17,7 @@ Idea
   -> Execution Graph
   -> Unit Context Manifest
   -> TDD And Review Gates
+  -> Feedback, Assets, And Content
 ```
 
 ## Stage Contracts
@@ -42,7 +45,25 @@ REQUIRED_MODULES:
 INFRASTRUCTURE:
 ```
 
-### 3. Architecture Selection
+### 3. Idea Scorecard
+
+Write `IDEA_SCORECARD.md` with:
+
+- evidence-backed score
+- weak assumptions
+- KILL, TEST, or BUILD decision
+- kill criteria
+
+### 4. Validation Plan
+
+Write `VALIDATION_PLAN.md` with:
+
+- riskiest assumptions
+- validation experiments
+- expected and actual signals
+- continue, pivot, or stop decision
+
+### 5. Architecture Selection
 
 Select:
 
@@ -50,7 +71,7 @@ Select:
 - Modular monolith for multi-module products
 - Microservices only when scale, team, or isolation requirements justify it
 
-### 4. Product Blueprint
+### 6. Product Blueprint
 
 Write `PRODUCT_BLUEPRINT.md` with:
 
@@ -62,7 +83,7 @@ Write `PRODUCT_BLUEPRINT.md` with:
 - Infrastructure
 - Risks
 
-### 5. Phase Context
+### 7. Phase Context
 
 Write `PHASE_CONTEXT.md` with:
 
@@ -71,7 +92,7 @@ Write `PHASE_CONTEXT.md` with:
 - open questions
 - planning impact
 
-### 6. Build Plan
+### 8. Build Plan
 
 Write `BUILD_PLAN.md` with:
 
@@ -81,7 +102,7 @@ Write `BUILD_PLAN.md` with:
 - Verification per module
 - Exit criteria
 
-### 7. Execution Graph
+### 9. Execution Graph
 
 Write `EXECUTION_GRAPH.md` with:
 
@@ -90,7 +111,7 @@ Write `EXECUTION_GRAPH.md` with:
 - Validation checkpoints
 - Rollback or repair action for failed gates
 
-### 8. Unit Context Manifest
+### 10. Unit Context Manifest
 
 Write `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution with:
 
@@ -101,7 +122,7 @@ Write `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution
 - verification commands
 - gates and recovery behavior
 
-### 9. Test And Gate Plan
+### 11. Test And Gate Plan
 
 Write `TEST_PLAN.md` and `QUALITY_GATES.md` with:
 
@@ -114,3 +135,15 @@ Write `TEST_PLAN.md` and `QUALITY_GATES.md` with:
 - Required quality gates
 - Evidence slots
 - Accepted-risk section
+
+### 12. Feedback, Assets, And Content
+
+Write or update:
+
+- `FEEDBACK_LOG.md`
+- `ITERATION_REVIEW.md`
+- `FUNNEL_MODEL.md`
+- `ASSET_REGISTER.md`
+- `CONTENT_BACKLOG.md`
+
+These artifacts keep iteration tied to evidence and turn repeatable outcomes into reusable assets.

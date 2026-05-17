@@ -33,6 +33,7 @@ Write a dated session note under a project memory location, for example:
 - Files touched
 - PFO current state
 - Product classification
+- Idea, validation, feedback, funnel, asset, and content status when present
 - Completed modules
 - Failed validations
 

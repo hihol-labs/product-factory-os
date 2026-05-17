@@ -71,6 +71,13 @@ def main() -> None:
     }
     if state.get("currentStage") in planned_or_later:
         for rel in [
+            "IDEA_SCORECARD.md",
+            "VALIDATION_PLAN.md",
+            "FEEDBACK_LOG.md",
+            "ITERATION_REVIEW.md",
+            "FUNNEL_MODEL.md",
+            "ASSET_REGISTER.md",
+            "CONTENT_BACKLOG.md",
             "PRODUCT_BLUEPRINT.md",
             "PROJECT_ARCHITECTURE.md",
             "BUILD_PLAN.md",

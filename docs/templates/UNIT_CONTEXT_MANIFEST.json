@@ -8,9 +8,12 @@
     ".codex-memory/STATE.json",
     ".pfo/PROJECT_CONTRACT.md",
     ".pfo/SCOPE_LOCK.md",
+    "IDEA_SCORECARD.md",
+    "VALIDATION_PLAN.md",
     "PRODUCT_BLUEPRINT.md",
     "BUILD_PLAN.md",
     "EXECUTION_GRAPH.md",
+    "FEEDBACK_LOG.md or FUNNEL_MODEL.md when iteration or growth is in scope",
     "ROOT_CAUSE.md for bugfix units"
   ],
   "allowedWriteAreas": [],
@@ -33,7 +36,11 @@
     "regressionContract",
     "fallbackPolicy",
     "diffRisk",
-    "noSilentSubstitution"
+    "noSilentSubstitution",
+    "ideaGate",
+    "marketValidation",
+    "feedbackLoop",
+    "funnel"
   ],
   "review": {
     "specCompliance": "Check output against the unit goal, spec, and allowed scope first.",

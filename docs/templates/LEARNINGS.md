@@ -19,3 +19,13 @@ Record proposed runtime changes with:
 - Proposed rule
 - Evidence
 - Confidence
+
+## Asset Candidates
+
+| Source | Reusable Asset | Target | Evidence |
+|---|---|---|---|
+
+## Content Candidates
+
+| Source | Content Angle | Audience | Evidence |
+|---|---|---|---|

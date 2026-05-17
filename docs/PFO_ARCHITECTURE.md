@@ -8,6 +8,8 @@ It keeps the existing Codex skill-routing model, but adds deterministic runtime 
 IDEA
   -> Intent Parsing
   -> Product Classification
+  -> Idea Scorecard
+  -> Market Validation Plan
   -> Architecture Selection
   -> Product Blueprint
   -> Phase Discussion
@@ -22,6 +24,8 @@ IDEA
   -> Tests
   -> Quality Gates
   -> Deploy Ready
+  -> Feedback And Iteration Review
+  -> Asset And Content Extraction
   -> Learning Extraction
   -> Session State
 ```
@@ -105,10 +109,23 @@ Each template defines modules, default folders, test minimums, security minimums
 Compiles:
 
 ```text
-Idea -> Product Blueprint -> Build Plan -> Execution Graph
+Idea -> Idea Scorecard -> Validation Plan -> Product Blueprint -> Build Plan -> Execution Graph
 ```
 
-### 6. Phase Discussion Layer
+### 6. Validation Layer
+
+Prevents broad build scope from hiding weak demand. It records:
+
+- idea score and KILL/TEST/BUILD decision
+- riskiest assumptions
+- validation experiments
+- expected and actual market signals
+- feedback sources
+- funnel bottlenecks
+
+Canonical artifacts are `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, and `FUNNEL_MODEL.md`.
+
+### 7. Phase Discussion Layer
 
 Captures the implementation decisions that usually get lost between high-level planning and code:
 
@@ -120,7 +137,7 @@ Captures the implementation decisions that usually get lost between high-level p
 
 The canonical artifact is `PHASE_CONTEXT.md`.
 
-### 7. Unit Context Manifest
+### 8. Unit Context Manifest
 
 Before execution, each node gets a task-scoped manifest:
 
@@ -135,13 +152,13 @@ Before execution, each node gets a task-scoped manifest:
 
 The canonical artifact is `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 
-### 8. Execution Engine
+### 9. Execution Engine
 
 Uses `execution/state-machine.json` and `pipelines/execution-pipeline.json` to move through controlled states. Failed gates block forward movement and create a repair path.
 
 Execution should use fresh, task-scoped context per unit. Long chat history is not the execution source of truth.
 
-### 9. Verification, Drift, And Recovery
+### 10. Verification, Drift, And Recovery
 
 Post-unit verification fails closed. PFO records unclear evidence as recovery work, not success.
 
@@ -154,7 +171,7 @@ Recovery covers:
 - changed golden flows without evidence
 - repeated unit failure or stuck progress
 
-### 10. Engineering Discipline Gates
+### 11. Engineering Discipline Gates
 
 PFO keeps product strategy and project contracts as the outer lifecycle, then applies disciplined engineering gates inside each execution unit:
 
@@ -164,7 +181,7 @@ PFO keeps product strategy and project contracts as the outer lifecycle, then ap
 - Strict task granularity: exact files, commands, expected output, and exit criteria.
 - Branch finish: PR, merge, keep, or discard decision with fresh verification.
 
-### 11. Memory System
+### 12. Memory System
 
 Uses `memory/session-state.schema.json` as the canonical reloadable state contract.
 
@@ -172,11 +189,13 @@ It stores dispatch history, telemetry, recovery state, captured notes, and durab
 
 Structured learnings are recorded in `.codex-memory/LEARNINGS.jsonl`. Candidate runtime improvements are proposed into `.codex-memory/LEARNING_PROPOSALS.json` and the repository-level `memory/LEARNING_REGISTRY.json`; they must pass promotion gates before changing templates, routes, gates, or skills.
 
-### 12. Deployment Abstraction Layer
+Reusable assets are recorded in `ASSET_REGISTER.md`. Publishable lessons, case studies, and checklists are recorded in `CONTENT_BACKLOG.md` only when they are tied to evidence and approved data boundaries.
+
+### 13. Deployment Abstraction Layer
 
 Uses `deployment/deployment-targets.json` to prepare deploy-ready artifacts for Docker, VPS, Vercel, Netlify, AWS, GCP, and Azure.
 
-### 13. Connector And MCP Layer
+### 14. Connector And MCP Layer
 
 Uses `integrations/mcp-capabilities.json` and `docs/OPENAI_MCP_INTEGRATIONS.md` to bind external tools to named PFO skills:
 
@@ -190,10 +209,15 @@ Uses `integrations/mcp-capabilities.json` and `docs/OPENAI_MCP_INTEGRATIONS.md` 
 Every full-cycle PFO project should maintain:
 
 - `DISCOVERY.md`
+- `IDEA_SCORECARD.md`
+- `VALIDATION_PLAN.md`
 - `MARKET_BRIEF.md` when strategy risk is non-trivial
 - `ICP.md` when users or customers matter
 - `BUSINESS_MODEL.md` when value capture matters
 - `GO_TO_MARKET.md` when launch or acquisition matters
+- `FUNNEL_MODEL.md` when acquisition, activation, conversion, or retention matters
+- `FEEDBACK_LOG.md` when user or market feedback exists
+- `ITERATION_REVIEW.md` after feedback-driven product changes
 - `PRD.md`
 - `PRODUCT_BLUEPRINT.md`
 - `PROJECT_ARCHITECTURE.md`
@@ -211,6 +235,8 @@ Every full-cycle PFO project should maintain:
 - `BRANCH_FINISH.md` when branch cleanup or PR/merge decisions are in scope
 - `PFO_BRIEF.html` when visual status, plan, diff, or recap review is useful
 - `.codex-memory/LEARNINGS.md` after significant milestones or repairs
+- `ASSET_REGISTER.md` after reusable solutions or patterns appear
+- `CONTENT_BACKLOG.md` when evidence-backed learnings can become public content
 - `CODEX.md`
 - `.codex-memory/STATE.json`
 - `.codex-memory/MEMORY.md`
@@ -219,6 +245,8 @@ Every full-cycle PFO project should maintain:
 
 Deployment is blocked unless:
 
+- The idea gate is not `KILL` for the current build scope.
+- Validation, feedback, and funnel evidence are explicit when market risk is material.
 - Architecture matches implementation.
 - Changed behavior has tests or a documented non-production limitation.
 - TDD red/green/refactor evidence is recorded for behavior changes, or an explicit exception exists.

@@ -8,17 +8,20 @@
 
 1. принимаешь идею;
 2. классифицируешь продукт;
-3. выбираешь архитектурный шаблон;
-4. компилируешь идею в Product Blueprint, Build Plan и Execution Graph;
-5. собираешь систему из модулей;
-6. запускаешь проверки качества;
-7. готовишь деплой;
-8. сохраняешь состояние проекта.
+3. оцениваешь идею через KILL / TEST / BUILD gate;
+4. задаешь validation plan для рискованных гипотез;
+5. выбираешь архитектурный шаблон;
+6. компилируешь идею в Product Blueprint, Build Plan и Execution Graph;
+7. собираешь систему из модулей;
+8. запускаешь проверки качества;
+9. фиксируешь feedback, funnel, iteration и reusable assets;
+10. готовишь деплой;
+11. сохраняешь состояние проекта.
 
 Главный поток:
 
 ```text
-IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> VALIDATE -> DEPLOY_READY -> SAVE_STATE
+IDEA -> IDEA_SCORECARD -> VALIDATION_PLAN -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> VALIDATE -> FEEDBACK -> ASSETS -> DEPLOY_READY -> SAVE_STATE
 ```
 
 Никакой этап не может быть пропущен.
@@ -29,11 +32,13 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 1. Intent Parsing
 2. Product Classification
-3. Architecture Selection
-4. Blueprint Generation
-5. Execution Plan Generation
-6. Modular Build
-7. Test Generation
+3. Idea Gate
+4. Market Validation
+5. Architecture Selection
+6. Blueprint Generation
+7. Execution Plan Generation
+8. Modular Build
+9. Test Generation
 8. Validation Gates
 9. Deployment Readiness
 10. Session Persistence
@@ -140,11 +145,15 @@ RECOMMENDED_STACK:
 
 ## VI. Product Compiler
 
-Компилируй идею в три уровня:
+Компилируй идею в пять уровней:
 
 ```text
-Idea -> Product Blueprint -> Build Plan -> Execution Graph
+Idea -> Idea Scorecard -> Validation Plan -> Product Blueprint -> Build Plan -> Execution Graph
 ```
+
+`IDEA_SCORECARD.md` включает score, evidence, weaknesses, kill criteria и решение KILL / TEST / BUILD.
+
+`VALIDATION_PLAN.md` включает risky assumptions, experiments, expected signals, actual signals и continue / pivot / stop decision.
 
 `PRODUCT_BLUEPRINT.md` включает бизнес-логику, сущности, модули, интерфейсы, зависимости и инфраструктуру.
 
@@ -161,7 +170,8 @@ Execution Engine обязан:
 3. запускать проверки после каждого модуля;
 4. фиксировать прогресс;
 5. блокировать переход при ошибке;
-6. создавать repair path при провале gate.
+6. создавать repair path при провале gate;
+7. не считать активность прогрессом без сигнала, gate, решения или reusable asset.
 
 ## VIII. Agent Orchestration Model
 
@@ -237,6 +247,8 @@ BLOCKERS:
 - gate results
 - verification history
 - decision log
+- validation and feedback log
+- asset register and content backlog
 - recovery state
 - telemetry
 - drift checks

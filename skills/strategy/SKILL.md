@@ -22,6 +22,13 @@ As needed:
 - `ICP.md`
 - `BUSINESS_MODEL.md`
 - `GO_TO_MARKET.md`
+- `IDEA_SCORECARD.md`
+- `VALIDATION_PLAN.md`
+- `FUNNEL_MODEL.md`
+- `FEEDBACK_LOG.md`
+- `ITERATION_REVIEW.md`
+- `ASSET_REGISTER.md`
+- `CONTENT_BACKLOG.md`
 - `LAUNCH_PLAN.md`
 - `BACKLOG.md`
 - `docs/adr/YYYY-MM-DD-decision.md`
@@ -36,8 +43,13 @@ As needed:
    - ICP
    - value proposition
    - MVP scope
+   - idea score and KILL/TEST/BUILD decision
+   - validation experiments and exit criteria
    - monetization or value-capture model
    - acquisition path
+   - funnel stages and bottleneck
+   - feedback loop and iteration decision
+   - asset and content candidates
    - launch success metrics
    - strategic risk matrix
 5. Generate options and tradeoffs.
@@ -50,3 +62,4 @@ As needed:
 - Planning docs only unless the user asks for implementation.
 - Do not rewrite history; append dated decisions.
 - Do not allow large implementation work to start when strategy Critical checks fail for a non-trivial product.
+- Do not count activity as progress unless it changes a signal, gate, decision, or reusable asset.

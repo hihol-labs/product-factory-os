@@ -20,6 +20,9 @@ NEXT_STATE:
 ## Validation Checkpoints
 
 - Unit Context Manifest:
+- Idea Gate:
+- Market Validation:
+- Feedback/Funnel Check:
 - Architecture Validation:
 - Dependency Check:
 - Test Coverage Check:
@@ -29,4 +32,5 @@ NEXT_STATE:
 ## Repair Paths
 
 - Missing or ambiguous verification evidence -> `RECOVERY_REQUIRED` -> `PFO_RECOVERY.md`.
+- Weak idea or missing validation signal -> update `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md`.
 - Scope, data, fallback, or golden-flow contract failure -> repair before next unit.

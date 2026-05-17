@@ -21,6 +21,8 @@ Run `pfo contracts . --write` during review.
 
 ## Autonomous Execution
 
+- Score ideas in `IDEA_SCORECARD.md` before broad build scope.
+- Validate risky assumptions in `VALIDATION_PLAN.md`.
 - Capture phase decisions in `PHASE_CONTEXT.md` before detailed planning.
 - Create `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
 - Execute one unit at a time from the manifest, not from accumulated chat context.
@@ -30,6 +32,7 @@ Run `pfo contracts . --write` during review.
 - Verification fails closed when evidence is missing or ambiguous.
 - Finish branches with an explicit PR, merge, keep, or discard decision.
 - Record durable decisions, lessons, patterns, and surprises in `.codex-memory/LEARNINGS.md`.
+- Promote repeatable solutions into `ASSET_REGISTER.md` and evidence-backed content ideas into `CONTENT_BACKLOG.md`.
 
 ## Status
 

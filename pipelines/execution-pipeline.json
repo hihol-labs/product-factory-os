@@ -3,6 +3,8 @@
   "pipeline": [
     "INTENT_PARSING",
     "PRODUCT_CLASSIFICATION",
+    "IDEA_GATE",
+    "MARKET_VALIDATION",
     "ARCHITECTURE_SELECTION",
     "BLUEPRINT_GENERATION",
     "PHASE_DISCUSSION",
@@ -18,12 +20,15 @@
     "BRANCH_FINISH",
     "DRIFT_RECOVERY_CHECK",
     "LEARNING_EXTRACTION",
+    "ASSET_EXTRACTION",
     "DEPLOYMENT_READINESS",
     "SESSION_PERSISTENCE"
   ],
   "artifacts": {
     "INTENT_PARSING": ["DISCOVERY.md"],
     "PRODUCT_CLASSIFICATION": ["PRODUCT_BLUEPRINT.md"],
+    "IDEA_GATE": ["IDEA_SCORECARD.md"],
+    "MARKET_VALIDATION": ["VALIDATION_PLAN.md", "FUNNEL_MODEL.md", "FEEDBACK_LOG.md"],
     "ARCHITECTURE_SELECTION": ["PROJECT_ARCHITECTURE.md"],
     "BLUEPRINT_GENERATION": ["PRD.md", "PRODUCT_BLUEPRINT.md"],
     "PHASE_DISCUSSION": ["PHASE_CONTEXT.md"],
@@ -39,16 +44,19 @@
     "BRANCH_FINISH": ["BRANCH_FINISH.md when branch cleanup or PR is in scope"],
     "DRIFT_RECOVERY_CHECK": ["state_reconciliation", "drift_check_log"],
     "LEARNING_EXTRACTION": [".codex-memory/LEARNINGS.md"],
+    "ASSET_EXTRACTION": ["ASSET_REGISTER.md", "CONTENT_BACKLOG.md"],
     "DEPLOYMENT_READINESS": ["deployment_plan", ".env.example", "health_check", "rollback_notes"],
     "SESSION_PERSISTENCE": [".codex-memory/STATE.json", ".codex-memory/MEMORY.md", "PFO_BRIEF.html when requested"]
   },
   "noSkipRules": [
     "MODULAR_BUILD requires BLUEPRINT_GENERATION and EXECUTION_PLAN_GENERATION artifacts.",
+    "Broad BUILD scope requires IDEA_GATE not to be KILL and MARKET_VALIDATION to name exit criteria.",
     "Autonomous or delegated execution requires UNIT_CONTEXT_MANIFEST.",
     "Behavior changes require TDD_EVIDENCE unless explicitly waived.",
     "Bugfix units require ROOT_CAUSE_ANALYSIS before implementation.",
     "TWO_STAGE_REVIEW requires spec compliance before code quality.",
     "UNIT_VERIFICATION must fail closed when evidence is missing or ambiguous.",
+    "Product iteration requires feedback, metric, validation, or strategy-decision evidence.",
     "READY_FOR_DEPLOY requires passing validation gates.",
     "SESSION_PERSISTENCE runs after every major milestone."
   ]

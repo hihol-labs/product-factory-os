@@ -73,6 +73,8 @@ PFO добавляет:
 - `routing/product-classifier.json` — классификация SaaS, ботов, API, web apps, landing pages, CLI, mini apps, e-commerce, scrapers и internal automation.
 - `templates/product-templates.json` — библиотека модульных шаблонов.
 - `core/product-compiler.md` — компилятор idea -> Product Blueprint -> Build Plan -> Execution Graph.
+- `docs/templates/IDEA_SCORECARD.md` и `VALIDATION_PLAN.md` — gate для слабых идей, гипотез и рыночных сигналов до расширения scope.
+- `docs/templates/FUNNEL_MODEL.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md` — слой воронки, обратной связи, итераций, активов и контента.
 - `execution/state-machine.json` — контролируемые переходы workflow.
 - `memory/session-state.schema.json` — формат восстановления состояния.
 - `deployment/deployment-targets.json` — deploy readiness checks.
@@ -117,7 +119,7 @@ Starter packs находятся в `starters/`. Golden paths находятся
 
 Сгенерированные проекты получают `.pfo/` contracts, `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile` и `PFO_REPORT.md`.
 
-`pfo plan` создает недостающие `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md` и `QUALITY_GATES.md` на основе выбранного starter, но не перезаписывает уже существующие файлы.
+`pfo plan` создает недостающие `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `FUNNEL_MODEL.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md` и `QUALITY_GATES.md` на основе выбранного starter, но не перезаписывает уже существующие файлы.
 
 `pfo discuss` фиксирует решения в `PHASE_CONTEXT.md`, `pfo manifest` создает `.pfo/UNIT_CONTEXT_MANIFEST.json`, `pfo verify-work` по умолчанию создает recovery-путь при неясной проверке, `pfo brief` делает локальный HTML-brief по статусу проекта.
 
@@ -196,17 +198,21 @@ python3 scripts/meta_review.py
 Каждый значимый этап должен пройти:
 
 1. Требования задокументированы.
-2. Классификация продукта и архитектурный шаблон явные.
-3. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md` и `EXECUTION_GRAPH.md` согласованы.
-4. Для автономной или delegated-работы есть `.pfo/UNIT_CONTEXT_MANIFEST.json`.
-5. Для behavior changes есть TDD red/green/refactor evidence или явное исключение.
-6. Для bugfixes есть root-cause evidence до фикса.
-7. Verification не является неясной: missing/ambiguous evidence ведет в recovery, а не в pass.
-8. Spec compliance review выполнен до code quality review.
-9. Review status не равен `BLOCKED`.
-10. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
-11. Branch finish фиксирует PR, merge, keep или discard decision, если это в scope.
-12. Контекст сессии сохранён через `/session-save`.
+2. Идея имеет `KILL`, `TEST` или `BUILD` решение в `IDEA_SCORECARD.md`.
+3. Рискованные гипотезы проверяются через `VALIDATION_PLAN.md`.
+4. Классификация продукта и архитектурный шаблон явные.
+5. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md` и `EXECUTION_GRAPH.md` согласованы.
+6. Для автономной или delegated-работы есть `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+7. Для behavior changes есть TDD red/green/refactor evidence или явное исключение.
+8. Для bugfixes есть root-cause evidence до фикса.
+9. Feedback, funnel и iteration decisions привязаны к сигналам, а не активности.
+10. Reusable outcomes попадают в `ASSET_REGISTER.md` или `CONTENT_BACKLOG.md`.
+11. Verification не является неясной: missing/ambiguous evidence ведет в recovery, а не в pass.
+12. Spec compliance review выполнен до code quality review.
+13. Review status не равен `BLOCKED`.
+14. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
+15. Branch finish фиксирует PR, merge, keep или discard decision, если это в scope.
+16. Контекст сессии сохранён через `/session-save`.
 
 ## Документация
 

@@ -38,24 +38,27 @@ Announce the selected mode and why.
    - `docs/rubrics/testing.md`
    - `docs/rubrics/strategy.md`
 3. If docs are missing, run discovery and blueprint work.
-4. Ensure Product Compiler outputs exist: `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md`.
-5. Use `/mcp-docs` when dependency, SDK, framework, or platform details may be stale.
-6. Run `/review` before writing application code.
-7. Scaffold project structure, tooling, environment examples, and test framework.
-8. Implement modules from `BUILD_PLAN.md` and `EXECUTION_GRAPH.md` step by step.
-9. After each behavior change, run or create tests via `/test`.
-10. For user-facing browser flows, run `/browser-check` before ship readiness.
-11. Review significant changes with `/review`.
-12. Before production work, run `/security-audit`, `/deps-audit`, and `/harden`.
-13. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external roadmap sync is in scope.
-14. Deploy only after explicit user confirmation.
-15. Run `/session-save`.
+4. Ensure `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md` exist before broad implementation scope.
+5. Ensure Product Compiler outputs exist: `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md`.
+6. Use `/mcp-docs` when dependency, SDK, framework, or platform details may be stale.
+7. Run `/review` before writing application code.
+8. Scaffold project structure, tooling, environment examples, and test framework.
+9. Implement modules from `BUILD_PLAN.md` and `EXECUTION_GRAPH.md` step by step.
+10. After each behavior change, run or create tests via `/test`.
+11. For user-facing browser flows, run `/browser-check` before ship readiness.
+12. Capture feedback and iteration outcomes in `FEEDBACK_LOG.md` and `ITERATION_REVIEW.md` when users or tests produce signals.
+13. Promote reusable solutions into `ASSET_REGISTER.md` and `CONTENT_BACKLOG.md` when evidence exists.
+14. Review significant changes with `/review`.
+15. Before production work, run `/security-audit`, `/deps-audit`, and `/harden`.
+16. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external roadmap sync is in scope.
+17. Deploy only after explicit user confirmation.
+18. Run `/session-save`.
 
 ## Phase Details
 
 ### 1. Discovery And Planning
 
-- If `DISCOVERY.md`, `PRD.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, and `IMPLEMENTATION_PLAN.md` are absent, run the `/blueprint` behavior first.
+- If `DISCOVERY.md`, `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `PRD.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, and `IMPLEMENTATION_PLAN.md` are absent, run the `/blueprint` behavior first.
 - If only some docs exist, supplement missing docs and preserve existing decisions.
 - If docs conflict, run `/review` and fix docs before code.
 
@@ -64,6 +67,8 @@ Announce the selected mode and why.
 Implementation can start only when:
 
 - `PRD.md` exists.
+- `IDEA_SCORECARD.md` exists and does not say `KILL` for the current scope.
+- `VALIDATION_PLAN.md` exists or the project has a documented non-market/internal reason to build.
 - `PRODUCT_BLUEPRINT.md` exists.
 - `PROJECT_ARCHITECTURE.md` exists.
 - `BUILD_PLAN.md` exists.
@@ -115,6 +120,8 @@ Before deploy:
 - Do not deploy or migrate production data without explicit confirmation.
 - Keep `CODEX.md` status updated as steps complete.
 - Keep `.codex-memory/STATE.json` aligned with the state machine.
+- Do not expand from a `TEST` idea into a full `BUILD` scope without validation evidence.
+- Do not treat meetings, commits, or generated docs as progress unless a gate, signal, decision, or reusable asset changes.
 - Never continue past a `BLOCKED` gate unless the user explicitly changes the requirement or accepts a documented non-production limitation.
 - Preserve unrelated user changes in the worktree.
 - If dependency installation or network access fails, report it and keep working with local verification where possible.

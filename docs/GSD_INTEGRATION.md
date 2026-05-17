@@ -18,6 +18,7 @@ Product Factory OS and GSD overlap on spec-driven development, stateful planning
 
 - Product classification and starter selection.
 - Product strategy artifacts: discovery, ICP, market brief, business model, GTM.
+- Idea scoring, validation plan, feedback loop, funnel model, asset register, and content backlog.
 - Project-owned `.pfo/` guardrails for scope, data, fallbacks, golden flows, and regression contracts.
 - Connector-aware workflow through GitHub, Linear, Notion, Google Drive, Context7, Browser Use, and Codex Security.
 - Starter packs and golden paths across product types.

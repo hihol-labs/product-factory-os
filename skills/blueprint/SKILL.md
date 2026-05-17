@@ -17,12 +17,14 @@ Create Product Factory OS planning documents and stop before code.
 Ask only for details that change the plan:
 
 - Product goal and primary user
+- Idea score, target segment, and riskiest assumption
 - Must-have user flows
 - Data that must be stored
 - Authentication and roles
 - External integrations
 - Deployment target and budget
 - Deadline or first milestone
+- First channel, offer, funnel, or feedback source when launch matters
 - Non-goals and constraints
 
 If the user says "you decide", choose a conservative default and record it as `Assumption: user deferred`.
@@ -43,10 +45,17 @@ If the user says "you decide", choose a conservative default and record it as `A
 4. Confirm the captured understanding.
 5. Generate documents in this order:
    - `DISCOVERY.md`
+   - `IDEA_SCORECARD.md`
+   - `VALIDATION_PLAN.md`
    - `MARKET_BRIEF.md` when strategy risk is non-trivial
    - `ICP.md` when users/customers matter
    - `BUSINESS_MODEL.md` when revenue, cost saving, or value capture matters
    - `GO_TO_MARKET.md` when launch or user acquisition matters
+   - `FUNNEL_MODEL.md` when acquisition, activation, conversion, or retention matters
+   - `FEEDBACK_LOG.md` when feedback collection is in scope
+   - `ITERATION_REVIEW.md` when improving an existing product or MVP
+   - `ASSET_REGISTER.md` when reusable assets may be produced
+   - `CONTENT_BACKLOG.md` when learnings may become content
    - `PRD.md`
    - `PRODUCT_BLUEPRINT.md`
    - `PROJECT_ARCHITECTURE.md`
@@ -74,6 +83,13 @@ Default to supplement. Do not silently replace user-authored documents.
 ## Document Requirements
 
 - `PRD.md`: user stories, acceptance criteria, non-goals, launch criteria.
+- `IDEA_SCORECARD.md`: evidence-backed KILL, TEST, or BUILD decision.
+- `VALIDATION_PLAN.md`: riskiest assumptions, experiments, expected signals, and exit decision.
+- `FUNNEL_MODEL.md`: traffic, lead, activation, conversion, retention stages and bottleneck.
+- `FEEDBACK_LOG.md`: feedback sources, evidence, patterns, and triggered decisions.
+- `ITERATION_REVIEW.md`: inputs, changes, outcome, and keep/revert/iterate/pivot/stop decision.
+- `ASSET_REGISTER.md`: reusable product, process, template, offer, or automation assets.
+- `CONTENT_BACKLOG.md`: evidence-backed content candidates with audience and offer tie-in.
 - `PRODUCT_BLUEPRINT.md`: product classification, business logic, entities, modules, interfaces, dependencies, infrastructure.
 - `PROJECT_ARCHITECTURE.md`: stack, data model, APIs, auth, integrations, deployment.
 - `THREAT_MODEL.md`: assets, actors, trust boundaries, abuse cases, controls.
@@ -93,7 +109,9 @@ Default to supplement. Do not silently replace user-authored documents.
 - Users
 - Alternatives
 - Positioning
+- Hypotheses
 - MVP scope
+- Kill criteria
 - Risks
 
 `PRD.md`:
@@ -163,6 +181,7 @@ Default to supplement. Do not silently replace user-authored documents.
 - Ask before overwriting existing documents.
 - Keep names and entities consistent across all documents.
 - Treat `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md` as the Product Compiler outputs.
+- Treat `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md` as gates before broad build scope.
 - Do not move to implementation until the execution graph can reach `PLAN_READY`.
 - Stop with `BLOCKED` if the user refuses to answer a question that determines architecture or data safety.
 - If `/review` returns `BLOCKED`, offer doc fixes before implementation.
@@ -171,6 +190,7 @@ Default to supplement. Do not silently replace user-authored documents.
 
 - All required documents exist.
 - `/review` status is `PASSED` or `PASSED_WITH_WARNINGS`.
+- Idea gate, validation plan, funnel, feedback, and asset/content assumptions are explicit when applicable.
 - Product type, template modules, architecture pattern, and execution graph are explicit.
 - Remaining assumptions are explicitly listed.
 - The user has a clear next route: `/kickstart`, `/guide`, or manual review.

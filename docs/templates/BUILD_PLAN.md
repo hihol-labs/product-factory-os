@@ -9,6 +9,7 @@
 
 Every executable task must include:
 
+- Current idea/validation decision when the task expands product scope.
 - Exact files to create or modify.
 - Exact verification command.
 - Expected output or failure mode.
