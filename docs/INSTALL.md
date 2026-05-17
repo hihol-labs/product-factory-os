@@ -34,6 +34,7 @@ Run validation:
 
 ```bash
 python3 scripts/validate_structure.py
+python3 scripts/validate_plan_quality.py /path/to/project
 python3 scripts/run_fixtures.py
 python3 scripts/validate_execution_graph.py
 python3 scripts/validate_state.py /path/to/project/.codex-memory/STATE.json

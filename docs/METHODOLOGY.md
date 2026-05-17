@@ -139,7 +139,7 @@ Product Factory OS adopts the strongest GSD execution ideas without copying its 
 - Learnings: extract reusable decisions, patterns, lessons, and surprises into project memory.
 - Assetization: convert proven repeatable solutions into reusable assets and content candidates.
 
-## Engineering Discipline Layer
+## Engineering Discipline v2 Layer
 
 Product Factory OS adopts the strongest Superpowers engineering discipline while keeping PFO artifacts as the source of truth:
 
@@ -148,6 +148,7 @@ Product Factory OS adopts the strongest Superpowers engineering discipline while
 - Two-stage review: first verify spec compliance against the unit manifest and plan, then review code quality.
 - Strict plan granularity: executable tasks name exact files, exact commands, expected output, and exit criteria. Placeholders are plan failures.
 - Branch finish workflow: every finished branch records PR, merge, keep, or discard decision with fresh verification evidence.
+- Enforcement: `scripts/validate_plan_quality.py` blocks weak executable plans, missing TDD evidence for behavior changes, bugfixes without `ROOT_CAUSE.md`, reversed review order, and branch finish without fresh verification.
 
 ## Rubrics
 

@@ -46,6 +46,7 @@ Return one:
    - execution graph semantics
    - state consistency
    - gate traceability
+   - Engineering Discipline v2 via `scripts/validate_plan_quality.py <project>`
 5. For browser-facing changes, require `/browser-check` evidence before deploy readiness.
 6. For SDK, framework, or platform questions, use `/mcp-docs` before flagging documentation-sensitive findings.
 7. Apply checks as binary pass/fail at Critical tier.

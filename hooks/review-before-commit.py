@@ -22,6 +22,7 @@ def main() -> None:
 
     checks = [
         [sys.executable, "scripts/validate_structure.py"],
+        [sys.executable, "scripts/validate_plan_quality.py", "--self-check"],
         [sys.executable, "scripts/run_fixtures.py"],
         [sys.executable, "scripts/validate_hooks.py"],
         [sys.executable, "scripts/validate_runtime.py"],

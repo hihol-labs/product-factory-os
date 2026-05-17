@@ -58,7 +58,7 @@
 - Expand `pfo_runner.py` from state recorder to node executor with explicit command plans.
 - Add snapshot fixtures for starter-specific golden paths.
 - Add GSD-inspired autonomous execution layer: phase discussion, unit context manifest, dispatch journal, fail-closed verification, recovery state, telemetry, learnings, and HTML briefs.
-- Add Superpowers-inspired engineering gates for TDD evidence, root-cause reports, two-stage review, strict executable tasks, and branch finish decisions.
+- Maintain Engineering Discipline v2 gates for TDD evidence, root-cause reports, two-stage review, strict executable tasks, and branch finish decisions.
 
 ## 0.8.0
 

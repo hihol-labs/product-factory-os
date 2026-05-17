@@ -57,6 +57,7 @@ def main() -> None:
         "pfo_runner.py",
         "existing_project_analyzer.py",
         "validate_project.py",
+        "validate_plan_quality.py",
         "pfo_contract_gate.py",
         "voice_intent.py",
         "voice_transcribe.py",
