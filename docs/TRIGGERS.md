@@ -57,6 +57,7 @@ Trigger phrases help route natural language requests to the right skill. They ar
 
 | Skill | English | Russian |
 |---|---|---|
+| `/handoff` | handoff, transfer context, switch sessions, compact context, delegate to next agent, AFK run | handoff, передай контекст, новая сессия, смена роли, делегируй агенту, AFK |
 | `/session-save` | save session, remember context | сохрани сессию, запомни контекст |
 | `/advisor` | advise, compare options, tradeoff | посоветуй, сравни варианты, компромисс |
 | `/grill-me` | grill me, stress-test plan, challenge my design | прожарь план, проверь дизайн, стресс-тест решения |

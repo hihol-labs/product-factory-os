@@ -93,7 +93,7 @@ def infer_existing_project_summary(path: Path) -> str:
     if (path / "pyproject.toml").is_file():
         stack.append("Python")
     suffix = f" Detected stack hints: {', '.join(stack)}." if stack else ""
-    return "Adopted with minimal Product Factory OS state. Run `pfo analyze <project> --run-gates` before major work." + suffix
+    return "Adopted with minimal Product Factory OS state. Run `pfo analyze <project> --run-gates` before major work, and `pfo handoff <project>` before session transfer." + suffix
 
 
 def project_runtime_block(path: Path, workspace: Path) -> str:
@@ -112,7 +112,7 @@ Before substantial implementation, Codex must use:
 pfo adopt {path} --analyze
 ```
 
-Then route work through `/task`, update `.codex-memory/STATE.json`, and respect `.pfo/` contracts. Project-local rules may add constraints, but they do not replace PFO gates, memory, or scope/data/fallback contracts.
+Then route work through `/task`, write `HANDOFF.md` before session or role transfer, update `.codex-memory/STATE.json`, and respect `.pfo/` contracts. Project-local rules may add constraints, but they do not replace PFO gates, memory, or scope/data/fallback contracts.
 {MANAGED_END}
 """
 
@@ -210,6 +210,15 @@ def write_adoption_files(path: Path, workspace: Path) -> None:
                         "gates": [],
                         "recovery": "",
                     },
+                    "handoff": {
+                        "path": "HANDOFF.md",
+                        "status": "",
+                        "fromRole": "",
+                        "toRole": "",
+                        "reason": "",
+                        "createdAt": "",
+                        "nextAction": "",
+                    },
                     "gateResults": {
                         "ideaGate": "",
                         "marketValidation": "",
@@ -226,6 +235,7 @@ def write_adoption_files(path: Path, workspace: Path) -> None:
                         "specComplianceReview": "",
                         "codeQualityReview": "",
                         "branchFinish": "",
+                        "handoff": "",
                         "security": "",
                         "dependencies": "",
                         "hardening": "",

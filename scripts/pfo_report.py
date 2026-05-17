@@ -35,6 +35,7 @@ def main() -> None:
         f"- Next action: {state.get('nextAction', '')}",
         f"- Recovery: `{state.get('recoveryState', {}).get('status', '')}` {state.get('recoveryState', {}).get('reason', '')}",
         f"- Root cause: `{state.get('rootCause', {}).get('status', '')}` {state.get('rootCause', {}).get('summary', '')}",
+        f"- Handoff: `{state.get('handoff', {}).get('status', '')}` {state.get('handoff', {}).get('reason', '')}",
         "",
         "## Existing Project Analysis",
         "",

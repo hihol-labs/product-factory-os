@@ -25,6 +25,7 @@ Run `pfo contracts . --write` during review.
 - Validate risky assumptions in `VALIDATION_PLAN.md`.
 - Capture phase decisions in `PHASE_CONTEXT.md` before detailed planning.
 - Create `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
+- Write `HANDOFF.md` before switching sessions, roles, delegated agents, AFK execution, compaction, or recovery.
 - Execute one unit at a time from the manifest, not from accumulated chat context.
 - Record TDD red/green/refactor evidence for behavior changes.
 - Write `ROOT_CAUSE.md` before bugfix implementation.
@@ -42,4 +43,4 @@ Run `pfo contracts . --write` during review.
 
 ## Session Rule
 
-Save context with `/session-save` after significant work or before stopping.
+Use `/handoff` before transfer to another session or role. Save context with `/session-save` after significant work or before stopping.

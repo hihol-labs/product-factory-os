@@ -122,7 +122,19 @@ Write `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution
 - verification commands
 - gates and recovery behavior
 
-### 11. Test And Gate Plan
+### 11. Handoff
+
+Write `HANDOFF.md` before session transfer, role switch, delegated execution, AFK, compaction, or recovery with:
+
+- from role and target role
+- reason for transfer
+- current state and next action
+- final decisions
+- scope boundaries
+- verification commands
+- blockers and first action
+
+### 12. Test And Gate Plan
 
 Write `TEST_PLAN.md` and `QUALITY_GATES.md` with:
 

@@ -38,6 +38,7 @@ PFO keeps human confirmation at irreversible boundaries and uses file-backed sta
 |---|---|
 | discuss phase | `pfo discuss`, `PHASE_CONTEXT.md` |
 | task-ready context | `pfo manifest`, `.pfo/UNIT_CONTEXT_MANIFEST.json` |
+| session or role transfer | `pfo handoff`, `HANDOFF.md` |
 | execute and verify loop | `pfo build`, `pfo verify-work` |
 | recovery and stuck handling | `RECOVERY_REQUIRED`, `PFO_RECOVERY.md` |
 | history and metrics | `dispatchJournal`, `telemetry`, `pfo report` |

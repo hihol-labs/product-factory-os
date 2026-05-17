@@ -74,6 +74,15 @@
       },
       "recovery": ""
     },
+    "handoff": {
+      "path": "HANDOFF.md",
+      "status": "",
+      "fromRole": "",
+      "toRole": "",
+      "reason": "",
+      "createdAt": "",
+      "nextAction": ""
+    },
     "gateResults": {
       "ideaGate": "",
       "marketValidation": "",
@@ -90,6 +99,7 @@
       "specComplianceReview": "",
       "codeQualityReview": "",
       "branchFinish": "",
+      "handoff": "",
       "security": "",
       "dependencies": "",
       "hardening": "",

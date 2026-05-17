@@ -6,7 +6,7 @@
 | `/task` | Existing-project task | Route decision | None | Safe |
 | `/discover` | Idea or problem | `DISCOVERY.md`, `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md` | Writes docs | Ask before overwrite |
 | `/market-scan` | Idea, problem, segment, competitor, or launch question | Fresh public market/community signals normalized into `MARKET_BRIEF.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, or `CONTENT_BACKLOG.md` | External public research, writes docs when approved | Append dated evidence |
-| `/blueprint` | Idea plus clarifications | Planning documents plus `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FUNNEL_MODEL.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `PHASE_CONTEXT.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, `QUALITY_GATES.md` | Writes docs | Ask before overwrite |
+| `/blueprint` | Idea plus clarifications | Planning documents plus `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FUNNEL_MODEL.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `PHASE_CONTEXT.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, `QUALITY_GATES.md`, optional `HANDOFF.md` | Writes docs | Ask before overwrite |
 | `/guide` | Existing planning docs | `CODEX_GUIDE.md` | Writes docs | Safe if generated from same inputs |
 | `/kickstart` | Idea or approved PFO docs | Project docs, scaffold, `.pfo/UNIT_CONTEXT_MANIFEST.json`, code, state updates | Writes code/docs/memory | Stateful |
 | `/review` | Project path or changed files | Spec compliance review, code quality review, review report | Read-only by default | Safe |
@@ -26,6 +26,7 @@
 | `/migrate` | Migration target | Applied migration/report | DB impact | Requires confirmation for prod |
 | `/github-workflow` | Issue, PR, check run, branch, or release | GitHub status, CI/PR actions, branch finish evidence, export payload | External GitHub reads/writes with approval | Stateful |
 | `/tool-sync` | PFO artifacts and target tool | Connector sync result or `.pfo-integrations/` payload | External writes only with approval | Reconcile by source artifact |
+| `/handoff` | Session, role, delegation, compaction, AFK, or recovery transfer context | `HANDOFF.md`, `.codex-memory/STATE.json` handoff state | Writes current transfer artifact/state | Overwrites current handoff |
 | `/session-save` | Session summary and PFO state | Memory files, `.codex-memory/STATE.json`, optional `.codex-memory/LEARNINGS.md` | Writes memory docs/state | Creates or updates state |
 | `/advisor` | Decision or question | Analysis report | None | Safe |
 | `/grill-me` | Plan, design, strategy, architecture, migration, deploy, or decision | One-question-at-a-time decision stress test with recommended answers | None | Safe |

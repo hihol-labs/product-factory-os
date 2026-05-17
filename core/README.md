@@ -16,6 +16,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - Compile product intent into build artifacts.
 - Generate missing planning artifacts through `pfo plan` while preserving existing files.
 - Execute modules through a state machine.
+- Transfer compact context through `HANDOFF.md` before session or role switches.
 - Block unsafe transitions through quality gates.
 - Keep route snapshots, hook contracts, and fixtures aligned.
 - Use MCP and OpenAI/Codex plugin routes for current documentation, browser smoke checks, GitHub workflow, security scans, and external tool sync.
@@ -28,5 +29,6 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - `EXECUTION_GRAPH.md`: build nodes, transitions, checkpoints, and gate rules.
 - `TEST_PLAN.md`: product-specific test matrix and smoke path.
 - `QUALITY_GATES.md`: gate status, evidence, blockers, and accepted risks.
+- `HANDOFF.md`: compact transfer artifact for session, role, delegation, AFK, compaction, or recovery handoff.
 - `.codex-memory/STATE.json`: reloadable machine-readable session state.
 - `.pfo/*`: project-owned scope, data, fallback, golden-flow, and regression contracts.

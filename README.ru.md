@@ -8,7 +8,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 ## Что Внутри
 
-- 29 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research и connector workflows
+- 30 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research и connector workflows
 - 15 agent-role описаний для архитектуры, ревью, тестов, аналитики, безопасности, релизов, UX, данных и интеграций
 - Контракты skills: входы, выходы, side effects и idempotency
 - Call graph, чтобы цепочки не становились хаотичными
@@ -92,6 +92,7 @@ pfo analyze ../existing-product --run-gates --report
 pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product
 pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
+pfo handoff ../my-product --from-role planner --to-role implementer --reason role-switch
 pfo build ../my-product
 pfo test ../my-product
 pfo tdd-evidence ../my-product --red "pytest ... failed as expected" --green "pytest ... passed"
@@ -122,7 +123,7 @@ Starter packs находятся в `starters/`. Golden paths находятся
 
 `pfo plan` создает недостающие `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `FUNNEL_MODEL.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md` и `QUALITY_GATES.md` на основе выбранного starter, но не перезаписывает уже существующие файлы.
 
-`pfo discuss` фиксирует решения в `PHASE_CONTEXT.md`, `pfo manifest` создает `.pfo/UNIT_CONTEXT_MANIFEST.json`, `pfo verify-work` по умолчанию создает recovery-путь при неясной проверке, `pfo brief` делает локальный HTML-brief по статусу проекта.
+`pfo discuss` фиксирует решения в `PHASE_CONTEXT.md`, `pfo manifest` создает `.pfo/UNIT_CONTEXT_MANIFEST.json`, `pfo handoff` пишет `HANDOFF.md` перед передачей сессии, `pfo verify-work` по умолчанию создает recovery-путь при неясной проверке, `pfo brief` делает локальный HTML-brief по статусу проекта.
 
 `pfo tdd-evidence`, `pfo root-cause`, `pfo review-stage` и `pfo finish-branch` добавляют строгие инженерные gates для behavior changes, bugfixes, unit review и PR/merge cleanup.
 
@@ -204,16 +205,17 @@ python3 scripts/meta_review.py
 4. Классификация продукта и архитектурный шаблон явные.
 5. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md` и `EXECUTION_GRAPH.md` согласованы.
 6. Для автономной или delegated-работы есть `.pfo/UNIT_CONTEXT_MANIFEST.json`.
-7. Для behavior changes есть TDD red/green/refactor evidence или явное исключение.
-8. Для bugfixes есть root-cause evidence до фикса.
-9. Feedback, funnel и iteration decisions привязаны к сигналам, а не активности.
-10. Reusable outcomes попадают в `ASSET_REGISTER.md` или `CONTENT_BACKLOG.md`.
-11. Verification не является неясной: missing/ambiguous evidence ведет в recovery, а не в pass.
-12. Spec compliance review выполнен до code quality review.
-13. Review status не равен `BLOCKED`.
-14. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
-15. Branch finish фиксирует PR, merge, keep или discard decision, если это в scope.
-16. Контекст сессии сохранён через `/session-save`.
+7. Перед передачей сессии или роли есть `HANDOFF.md`.
+8. Для behavior changes есть TDD red/green/refactor evidence или явное исключение.
+9. Для bugfixes есть root-cause evidence до фикса.
+10. Feedback, funnel и iteration decisions привязаны к сигналам, а не активности.
+11. Reusable outcomes попадают в `ASSET_REGISTER.md` или `CONTENT_BACKLOG.md`.
+12. Verification не является неясной: missing/ambiguous evidence ведет в recovery, а не в pass.
+13. Spec compliance review выполнен до code quality review.
+14. Review status не равен `BLOCKED`.
+15. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
+16. Branch finish фиксирует PR, merge, keep или discard decision, если это в scope.
+17. Контекст сессии сохранён через `/session-save`.
 
 ## Документация
 

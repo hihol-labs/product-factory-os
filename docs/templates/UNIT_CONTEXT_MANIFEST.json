@@ -14,6 +14,7 @@
     "BUILD_PLAN.md",
     "EXECUTION_GRAPH.md",
     "FEEDBACK_LOG.md or FUNNEL_MODEL.md when iteration or growth is in scope",
+    "HANDOFF.md when switching sessions, roles, delegated agents, AFK execution, compaction, or recovery",
     "ROOT_CAUSE.md for bugfix units"
   ],
   "allowedWriteAreas": [],
@@ -30,6 +31,7 @@
     "rootCause",
     "specComplianceReview",
     "codeQualityReview",
+    "handoff",
     "scopeLock",
     "dataAuthenticity",
     "goldenFlows",

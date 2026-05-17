@@ -100,6 +100,10 @@ def main() -> None:
         rel = ".pfo/UNIT_CONTEXT_MANIFEST.json"
         if not (project / rel).is_file():
             fail(f"unit execution project is missing {rel}")
+    if state.get("currentStage") == "HANDOFF_READY":
+        rel = "HANDOFF.md"
+        if not (project / rel).is_file():
+            fail(f"handoff project is missing {rel}")
     if state.get("currentStage") in ["READY_FOR_DEPLOY", "DEPLOYED"]:
         for rel in ["QUALITY_GATES.md", "TEST_PLAN.md"]:
             if not (project / rel).is_file():

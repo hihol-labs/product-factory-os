@@ -12,7 +12,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 This is a Codex-native methodology runtime. It contains:
 
-- 29 skills for creation, daily work, quality, operations, strategy, memory, research, and connector workflows
+- 30 skills for creation, daily work, quality, operations, strategy, memory, research, and connector workflows
 - 15 agent role descriptions for heavy review, architecture, test, analysis, security, release, UX, data, and integration work
 - Skill contracts with inputs, outputs, side effects, and idempotency notes
 - A call graph that keeps workflow chaining bounded
@@ -98,6 +98,7 @@ pfo analyze ../existing-product --run-gates --report
 pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product
 pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
+pfo handoff ../my-product --from-role planner --to-role implementer --reason role-switch
 pfo build ../my-product
 pfo test ../my-product
 pfo tdd-evidence ../my-product --red "pytest ... failed as expected" --green "pytest ... passed"
@@ -128,7 +129,7 @@ Generated projects receive `.pfo/` contracts, `.pfo-starter.json`, `.env.example
 
 `pfo plan` now creates missing `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `FUNNEL_MODEL.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, and `QUALITY_GATES.md` from the selected starter while preserving existing files.
 
-`pfo discuss` records decisions in `PHASE_CONTEXT.md`, `pfo manifest` writes `.pfo/UNIT_CONTEXT_MANIFEST.json`, `pfo verify-work` creates a recovery path by default when evidence is unclear, and `pfo brief` generates a local HTML project brief.
+`pfo discuss` records decisions in `PHASE_CONTEXT.md`, `pfo manifest` writes `.pfo/UNIT_CONTEXT_MANIFEST.json`, `pfo handoff` writes `HANDOFF.md` before session transfer, `pfo verify-work` creates a recovery path by default when evidence is unclear, and `pfo brief` generates a local HTML project brief.
 
 `pfo tdd-evidence`, `pfo root-cause`, `pfo review-stage`, and `pfo finish-branch` add stricter engineering gates for behavior changes, bugfixes, unit review, and PR/merge cleanup.
 
@@ -220,14 +221,15 @@ Every major project step should pass:
 2. Product classification and architecture template are explicit.
 3. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md` agree.
 4. Autonomous or delegated work has `.pfo/UNIT_CONTEXT_MANIFEST.json`.
-5. Behavior changes have TDD red/green/refactor evidence or an explicit exception.
-6. Bugfixes have root-cause evidence before the fix.
-7. Verification is definitive; missing or ambiguous evidence creates recovery work.
-8. Spec compliance review runs before code quality review.
-9. Review status is not `BLOCKED`.
-10. `.pfo/` contract gates do not report scope, data, fallback, golden-flow, or silent-substitution violations.
-11. Branch finish records PR, merge, keep, or discard decision when in scope.
-12. Session state is saved before stopping.
+5. Session or role transfer has `HANDOFF.md`.
+6. Behavior changes have TDD red/green/refactor evidence or an explicit exception.
+7. Bugfixes have root-cause evidence before the fix.
+8. Verification is definitive; missing or ambiguous evidence creates recovery work.
+9. Spec compliance review runs before code quality review.
+10. Review status is not `BLOCKED`.
+11. `.pfo/` contract gates do not report scope, data, fallback, golden-flow, or silent-substitution violations.
+12. Branch finish records PR, merge, keep, or discard decision when in scope.
+13. Session state is saved before stopping.
 
 ## Validation
 
