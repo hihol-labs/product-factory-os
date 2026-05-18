@@ -24,6 +24,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
        -> /handoff
        -> /github-workflow
        -> /tool-sync
+       -> /obsidian-export
        -> /session-save
   -> /blueprint
        -> /market-scan
@@ -50,6 +51,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /handoff
   -> /github-workflow
   -> /tool-sync
+  -> /obsidian-export
   -> /session-save
   -> /strategy
   -> /advisor

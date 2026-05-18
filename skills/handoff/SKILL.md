@@ -29,6 +29,8 @@ HANDOFF.md
 .codex-memory/STATE.json
 ```
 
+`HANDOFF.md` should remain regular Markdown while also being Obsidian-compatible: frontmatter for project/stage/roles, wikilinks to PFO artifacts, and callouts for first action, blockers, and risks.
+
 ## Include
 
 - From role and target role
@@ -40,6 +42,17 @@ HANDOFF.md
 - Verification commands
 - Blockers and risks
 - Exact first action for the receiving session
+
+## Obsidian Layer
+
+- Link core artifacts with wikilinks: `[[STATE]]`, `[[BUILD_PLAN]]`, `[[EXECUTION_GRAPH]]`, `[[QUALITY_GATES]]`.
+- Highlight the first action with `> [!todo]`.
+- Highlight risks and blockers with `> [!warning]`.
+- After a handoff that should be searchable in a vault, run:
+
+```bash
+python3 scripts/pfo.py export <project> --target obsidian
+```
 
 ## Rules
 

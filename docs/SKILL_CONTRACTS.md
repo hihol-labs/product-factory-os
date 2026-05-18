@@ -26,6 +26,7 @@
 | `/migrate` | Migration target | Applied migration/report | DB impact | Requires confirmation for prod |
 | `/github-workflow` | Issue, PR, check run, branch, or release | GitHub status, CI/PR actions, branch finish evidence, export payload | External GitHub reads/writes with approval | Stateful |
 | `/tool-sync` | PFO artifacts and target tool | Connector sync result or `.pfo-integrations/` payload | External writes only with approval | Reconcile by source artifact |
+| `/obsidian-export` | PFO project docs, memory, handoff, state, decisions, and gates | `.pfo-integrations/obsidian/PROJECT_INDEX.md`, `KNOWLEDGE_GRAPH.md`, and linked notes | Writes generated local export docs and updates knowledge log | Rebuildable from canonical PFO artifacts |
 | `/handoff` | Session, role, delegation, compaction, AFK, or recovery transfer context | `HANDOFF.md`, `.codex-memory/STATE.json` handoff state | Writes current transfer artifact/state | Overwrites current handoff |
 | `/session-save` | Session summary and PFO state | Memory files, `.codex-memory/STATE.json`, optional `.codex-memory/LEARNINGS.md` | Writes memory docs/state | Creates or updates state |
 | `/advisor` | Decision or question | Analysis report | None | Safe |

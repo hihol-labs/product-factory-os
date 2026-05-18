@@ -8,7 +8,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 ## Что Внутри
 
-- 30 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research и connector workflows
+- 31 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research, connector workflows и Obsidian knowledge export
 - 15 agent-role описаний для архитектуры, ревью, тестов, аналитики, безопасности, релизов, UX, данных и интеграций
 - Контракты skills: входы, выходы, side effects и idempotency
 - Call graph, чтобы цепочки не становились хаотичными
@@ -115,6 +115,7 @@ pfo voice "создай Telegram бот для продаж"
 pfo metrics
 pfo export ../my-product --target github
 python3 scripts/pfo.py export ../my-product --target google-drive
+pfo export ../my-product --target obsidian
 ```
 
 Starter packs находятся в `starters/`. Golden paths находятся в `golden-paths/`.
@@ -133,7 +134,8 @@ Starter packs находятся в `starters/`. Golden paths находятся
 - `benchmarks/` — benchmark suite для prompt-классификации.
 - `packaging/` — install/update helper.
 - `marketplace/` — local marketplace metadata.
-- `integrations/` — контракты GitHub, Linear, Notion, Google Drive и MCP capabilities.
+- `integrations/` — контракты GitHub, Linear, Notion, Google Drive, Obsidian и MCP capabilities.
+- `pfo export --target obsidian` создает `.pfo-integrations/obsidian/` с `PROJECT_INDEX.md`, `KNOWLEDGE_GRAPH.md`, planning docs, handoff, memory, state, gates и decisions.
 
 Для существующих проектов `pfo analyze` определяет monorepo, стек, package manager, доступные scripts, архитектурные признаки, security findings и optional gate results, затем сохраняет это в `.codex-memory/STATE.json` и `PFO_EXISTING_PROJECT_ANALYSIS.json`.
 

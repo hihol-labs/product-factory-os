@@ -1,0 +1,5 @@
+.pfo-integrations/obsidian/PROJECT_INDEX.md
+.pfo-integrations/obsidian/KNOWLEDGE_GRAPH.md
+.pfo-integrations/obsidian/STATE.md
+.pfo-integrations/obsidian/DECISIONS.md
+.pfo-integrations/obsidian/GATES.md

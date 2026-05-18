@@ -158,7 +158,29 @@ def write_adoption_files(path: Path, workspace: Path) -> None:
 
     memory_dir.mkdir(exist_ok=True)
     if not memory.exists():
-        memory.write_text("# Memory\n\n", encoding="utf-8")
+        memory.write_text(
+            f"""---
+title: "Memory"
+project: "{path.name}"
+tags:
+  - pfo/memory
+  - pfo/project
+aliases:
+  - "Project Memory"
+---
+
+# Memory
+
+- adopted: {path.name} connected to Product Factory OS -> STATE.json
+
+## Obsidian Links
+
+- [[STATE]]
+- [[LEARNINGS]]
+- [[HANDOFF]]
+""",
+            encoding="utf-8",
+        )
     if not state.exists():
         state.write_text(
             json.dumps(

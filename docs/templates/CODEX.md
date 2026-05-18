@@ -35,6 +35,7 @@ Run `pfo contracts . --write` during review.
 - Run `scripts/validate_plan_quality.py .` when validating Engineering Discipline v2 gates.
 - Record durable decisions, lessons, patterns, and surprises in `.codex-memory/LEARNINGS.md`.
 - Promote repeatable solutions into `ASSET_REGISTER.md` and evidence-backed content ideas into `CONTENT_BACKLOG.md`.
+- Use `pfo export . --target obsidian` when a local Obsidian knowledge graph is needed; keep `.pfo-integrations/obsidian/` generated.
 
 ## Status
 

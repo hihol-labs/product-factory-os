@@ -22,6 +22,7 @@ Product Factory OS uses external tools only when they strengthen a specific PFO 
 | Linear | `/tool-sync` | roadmap and execution tracking |
 | Notion | `/tool-sync` | project pages and decision logs |
 | Google Drive | `/tool-sync` | Docs, Sheets, Slides, stakeholder artifacts |
+| Obsidian local export | `/obsidian-export` | local memory, handoff, planning graph |
 
 ## Agent Map
 
@@ -42,4 +43,5 @@ python3 scripts/pfo.py export <project> --target github
 python3 scripts/pfo.py export <project> --target linear
 python3 scripts/pfo.py export <project> --target notion
 python3 scripts/pfo.py export <project> --target google-drive
+python3 scripts/pfo.py export <project> --target obsidian
 ```

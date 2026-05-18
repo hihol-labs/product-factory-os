@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "target": "obsidian",
+  "objects": ["local markdown note", "project index", "knowledge graph", "state note", "decision note", "gate note"],
+  "mapping": {
+    "PROJECT_INDEX.md": "vault entrypoint",
+    "KNOWLEDGE_GRAPH.md": "linked project graph",
+    ".codex-memory/STATE.json": "STATE.md, DECISIONS.md, GATES.md",
+    ".codex-memory/MEMORY.md": "MEMORY.md",
+    "HANDOFF.md": "HANDOFF.md",
+    "planning docs": "vault-ready linked notes"
+  }
+}
