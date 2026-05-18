@@ -19,7 +19,7 @@
 | `/deps-audit` | Manifests or lockfiles | Supply-chain report | Read-only | Safe |
 | `/mcp-docs` | Library, framework, SDK, or API question | Documentation decision and implementation impact | External MCP or official-doc lookup | Safe |
 | `/perf` | Slow path or complaint | Bottleneck report and patch | Writes code optionally | Measure between runs |
-| `/browser-check` | Local URL or user flow | Browser smoke result and evidence | Opens local browser target | Safe |
+| `/browser-check` | Local URL or user flow | Browser smoke result, engine, screenshots/log evidence | Opens local browser target or runs local Playwright harness | Safe |
 | `/harden` | Service or project | Hardening report/artifacts | Writes only with approval | Stateful |
 | `/infra` | Target platform | IaC files | Writes `infra/` | Deterministic per input |
 | `/deploy` | Service and target | Deployment result | Production impact | Requires confirmation |

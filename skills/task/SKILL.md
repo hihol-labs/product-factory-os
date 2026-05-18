@@ -61,7 +61,7 @@ EXISTING_PROJECT_DETECTED
 - Explain code or architecture -> `/explain`
 - Slow behavior or resource use -> `/perf`
 - Current framework, SDK, or API documentation needed -> `/mcp-docs`
-- Browser UI smoke test or visual QA -> `/browser-check`
+- Browser UI smoke test, Playwright smoke, or visual QA -> `/browser-check`
 - General quality review -> `/review`
 - Security concerns -> `/security-audit`
 - Dependency, license, CVE concerns -> `/deps-audit`

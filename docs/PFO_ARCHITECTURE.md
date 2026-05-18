@@ -217,7 +217,7 @@ Uses `integrations/mcp-capabilities.json` and `docs/OPENAI_MCP_INTEGRATIONS.md` 
 
 - `/mcp-docs` for Context7 and current documentation lookup.
 - `/market-scan` for Last30Days-backed public market and community signal research.
-- `/browser-check` for Browser Use smoke testing.
+- `/browser-check` for Playwright or Browser Use smoke testing.
 - `/github-workflow` for issues, PRs, CI, and release workflow.
 - `/tool-sync` for Linear, Notion, Google Drive, and export-only payloads.
 
@@ -274,7 +274,7 @@ Deployment is blocked unless:
 - Security review has no Critical findings.
 - Dependency review has no Critical findings or accepted risk.
 - Deployment readiness includes env vars, build command, health check, and rollback or recovery notes.
-- Browser-facing products have no blocking `/browser-check` findings before deploy readiness.
+- Browser-facing products have no blocking `/browser-check` findings and include target, engine, flow, screenshot/log evidence before deploy readiness.
 - GitHub, Linear, Notion, or Google Drive sync status is explicit when external tracking is in scope.
 - Strategy, testing, PFO, and security rubrics pass for their applicable scope.
 

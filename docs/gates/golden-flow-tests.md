@@ -12,11 +12,11 @@ Project-owned inputs:
 
 - `.pfo/GOLDEN_FLOWS.md`
 - project test commands
+- `/browser-check` Playwright/browser evidence for browser-facing flows
 - manual verification notes when automation is not available
 
 Gate output:
 
-- `PASS`: golden flows were verified.
+- `PASS`: golden flows were verified with commands or browser evidence.
 - `PASS_WITH_WARNINGS`: flows exist but only partial evidence is available.
 - `BLOCKED`: a touched golden flow is not verified or is failing.
-

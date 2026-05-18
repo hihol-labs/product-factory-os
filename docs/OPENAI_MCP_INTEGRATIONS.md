@@ -16,7 +16,7 @@ Product Factory OS uses external tools only when they strengthen a specific PFO 
 |---|---|---|
 | Context7 MCP | `/mcp-docs` | planning, implementation, dependency, infra |
 | Last30Days skill | `/market-scan` | discovery, validation, strategy, launch, iteration |
-| Browser Use | `/browser-check` | frontend QA, hardening, deploy readiness |
+| Playwright / Browser Use | `/browser-check` | frontend QA, hardening, deploy readiness |
 | GitHub | `/github-workflow` | issues, PR, CI, release |
 | Codex Security | `/security-audit` | security gate and attack-path analysis |
 | Linear | `/tool-sync` | roadmap and execution tracking |

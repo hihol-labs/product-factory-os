@@ -21,6 +21,7 @@
 | Unit Context Manifest |  | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
 | Handoff |  | `HANDOFF.md` before session transfer, role switch, delegation, AFK, compaction, or recovery |  |
 | Work Verification |  | verification log / command output |  |
+| Browser Smoke |  | `/browser-check` target, engine, flow, screenshot/log evidence for browser-facing products |  |
 | Security |  |  |  |
 | Dependencies |  |  |  |
 | Hardening |  |  |  |

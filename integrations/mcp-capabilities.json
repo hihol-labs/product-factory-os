@@ -6,7 +6,7 @@
       "usedBy": ["mcp-docs", "bugfix", "refactor", "infra", "deploy", "deps-audit", "harden"]
     },
     "browser-use": {
-      "purpose": "local browser smoke testing and UX verification",
+      "purpose": "local browser smoke testing and UX verification, with Playwright harness as the repeatable local default when available",
       "usedBy": ["browser-check", "review", "test", "harden", "deploy"]
     },
     "github": {

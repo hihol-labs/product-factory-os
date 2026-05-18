@@ -16,7 +16,7 @@ Use for web UI, dashboards, landing pages, mini apps, forms, navigation, and cli
 - Cover expected empty, loading, error, and success states.
 - Keep accessibility and responsive behavior in scope.
 - Verify keyboard navigation, labels, contrast, responsive breakpoints, and text overflow for core flows.
-- Prefer E2E or smoke coverage for primary user flows when the stack supports it.
+- Prefer E2E or `/browser-check` Playwright smoke coverage for primary user flows when the stack supports it.
 - Add or update tests when the stack supports it.
 
 ## Output
