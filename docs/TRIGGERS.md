@@ -27,6 +27,7 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | `/explain` | explain code, how does this work | объясни код, как это работает |
 | `/perf` | slow, optimize, bottleneck | медленно, оптимизируй, узкое место |
 | `/mcp-docs` | latest docs, current API, SDK docs, framework version | свежая документация, актуальный API, документация SDK |
+| `/skill-create` | create skill, new PFO skill, add workflow, skill creator | создай skill, новый PFO skill, добавь workflow, расширь PFO |
 | `/browser-check` | open localhost, browser smoke, Playwright smoke, visual QA, check UI | открой localhost, проверь UI, browser smoke, Playwright проверка, визуальная проверка |
 
 ## Quality And Operations

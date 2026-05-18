@@ -22,6 +22,7 @@ ROUTES = [
     (r"\b(explain code|how does this work|walk me through)\b|объясни код|как это работает", "/task -> /explain"),
     (r"\b(slow|optimi[sz]e|bottleneck|performance)\b|медленно|оптимизируй|узкое место|производительност", "/task -> /perf"),
     (r"\b(latest docs|current api|sdk docs|framework version|context7|mcp)\b|свеж(ая|ие) документаци|актуальн(ый|ая) api|документаци[яи] sdk", "/task -> /mcp-docs"),
+    (r"\b(create skill|new pfo skill|new skill|add workflow|skill creator|skill-create|custom skill|domain pack|premium pack skill)\b|создай skill|нов(ый|ого) pfo skill|нов(ый|ого) skill|добавь workflow|расширь pfo|кастомн(ый|ого) skill", "/task -> /skill-create"),
     (r"\b(open localhost|browser smoke|visual qa|check ui|frontend smoke|playwright smoke|playwright check)\b|открой localhost|проверь ui|визуальн(ая|ую) проверк|playwright проверк", "/task -> /browser-check"),
     (r"\b(github actions|pull request|pr review|ci|pr|check run|release branch)\b|github actions|pull request|релизн(ая|ую) ветк", "/task -> /github-workflow"),
     (r"\b(obsidian|vault|wikilinks?|knowledge graph|linked notes?)\b|obsidian|граф знаний|связанн(ые|ых) заметк|вики.?ссылк", "/task -> /obsidian-export"),

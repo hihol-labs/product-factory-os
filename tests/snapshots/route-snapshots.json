@@ -18,6 +18,7 @@
     {"skill": "/security-audit", "fixture": "security-audit", "expectedRoute": "/task -> /security-audit", "reminderPrompt": "security audit OWASP secrets"},
     {"skill": "/deps-audit", "fixture": "deps-audit", "expectedRoute": "/task -> /deps-audit", "reminderPrompt": "dependency audit CVE licenses"},
     {"skill": "/mcp-docs", "fixture": "mcp-docs", "expectedRoute": "/task -> /mcp-docs", "reminderPrompt": "latest SDK docs current API"},
+    {"skill": "/skill-create", "fixture": "skill-create", "expectedRoute": "/task -> /skill-create", "reminderPrompt": "create skill for a custom PFO workflow"},
     {"skill": "/perf", "fixture": "perf-bottleneck", "expectedRoute": "/task -> /perf", "reminderPrompt": "slow endpoint performance bottleneck"},
     {"skill": "/browser-check", "fixture": "browser-check", "expectedRoute": "/task -> /browser-check", "reminderPrompt": "open localhost playwright smoke"},
     {"skill": "/harden", "fixture": "harden-service", "expectedRoute": "/task -> /harden", "reminderPrompt": "production readiness harden service"},

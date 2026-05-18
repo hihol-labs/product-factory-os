@@ -1,0 +1,10 @@
+skills/<skill>/SKILL.md
+docs/SKILL_CONTRACTS.md
+docs/TRIGGERS.md
+docs/CALL_GRAPH.md
+hooks/route-reminder.py
+tests/snapshots/route-snapshots.json
+tests/fixtures/<fixture>/idea.md
+tests/fixtures/<fixture>/notes.md
+tests/fixtures/<fixture>/expected-files.txt
+scripts/validate_structure.py

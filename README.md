@@ -12,7 +12,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 This is a Codex-native methodology runtime. It contains:
 
-- 31 skills for creation, daily work, quality, operations, strategy, memory, research, connector workflows, and Obsidian knowledge export
+- 32 skills for creation, daily work, quality, operations, strategy, memory, research, methodology extension, connector workflows, and Obsidian knowledge export
 - 15 agent role descriptions for heavy review, architecture, test, analysis, security, release, UX, data, and integration work
 - Skill contracts with inputs, outputs, side effects, and idempotency notes
 - A call graph that keeps workflow chaining bounded
