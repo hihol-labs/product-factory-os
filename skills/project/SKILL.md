@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: router
   tags: [project, router, creation, methodology]
+  effort: low
+  side_effect: route-only
+  explicit_invocation: false
 ---
 
 # Project Router
@@ -29,6 +32,14 @@ Use this skill when the user wants to create a new project, app, service, site, 
    - `A` -> `/kickstart`
    - `B` -> `/blueprint`
    - `C` -> `/guide`
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

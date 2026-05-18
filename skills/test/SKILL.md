@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: quality
   tags: [tests, qa, coverage]
+  effort: medium
+  side_effect: tests-write
+  explicit_invocation: false
 ---
 
 # Test
@@ -26,6 +29,14 @@ The canonical testing rubric lives in `docs/rubrics/testing.md`.
 8. Run the smallest relevant test command, then broader tests if risk warrants it.
 9. Update `TEST_PLAN.md` and record green/refactor evidence in `QUALITY_GATES.md` or `.codex-memory/STATE.json`.
 10. Run or satisfy `scripts/validate_plan_quality.py <project>` before accepting a behavior-change gate.
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

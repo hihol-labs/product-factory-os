@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "skill": "/market-scan",
+  "status": "active",
+  "contract_files": {
+    "expected-files.txt": {
+      "must_contain": [
+        "MARKET_BRIEF.md",
+        "VALIDATION_PLAN.md",
+        "FEEDBACK_LOG.md"
+      ]
+    },
+    "notes.md": {
+      "must_contain": [
+        "fresh public community",
+        "competitor signals",
+        "validation"
+      ],
+      "min_scenario_count": 3
+    }
+  }
+}

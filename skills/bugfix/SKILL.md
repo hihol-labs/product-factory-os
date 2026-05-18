@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: daily-work
   tags: [bugfix, debug, regression]
+  effort: high
+  side_effect: code-tests-write
+  explicit_invocation: false
 ---
 
 # Bugfix
@@ -23,6 +26,14 @@ Fix the root cause, not just the symptom.
 7. Run spec compliance review, then code quality review for the touched unit.
 8. Run or satisfy `scripts/validate_plan_quality.py <project>`.
 9. Summarize root cause and verification.
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

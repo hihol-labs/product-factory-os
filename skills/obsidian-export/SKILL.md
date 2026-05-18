@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: integration
   tags: [obsidian, markdown, knowledge-graph, memory, export]
+  effort: medium
+  side_effect: local-export-write
+  explicit_invocation: false
 ---
 
 # Obsidian Export
@@ -62,6 +65,14 @@ SOURCE ARTIFACTS:
 REGENERATE COMMAND:
 NEXT ACTION:
 ```
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

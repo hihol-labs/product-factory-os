@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: strategy
   tags: [interview, stress-test, planning, decision-quality]
+  effort: medium
+  side_effect: read-only
+  explicit_invocation: false
 ---
 
 # Grill Me
@@ -31,6 +34,14 @@ Recommended answer: ...
 
 Why it matters: ...
 ```
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

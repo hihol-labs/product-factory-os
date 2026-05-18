@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: strategy
   tags: [advisor, consulting, tradeoffs]
+  effort: high
+  side_effect: read-only
+  explicit_invocation: false
 ---
 
 # Advisor
@@ -22,6 +25,14 @@ Use `docs/rubrics/strategy.md` for product, idea-gate, validation, funnel, feedb
 4. Give a recommendation with assumptions.
 5. Name what would change the recommendation.
 6. Identify the next artifact that should change if the decision is accepted, such as `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FUNNEL_MODEL.md`, `ITERATION_REVIEW.md`, `ASSET_REGISTER.md`, or `CONTENT_BACKLOG.md`.
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

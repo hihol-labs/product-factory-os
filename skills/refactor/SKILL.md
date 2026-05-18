@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: daily-work
   tags: [refactor, maintainability]
+  effort: medium
+  side_effect: code-write
+  explicit_invocation: false
 ---
 
 # Refactor
@@ -20,9 +23,16 @@ Improve maintainability without behavior changes.
 4. Run tests before and after when possible.
 5. Document any risk or behavior uncertainty.
 
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
+
 ## Rules
 
 - No unrelated cleanup.
 - No opportunistic dependency changes.
 - Add tests first if behavior is not protected.
-

@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: planning
   tags: [discovery, product, market, mvp]
+  effort: high
+  side_effect: docs-write
+  explicit_invocation: false
 ---
 
 # Discover
@@ -58,6 +61,14 @@ Write or update:
 - Feature priority table
 - Kill criteria
 - Risks and unknowns
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

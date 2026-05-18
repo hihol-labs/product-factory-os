@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: quality
   tags: [review, quality, validation]
+  effort: high
+  side_effect: read-only
+  explicit_invocation: false
 ---
 
 # Review
@@ -92,6 +95,14 @@ Status: BLOCKED | PASSED_WITH_WARNINGS | PASSED
 
 ## Summary
 ```
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Product Factory OS workflow</title>
+  <desc id="desc">Idea to deploy-ready product workflow with PFO gates.</desc>
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <rect x="70" y="70" width="1060" height="490" rx="28" fill="#111827" stroke="#38bdf8" stroke-width="3"/>
+  <text x="100" y="140" fill="#f8fafc" font-family="Arial, sans-serif" font-size="58" font-weight="700">Product Factory OS</text>
+  <text x="104" y="192" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="26">Idea -> Blueprint -> Execution Graph -> Build -> Gates -> Deploy Ready</text>
+  <g font-family="Arial, sans-serif" font-size="24" font-weight="700">
+    <rect x="105" y="275" width="140" height="76" rx="12" fill="#2563eb"/>
+    <text x="142" y="323" fill="#fff">IDEA</text>
+    <rect x="290" y="275" width="180" height="76" rx="12" fill="#0891b2"/>
+    <text x="319" y="323" fill="#fff">BLUEPRINT</text>
+    <rect x="515" y="275" width="180" height="76" rx="12" fill="#059669"/>
+    <text x="546" y="323" fill="#fff">BUILD</text>
+    <rect x="740" y="275" width="150" height="76" rx="12" fill="#ca8a04"/>
+    <text x="779" y="323" fill="#fff">GATES</text>
+    <rect x="935" y="275" width="155" height="76" rx="12" fill="#dc2626"/>
+    <text x="963" y="323" fill="#fff">DEPLOY</text>
+  </g>
+  <g stroke="#94a3b8" stroke-width="6" stroke-linecap="round">
+    <path d="M250 313h35"/>
+    <path d="M475 313h35"/>
+    <path d="M700 313h35"/>
+    <path d="M895 313h35"/>
+  </g>
+  <text x="105" y="430" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="30">Codex-native lifecycle, memory, contracts, route snapshots, and hook gates.</text>
+</svg>

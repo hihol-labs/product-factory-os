@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "skill": "/blueprint",
+  "status": "active",
+  "contract_files": {
+    "expected-files.txt": {
+      "must_contain": [
+        "PRODUCT_BLUEPRINT.md",
+        "PROJECT_ARCHITECTURE.md",
+        "BUILD_PLAN.md",
+        "EXECUTION_GRAPH.md",
+        "IMPLEMENTATION_PLAN.md"
+      ],
+      "must_not_contain": [
+        "application code"
+      ]
+    },
+    "notes.md": {
+      "must_contain": [
+        "planning-only",
+        "stops before application code",
+        "architecture variants"
+      ],
+      "min_scenario_count": 3
+    }
+  }
+}

@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: strategy
   tags: [strategy, roadmap, backlog, adr]
+  effort: high
+  side_effect: docs-write
+  explicit_invocation: false
 ---
 
 # Strategy
@@ -57,6 +60,14 @@ As needed:
 7. Record the chosen direction as an ADR.
 8. Update backlog and launch plan.
 9. Update `.codex-memory/STATE.json` decision log when present.
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

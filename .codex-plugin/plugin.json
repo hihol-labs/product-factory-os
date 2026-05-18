@@ -1,6 +1,6 @@
 {
   "name": "product-factory-os",
-  "version": "0.6.1",
+  "version": "1.0.0",
   "description": "Product Factory OS methodology plugin for Codex: a deterministic product generation runtime that installs as a workspace default, auto-adopts existing projects, classifies product ideas, selects templates, compiles blueprints into execution graphs, runs hook guardrails, builds, tests, validates, prepares deployment, and saves reloadable state.",
   "author": {
     "name": "hihol-labs",

@@ -1,7 +1,7 @@
 {
   "name": "product-factory-os",
   "displayName": "Product Factory OS",
-  "version": "0.6.1",
+  "version": "1.0.0",
   "source": {
     "source": "local",
     "path": "./product-factory-os"
@@ -25,5 +25,12 @@
     "Hook Gates",
     "Route Snapshots",
     "Workspace Auto-Adoption"
+  ],
+  "images": [
+    {
+      "type": "hero",
+      "url": "https://raw.githubusercontent.com/hihol-labs/product-factory-os/main/docs/demo.svg",
+      "alt": "Product Factory OS workflow from idea to deploy-ready product"
+    }
   ]
 }

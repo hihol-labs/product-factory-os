@@ -1,0 +1,368 @@
+{
+  "version": 1,
+  "description": "Behavioural fixture contracts. Fixture-local expected-contract.json files may strengthen these base contracts.",
+  "fixtures": {
+    "adopt-existing": {
+      "skill": "/adopt",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["AGENTS.md", "CODEX.md", ".codex-memory/STATE.json", ".pfo/PROJECT_CONTRACT.md"]},
+        "notes.md": {"must_contain": ["idempotent", "no application behavior changes"]}
+      },
+      "output_contract": {
+        "required_files": ["AGENTS.md", "CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json", ".pfo/PROJECT_CONTRACT.md"],
+        "any_file_must_contain": ["Product Factory OS", "ADOPTED"]
+      }
+    },
+    "advisor-decision": {
+      "skill": "/advisor",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["NONE"]},
+        "notes.md": {"must_contain": ["read-only", "decision analysis"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["Recommendation", "Tradeoff", "Risk"],
+        "forbidden_files": ["*"]
+      }
+    },
+    "browser-check": {
+      "skill": "/browser-check",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["browser smoke report", "engine evidence"]},
+        "notes.md": {"must_contain": ["local UI verification", "blocking visual"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["browser smoke", "engine", "evidence"]
+      }
+    },
+    "deploy-production": {
+      "skill": "/deploy",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["explicit confirmation", "rollback notes", "session save"]},
+        "notes.md": {"must_contain": ["production deploys require confirmation"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["explicit confirmation", "health check", "rollback", "session save"]
+      }
+    },
+    "deps-audit": {
+      "skill": "/deps-audit",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["dependency audit report"]},
+        "notes.md": {"must_contain": ["read-only supply-chain"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["dependency audit", "CVE", "license"]
+      }
+    },
+    "discover": {
+      "skill": "/discover",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["DISCOVERY.md", "MARKET_BRIEF.md", "ICP.md"]},
+        "notes.md": {"must_contain": ["early product research", "discovery"]}
+      },
+      "output_contract": {
+        "required_files": ["DISCOVERY.md", "MARKET_BRIEF.md", "ICP.md"],
+        "files_must_contain": {"DISCOVERY.md": ["Problem", "Users", "MVP", "Risks"]}
+      }
+    },
+    "doc-readme": {
+      "skill": "/doc",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["README.md", "docs/"]},
+        "notes.md": {"must_contain": ["existing style", "unsupported commands"]}
+      },
+      "output_contract": {
+        "required_files": ["README.md"],
+        "files_must_contain": {"README.md": ["Usage", "Validation"]}
+      }
+    },
+    "existing-bug": {
+      "skill": "/bugfix",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["regression test", "root-cause fix", "verification summary"]},
+        "notes.md": {"must_contain": ["existing-code work", "/kickstart"]}
+      },
+      "output_contract": {
+        "required_files": ["ROOT_CAUSE.md"],
+        "any_file_must_contain": ["root cause", "regression", "verification"]
+      }
+    },
+    "explain-code": {
+      "skill": "/explain",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["NONE"]},
+        "notes.md": {"must_contain": ["read-only explanation"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["Explanation", "Flow", "Assumption"],
+        "forbidden_files": ["*"]
+      }
+    },
+    "github-workflow": {
+      "skill": "/github-workflow",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["PR or CI summary"]},
+        "notes.md": {"must_contain": ["PR", "CI", "release"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["GitHub", "PR", "CI", "approval"]
+      }
+    },
+    "grill-me": {
+      "skill": "/grill-me",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["NONE"]},
+        "notes.md": {"must_contain": ["one question at a time", "avoid file edits"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["Question", "Recommended answer", "Risk"],
+        "forbidden_files": ["*"]
+      }
+    },
+    "guide-existing-docs": {
+      "skill": "/guide",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["CODEX_GUIDE.md", "EXECUTION_GRAPH.md"]},
+        "notes.md": {"must_contain": ["existing documentation", "implementation prompts"]}
+      },
+      "output_contract": {
+        "required_files": ["CODEX_GUIDE.md", "EXECUTION_GRAPH.md"],
+        "files_must_contain": {"CODEX_GUIDE.md": ["Step", "Codex", "Verification"]}
+      }
+    },
+    "handoff": {
+      "skill": "/handoff",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["HANDOFF.md", ".codex-memory/STATE.json"]},
+        "notes.md": {"must_contain": ["context transfer", "role switch"]}
+      },
+      "output_contract": {
+        "required_files": ["HANDOFF.md", ".codex-memory/STATE.json"],
+        "files_must_contain": {"HANDOFF.md": ["Current state", "Next action", "Blockers"]}
+      }
+    },
+    "harden-service": {
+      "skill": "/harden",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["QUALITY_GATES.md", "runbook or hardening report"]},
+        "notes.md": {"must_contain": ["production hardening", "require approval"]}
+      },
+      "output_contract": {
+        "required_files": ["QUALITY_GATES.md"],
+        "any_file_must_contain": ["health", "observability", "runbook"]
+      }
+    },
+    "infra-generate": {
+      "skill": "/infra",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["infra/", "deployment docs"]},
+        "notes.md": {"must_contain": ["without calling cloud APIs", "explicit user confirmation"]}
+      },
+      "output_contract": {
+        "required_files": ["infra/README.md"],
+        "files_must_contain": {"infra/README.md": ["plan", "apply", "state"]}
+      }
+    },
+    "market-scan": {
+      "skill": "/market-scan",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["MARKET_BRIEF.md", "VALIDATION_PLAN.md", "FEEDBACK_LOG.md"]},
+        "notes.md": {"must_contain": ["fresh public community", "competitor signals"]}
+      },
+      "output_contract": {
+        "required_files": ["MARKET_BRIEF.md", "VALIDATION_PLAN.md", "FEEDBACK_LOG.md"],
+        "files_must_contain": {"MARKET_BRIEF.md": ["signals", "sources", "confidence"]}
+      }
+    },
+    "mcp-docs": {
+      "skill": "/mcp-docs",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["documentation lookup notes", "implementation constraints"]},
+        "notes.md": {"must_contain": ["stale-knowledge prevention"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["documentation", "version", "implementation impact"]
+      }
+    },
+    "migration": {
+      "skill": "/migrate",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["migration preflight", "rollback notes"]},
+        "notes.md": {"must_contain": ["backup", "verification", "rollback"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["migration preflight", "backup", "verification", "rollback"]
+      }
+    },
+    "new-project": {
+      "skill": "/project",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["PRODUCT_BLUEPRINT.md", "EXECUTION_GRAPH.md", ".pfo/PROJECT_CONTRACT.md"]},
+        "notes.md": {"must_contain": ["full-cycle path", "before writing code"]}
+      },
+      "output_contract": {
+        "required_files": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "AGENTS.md", "CODEX.md", ".codex-memory/STATE.json"],
+        "files_must_contain": {"EXECUTION_GRAPH.md": ["Nodes", "Transitions", "Validation checkpoints"]}
+      }
+    },
+    "obsidian-export": {
+      "skill": "/obsidian-export",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": [".pfo-integrations/obsidian/PROJECT_INDEX.md", ".pfo-integrations/obsidian/KNOWLEDGE_GRAPH.md"]},
+        "notes.md": {"must_contain": ["Obsidian", "must not replace canonical PFO planning docs"]}
+      },
+      "output_contract": {
+        "required_files": [".pfo-integrations/obsidian/PROJECT_INDEX.md", ".pfo-integrations/obsidian/KNOWLEDGE_GRAPH.md"],
+        "any_file_must_contain": ["[[", "Product Factory OS"]
+      }
+    },
+    "perf-bottleneck": {
+      "skill": "/perf",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["performance report", "regression or benchmark evidence"]},
+        "notes.md": {"must_contain": ["measures first", "before/after evidence"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["measurement", "bottleneck", "before", "after"]
+      }
+    },
+    "pfo-bot": {
+      "skill": "/kickstart",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["PRODUCT_BLUEPRINT.md", "EXECUTION_GRAPH.md", ".pfo/PROJECT_CONTRACT.md"]},
+        "notes.md": {"must_contain": ["voice-first", "Telegram bot", "full Product Factory OS route"]}
+      },
+      "output_contract": {
+        "required_files": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "PROJECT_ARCHITECTURE.md", ".codex-memory/STATE.json"],
+        "any_file_must_contain": ["Telegram", "bot", "validation"]
+      }
+    },
+    "planning-only": {
+      "skill": "/blueprint",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["PRODUCT_BLUEPRINT.md", "PROJECT_ARCHITECTURE.md", "EXECUTION_GRAPH.md"]},
+        "notes.md": {"must_contain": ["planning-only", "architecture variants"]}
+      },
+      "output_contract": {
+        "required_files": ["PRODUCT_BLUEPRINT.md", "PROJECT_ARCHITECTURE.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md"],
+        "files_must_contain": {"PROJECT_ARCHITECTURE.md": ["Architecture variants", "ADR", "Adversarial"]}
+      }
+    },
+    "refactor-module": {
+      "skill": "/refactor",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["source patch", "tests or unchanged behavior proof"]},
+        "notes.md": {"must_contain": ["behavior-preserving", "golden flows"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["behavior preserved", "verification", "scope"]
+      }
+    },
+    "review-quality": {
+      "skill": "/review",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["QUALITY_GATES.md", "PFO_REVIEW_REPORT.md"]},
+        "notes.md": {"must_contain": ["BLOCKED", "PASSED_WITH_WARNINGS", "PASSED"]}
+      },
+      "output_contract": {
+        "required_files": ["QUALITY_GATES.md", "PFO_REVIEW_REPORT.md"],
+        "any_file_must_contain": ["BLOCKED", "PASSED_WITH_WARNINGS", "PASSED"]
+      }
+    },
+    "security-audit": {
+      "skill": "/security-audit",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["security report", "critical findings", "status enum"]},
+        "notes.md": {"must_contain": ["read-only", "docs/rubrics/security.md"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["security", "Critical", "status"]
+      }
+    },
+    "session-save": {
+      "skill": "/session-save",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": [".codex-memory/MEMORY.md", ".codex-memory/STATE.json"]},
+        "notes.md": {"must_contain": ["reloadable state persistence"]}
+      },
+      "output_contract": {
+        "required_files": [".codex-memory/MEMORY.md", ".codex-memory/STATE.json"],
+        "any_file_must_contain": ["next", "blockers", "state"]
+      }
+    },
+    "skill-create": {
+      "skill": "/skill-create",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["skills/<skill>/SKILL.md", "docs/SKILL_CONTRACTS.md", "tests/snapshots/route-snapshots.json"]},
+        "notes.md": {"must_contain": ["methodology extension", "contract", "validation coverage"]}
+      },
+      "output_contract": {
+        "required_files": ["skills/example-skill/SKILL.md"],
+        "any_file_must_contain": ["Self-validation", "side_effect", "route snapshot"]
+      }
+    },
+    "strategy-replan": {
+      "skill": "/strategy",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["MARKET_BRIEF.md", "GO_TO_MARKET.md", "ADR or strategy update"]},
+        "notes.md": {"must_contain": ["strategic replanning", "without defaulting to code changes"]}
+      },
+      "output_contract": {
+        "required_files": ["MARKET_BRIEF.md", "GO_TO_MARKET.md"],
+        "any_file_must_contain": ["decision", "options", "risks"]
+      }
+    },
+    "test-existing-feature": {
+      "skill": "/test",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["TEST_PLAN.md", "tests/"]},
+        "notes.md": {"must_contain": ["existing project conventions", "test plan"]}
+      },
+      "output_contract": {
+        "required_files": ["TEST_PLAN.md"],
+        "any_file_must_contain": ["red", "green", "coverage"]
+      }
+    },
+    "tool-sync": {
+      "skill": "/tool-sync",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["export payload", "sync summary"]},
+        "notes.md": {"must_contain": ["external tool synchronization", "explicit"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["target", "approval", "sync summary"]
+      }
+    }
+  }
+}

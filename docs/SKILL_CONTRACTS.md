@@ -1,5 +1,13 @@
 # Skill Contracts
 
+Every skill frontmatter must declare:
+
+- `effort`: `low`, `medium`, or `high`.
+- `side_effect`: the highest expected mutation or external interaction class.
+- `explicit_invocation`: `true` for production, migration, infrastructure, external-write, or other high-impact routes.
+
+`scripts/verify_skill_profiles.py` enforces these fields and checks that every skill has a `## Self-validation` section.
+
 | Skill | Input | Output | Side Effects | Idempotency |
 |---|---|---|---|---|
 | `/project` | Product idea | Route decision | None | Safe |

@@ -35,6 +35,7 @@ def main() -> None:
     for expected in [
         "route-reminder",
         "preflight-context",
+        "session-diagnostics",
         "skill-completeness",
         "commit-completeness",
         "review-before-commit",

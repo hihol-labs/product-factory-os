@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: operations
   tags: [production, hardening, sre]
+  effort: high
+  side_effect: code-docs-write
+  explicit_invocation: false
 ---
 
 # Harden
@@ -30,6 +33,14 @@ The canonical production readiness rubric lives in `docs/rubrics/production.md`.
 - Migration and rollback sequence
 - Smoke test after deployment
 - Incident response and credential rotation notes
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

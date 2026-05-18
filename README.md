@@ -165,16 +165,15 @@ Products generated with PFO belong to their authors. Using PFO does not require 
 - It does not require products generated with PFO to be open source.
 - It is not a hosted team platform yet. Hosted dashboards, managed execution, team workspaces, and enterprise policy belong to the open-core/commercial roadmap.
 
-## Path To 1.0
+## Production Grade
 
-PFO reaches `1.0.0` when the runtime is stable enough to rely on across new and existing projects:
+PFO is now gated as a `1.0.0` production-grade local runtime. The release gate is:
 
-1. Stable skill and hook contracts with route snapshots for every skill.
-2. Stable CLI semantics for `new`, `plan`, `build`, `test`, `review`, `validate`, `analyze`, `contracts`, `resume`, `report`, and `export`.
-3. Generated projects validate after bootstrap and after `pfo plan`.
-4. Starter packs and golden paths cover the supported product types.
-5. `.pfo/` contract gates block scope drift, fake data substitution, unsafe fallbacks, and unverified golden-flow changes.
-6. CI runs structure, fixture, hook, runtime, benchmark, generated-project, and meta-review checks.
+```bash
+python3 scripts/production_readiness.py
+```
+
+It verifies structure, route fixtures, trigger drift, behavioural fixture contracts, headless fixture validation, skill risk profiles, runtime assets, hooks, manifest drift, install sync, benchmarks, and meta-review.
 
 See:
 
@@ -185,12 +184,14 @@ See:
 - [PFO Cloud](docs/CLOUD.md)
 - [GitHub Launch Checklist](docs/GITHUB_LAUNCH.md)
 - [Initial Roadmap Issues](docs/GITHUB_ISSUES.md)
+- [v1.0.0 Release Notes](docs/RELEASE_NOTES_v1.0.0.md)
 - [v0.6.1 Release Notes](docs/RELEASE_NOTES_v0.6.1.md)
 - [v0.6.0 Release Notes](docs/RELEASE_NOTES_v0.6.0.md)
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
 - [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
 - [GSD Integration Notes](docs/GSD_INTEGRATION.md)
 - [Superpowers Integration Notes](docs/SUPERPOWERS_INTEGRATION.md)
+- [Design Space Map](docs/DESIGN_SPACE.md)
 
 ## Repository Layout
 

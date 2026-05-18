@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "skill": "/kickstart",
+  "status": "active",
+  "contract_files": {
+    "expected-files.txt": {
+      "must_contain": [
+        "PRODUCT_BLUEPRINT.md",
+        "BUILD_PLAN.md",
+        "EXECUTION_GRAPH.md",
+        ".pfo/PROJECT_CONTRACT.md",
+        ".codex-memory/STATE.json"
+      ]
+    },
+    "notes.md": {
+      "must_contain": [
+        "voice-first",
+        "Telegram bot",
+        "full Product Factory OS route"
+      ],
+      "min_scenario_count": 3
+    }
+  }
+}

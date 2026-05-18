@@ -66,6 +66,8 @@
 - Add drift/reconciliation checks for stale state, missing artifacts, and worktree mismatch before autonomous dispatch.
 - Add connector-backed export smoke tests where local connector access exists.
 - Add browser-facing generated-project smoke checks for UI starters.
+- Expand behavioural fixture contracts from the first 7 high-risk skills to all core PFO skills.
+- Add numeric context budget thresholds and checkpoint restore smoke tests.
 
 ## 0.9.0
 

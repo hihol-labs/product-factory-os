@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: quality
   tags: [browser, frontend, smoke-test, ux]
+  effort: medium
+  side_effect: local-browser
+  explicit_invocation: false
 ---
 
 # Browser Check
@@ -51,6 +54,14 @@ CONSOLE OR NETWORK ISSUES:
 ISSUES:
 NEXT ACTION:
 ```
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

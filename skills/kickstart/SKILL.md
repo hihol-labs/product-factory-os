@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: creation
   tags: [kickstart, full-cycle, implementation, deploy]
+  effort: high
+  side_effect: code-docs-memory-write
+  explicit_invocation: false
 ---
 
 # Kickstart
@@ -113,6 +116,14 @@ Before deploy:
 - `/browser-check` has no blocking user-facing failures when a browser UI exists.
 - `EXECUTION_GRAPH.md` has reached `READY_FOR_DEPLOY`.
 - User explicitly confirms target environment.
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

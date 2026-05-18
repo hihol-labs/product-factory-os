@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: integration
   tags: [github, pull-request, ci, release]
+  effort: medium
+  side_effect: external-write
+  explicit_invocation: true
 ---
 
 # GitHub Workflow
@@ -45,6 +48,14 @@ ACTION TAKEN:
 BLOCKERS:
 NEXT ACTION:
 ```
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

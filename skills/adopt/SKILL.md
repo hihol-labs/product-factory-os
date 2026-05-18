@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: workflow
   tags: [adoption, existing-project, bootstrap]
+  effort: medium
+  side_effect: project-metadata-write
+  explicit_invocation: false
 ---
 
 # Adopt
@@ -41,6 +44,14 @@ EXISTING_PROJECT_DETECTED
   -> EXISTING_PROJECT_ANALYZED
   -> TASK_CLASSIFIED
 ```
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

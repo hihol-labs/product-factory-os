@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: daily-work
   tags: [explain, learning, read-only]
+  effort: low
+  side_effect: read-only
+  explicit_invocation: false
 ---
 
 # Explain
@@ -20,9 +23,16 @@ Explain how something works.
 4. Name surprising decisions, risks, and extension points.
 5. Use small diagrams when they clarify.
 
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
+
 ## Rules
 
 - Read-only unless the user separately asks for edits.
 - Prefer concrete file references.
 - Distinguish facts from guesses.
-

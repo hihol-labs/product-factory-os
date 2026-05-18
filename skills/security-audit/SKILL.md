@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: quality
   tags: [security, audit, owasp]
+  effort: high
+  side_effect: read-only
+  explicit_invocation: false
 ---
 
 # Security Audit
@@ -47,6 +50,14 @@ Group findings as:
 - Informational
 
 Return `BLOCKED` when Critical findings exist.
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

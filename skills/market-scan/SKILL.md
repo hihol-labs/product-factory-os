@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: research
   tags: [market, discovery, validation, last30days, social-signals]
+  effort: high
+  side_effect: external-read-docs-write
+  explicit_invocation: false
 ---
 
 # Market Scan
@@ -50,6 +53,14 @@ NEXT VALIDATION STEP:
 ```
 
 When writing docs, append dated evidence instead of replacing prior user-authored research unless the user explicitly asks to rewrite.
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

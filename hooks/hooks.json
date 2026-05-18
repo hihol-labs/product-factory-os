@@ -15,6 +15,12 @@
       "description": "Auto-adopts first-level workspace projects when needed, then prints discovered docs and memory state."
     },
     {
+      "name": "session-diagnostics",
+      "type": "context-diagnostic",
+      "command": "python3 hooks/session-diagnostics.py",
+      "description": "Prints stale state, recovery, handoff, and telemetry diagnostics from project memory."
+    },
+    {
       "name": "skill-completeness",
       "type": "enforcement",
       "command": "python3 hooks/skill-completeness.py",
