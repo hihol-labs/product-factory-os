@@ -36,11 +36,27 @@ Run validation:
 python3 scripts/validate_structure.py
 python3 scripts/validate_plan_quality.py /path/to/project
 python3 scripts/run_fixtures.py
+python3 scripts/verify_triggers.py
+python3 scripts/verify_fixture_contracts.py
+python3 scripts/run_headless_fixtures.py --mode mock
+python3 scripts/verify_skill_profiles.py
 python3 scripts/validate_execution_graph.py
 python3 scripts/validate_state.py /path/to/project/.codex-memory/STATE.json
 python3 scripts/validate_runtime.py
 python3 scripts/validate_hooks.py
+python3 scripts/verify_manifest_drift.py
+python3 scripts/verify_install_sync.py
 python3 scripts/meta_review.py
+python3 scripts/production_readiness.py
+```
+
+Real Codex-backed behavioural execution is optional and budgeted:
+
+```bash
+python3 scripts/run_headless_fixtures.py --mode command \
+  --fixture planning-only \
+  --output-root .pfo-headless-runs/live \
+  --command-template 'python3 {root}/scripts/pfo_headless_adapter.py'
 ```
 
 The validator also checks the Product Factory OS runtime layer:
@@ -84,6 +100,7 @@ Installed hook layers:
 
 - `route-reminder.py`: suggests `/project`, `/task`, or a specialized PFO skill.
 - `preflight-context.py`: auto-adopts first-level workspace projects when needed, then prints discovered docs, state, memory, and `.pfo/` contracts.
+- `session-diagnostics.py`: reports stale state, recovery, handoff, and telemetry warnings from project memory.
 - `skill-completeness.py`: checks skills against contracts, triggers, fixtures, and route snapshots.
 - `commit-completeness.py`: checks staged methodology diffs for supporting artifacts.
 - `review-before-commit.py`: runs fast PFO validators before committing methodology changes.

@@ -136,7 +136,7 @@ The intended marketplace entry is:
 {
   "name": "product-factory-os",
   "displayName": "Product Factory OS",
-  "version": "0.6.1",
+  "version": "1.0.0",
   "source": {
     "source": "local",
     "path": "./product-factory-os"

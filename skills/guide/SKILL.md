@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: planning
   tags: [guide, prompts, execution]
+  effort: medium
+  side_effect: docs-write
+  explicit_invocation: false
 ---
 
 # Guide
@@ -33,9 +36,16 @@ Look for:
 - Review/test checkpoints
 - Resume instructions for later sessions
 
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
+
 ## Rules
 
 - Do not change architecture decisions while creating the guide.
 - If docs conflict, stop and ask whether to fix docs via `/review`.
 - Make each step small enough to verify independently.
-

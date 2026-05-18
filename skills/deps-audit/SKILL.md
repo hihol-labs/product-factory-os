@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: quality
   tags: [dependencies, supply-chain, licenses]
+  effort: medium
+  side_effect: read-only
+  explicit_invocation: false
 ---
 
 # Dependency Audit
@@ -21,6 +24,14 @@ The canonical rubric lives in `docs/rubrics/deps.md`. Use it as the source of tr
 3. Check for known vulnerable packages, abandoned packages, risky licenses, duplicate frameworks, unpinned Docker base images, and missing lockfiles.
 4. Identify whether dependency audit can run in CI.
 5. Report actionable upgrades and accepted-risk options.
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: workflow
   tags: [memory, context, session]
+  effort: low
+  side_effect: memory-write
+  explicit_invocation: false
 ---
 
 # Session Save
@@ -125,6 +128,14 @@ Update `.codex-memory/STATE.json` using `memory/session-state.schema.json`:
   "nextAction": "begin modular build"
 }
 ```
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: operations
   tags: [deploy, release, production]
+  effort: high
+  side_effect: production-impact
+  explicit_invocation: true
 ---
 
 # Deploy
@@ -63,6 +66,14 @@ Every deploy report must include one:
 - Exact rollback command
 - Previous artifact/image/commit to restore
 - Reason rollback is not available
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

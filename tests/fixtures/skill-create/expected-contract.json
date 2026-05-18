@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "skill": "/skill-create",
+  "status": "active",
+  "contract_files": {
+    "expected-files.txt": {
+      "must_contain": [
+        "skills/<skill>/SKILL.md",
+        "docs/SKILL_CONTRACTS.md",
+        "docs/TRIGGERS.md",
+        "tests/snapshots/route-snapshots.json",
+        "scripts/validate_structure.py"
+      ]
+    },
+    "notes.md": {
+      "must_contain": [
+        "methodology extension",
+        "contract",
+        "validation coverage"
+      ],
+      "min_scenario_count": 3
+    }
+  }
+}

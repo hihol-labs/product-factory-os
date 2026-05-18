@@ -15,8 +15,12 @@ REQUIRED_FILES = [
     "SECURITY.md",
     "GOVERNANCE.md",
     "docs/PFO_ARCHITECTURE.md",
+    "docs/DESIGN_SPACE.md",
+    "docs/demo.svg",
     "docs/MASTER_PROMPT.ru.md",
     "docs/INSTALL.md",
+    "docs/HEADLESS_EXECUTION.md",
+    "docs/PRODUCTION_READINESS.md",
     "docs/METHODOLOGY.md",
     "docs/SKILL_CONTRACTS.md",
     "docs/CALL_GRAPH.md",
@@ -33,6 +37,7 @@ REQUIRED_FILES = [
     "docs/GO_TO_MARKET_OPEN_CORE.md",
     "docs/OPENAI_MCP_INTEGRATIONS.md",
     "docs/RELEASE_NOTES_v0.6.1.md",
+    "docs/RELEASE_NOTES_v1.0.0.md",
     "docs/RELEASE_NOTES_v0.6.0.md",
     "docs/gates/README.md",
     "docs/gates/scope-lock.md",
@@ -102,6 +107,7 @@ REQUIRED_FILES = [
     "hooks/README.md",
     "hooks/route-reminder.py",
     "hooks/preflight-context.py",
+    "hooks/session-diagnostics.py",
     "hooks/skill-completeness.py",
     "hooks/commit-completeness.py",
     "hooks/review-before-commit.py",
@@ -137,8 +143,17 @@ REQUIRED_FILES = [
     "starters/README.md",
     "golden-paths/README.md",
     "tests/README.md",
+    "tests/fixture-contracts.json",
     "tests/snapshots/route-snapshots.json",
     "scripts/run_fixtures.py",
+    "scripts/run_headless_fixtures.py",
+    "scripts/pfo_headless_adapter.py",
+    "scripts/verify_triggers.py",
+    "scripts/verify_fixture_contracts.py",
+    "scripts/verify_skill_profiles.py",
+    "scripts/verify_manifest_drift.py",
+    "scripts/verify_install_sync.py",
+    "scripts/production_readiness.py",
     "scripts/meta_review.py",
     "scripts/validate_hooks.py",
     "scripts/install_workspace.py",
@@ -399,7 +414,7 @@ def main() -> None:
 
     hooks = json.loads((ROOT / "hooks/hooks.json").read_text())
     hook_names = {hook.get("name") for hook in hooks.get("hooks", [])}
-    for expected_hook in ["route-reminder", "preflight-context", "skill-completeness", "commit-completeness", "review-before-commit"]:
+    for expected_hook in ["route-reminder", "preflight-context", "session-diagnostics", "skill-completeness", "commit-completeness", "review-before-commit"]:
         if expected_hook not in hook_names:
             fail(f"hooks/hooks.json is missing hook {expected_hook}")
 
@@ -487,6 +502,12 @@ def main() -> None:
         for name in ["idea.md", "expected-files.txt", "notes.md"]:
             if not (fixture_dir / name).is_file():
                 fail(f"fixture {fixture} is missing {name}")
+
+    fixture_contracts = json.loads((ROOT / "tests" / "fixture-contracts.json").read_text())
+    contract_names = set(fixture_contracts.get("fixtures", {}))
+    for fixture in REQUIRED_FIXTURES:
+        if fixture not in contract_names:
+            fail(f"fixture {fixture} is missing behavioural contract")
 
     snapshots = json.loads((ROOT / "tests" / "snapshots" / "route-snapshots.json").read_text())
     snapshot_fixtures = {item.get("fixture") for item in snapshots.get("snapshots", [])}

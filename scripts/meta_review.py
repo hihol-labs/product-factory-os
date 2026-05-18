@@ -78,10 +78,17 @@ def main() -> None:
     for command in [
         "python3 scripts/validate_structure.py",
         "python3 scripts/run_fixtures.py",
+        "python3 scripts/verify_triggers.py",
+        "python3 scripts/verify_fixture_contracts.py",
+        "python3 scripts/run_headless_fixtures.py --mode mock",
+        "python3 scripts/verify_skill_profiles.py",
         "python3 scripts/validate_execution_graph.py",
         "python3 scripts/validate_runtime.py",
         "python3 scripts/validate_hooks.py",
+        "python3 scripts/verify_manifest_drift.py",
+        "python3 scripts/verify_install_sync.py",
         "python3 scripts/meta_review.py",
+        "python3 scripts/production_readiness.py",
     ]:
         if command not in install:
             fail(f"docs/INSTALL.md must document {command}")
@@ -178,6 +185,24 @@ def main() -> None:
     )
     if runtime_check.returncode != 0:
         fail("runtime validation failed: " + runtime_check.stdout + runtime_check.stderr)
+
+    for command in [
+        [sys.executable, "scripts/verify_triggers.py"],
+        [sys.executable, "scripts/verify_fixture_contracts.py"],
+        [sys.executable, "scripts/run_headless_fixtures.py", "--mode", "mock"],
+        [sys.executable, "scripts/verify_skill_profiles.py"],
+        [sys.executable, "scripts/verify_manifest_drift.py"],
+        [sys.executable, "scripts/verify_install_sync.py"],
+    ]:
+        result = subprocess.run(
+            command,
+            cwd=ROOT,
+            check=False,
+            text=True,
+            capture_output=True,
+        )
+        if result.returncode != 0:
+            fail("validator failed: " + " ".join(command) + "\n" + result.stdout + result.stderr)
 
     if "/deploy" not in call_graph or "/migrate" not in call_graph:
         fail("docs/CALL_GRAPH.md must include operations routes")

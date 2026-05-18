@@ -3,6 +3,16 @@ name: Validate Methodology
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      live_headless:
+        description: "Run live command-mode headless fixtures"
+        required: false
+        default: "false"
+      live_fixtures:
+        description: "Space-separated fixture names"
+        required: false
+        default: "planning-only pfo-bot adopt-existing market-scan review-quality"
 
 jobs:
   validate:
@@ -25,6 +35,18 @@ jobs:
       - name: Run routing fixtures
         run: python3 scripts/run_fixtures.py
 
+      - name: Verify trigger registry
+        run: python3 scripts/verify_triggers.py
+
+      - name: Verify behavioural fixture contracts
+        run: python3 scripts/verify_fixture_contracts.py
+
+      - name: Run headless behavioural fixture validator
+        run: python3 scripts/run_headless_fixtures.py --mode mock
+
+      - name: Verify skill risk profiles
+        run: python3 scripts/verify_skill_profiles.py
+
       - name: Validate execution graph semantics
         run: python3 scripts/validate_execution_graph.py
 
@@ -33,6 +55,12 @@ jobs:
 
       - name: Validate hook contracts
         run: python3 scripts/validate_hooks.py
+
+      - name: Verify manifest drift
+        run: python3 scripts/verify_manifest_drift.py
+
+      - name: Verify install and hook sync
+        run: python3 scripts/verify_install_sync.py
 
       - name: Run benchmark suite
         run: python3 scripts/run_benchmarks.py
@@ -57,3 +85,21 @@ jobs:
 
       - name: Run meta review
         run: python3 scripts/meta_review.py
+
+      - name: Production readiness gate
+        run: python3 scripts/production_readiness.py
+
+      - name: Live headless fixture proof
+        if: github.event_name == 'workflow_dispatch' && inputs.live_headless == 'true'
+        env:
+          PFO_HEADLESS_COMMAND: ${{ secrets.PFO_HEADLESS_COMMAND }}
+          LIVE_FIXTURES: ${{ inputs.live_fixtures }}
+        run: |
+          test -n "$PFO_HEADLESS_COMMAND" || { echo "Missing secret PFO_HEADLESS_COMMAND"; exit 1; }
+          args=""
+          for fixture in $LIVE_FIXTURES; do
+            args="$args --fixture $fixture"
+          done
+          python3 scripts/run_headless_fixtures.py --mode command $args \
+            --output-root .pfo-headless-runs/live \
+            --command-template "$PFO_HEADLESS_COMMAND"

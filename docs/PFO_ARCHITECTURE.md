@@ -197,6 +197,16 @@ PFO keeps product strategy and project contracts as the outer lifecycle, then ap
 - Branch finish: PR, merge, keep, or discard decision with fresh verification.
 - Enforcement: `scripts/validate_plan_quality.py` runs directly and through `scripts/validate_project.py`.
 
+### 12a. Design-Space And Drift Gates
+
+PFO tracks methodology coverage in `docs/DESIGN_SPACE.md`. The drift layer now checks:
+
+- trigger registry to route-reminder parity
+- behavioural fixture contracts for high-risk skills
+- skill effort, side-effect, explicit-invocation, and self-validation profiles
+- plugin, marketplace, public count, and install/hook sync consistency
+- dangerous-route warnings for production, migration, infrastructure, GitHub, and external tool writes
+
 ### 13. Memory System
 
 Uses `memory/session-state.schema.json` as the canonical reloadable state contract.

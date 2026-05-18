@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: methodology
   tags: [skill, extension, workflow, methodology]
+  effort: high
+  side_effect: methodology-write
+  explicit_invocation: false
 ---
 
 # Skill Create
@@ -62,6 +65,9 @@ license: MIT
 metadata:
   category: category
   tags: [tag-one, tag-two]
+  effort: low|medium|high
+  side_effect: read-only|docs-write|code-write|external-write|production-impact
+  explicit_invocation: false
 ---
 ```
 
@@ -105,6 +111,14 @@ python3 scripts/run_fixtures.py
 python3 scripts/validate_hooks.py
 python3 scripts/meta_review.py
 ```
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

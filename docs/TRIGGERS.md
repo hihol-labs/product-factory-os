@@ -2,6 +2,8 @@
 
 Trigger phrases help route natural language requests to the right skill. They are guidance, not rigid commands.
 
+`scripts/verify_triggers.py` checks that every phrase in this registry is recognized by `hooks/route-reminder.py` and routes to the expected skill.
+
 ## Creation
 
 | Skill | English | Russian |

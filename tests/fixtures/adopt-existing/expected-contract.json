@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "skill": "/adopt",
+  "status": "active",
+  "contract_files": {
+    "expected-files.txt": {
+      "must_contain": [
+        "AGENTS.md",
+        "CODEX.md",
+        ".codex-memory/STATE.json",
+        ".pfo/PROJECT_CONTRACT.md"
+      ],
+      "must_not_contain": [
+        "application source rewrite",
+        "overwrite existing instructions"
+      ]
+    },
+    "notes.md": {
+      "must_contain": [
+        "idempotent",
+        "self-reference refusal",
+        "no application behavior changes"
+      ],
+      "min_scenario_count": 4
+    }
+  }
+}

@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: research
   tags: [mcp, context7, documentation, libraries]
+  effort: medium
+  side_effect: external-read
+  explicit_invocation: false
 ---
 
 # MCP Docs
@@ -40,6 +43,14 @@ DECISION:
 IMPLEMENTATION IMPACT:
 FOLLOW-UP RISK:
 ```
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

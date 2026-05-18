@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "Machine-readable Product Factory OS routing snapshots. Each skill must have at least one fixture proving its natural-language route.",
+  "description": "Machine-readable Product Factory OS routing snapshots. Each skill must have at least one fixture proving its natural-language route. Behavioural contracts live in fixture-level expected-contract.json files.",
   "snapshots": [
     {"skill": "/project", "fixture": "new-project", "expectedRoute": "/project -> /kickstart", "reminderPrompt": "new project booking app"},
     {"skill": "/task", "fixture": "existing-bug", "expectedRoute": "/project redirects to /task -> /bugfix", "reminderPrompt": "stack trace error in existing API"},

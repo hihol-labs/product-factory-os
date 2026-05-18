@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: planning
   tags: [blueprint, architecture, prd, planning]
+  effort: high
+  side_effect: docs-write
+  explicit_invocation: false
 ---
 
 # Blueprint
@@ -45,7 +48,18 @@ If the user says "you decide", choose a conservative default and record it as `A
 3. Run `/market-scan` before strategy documents when fresh public market, competitor, ICP, launch, or user/community signals can change the plan.
 4. Ask only clarifying questions that affect architecture, scope, data, auth, deployment, budget, or deadline.
 5. Confirm the captured understanding.
-6. Generate documents in this order:
+6. Generate 2 or 3 architecture variants before selecting one:
+   - candidate architecture name
+   - rationale
+   - complexity
+   - operational burden
+   - failure modes
+   - when to reject it
+7. Run an adversarial architecture debate:
+   - challenge the selected option against simpler and safer alternatives
+   - record accepted challenges and rejected challenges
+   - capture the final decision as an ADR section in `PROJECT_ARCHITECTURE.md`
+8. Generate documents in this order:
    - `DISCOVERY.md`
    - `IDEA_SCORECARD.md`
    - `VALIDATION_PLAN.md`
@@ -71,7 +85,7 @@ If the user says "you decide", choose a conservative default and record it as `A
    - `HANDOFF.md` when implementation will start in another session or role
    - `README.md`
    - `CODEX.md`
-6. Run `/review` on the documents.
+9. Run `/review` on the documents.
 
 ## Overwrite Policy
 
@@ -131,6 +145,9 @@ Default to supplement. Do not silently replace user-authored documents.
 `PROJECT_ARCHITECTURE.md`:
 
 - Stack and rationale
+- Architecture variants considered
+- ADR for the selected architecture
+- Adversarial challenges and resolutions
 - Data model or no-DB rationale
 - API, pages, commands, or handlers
 - Auth and permissions
@@ -179,6 +196,14 @@ Default to supplement. Do not silently replace user-authored documents.
 - Development commands
 - Status table
 - Rule: use `/handoff` before session or role transfer; save context with `/session-save` after significant work
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

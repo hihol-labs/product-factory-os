@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: workflow
   tags: [memory, context, delegation, recovery]
+  effort: low
+  side_effect: memory-write
+  explicit_invocation: false
 ---
 
 # Handoff
@@ -53,6 +56,14 @@ HANDOFF.md
 ```bash
 python3 scripts/pfo.py export <project> --target obsidian
 ```
+
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
 
 ## Rules
 

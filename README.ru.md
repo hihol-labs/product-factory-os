@@ -159,16 +159,15 @@ Product Factory OS использует open-core модель:
 - Не требует открывать исходный код продуктов, созданных через PFO.
 - Пока не является hosted team platform. Hosted dashboard, managed execution, team workspaces и enterprise policy относятся к open-core/commercial roadmap.
 
-## Путь К 1.0
+## Production Grade
 
-PFO готова к `1.0.0`, когда runtime можно стабильно использовать для новых и существующих проектов:
+PFO теперь проверяется как production-grade local runtime версии `1.0.0`. Главный gate:
 
-1. Стабильные skill и hook contracts, route snapshots для каждого skill.
-2. Стабильная CLI-семантика для `new`, `plan`, `build`, `test`, `review`, `validate`, `analyze`, `contracts`, `resume`, `report` и `export`.
-3. Сгенерированные проекты проходят validation после bootstrap и после `pfo plan`.
-4. Starter packs и golden paths покрывают поддерживаемые типы продуктов.
-5. `.pfo/` contract gates блокируют scope drift, fake data substitution, unsafe fallbacks и непроверенные golden-flow изменения.
-6. CI запускает structure, fixture, hook, runtime, benchmark, generated-project и meta-review checks.
+```bash
+python3 scripts/production_readiness.py
+```
+
+Он проверяет structure, route fixtures, trigger drift, behavioural contracts, headless fixture validation, skill risk profiles, runtime assets, hooks, manifest drift, install sync, benchmarks и meta-review.
 
 См.:
 
@@ -179,6 +178,7 @@ PFO готова к `1.0.0`, когда runtime можно стабильно и
 - [PFO Cloud](docs/CLOUD.md)
 - [GitHub Launch Checklist](docs/GITHUB_LAUNCH.md)
 - [Initial Roadmap Issues](docs/GITHUB_ISSUES.md)
+- [v1.0.0 Release Notes](docs/RELEASE_NOTES_v1.0.0.md)
 - [v0.6.1 Release Notes](docs/RELEASE_NOTES_v0.6.1.md)
 - [v0.6.0 Release Notes](docs/RELEASE_NOTES_v0.6.0.md)
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)

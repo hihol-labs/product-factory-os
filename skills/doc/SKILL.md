@@ -6,6 +6,9 @@ license: MIT
 metadata:
   category: daily-work
   tags: [docs, readme, api]
+  effort: low
+  side_effect: docs-write
+  explicit_invocation: false
 ---
 
 # Doc
@@ -20,9 +23,16 @@ Write documentation that matches the project.
 4. Include commands, environment variables, and examples when useful.
 5. Verify commands if practical.
 
+## Self-validation
+
+Before final output, verify:
+
+- Route, side-effect, and confirmation requirements match metadata.
+- Required artifacts or read-only result are explicit.
+- Verification, blockers, and next route are stated.
+
 ## Rules
 
 - Do not document features that do not exist.
 - Do not create a new docs system for a small change.
 - Keep generated docs concise and maintainable.
-

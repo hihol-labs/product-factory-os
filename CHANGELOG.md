@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+---
+
+## [1.0.0] - 2026-05-18
+
 ### Added
 
 - GSD-inspired autonomous execution layer: phase discussion, unit context manifest, dispatch journal, fail-closed verification, recovery state, telemetry, learnings, and HTML briefs.
@@ -15,6 +19,11 @@
 - Market and validation templates now capture recent community signals, complaints, alternatives, source links, engagement, and confidence.
 - `/handoff` skill, `HANDOFF.md` template, state tracking, route fixture, and `pfo handoff` command for session, role, delegation, AFK, compaction, and recovery transfers.
 - `/skill-create` skill for extending Product Factory OS with new skills, contracts, triggers, route snapshots, and fixtures.
+- Trigger drift verifier, behavioural fixture contracts, manifest drift checks, install/hook sync checks, and skill risk profile validation.
+- `session-diagnostics.py` hook for stale state, recovery, handoff, and telemetry warnings.
+- `docs/DESIGN_SPACE.md` coverage map and marketplace hero image metadata.
+- Skill metadata profiles for `effort`, `side_effect`, and `explicit_invocation`, plus `Self-validation` sections in every skill.
+- `/blueprint` architecture variants and adversarial architecture debate before final ADR selection.
 
 ## [0.6.1] - 2026-05-09
 
