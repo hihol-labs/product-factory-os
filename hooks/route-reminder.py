@@ -22,7 +22,7 @@ ROUTES = [
     (r"\b(explain code|how does this work|walk me through)\b|объясни код|как это работает", "/task -> /explain"),
     (r"\b(slow|optimi[sz]e|bottleneck|performance)\b|медленно|оптимизируй|узкое место|производительност", "/task -> /perf"),
     (r"\b(latest docs|current api|sdk docs|framework version|context7|mcp)\b|свеж(ая|ие) документаци|актуальн(ый|ая) api|документаци[яи] sdk", "/task -> /mcp-docs"),
-    (r"\b(open localhost|browser smoke|visual qa|check ui|frontend smoke)\b|открой localhost|проверь ui|визуальн(ая|ую) проверк", "/task -> /browser-check"),
+    (r"\b(open localhost|browser smoke|visual qa|check ui|frontend smoke|playwright smoke|playwright check)\b|открой localhost|проверь ui|визуальн(ая|ую) проверк|playwright проверк", "/task -> /browser-check"),
     (r"\b(github actions|pull request|pr review|ci|pr|check run|release branch)\b|github actions|pull request|релизн(ая|ую) ветк", "/task -> /github-workflow"),
     (r"\b(linear|notion|google drive|sync|export project state)\b|синхронизи|экспорт состояния|google drive", "/task -> /tool-sync"),
     (r"\b(code review|quality gate|validate changes|review)\b|ревью|проверь качество|валидаци", "/task -> /review"),

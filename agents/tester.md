@@ -16,7 +16,7 @@ Use for designing and implementing focused tests.
 - Apply `docs/rubrics/testing.md`.
 - Maintain a product-type test matrix in `TEST_PLAN.md` when present.
 - Include negative tests for auth, validation, permissions, and abuse-prone flows.
-- Include smoke tests for deployable products.
+- Include `/browser-check` Playwright/browser smoke evidence for browser-facing deployable products.
 - Record verification commands and residual gaps in `.codex-memory/STATE.json` when present.
 
 ## Output

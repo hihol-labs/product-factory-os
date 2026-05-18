@@ -10,7 +10,7 @@ Use this rubric from `/test`, `/review`, and `/kickstart`.
 | T2 | Regression coverage | Bugs include a regression test that fails before the fix or clearly reproduces the risk. |
 | T3 | Boundary coverage | External services, databases, queues, file systems, and network calls are tested at boundaries or mocked safely. |
 | T4 | Verification command | Every execution graph node has a concrete verification command or manual check. |
-| T5 | Smoke path | Deployable products have a smoke test path for startup and primary flow. |
+| T5 | Smoke path | Deployable products have a smoke test path for startup and primary flow; browser-facing products include `/browser-check` Playwright/browser evidence or an explicit accepted limitation. |
 | T6 | Data safety | Migrations, destructive operations, and scrapers have rollback, dry-run, or fixture-based verification. |
 | T7 | TDD evidence | Behavior changes record red evidence before implementation and green evidence after minimal implementation, or an explicit owner-approved exception. |
 
@@ -32,10 +32,10 @@ Use this rubric from `/test`, `/review`, and `/kickstart`.
 | SaaS | Auth, core CRUD, billing/subscription webhooks if present, permission boundaries, smoke flow |
 | Messaging Bot | Command routing, handler flows, state transitions, integration mocks |
 | API Service | Route contracts, validation errors, auth/authorization, service logic |
-| Web App | Component/form behavior, core user flow, responsive/accessibility smoke |
-| Landing Page | Form submit, analytics hook or lead capture, responsive smoke |
+| Web App | Component/form behavior, core user flow, Playwright/browser responsive and accessibility smoke |
+| Landing Page | Form submit, analytics hook or lead capture, Playwright/browser responsive smoke |
 | CLI Tool | Command parsing, file/stdio behavior, error codes |
-| Mini App | Platform auth/init, core UI flow, backend contract |
-| E-commerce | Catalog, cart, checkout, order state, payment webhook mocks |
+| Mini App | Platform auth/init, core UI flow with browser evidence, backend contract |
+| E-commerce | Catalog, cart, checkout browser smoke, order state, payment webhook mocks |
 | Data Scraper | Fetch retry/rate limit, parser fixtures, storage, scheduler dry run |
 | Internal Automation | Workflow state, integration mocks, audit log |

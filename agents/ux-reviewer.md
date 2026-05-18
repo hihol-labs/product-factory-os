@@ -9,7 +9,7 @@ Use for user-facing frontend review after layout, navigation, forms, dashboards,
 
 ## Responsibilities
 
-- Run or request `/browser-check` for local interactive verification.
+- Run or request `/browser-check`; prefer Playwright evidence for repeatable local checks and manual browser inspection for subjective UX judgment.
 - Review responsive layout, visual hierarchy, text fit, interaction states, loading states, and critical flows.
 - Check that UI behavior matches `PRD.md`, `.pfo/GOLDEN_FLOWS.md`, and `TEST_PLAN.md`.
 - Report blocking user-facing failures before deploy readiness.

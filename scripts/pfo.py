@@ -377,6 +377,7 @@ def generated_test_plan(starter: dict) -> str:
 |---|---|---|---|
 | Backend | domain logic, API, integrations | `{backend}` | behavior changes |
 | Frontend/UI | critical user flows | `{frontend}` | browser-facing changes |
+| Browser smoke | primary UI flow, responsive render, form/nav interaction | `/browser-check` with Playwright evidence | deploy readiness for browser-facing products |
 | Build | deployable artifact | `{build}` | deploy readiness |
 | PFO contracts | scope/data/fallback/golden flows | `python3 scripts/pfo_contract_gate.py <project>` | every meaningful diff |
 | TDD evidence | red, green, refactor command evidence | `pfo tdd-evidence <project> --red ... --green ...` | behavior changes |
@@ -404,7 +405,9 @@ def generated_test_plan(starter: dict) -> str:
 
 ## Smoke Path
 
-TBD by product type.
+| Flow | Target URL/File | Engine | Command Or Manual Check | Evidence |
+|---|---|---|---|---|
+| Primary browser flow | TBD | Playwright via `/browser-check` when browser-facing | TBD | screenshot/log evidence |
 
 ## CI Requirements
 
@@ -693,6 +696,7 @@ def generated_quality_gates() -> str:
 | Unit Context Manifest | PENDING | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
 | Handoff | PENDING | `HANDOFF.md` before session transfer, role switch, delegation, AFK, compaction, or recovery |  |
 | Work Verification | PENDING | `pfo verify-work` evidence |  |
+| Browser Smoke | PENDING | `/browser-check` target, engine, flow, screenshot/log evidence for browser-facing products |  |
 | Security | PENDING | `/security-audit` or accepted not-applicable note |  |
 | Dependencies | PENDING | `/deps-audit` or accepted not-applicable note |  |
 | Hardening | PENDING | `/harden` or accepted non-production note |  |

@@ -19,7 +19,7 @@
     {"skill": "/deps-audit", "fixture": "deps-audit", "expectedRoute": "/task -> /deps-audit", "reminderPrompt": "dependency audit CVE licenses"},
     {"skill": "/mcp-docs", "fixture": "mcp-docs", "expectedRoute": "/task -> /mcp-docs", "reminderPrompt": "latest SDK docs current API"},
     {"skill": "/perf", "fixture": "perf-bottleneck", "expectedRoute": "/task -> /perf", "reminderPrompt": "slow endpoint performance bottleneck"},
-    {"skill": "/browser-check", "fixture": "browser-check", "expectedRoute": "/task -> /browser-check", "reminderPrompt": "open localhost browser smoke"},
+    {"skill": "/browser-check", "fixture": "browser-check", "expectedRoute": "/task -> /browser-check", "reminderPrompt": "open localhost playwright smoke"},
     {"skill": "/harden", "fixture": "harden-service", "expectedRoute": "/task -> /harden", "reminderPrompt": "production readiness harden service"},
     {"skill": "/infra", "fixture": "infra-generate", "expectedRoute": "/task -> /infra", "reminderPrompt": "infrastructure Terraform Kubernetes"},
     {"skill": "/deploy", "fixture": "deploy-production", "expectedRoute": "/task -> /deploy", "reminderPrompt": "deploy service to production"},

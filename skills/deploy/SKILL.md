@@ -21,7 +21,7 @@ Check:
 - Current git status and target commit
 - Tests or accepted test gap
 - Review status is not `BLOCKED`
-- Browser-facing flows have no blocking `/browser-check` failures when applicable
+- Browser-facing flows have no blocking `/browser-check` failures and include target, engine, flow, and screenshot/log evidence when applicable
 - GitHub CI or equivalent release verification is known when `/github-workflow` is in scope
 - Required env vars are documented
 - Rollback path exists

@@ -21,4 +21,8 @@
 
 ## Smoke Path
 
+| Flow | Target URL/File | Engine | Command Or Manual Check | Evidence |
+|---|---|---|---|---|
+| Primary browser flow |  | Playwright via `/browser-check` when browser-facing |  |  |
+
 ## CI Requirements

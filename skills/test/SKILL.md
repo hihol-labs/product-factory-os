@@ -36,4 +36,4 @@ The canonical testing rubric lives in `docs/rubrics/testing.md`.
 - Do not mark a gate as passing without a command or explicit manual check.
 - Do not count a new behavior test as valid unless it was observed failing before implementation, or the exception is explicit.
 - Engineering Discipline v2 blocks behavior changes without TDD red and green evidence.
-- For production-facing products, ensure a smoke path exists before deploy readiness.
+- For production-facing browser products, ensure `/browser-check` has Playwright/browser evidence before deploy readiness.
