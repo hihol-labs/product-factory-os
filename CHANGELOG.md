@@ -14,6 +14,7 @@
 - `/market-scan` skill for Last30Days-backed public market/community signal research before discovery, blueprint, and strategy decisions.
 - Market and validation templates now capture recent community signals, complaints, alternatives, source links, engagement, and confidence.
 - `/handoff` skill, `HANDOFF.md` template, state tracking, route fixture, and `pfo handoff` command for session, role, delegation, AFK, compaction, and recovery transfers.
+- `/skill-create` skill for extending Product Factory OS with new skills, contracts, triggers, route snapshots, and fixtures.
 
 ## [0.6.1] - 2026-05-09
 

@@ -40,6 +40,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /test
   -> /perf
   -> /mcp-docs
+  -> /skill-create
   -> /browser-check
   -> /review
   -> /security-audit
