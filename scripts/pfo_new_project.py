@@ -330,6 +330,7 @@ HANDOFF.md when transfer is in scope
 - Reusable solutions should be promoted into `ASSET_REGISTER.md`; publishable lessons go into `CONTENT_BACKLOG.md`.
 - Branch finish must record a PR, merge, keep, or discard decision with verification evidence.
 - Extract durable decisions, lessons, patterns, and surprises into `.codex-memory/LEARNINGS.md`.
+- Use `pfo export . --target obsidian` when a local Obsidian knowledge graph is needed; keep `.pfo-integrations/obsidian/` generated.
 - Session state is saved after significant milestones.
 
 ## Memory
@@ -353,13 +354,29 @@ Use `/project -> /kickstart` for new product work and `/task` routes for ongoing
 
 def memory_md(project_name: str, idea: str) -> str:
     summary = idea or "Product Factory OS project bootstrapped."
-    return f"""# Memory
+    return f"""---
+title: "Memory"
+project: "{project_name}"
+tags:
+  - pfo/memory
+  - pfo/project
+aliases:
+  - "Project Memory"
+---
+
+# Memory
 
 - bootstrap: {project_name} initialized for Product Factory OS -> STATE.json
 
 ## Initial Intent
 
 {summary}
+
+## Obsidian Links
+
+- [[STATE]]
+- [[LEARNINGS]]
+- [[HANDOFF]]
 """
 
 

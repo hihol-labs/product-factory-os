@@ -24,6 +24,8 @@
     "github",
     "linear",
     "google-drive",
+    "obsidian",
+    "knowledge-graph",
     "open-core",
     "product-factory",
     "startup-studio"
@@ -43,7 +45,8 @@
       "Project Planning",
       "Market Research",
       "Testing",
-      "Integrations"
+      "Integrations",
+      "Knowledge Export"
     ],
     "websiteURL": "https://github.com/hihol-labs/product-factory-os",
     "privacyPolicyURL": "https://github.com/hihol-labs/product-factory-os",

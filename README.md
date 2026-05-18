@@ -12,7 +12,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 This is a Codex-native methodology runtime. It contains:
 
-- 30 skills for creation, daily work, quality, operations, strategy, memory, research, and connector workflows
+- 31 skills for creation, daily work, quality, operations, strategy, memory, research, connector workflows, and Obsidian knowledge export
 - 15 agent role descriptions for heavy review, architecture, test, analysis, security, release, UX, data, and integration work
 - Skill contracts with inputs, outputs, side effects, and idempotency notes
 - A call graph that keeps workflow chaining bounded
@@ -121,6 +121,7 @@ python3 scripts/pfo.py voice "создай Telegram бот для продаж"
 python3 scripts/pfo.py metrics
 python3 scripts/pfo.py export ../my-product --target github
 python3 scripts/pfo.py export ../my-product --target google-drive
+python3 scripts/pfo.py export ../my-product --target obsidian
 ```
 
 Starter packs live in `starters/`. Golden paths live in `golden-paths/`.
@@ -139,7 +140,8 @@ Additional platform extensions:
 - `benchmarks/`: prompt benchmark suite.
 - `packaging/`: install/update helper.
 - `marketplace/`: local marketplace metadata.
-- `integrations/`: GitHub, Linear, Notion, Google Drive, and MCP capability contracts.
+- `integrations/`: GitHub, Linear, Notion, Google Drive, Obsidian, and MCP capability contracts.
+- `pfo export --target obsidian` creates `.pfo-integrations/obsidian/` with `PROJECT_INDEX.md`, `KNOWLEDGE_GRAPH.md`, planning docs, handoff, memory, state, gates, and decisions.
 
 For existing projects, `pfo analyze` detects monorepos, stack, package manager, available scripts, architecture hints, security findings, and optional gate results, then writes them into `.codex-memory/STATE.json` and `PFO_EXISTING_PROJECT_ANALYSIS.json`.
 

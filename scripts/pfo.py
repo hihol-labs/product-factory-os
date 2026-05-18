@@ -851,6 +851,22 @@ def markdown_list(values: list, fallback: str) -> str:
     return "\n".join(f"- {item}" for item in items)
 
 
+def yaml_quote(value: object) -> str:
+    return json.dumps(str(value), ensure_ascii=False)
+
+
+def callout(kind: str, title: str, body: str) -> str:
+    lines = str(body or "TBD").splitlines() or ["TBD"]
+    quoted = "\n".join(f"> {line}" if line else ">" for line in lines)
+    return f"> [!{kind}] {title}\n{quoted}\n"
+
+
+def callout_list(kind: str, title: str, values: list, fallback: str) -> str:
+    items = [str(value).strip() for value in values if str(value).strip()]
+    body = "\n".join(f"- {item}" for item in items) if items else fallback
+    return callout(kind, title, body)
+
+
 def generated_handoff_doc(project: Path, state: dict, from_role: str, to_role: str, reason: str, note: str) -> str:
     manifest = state.get("unitContextManifest", {}) if isinstance(state.get("unitContextManifest"), dict) else {}
     current_unit = state.get("currentUnit", {}) if isinstance(state.get("currentUnit"), dict) else {}
@@ -882,12 +898,29 @@ def generated_handoff_doc(project: Path, state: dict, from_role: str, to_role: s
     blockers = state.get("blockers", []) if isinstance(state.get("blockers"), list) else []
     goal = current_unit.get("goal") or manifest.get("goal") or state.get("intent") or "Continue the active Product Factory OS task."
     next_action = note or state.get("nextAction") or "Read this handoff, then continue from the active PFO state."
-    return f"""# Handoff
+    created = now_iso()
+    return f"""---
+title: "Handoff"
+project: {yaml_quote(project.name)}
+stage: {yaml_quote(state.get("currentStage", ""))}
+node: {yaml_quote(state.get("currentNode", ""))}
+from_role: {yaml_quote(from_role or "current-session")}
+to_role: {yaml_quote(to_role or "next-session")}
+reason: {yaml_quote(reason or "session-transfer")}
+created: {yaml_quote(created)}
+tags:
+  - pfo/handoff
+  - pfo/memory
+---
 
-Created: {now_iso()}
+# Handoff
+
+Created: {created}
 From: {from_role or "current-session"}
 To: {to_role or "next-session"}
 Reason: {reason or "session-transfer"}
+
+{callout("todo", "First Action", next_action)}
 
 ## Current State
 
@@ -925,7 +958,7 @@ Reason: {reason or "session-transfer"}
 
 ## Risks And Blockers
 
-{markdown_list(blockers, "No blockers recorded.")}
+{callout_list("warning", "Risks And Blockers", blockers, "No blockers recorded.")}
 
 ## First Action
 
@@ -1636,7 +1669,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     export = sub.add_parser("export", help="Export project state for external tools.")
     export.add_argument("project", type=Path)
-    export.add_argument("--target", choices=["github", "linear", "notion", "google-drive"], required=True)
+    export.add_argument("--target", choices=["github", "linear", "notion", "google-drive", "obsidian"], required=True)
     export.set_defaults(func=cmd_export)
 
     return parser

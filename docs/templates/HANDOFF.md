@@ -1,9 +1,26 @@
+---
+title: Handoff
+tags:
+  - pfo/handoff
+  - pfo/memory
+project:
+stage:
+node:
+from_role:
+to_role:
+reason:
+created:
+---
+
 # Handoff
 
 Created:
 From:
 To:
 Reason:
+
+> [!todo] First Action
+>
 
 ## Current State
 
@@ -25,14 +42,16 @@ Reason:
 ## Required Inputs
 
 - CODEX.md
-- .codex-memory/STATE.json
-- .pfo/UNIT_CONTEXT_MANIFEST.json when present
-- BUILD_PLAN.md
-- EXECUTION_GRAPH.md
+- [[STATE|.codex-memory/STATE.json]]
+- [[UNIT_CONTEXT_MANIFEST|.pfo/UNIT_CONTEXT_MANIFEST.json]] when present
+- [[BUILD_PLAN]]
+- [[EXECUTION_GRAPH]]
 
 ## Verification
 
 ## Risks And Blockers
 
-## First Action
+> [!warning] Risks And Blockers
+>
 
+## First Action

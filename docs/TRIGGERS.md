@@ -42,6 +42,7 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | `/migrate` | migration, schema change, database upgrade | миграция, схема БД, обновить базу |
 | `/github-workflow` | PR, pull request, GitHub Actions, CI, issue, release branch | PR, pull request, GitHub Actions, CI, issue, релизная ветка |
 | `/tool-sync` | sync Linear, Notion, Google Drive, export project state | синхронизируй Linear, Notion, Google Drive, экспорт состояния |
+| `/obsidian-export` | Obsidian, vault, wikilinks, knowledge graph, linked notes | Obsidian, vault, граф знаний, связанные заметки, wikilinks |
 
 ## Engineering Discipline v2
 

@@ -115,6 +115,7 @@ Connector-aware work routes through explicit skills:
 - Browser UI smoke, Playwright smoke, or visual QA -> `/browser-check`
 - GitHub issue, PR, CI, or release workflow -> `/github-workflow`
 - Linear, Notion, Google Drive, or export sync -> `/tool-sync`
+- Obsidian vault, wikilinks, linked notes, or local knowledge graph -> `/obsidian-export`
 
 ## Precedence
 

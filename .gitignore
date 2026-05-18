@@ -5,6 +5,7 @@ __pycache__/
 .env.*
 !.env.example
 .codex-memory/
+.pfo-integrations/
 node_modules/
 dist/
 build/
