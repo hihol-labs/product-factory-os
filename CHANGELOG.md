@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added
+
+- Autoresearch-style self-improvement loop with `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric/budget state, and `pfo experiment-init` / `pfo experiment-record`.
+- Documentation, routing, templates, state schema, and plan-quality gates for baseline-first keep/discard/crash experiment decisions.
+
 ---
 
 ## [1.0.0] - 2026-05-18

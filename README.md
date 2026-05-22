@@ -104,6 +104,8 @@ pfo test ../my-product
 pfo tdd-evidence ../my-product --red "pytest ... failed as expected" --green "pytest ... passed"
 pfo root-cause ../my-product --summary "bad value enters parser" --evidence "trace shows parser input" --hypothesis "validate before parse"
 pfo verify-work ../my-product --evidence "tests and smoke passed" --pass-gate
+pfo experiment-init ../my-product --metric "conversion_rate" --direction higher --budget-seconds 300 --run-command "pytest -q"
+pfo experiment-record ../my-product --metric-value 0.42 --status auto --description "baseline or candidate"
 pfo review-stage ../my-product --stage spec --status PASSED --evidence "matches manifest"
 pfo review-stage ../my-product --stage quality --status PASSED --evidence "tests and review clean"
 python3 scripts/validate_plan_quality.py ../my-product
@@ -131,6 +133,8 @@ Generated projects receive `.pfo/` contracts, `.pfo-starter.json`, `.env.example
 `pfo plan` now creates missing `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `FUNNEL_MODEL.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, and `QUALITY_GATES.md` from the selected starter while preserving existing files.
 
 `pfo discuss` records decisions in `PHASE_CONTEXT.md`, `pfo manifest` writes `.pfo/UNIT_CONTEXT_MANIFEST.json`, `pfo handoff` writes `HANDOFF.md` before session transfer, `pfo verify-work` creates a recovery path by default when evidence is unclear, and `pfo brief` generates a local HTML project brief.
+
+`pfo experiment-init` and `pfo experiment-record` add an Autoresearch-style self-improvement loop: one metric, fixed budget, protected evaluation harness, baseline-first `.pfo/EXPERIMENTS.tsv`, and keep/discard/crash decisions.
 
 `pfo tdd-evidence`, `pfo root-cause`, `pfo review-stage`, and `pfo finish-branch` add stricter engineering gates for behavior changes, bugfixes, unit review, and PR/merge cleanup.
 
@@ -225,14 +229,15 @@ Every major project step should pass:
 3. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md` agree.
 4. Autonomous or delegated work has `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 5. Session or role transfer has `HANDOFF.md`.
-6. Behavior changes have TDD red/green/refactor evidence or an explicit exception.
-7. Bugfixes have root-cause evidence before the fix.
-8. Verification is definitive; missing or ambiguous evidence creates recovery work.
-9. Spec compliance review runs before code quality review.
-10. Review status is not `BLOCKED`.
-11. `.pfo/` contract gates do not report scope, data, fallback, golden-flow, or silent-substitution violations.
-12. Branch finish records PR, merge, keep, or discard decision when in scope.
-13. Session state is saved before stopping.
+6. Autonomous improvement has `.pfo/EXPERIMENT_PROGRAM.md`, a baseline, fixed budget, metric, and keep/discard/crash log.
+7. Behavior changes have TDD red/green/refactor evidence or an explicit exception.
+8. Bugfixes have root-cause evidence before the fix.
+9. Verification is definitive; missing or ambiguous evidence creates recovery work.
+10. Spec compliance review runs before code quality review.
+11. Review status is not `BLOCKED`.
+12. `.pfo/` contract gates do not report scope, data, fallback, golden-flow, or silent-substitution violations.
+13. Branch finish records PR, merge, keep, or discard decision when in scope.
+14. Session state is saved before stopping.
 
 ## Validation
 

@@ -67,4 +67,5 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | `/grill-me` | grill me, stress-test plan, challenge my design | прожарь план, проверь дизайн, стресс-тест решения |
 | `/strategy` | replan, roadmap, pivot, launch plan | перепланируй, roadmap, pivot, launch plan |
 | `/strategy` | funnel, feedback loop, content backlog, product iteration | воронка, обратная связь, контент, итерация продукта |
+| `/strategy` | autoresearch, self-improvement loop, fixed metric experiment, keep discard loop | самосовершенствование, цикл экспериментов, фиксированная метрика, keep discard |
 | `/adopt` | adopt existing repo, onboard project | подключи методологию, адаптируй репозиторий |

@@ -25,6 +25,7 @@ Run `pfo contracts . --write` during review.
 - Validate risky assumptions in `VALIDATION_PLAN.md`.
 - Capture phase decisions in `PHASE_CONTEXT.md` before detailed planning.
 - Create `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
+- For Autoresearch-style improvement, initialize `.pfo/EXPERIMENT_PROGRAM.md`, keep one metric and fixed budget, and record `.pfo/EXPERIMENTS.tsv`.
 - Write `HANDOFF.md` before switching sessions, roles, delegated agents, AFK execution, compaction, or recovery.
 - Execute one unit at a time from the manifest, not from accumulated chat context.
 - Record TDD red/green/refactor evidence for behavior changes.

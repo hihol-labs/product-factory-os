@@ -37,6 +37,19 @@ def main() -> None:
         f"- Root cause: `{state.get('rootCause', {}).get('status', '')}` {state.get('rootCause', {}).get('summary', '')}",
         f"- Handoff: `{state.get('handoff', {}).get('status', '')}` {state.get('handoff', {}).get('reason', '')}",
         "",
+        "## Experiment Loop",
+        "",
+    ]
+    experiment = state.get("experimentLoop", {}) if isinstance(state.get("experimentLoop", {}), dict) else {}
+    metric = experiment.get("metric", {}) if isinstance(experiment.get("metric", {}), dict) else {}
+    report.extend([
+        f"- Status: `{experiment.get('status', '')}`",
+        f"- Tag: `{experiment.get('tag', '')}`",
+        f"- Metric: `{metric.get('name', '')}` `{metric.get('direction', '')}` best `{metric.get('bestValue', '')}`",
+        f"- Budget seconds: `{experiment.get('budgetSeconds', '')}`",
+        f"- Program: `{experiment.get('programPath', '')}`",
+        f"- Results: `{experiment.get('resultsPath', '')}`",
+        "",
         "## Existing Project Analysis",
         "",
         f"- Detected stack: {', '.join(existing.get('detectedStack', [])) or 'none'}",
@@ -47,7 +60,7 @@ def main() -> None:
         "",
         "| Gate | Status |",
         "|---|---|",
-    ]
+    ])
     for gate, status in state.get("gateResults", {}).items():
         report.append(f"| {gate} | {status} |")
     report.extend([

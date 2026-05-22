@@ -107,6 +107,23 @@ def ensure_autonomy_state(state: dict) -> None:
     state.setdefault("driftChecks", [])
     state.setdefault("knowledgeLog", [])
     state.setdefault("learningProposals", [])
+    state.setdefault(
+        "experimentLoop",
+        {
+            "status": "",
+            "tag": "",
+            "programPath": ".pfo/EXPERIMENT_PROGRAM.md",
+            "resultsPath": ".pfo/EXPERIMENTS.tsv",
+            "metric": {"name": "", "direction": "lower", "bestValue": None, "bestRunId": ""},
+            "budgetSeconds": None,
+            "runCommand": "",
+            "baselineCommand": "",
+            "allowedWriteAreas": [],
+            "protectedFiles": [],
+            "baselineRecorded": False,
+            "lastRun": {},
+        },
+    )
     state.setdefault("briefArtifacts", [])
     state.setdefault(
         "recoveryState",
@@ -143,6 +160,9 @@ def ensure_autonomy_state(state: dict) -> None:
         "handoff",
         "assetExtraction",
         "contentPipeline",
+        "experimentSetup",
+        "experimentMetric",
+        "experimentDecision",
     ]:
         gates.setdefault(gate, "")
 
@@ -696,6 +716,7 @@ def generated_quality_gates() -> str:
 | Unit Context Manifest | PENDING | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
 | Handoff | PENDING | `HANDOFF.md` before session transfer, role switch, delegation, AFK, compaction, or recovery |  |
 | Work Verification | PENDING | `pfo verify-work` evidence |  |
+| Experiment Loop | PENDING | `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric and keep/discard/crash decision |  |
 | Browser Smoke | PENDING | `/browser-check` target, engine, flow, screenshot/log evidence for browser-facing products |  |
 | Security | PENDING | `/security-audit` or accepted not-applicable note |  |
 | Dependencies | PENDING | `/deps-audit` or accepted not-applicable note |  |
@@ -750,6 +771,7 @@ Captured: {now_iso()}
 ## Planning Impact
 
 - Update `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, and `.pfo/UNIT_CONTEXT_MANIFEST.json` with decisions from this file.
+- Add `.pfo/EXPERIMENT_PROGRAM.md` when the phase uses fixed-budget metric experiments.
 - Write `HANDOFF.md` before session transfer, role switch, delegated execution, AFK, compaction, or recovery.
 """
 
@@ -784,6 +806,8 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "EXECUTION_GRAPH.md",
             "FEEDBACK_LOG.md and FUNNEL_MODEL.md when user acquisition or iteration is in scope",
             "PHASE_CONTEXT.md when present",
+            ".pfo/EXPERIMENT_PROGRAM.md when autonomous measurement-driven iteration is in scope",
+            ".pfo/EXPERIMENTS.tsv when autonomous measurement-driven iteration is in scope",
             "HANDOFF.md when switching sessions, roles, delegated agents, AFK execution, compaction, or recovery",
             "ROOT_CAUSE.md for bugfix units",
         ],
@@ -825,6 +849,9 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "marketValidation",
             "feedbackLoop",
             "funnel",
+            "experimentSetup",
+            "experimentMetric",
+            "experimentDecision",
         ],
         "engineeringDiscipline": {
             "behaviorChange": inferred_behavior_change,
@@ -832,8 +859,21 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "strictPlan": True,
             "requiresTdd": "behavior changes",
             "requiresRootCause": "bugfix units",
+            "experimentLoop": "fixed budget, protected evaluation, metric-first keep/discard",
             "reviewOrder": ["specCompliance", "codeQuality"],
             "branchFinish": "PR, merge, keep, or discard with fresh verification",
+        },
+        "experimentLoop": {
+            "requiredWhen": "autonomous measurement-driven iteration is in scope",
+            "programPath": ".pfo/EXPERIMENT_PROGRAM.md",
+            "resultsPath": ".pfo/EXPERIMENTS.tsv",
+            "rules": [
+                "record a baseline first",
+                "keep evaluation harness and protected files immutable",
+                "run each attempt under the fixed budget",
+                "append metric evidence before keep/discard/crash",
+                "prefer simpler code when metric impact is equal",
+            ],
         },
         "review": {
             "specCompliance": "Check output against the unit goal, spec, and allowed scope first.",
@@ -842,6 +882,100 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
         "recovery": "If verification is missing or ambiguous, mark RECOVERY_REQUIRED and create PFO_RECOVERY.md.",
         "project": str(project),
     }
+
+
+def clean_tsv_cell(value: object) -> str:
+    return str(value if value is not None else "").replace("\t", " ").replace("\r", " ").replace("\n", " ").strip()
+
+
+def write_tsv_row(path: Path, values: list[object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as stream:
+        stream.write("\t".join(clean_tsv_cell(value) for value in values) + "\n")
+
+
+def resolve_project_file(project: Path, rel_path: str) -> tuple[Path, str]:
+    rel = (rel_path or "").strip() or ".pfo/EXPERIMENTS.tsv"
+    candidate = Path(rel)
+    if candidate.is_absolute():
+        raise SystemExit("ERROR: experiment files must be relative to the project")
+    resolved_project = project.resolve()
+    resolved = (resolved_project / candidate).resolve()
+    try:
+        normalized = resolved.relative_to(resolved_project).as_posix()
+    except ValueError as exc:
+        raise SystemExit("ERROR: experiment file escapes the project") from exc
+    return resolved, normalized
+
+
+def metric_improved(direction: str, value: float, best: object) -> bool:
+    if best is None:
+        return True
+    try:
+        best_value = float(best)
+    except (TypeError, ValueError):
+        return True
+    if direction == "higher":
+        return value > best_value
+    return value < best_value
+
+
+def generated_experiment_program(
+    project: Path,
+    tag: str,
+    metric: str,
+    direction: str,
+    budget_seconds: int,
+    run_command: str,
+    baseline_command: str,
+    allowed_write_areas: list[str],
+    protected_files: list[str],
+    results_path: str,
+) -> str:
+    return f"""# Experiment Program
+
+Project: `{project.name}`
+Tag: `{tag}`
+
+## Goal
+
+Run a measurement-first improvement loop with a fixed budget, one primary metric, and explicit keep/discard decisions.
+
+## Metric Contract
+
+- Primary metric: `{metric}`
+- Direction: `{direction}`
+- Fixed run budget: `{budget_seconds}` seconds
+- Baseline command: `{baseline_command or run_command or 'TBD'}`
+- Experiment command: `{run_command or 'TBD'}`
+- Results log: `{results_path}`
+
+## Scope Contract
+
+Allowed write areas:
+{markdown_list(allowed_write_areas, "files listed by the active `.pfo/UNIT_CONTEXT_MANIFEST.json`")}
+
+Protected files and behavior:
+{markdown_list(protected_files, "evaluation harness, production data, `.pfo/` contracts, and golden flows")}
+
+## Loop
+
+1. Record a baseline before changing implementation.
+2. Change the smallest in-scope surface that could improve the metric.
+3. Run the command under the fixed budget.
+4. Record metric, runtime, memory if available, complexity cost, and status in `{results_path}`.
+5. Keep only if the metric improves, or if the metric is equal and the implementation is simpler.
+6. Discard regressions and crashes unless the crash is a trivial fix within the same idea.
+7. Promote durable lessons through `pfo learnings` and `pfo improve --from-learnings --propose`.
+
+## Guardrails
+
+- Do not change protected files to improve the metric.
+- Do not add dependencies unless the active project plan explicitly allows it.
+- Do not treat missing or ambiguous metric output as success.
+- Do not perform production, migration, DNS, billing, or external writes without explicit approval.
+- Keep branch/worktree cleanup explicit through `pfo finish-branch` when branch state is in scope.
+"""
 
 
 def markdown_list(values: list, fallback: str) -> str:
@@ -1470,6 +1604,193 @@ def cmd_improve(args: argparse.Namespace) -> int:
     return run_script("pfo_learn.py", argv)
 
 
+def cmd_experiment_init(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    tag = args.tag or datetime.now(timezone.utc).strftime("exp-%Y%m%d")
+    program_path, program_rel = resolve_project_file(project, args.program_file)
+    results_path, results_rel = resolve_project_file(project, args.result_file)
+    allowed_write_areas = args.allowed_write or []
+    protected_files = args.protected_file or [
+        "evaluation harness",
+        "production data and provider outputs",
+        "project `.pfo/` contracts",
+        "golden flows unless verification evidence is explicit",
+    ]
+
+    program_path.parent.mkdir(parents=True, exist_ok=True)
+    if not program_path.exists():
+        program_path.write_text(
+            generated_experiment_program(
+                project,
+                tag,
+                args.metric,
+                args.direction,
+                args.budget_seconds,
+                args.run_command,
+                args.baseline_command,
+                allowed_write_areas,
+                protected_files,
+                results_rel,
+            ),
+            encoding="utf-8",
+        )
+        print(f"Generated: {program_rel}")
+    else:
+        print(f"Generated: none; existing {program_rel} preserved")
+
+    if not results_path.exists():
+        results_path.parent.mkdir(parents=True, exist_ok=True)
+        results_path.write_text(
+            "run_id\tcommit\tmetric\tmetric_value\tbudget_seconds\trun_seconds\tmemory_gb\tstatus\tcomplexity_cost\tdescription\n",
+            encoding="utf-8",
+        )
+        print(f"Generated: {results_rel}")
+
+    state["currentStage"] = "EXPERIMENT_READY"
+    state["experimentLoop"] = {
+        "status": "READY",
+        "tag": tag,
+        "programPath": program_rel,
+        "resultsPath": results_rel,
+        "metric": {"name": args.metric, "direction": args.direction, "bestValue": None, "bestRunId": ""},
+        "budgetSeconds": args.budget_seconds,
+        "runCommand": args.run_command,
+        "baselineCommand": args.baseline_command or args.run_command,
+        "allowedWriteAreas": allowed_write_areas,
+        "protectedFiles": protected_files,
+        "baselineRecorded": False,
+        "lastRun": {},
+    }
+    state["gateResults"]["experimentSetup"] = "PASSED"
+    state["nextAction"] = f"Run the baseline command, then record it with `pfo experiment-record {project}`."
+    state.setdefault("decisionLog", []).append(
+        {
+            "event": "experiment loop initialized",
+            "tag": tag,
+            "metric": args.metric,
+            "direction": args.direction,
+            "budgetSeconds": args.budget_seconds,
+        }
+    )
+    add_artifact(state, program_rel)
+    add_artifact(state, results_rel)
+    save_state(project, state)
+    print("OK: experiment loop initialized")
+    return 0
+
+
+def cmd_experiment_record(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    loop = state.get("experimentLoop", {})
+    if not isinstance(loop, dict) or not loop.get("resultsPath"):
+        print("ERROR: run `pfo experiment-init <project>` first")
+        return 2
+
+    metric = loop.get("metric", {}) if isinstance(loop.get("metric"), dict) else {}
+    metric_name = args.metric or metric.get("name") or "primary_metric"
+    direction = args.direction or metric.get("direction") or "lower"
+    metric_value = args.metric_value
+    status = args.status
+    if status == "auto":
+        if metric_value is None:
+            status = "crash"
+        elif metric_improved(direction, metric_value, metric.get("bestValue")):
+            status = "keep"
+        else:
+            status = "discard"
+    if status != "crash" and metric_value is None:
+        print("ERROR: --metric-value is required unless status is crash")
+        return 2
+
+    run_id = args.run_id or datetime.now(timezone.utc).strftime("run-%Y%m%dT%H%M%SZ")
+    results_path, results_rel = resolve_project_file(project, args.result_file or loop.get("resultsPath", ""))
+    if not results_path.exists():
+        results_path.parent.mkdir(parents=True, exist_ok=True)
+        results_path.write_text(
+            "run_id\tcommit\tmetric\tmetric_value\tbudget_seconds\trun_seconds\tmemory_gb\tstatus\tcomplexity_cost\tdescription\n",
+            encoding="utf-8",
+        )
+
+    metric_text = f"{metric_value:.6f}" if metric_value is not None else "0.000000"
+    memory_text = f"{args.memory_gb:.1f}" if args.memory_gb is not None else "0.0"
+    run_seconds_text = f"{args.run_seconds:.1f}" if args.run_seconds is not None else "0.0"
+    write_tsv_row(
+        results_path,
+        [
+            run_id,
+            args.commit,
+            metric_name,
+            metric_text,
+            loop.get("budgetSeconds") or args.budget_seconds or "",
+            run_seconds_text,
+            memory_text,
+            status,
+            args.complexity_cost,
+            args.description,
+        ],
+    )
+
+    best_value = metric.get("bestValue")
+    best_run_id = metric.get("bestRunId", "")
+    if status == "keep" and metric_value is not None and metric_improved(direction, metric_value, best_value):
+        best_value = metric_value
+        best_run_id = run_id
+
+    loop["status"] = "EVALUATED"
+    loop["resultsPath"] = results_rel
+    loop["metric"] = {
+        "name": metric_name,
+        "direction": direction,
+        "bestValue": best_value,
+        "bestRunId": best_run_id,
+    }
+    loop["baselineRecorded"] = bool(loop.get("baselineRecorded")) or status != "crash"
+    loop["lastRun"] = {
+        "runId": run_id,
+        "commit": args.commit,
+        "metricValue": metric_value,
+        "status": status,
+        "complexityCost": args.complexity_cost,
+        "description": args.description,
+        "recordedAt": now_iso(),
+    }
+    state["experimentLoop"] = loop
+    state["currentStage"] = "EXPERIMENT_EVALUATED"
+    state["gateResults"]["experimentMetric"] = "PASSED" if metric_value is not None else "BLOCKED"
+    state["gateResults"]["experimentDecision"] = "PASSED_WITH_WARNINGS" if status == "crash" else "PASSED"
+    state.setdefault("verificationHistory", []).append(
+        {
+            "mode": "experiment-record",
+            "runId": run_id,
+            "metric": metric_name,
+            "value": metric_value,
+            "status": status,
+            "description": args.description,
+        }
+    )
+    state.setdefault("dispatchJournal", []).append(
+        {"unit": state.get("currentNode", ""), "mode": "experiment", "runId": run_id, "status": status}
+    )
+    telemetry = state.setdefault("telemetry", {})
+    telemetry["verificationCount"] = int(telemetry.get("verificationCount") or 0) + 1
+    telemetry["lastCommand"] = loop.get("runCommand", "")
+    telemetry["lastDurationSeconds"] = args.run_seconds
+    add_artifact(state, results_rel)
+    if status == "keep":
+        state["nextAction"] = "Continue from the kept experiment and try the next smallest metric-improving idea."
+    elif status == "discard":
+        state["nextAction"] = "Discard this experiment's implementation change, keep the TSV evidence, and try a new idea."
+    else:
+        state["nextAction"] = "Treat the crash as a failed experiment unless the fix is trivial and in scope."
+    save_state(project, state)
+    print(f"OK: recorded experiment {run_id} as {status}")
+    return 0
+
+
 def cmd_brief(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
@@ -1652,6 +1973,36 @@ def build_parser() -> argparse.ArgumentParser:
     improve.add_argument("--min-confidence", type=float, default=0.0)
     improve.add_argument("--registry", type=Path, default=None)
     improve.set_defaults(func=cmd_improve)
+
+    experiment_init = sub.add_parser("experiment-init", help="Create an Autoresearch-style fixed-budget experiment loop.")
+    experiment_init.add_argument("project", type=Path)
+    experiment_init.add_argument("--tag", default="")
+    experiment_init.add_argument("--metric", default="primary_metric")
+    experiment_init.add_argument("--direction", choices=["lower", "higher"], default="lower")
+    experiment_init.add_argument("--budget-seconds", type=int, default=300)
+    experiment_init.add_argument("--run-command", default="")
+    experiment_init.add_argument("--baseline-command", default="")
+    experiment_init.add_argument("--allowed-write", action="append", default=[])
+    experiment_init.add_argument("--protected-file", action="append", default=[])
+    experiment_init.add_argument("--program-file", default=".pfo/EXPERIMENT_PROGRAM.md")
+    experiment_init.add_argument("--result-file", default=".pfo/EXPERIMENTS.tsv")
+    experiment_init.set_defaults(func=cmd_experiment_init)
+
+    experiment_record = sub.add_parser("experiment-record", help="Append an experiment result and update keep/discard state.")
+    experiment_record.add_argument("project", type=Path)
+    experiment_record.add_argument("--run-id", default="")
+    experiment_record.add_argument("--commit", default="")
+    experiment_record.add_argument("--metric", default="")
+    experiment_record.add_argument("--metric-value", type=float, default=None)
+    experiment_record.add_argument("--direction", choices=["lower", "higher"], default="")
+    experiment_record.add_argument("--budget-seconds", type=int, default=None)
+    experiment_record.add_argument("--run-seconds", type=float, default=None)
+    experiment_record.add_argument("--memory-gb", type=float, default=None)
+    experiment_record.add_argument("--status", choices=["auto", "keep", "discard", "crash"], default="auto")
+    experiment_record.add_argument("--complexity-cost", type=int, default=0)
+    experiment_record.add_argument("--description", default="")
+    experiment_record.add_argument("--result-file", default="")
+    experiment_record.set_defaults(func=cmd_experiment_record)
 
     brief = sub.add_parser("brief", help="Generate a self-contained HTML project brief.")
     brief.add_argument("project", type=Path)

@@ -13,6 +13,8 @@
     "PRODUCT_BLUEPRINT.md",
     "BUILD_PLAN.md",
     "EXECUTION_GRAPH.md",
+    ".pfo/EXPERIMENT_PROGRAM.md when autonomous measurement-driven iteration is in scope",
+    ".pfo/EXPERIMENTS.tsv when autonomous measurement-driven iteration is in scope",
     "FEEDBACK_LOG.md or FUNNEL_MODEL.md when iteration or growth is in scope",
     "HANDOFF.md when switching sessions, roles, delegated agents, AFK execution, compaction, or recovery",
     "ROOT_CAUSE.md for bugfix units"
@@ -42,7 +44,10 @@
     "ideaGate",
     "marketValidation",
     "feedbackLoop",
-    "funnel"
+    "funnel",
+    "experimentSetup",
+    "experimentMetric",
+    "experimentDecision"
   ],
   "engineeringDiscipline": {
     "behaviorChange": false,
@@ -54,7 +59,20 @@
       "specCompliance",
       "codeQuality"
     ],
-    "branchFinish": "PR, merge, keep, or discard with fresh verification"
+    "branchFinish": "PR, merge, keep, or discard with fresh verification",
+    "experimentLoop": "fixed budget, protected evaluation, metric-first keep/discard"
+  },
+  "experimentLoop": {
+    "requiredWhen": "autonomous measurement-driven iteration is in scope",
+    "programPath": ".pfo/EXPERIMENT_PROGRAM.md",
+    "resultsPath": ".pfo/EXPERIMENTS.tsv",
+    "rules": [
+      "record a baseline first",
+      "protect evaluation and data files",
+      "run each attempt under a fixed budget",
+      "append metric evidence before keep/discard/crash",
+      "prefer simpler code when metric impact is equal"
+    ]
   },
   "review": {
     "specCompliance": "Check output against the unit goal, spec, and allowed scope first.",

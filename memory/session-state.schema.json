@@ -112,6 +112,9 @@
       "noSilentSubstitution": "",
       "assetExtraction": "",
       "contentPipeline": "",
+      "experimentSetup": "",
+      "experimentMetric": "",
+      "experimentDecision": "",
       "deploymentReadiness": ""
     },
     "tddEvidence": {
@@ -174,6 +177,25 @@
     },
     "knowledgeLog": [],
     "learningProposals": [],
+    "experimentLoop": {
+      "status": "",
+      "tag": "",
+      "programPath": ".pfo/EXPERIMENT_PROGRAM.md",
+      "resultsPath": ".pfo/EXPERIMENTS.tsv",
+      "metric": {
+        "name": "",
+        "direction": "lower",
+        "bestValue": null,
+        "bestRunId": ""
+      },
+      "budgetSeconds": null,
+      "runCommand": "",
+      "baselineCommand": "",
+      "allowedWriteAreas": [],
+      "protectedFiles": [],
+      "baselineRecorded": false,
+      "lastRun": {}
+    },
     "briefArtifacts": [],
     "worktreeIsolation": {
       "enabled": false,

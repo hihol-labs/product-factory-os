@@ -30,6 +30,8 @@ As needed:
 - `FUNNEL_MODEL.md`
 - `FEEDBACK_LOG.md`
 - `ITERATION_REVIEW.md`
+- `.pfo/EXPERIMENT_PROGRAM.md`
+- `.pfo/EXPERIMENTS.tsv`
 - `ASSET_REGISTER.md`
 - `CONTENT_BACKLOG.md`
 - `LAUNCH_PLAN.md`
@@ -53,6 +55,7 @@ As needed:
    - acquisition path
    - funnel stages and bottleneck
    - feedback loop and iteration decision
+   - fixed metric experiment loop when autonomous self-improvement is requested
    - asset and content candidates
    - launch success metrics
    - strategic risk matrix
@@ -75,4 +78,5 @@ Before final output, verify:
 - Do not rewrite history; append dated decisions.
 - Do not allow large implementation work to start when strategy Critical checks fail for a non-trivial product.
 - Do not count activity as progress unless it changes a signal, gate, decision, or reusable asset.
+- For Autoresearch-style work, use one metric, fixed budget, protected evaluation, baseline-first logging, and keep/discard/crash decisions.
 - Do not treat recent social buzz as validated demand. Convert it into `VALIDATION_PLAN.md` experiments and decision criteria.

@@ -16,6 +16,7 @@ Use this rubric from `/strategy` and `/advisor` when product direction, market, 
 | S8 | Strategic risks | The top product, technical, legal, operational, and go-to-market risks are named with mitigations. |
 | S9 | Idea gate | `IDEA_SCORECARD.md` has a KILL, TEST, or BUILD decision backed by evidence. |
 | S10 | Validation plan | `VALIDATION_PLAN.md` names riskiest assumptions, experiments, expected signals, and exit decision. |
+| S11 | Self-improvement loop | Autonomous improvement has one metric, fixed budget, protected evaluation files, baseline, and keep/discard/crash logging. |
 
 ## Important
 
@@ -36,3 +37,4 @@ Use this rubric from `/strategy` and `/advisor` when product direction, market, 
 - Record major strategy decisions as ADRs.
 - Keep a dated backlog with priority and rationale.
 - Do not count activity as progress unless it changes a signal, gate, asset, or decision.
+- Use `.pfo/EXPERIMENT_PROGRAM.md` and `.pfo/EXPERIMENTS.tsv` for Autoresearch-style iteration.

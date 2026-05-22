@@ -64,6 +64,8 @@ REVIEW_ENFORCEMENT_STAGES = {
 
 ROOT_CAUSE_ENFORCEMENT_STAGES = {"ROOT_CAUSE_ANALYSIS"} | TDD_ENFORCEMENT_STAGES
 
+EXPERIMENT_ENFORCEMENT_STAGES = {"EXPERIMENT_READY", "EXPERIMENT_RUNNING", "EXPERIMENT_EVALUATED"}
+
 PASS_STATUSES = {"PASSED", "PASSED_WITH_WARNINGS"}
 
 
@@ -179,6 +181,7 @@ def validate_state_gates(project: Path) -> list[str]:
     manifest = read_json(project / ".pfo" / "UNIT_CONTEXT_MANIFEST.json")
     stage = state.get("currentStage", "")
     gates = state.get("gateResults", {})
+    experiment = state.get("experimentLoop", {}) if isinstance(state.get("experimentLoop", {}), dict) else {}
 
     if requires_tdd(state, manifest) and stage in TDD_RED_ENFORCEMENT_STAGES:
         evidence = state.get("tddEvidence", {})
@@ -224,6 +227,25 @@ def validate_state_gates(project: Path) -> list[str]:
         if not isinstance(branch_finish, dict) or not branch_finish.get("verification"):
             errors.append("branch finish stage is missing fresh verification evidence")
 
+    if stage in EXPERIMENT_ENFORCEMENT_STAGES:
+        metric = experiment.get("metric", {}) if isinstance(experiment.get("metric", {}), dict) else {}
+        program_path = experiment.get("programPath") or ".pfo/EXPERIMENT_PROGRAM.md"
+        results_path = experiment.get("resultsPath") or ".pfo/EXPERIMENTS.tsv"
+        if not (project / program_path).is_file():
+            errors.append("experiment loop is missing .pfo/EXPERIMENT_PROGRAM.md")
+        if not (project / results_path).is_file():
+            errors.append("experiment loop is missing .pfo/EXPERIMENTS.tsv")
+        if not metric.get("name") or metric.get("direction") not in {"lower", "higher"}:
+            errors.append("experiment loop is missing primary metric name/direction")
+        if not experiment.get("budgetSeconds"):
+            errors.append("experiment loop is missing fixed budget seconds")
+        if stage == "EXPERIMENT_EVALUATED":
+            last_run = experiment.get("lastRun", {}) if isinstance(experiment.get("lastRun", {}), dict) else {}
+            if last_run.get("status") not in {"keep", "discard", "crash"}:
+                errors.append("experiment loop is missing keep/discard/crash decision")
+            if str(gates.get("experimentDecision", "")) not in PASS_STATUSES:
+                errors.append("experiment loop has no passing experimentDecision gate")
+
     return errors
 
 
@@ -232,6 +254,7 @@ def self_check() -> None:
         "docs/templates/BUILD_PLAN.md": EXECUTABLE_TASK_REQUIREMENTS,
         "docs/SUPERPOWERS_INTEGRATION.md": ["Engineering Discipline v2", "source of truth"],
         "scripts/pfo.py": ["tdd-evidence", "root-cause", "review-stage", "finish-branch"],
+        "docs/AUTORESEARCH_INTEGRATION.md": ["fixed budget", "keep/discard"],
         "hooks/review-before-commit.py": ["validate_plan_quality.py"],
     }
     for rel, tokens in checks.items():

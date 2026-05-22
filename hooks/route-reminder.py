@@ -12,7 +12,7 @@ ROUTES = [
     (r"\b(adopt existing|onboard repo|onboard project|legacy project|connect methodology)\b|подключи методологию|адаптируй репозиторий|существующ(ий|его) проект", "/task -> /adopt"),
     (r"\b(handoff|transfer context|switch sessions?|compact context|delegate to next agent|afk run|role switch)\b|handoff|передай контекст|нов(ая|ую) сесси|смена роли|делегируй агенту|afk", "/task -> /handoff"),
     (r"\b(save session|remember context|persist state)\b|сохрани сессию|запомни контекст|сохрани контекст", "/task -> /session-save"),
-    (r"\b(strategy|replan|roadmap|pivot|launch plan|funnel|feedback loop|content backlog|product iteration)\b|стратеги|перепланируй|roadmap|pivot|план запуска|воронк|обратн(ая|ую) связь|контент|итераци", "/task -> /strategy"),
+    (r"\b(strategy|replan|roadmap|pivot|launch plan|funnel|feedback loop|content backlog|product iteration|autoresearch|self-improvement loop|fixed metric experiment|keep discard loop)\b|стратеги|перепланируй|roadmap|pivot|план запуска|воронк|обратн(ая|ую) связь|контент|итераци|самосовершенствован|цикл экспериментов|фиксированн(ая|ую) метрик|keep discard", "/task -> /strategy"),
     (r"\b(advise|compare options|tradeoff|recommend)\b|посоветуй|сравни варианты|компромисс|рекоменд", "/task -> /advisor"),
     (r"\b(grill me|stress[- ]test|challenge my (plan|design)|hard questions)\b|прожарь|стресс.?тест|проверь дизайн|жестк(ие|их) вопрос", "/task -> /grill-me"),
     (r"\b(stack trace|failing test|failing behavior|bug|error)\b|стек.?трейс|падает|ошибка|баг|не работает", "/task -> /bugfix"),
