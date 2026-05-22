@@ -17,6 +17,7 @@ This map tracks which external agent-engineering principles are covered by Produ
 | Drift prevention | Full | meta-review, manifest drift, install sync, skill profiles | Add table row integrity checks for more docs |
 | Production safety | Full | `/deploy`, `/migrate`, `/infra`, confirmation rules | Add live-op dry-run fixtures |
 | External evidence | Full | `/market-scan`, `/mcp-docs`, connector routes | Add source freshness confidence scoring |
+| Self-improving experiment loops | Full | `pfo experiment-init`, `pfo experiment-record`, `.pfo/EXPERIMENTS.tsv` | Add optional managed runners later |
 | Adversarial review | Partial | `/grill-me`, two-stage review | Embed architecture debate in `/blueprint` |
 | Memory continuity | Full | session save, handoff, state schema, diagnostics | Add stale-state auto-repair suggestions |
 | Marketplace/onboarding | Partial | one-command install, marketplace metadata, demo image | Add screenshots and install telemetry later |

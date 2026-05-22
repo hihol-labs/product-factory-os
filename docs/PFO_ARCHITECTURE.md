@@ -19,6 +19,7 @@ IDEA
   -> TDD Evidence
   -> Modular Build
   -> Work Verification
+  -> Experiment Loop
   -> Two-Stage Review
   -> Drift And Recovery Check
   -> Tests
@@ -186,6 +187,20 @@ Recovery covers:
 - changed golden flows without evidence
 - repeated unit failure or stuck progress
 
+### 11a. Autoresearch-Style Experiment Loop
+
+For measurement-driven self-improvement, PFO adds a small Autoresearch-style loop:
+
+- `.pfo/EXPERIMENT_PROGRAM.md` is the local "program" for autonomous iteration.
+- `.pfo/UNIT_CONTEXT_MANIFEST.json` defines the only allowed write areas.
+- Protected evaluation/data/contract files stay immutable during the loop.
+- Each run has one metric, one direction, and a fixed budget.
+- `.pfo/EXPERIMENTS.tsv` records baseline and candidate results.
+- Candidate changes end in `keep`, `discard`, or `crash`.
+- Equal metric quality prefers the simpler implementation.
+
+CLI entrypoints are `pfo experiment-init` and `pfo experiment-record`. Details live in `docs/AUTORESEARCH_INTEGRATION.md`.
+
 ### 12. Engineering Discipline v2 Gates
 
 PFO keeps product strategy and project contracts as the outer lifecycle, then applies disciplined engineering gates inside each execution unit:
@@ -259,6 +274,7 @@ Every full-cycle PFO project should maintain:
 - `HANDOFF.md` before session transfer, role switch, delegated execution, AFK, compaction, or recovery
 - `ROOT_CAUSE.md` for bugfix work
 - `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution
+- `.pfo/EXPERIMENT_PROGRAM.md` and `.pfo/EXPERIMENTS.tsv` when autonomous measurement-driven iteration is in scope
 - `PFO_RECOVERY.md` when verification or state reconciliation blocks progress
 - `BRANCH_FINISH.md` when branch cleanup or PR/merge decisions are in scope
 - `PFO_BRIEF.html` when visual status, plan, diff, or recap review is useful

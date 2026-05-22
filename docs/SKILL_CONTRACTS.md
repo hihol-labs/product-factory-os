@@ -40,5 +40,5 @@ Every skill frontmatter must declare:
 | `/session-save` | Session summary and PFO state | Memory files, `.codex-memory/STATE.json`, optional `.codex-memory/LEARNINGS.md` | Writes memory docs/state | Creates or updates state |
 | `/advisor` | Decision or question | Analysis report | None | Safe |
 | `/grill-me` | Plan, design, strategy, architecture, migration, deploy, or decision | One-question-at-a-time decision stress test with recommended answers | None | Safe |
-| `/strategy` | Existing project context | Strategy, validation, funnel, feedback, asset, and backlog docs | Writes docs | Safe with review |
+| `/strategy` | Existing project context | Strategy, validation, funnel, feedback, experiment loop, asset, and backlog docs | Writes docs | Safe with review |
 | `/adopt` | Existing repository | `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts when required | Writes project metadata | Marker-based |

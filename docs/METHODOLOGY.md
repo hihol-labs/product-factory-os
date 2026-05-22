@@ -19,20 +19,21 @@ Product Factory OS is built around small gates instead of one large generation p
 13. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
 14. Implement execution graph nodes in small, isolated units.
 15. Record dispatches, verification commands, cost or token notes, and recovery decisions.
-16. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
-17. For bugfixes, record root-cause evidence before changing code.
-18. Run `/browser-check` for browser-facing critical flows.
-19. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
-20. Verify work fail-closed: unclear verification does not pass.
-21. Run two-stage review: spec compliance first, code quality second.
-22. Review before commit or deploy.
-23. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
-24. Finish branches with an explicit PR, merge, keep, or discard decision.
-25. Extract durable learnings after completed milestones or significant repairs.
-26. Promote repeatable solutions into assets and content candidates.
-27. Harden production-facing services.
-28. Deploy only after explicit confirmation.
-29. Save reloadable session memory.
+16. For measurement-driven self-improvement, initialize an experiment loop with one metric, a fixed budget, protected evaluation files, and a results TSV.
+17. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
+18. For bugfixes, record root-cause evidence before changing code.
+19. Run `/browser-check` for browser-facing critical flows.
+20. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
+21. Verify work fail-closed: unclear verification does not pass.
+22. Run two-stage review: spec compliance first, code quality second.
+23. Review before commit or deploy.
+24. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
+25. Finish branches with an explicit PR, merge, keep, or discard decision.
+26. Extract durable learnings after completed milestones or significant repairs.
+27. Promote repeatable solutions into assets and content candidates.
+28. Harden production-facing services.
+29. Deploy only after explicit confirmation.
+30. Save reloadable session memory.
 
 ## Existing Project Lifecycle
 
@@ -100,6 +101,8 @@ If any are missing, run `/adopt` first.
 - `.pfo/FALLBACK_POLICY.md`: allowed/forbidden degraded-mode behavior
 - `.pfo/SCOPE_LOCK.md`: current task boundaries and forbidden change areas
 - `.pfo/UNIT_CONTEXT_MANIFEST.json`: execution-unit input, write-scope, gate, and recovery contract
+- `.pfo/EXPERIMENT_PROGRAM.md`: Autoresearch-style fixed-budget experiment contract
+- `.pfo/EXPERIMENTS.tsv`: baseline, candidate metrics, and keep/discard/crash decisions
 - `.codex-memory/LEARNINGS.md`: durable decisions, lessons, patterns, and surprises
 - `ASSET_REGISTER.md`: repeatable product, process, template, offer, or automation assets
 - `CONTENT_BACKLOG.md`: publishable learnings and case-study candidates tied to evidence
@@ -138,6 +141,7 @@ Product Factory OS adopts the strongest GSD execution ideas without copying its 
 - Fail-closed verification: missing or ambiguous evidence creates a repair path, not a pass.
 - Drift and recovery: stale state, missing artifacts, unexpected worktree changes, and blocked verification are first-class recovery cases.
 - Telemetry: record unit duration, commands, token or cost notes when available, and gate outcomes.
+- Autoresearch-style experiments: use one protected metric, fixed budget, baseline-first result logging, and keep/discard/crash decisions for self-improvement loops.
 - Learnings: extract reusable decisions, patterns, lessons, and surprises into project memory.
 - Assetization: convert proven repeatable solutions into reusable assets and content candidates.
 
@@ -177,6 +181,7 @@ Canonical checklists live under `docs/rubrics/`:
 - Treat TDD evidence, tests, and two-stage review as part of implementation, not cleanup.
 - Treat bugfixes without root-cause evidence as blocked.
 - Treat unclear verification as failed until evidence exists.
+- Treat self-improvement as an experiment loop: baseline first, fixed budget, protected harness, one metric, and explicit keep/discard/crash.
 - Treat project-owned `.pfo/` contracts as runtime guardrails, not documentation decoration.
 - If a real source or provider is unavailable, fail transparently or use an approved degraded mode; never silently invent production output.
 - Preserve session memory so the next session resumes with context.

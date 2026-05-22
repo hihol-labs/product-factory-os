@@ -60,6 +60,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
 
 /strategy
   -> /market-scan
+  -> pfo experiment-init / pfo experiment-record
   -> /advisor
   -> /grill-me
   -> /mcp-docs
