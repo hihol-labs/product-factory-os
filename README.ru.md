@@ -21,6 +21,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - PFO runtime contracts: classifier, template library, product compiler, state machine, execution pipeline, memory schema, deployment abstraction и voice-first interface
 - GSD-inspired autonomous layer: phase discussion, unit context manifest, dispatch journal, fail-closed verification, recovery state, telemetry, learnings и visual briefs
 - Engineering Discipline v2 gates по мотивам Superpowers: TDD evidence, root-cause discipline, two-stage review, strict executable plans и branch finish hygiene
+- Control harness: явное разделение feedforward/feedback и computational/inferential controls, чтобы deterministic gates блокировали повторяемые риски, а LLM-review отвечал за смысловую оценку
 
 ## Быстрый Старт
 
@@ -177,7 +178,7 @@ PFO теперь проверяется как production-grade local runtime в
 python3 scripts/production_readiness.py
 ```
 
-Он проверяет structure, route fixtures, trigger drift, behavioural contracts, headless fixture validation, skill risk profiles, runtime assets, hooks, manifest drift, install sync, benchmarks и meta-review.
+Он проверяет structure, control harness, route fixtures, trigger drift, behavioural contracts, headless fixture validation, skill risk profiles, runtime assets, hooks, manifest drift, install sync, benchmarks и meta-review.
 
 См.:
 

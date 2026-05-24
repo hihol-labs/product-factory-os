@@ -84,6 +84,7 @@ def main() -> None:
         "python3 scripts/verify_skill_profiles.py",
         "python3 scripts/validate_execution_graph.py",
         "python3 scripts/validate_runtime.py",
+        "python3 scripts/validate_control_harness.py",
         "python3 scripts/validate_hooks.py",
         "python3 scripts/verify_manifest_drift.py",
         "python3 scripts/verify_install_sync.py",
@@ -133,6 +134,7 @@ def main() -> None:
         "execution/state-machine.json",
         "memory/session-state.schema.json",
         "deployment/deployment-targets.json",
+        "docs/CONTROL_HARNESS.md",
     ]:
         if required not in pfo_architecture:
             fail(f"docs/PFO_ARCHITECTURE.md must reference {required}")
@@ -187,6 +189,7 @@ def main() -> None:
         fail("runtime validation failed: " + runtime_check.stdout + runtime_check.stderr)
 
     for command in [
+        [sys.executable, "scripts/validate_control_harness.py"],
         [sys.executable, "scripts/verify_triggers.py"],
         [sys.executable, "scripts/verify_fixture_contracts.py"],
         [sys.executable, "scripts/run_headless_fixtures.py", "--mode", "mock"],

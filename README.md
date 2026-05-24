@@ -52,7 +52,7 @@ IDEA -> DISCOVERY -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH
      -> BUILD -> TEST -> REVIEW -> HARDEN -> DEPLOY_READY -> SAVE_STATE
 ```
 
-Every major step has an artifact. Every risky transition has a gate. Every session can be resumed from `.codex-memory/STATE.json`. Execution policy, permissions, verification contracts, tool capabilities, structured events, and learning promotion gates are project-local artifacts, not chat-only instructions.
+Every major step has an artifact. Every risky transition has a gate. Every session can be resumed from `.codex-memory/STATE.json`. Execution policy, permissions, verification contracts, tool capabilities, structured events, and learning promotion gates are project-local artifacts, not chat-only instructions. The control harness explicitly separates feedforward, feedback, computational, and inferential controls so PFO can prefer deterministic gates and reserve LLM judgment for semantic review.
 
 ## Quick Start
 
@@ -352,7 +352,8 @@ Every major project step should pass:
 9. Spec compliance review runs before code quality review.
 10. Security, dependency, browser, hardening, and deploy gates are present when relevant.
 11. `.pfo/` contracts do not report scope, data, fallback, golden-flow, or silent-substitution violations.
-12. Session state is saved before stopping.
+12. Control harness coverage is explicit: feedforward controls set the boundary and feedback controls verify the result.
+13. Session state is saved before stopping.
 
 ## What Gets Generated
 

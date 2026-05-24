@@ -23,6 +23,9 @@
 | Permission Matrix |  | `.pfo/PERMISSION_MATRIX.json`, `.pfo/PERMISSION_MATRIX.md`, `pfo permission-check` |  |
 | Verification Contract |  | `.pfo/VERIFICATION_CONTRACT.json` |  |
 | Tool Capability Registry |  | `.pfo/TOOL_CAPABILITY_REGISTRY.json`, `pfo tool-registry` |  |
+| Control Harness Feedforward |  | active instructions, contracts, scope, and verification expectations are named before work starts |  |
+| Control Harness Computational Feedback |  | deterministic checks: tests, validators, CI, schema, build, or contract gate |  |
+| Control Harness Inferential Feedback |  | reviewer/security/UX/human judgment evidence when semantic risk exists |  |
 | Handoff |  | `HANDOFF.md` before session transfer, role switch, delegation, AFK, compaction, or recovery |  |
 | Work Verification |  | verification log / command output |  |
 | Experiment Loop |  | `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric and keep/discard/crash decision |  |

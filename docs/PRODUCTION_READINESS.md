@@ -10,6 +10,7 @@ This gate runs:
 
 - structure validation
 - Engineering Discipline v2 self-check
+- control harness validation
 - route fixtures
 - trigger drift verification
 - behavioural fixture contracts
