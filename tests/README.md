@@ -6,6 +6,7 @@ Run:
 
 ```bash
 python3 scripts/validate_structure.py
+python3 scripts/validate_control_harness.py
 python3 scripts/run_fixtures.py
 python3 scripts/verify_fixture_contracts.py
 python3 scripts/run_headless_fixtures.py --mode mock

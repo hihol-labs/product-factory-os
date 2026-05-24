@@ -1,0 +1,320 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+from pathlib import Path
+import re
+import sys
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+CONTROL_DOC = ROOT / "docs" / "CONTROL_HARNESS.md"
+
+CONTROL_REGISTRY = [
+    {
+        "id": "intent-routing",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "hooks/route-reminder.py",
+            "docs/TRIGGERS.md",
+            "tests/snapshots/route-snapshots.json",
+        ],
+    },
+    {
+        "id": "product-classification",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "routing/product-classifier.json",
+            "templates/product-templates.json",
+            "core/product-compiler.md",
+        ],
+    },
+    {
+        "id": "planning-documents",
+        "timing": "Feedforward",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "docs/templates/PRODUCT_BLUEPRINT.md",
+            "docs/templates/PROJECT_ARCHITECTURE.md",
+            "docs/templates/BUILD_PLAN.md",
+            "skills/blueprint/SKILL.md",
+        ],
+    },
+    {
+        "id": "adversarial-planning",
+        "timing": "Feedforward",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "skills/grill-me/SKILL.md",
+            "skills/advisor/SKILL.md",
+            "agents/architect.md",
+        ],
+    },
+    {
+        "id": "unit-context",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "docs/templates/pfo/EXECUTION_POLICY.json",
+            "docs/templates/pfo/PERMISSION_MATRIX.json",
+            "docs/templates/UNIT_CONTEXT_MANIFEST.json",
+        ],
+    },
+    {
+        "id": "verification-contract",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "docs/templates/pfo/VERIFICATION_CONTRACT.json",
+            "docs/templates/TEST_PLAN.md",
+            "docs/templates/QUALITY_GATES.md",
+        ],
+    },
+    {
+        "id": "market-validation",
+        "timing": "Feedforward",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "skills/market-scan/SKILL.md",
+            "docs/templates/VALIDATION_PLAN.md",
+            "docs/templates/MARKET_BRIEF.md",
+        ],
+    },
+    {
+        "id": "route-regression",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/run_fixtures.py",
+            "scripts/verify_triggers.py",
+            "scripts/verify_fixture_contracts.py",
+        ],
+    },
+    {
+        "id": "methodology-ci",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            ".github/workflows/validate.yml",
+            "scripts/validate_structure.py",
+            "scripts/validate_runtime.py",
+            "scripts/meta_review.py",
+        ],
+    },
+    {
+        "id": "project-ci",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "templates/generated-ci/validate.yml",
+            "scripts/validate_project.py",
+            "scripts/pfo_contract_gate.py",
+        ],
+    },
+    {
+        "id": "engineering-discipline",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/validate_plan_quality.py",
+            "docs/templates/ROOT_CAUSE.md",
+            "docs/templates/BRANCH_FINISH.md",
+        ],
+    },
+    {
+        "id": "browser-smoke",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "skills/browser-check/SKILL.md",
+            "skills/browser-check/playwright/run.js",
+            "docs/templates/TEST_PLAN.md",
+        ],
+    },
+    {
+        "id": "review-agent",
+        "timing": "Feedback",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "skills/review/SKILL.md",
+            "agents/reviewer.md",
+            "docs/rubrics/review.md",
+        ],
+    },
+    {
+        "id": "security-review-agent",
+        "timing": "Feedback",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "skills/security-audit/SKILL.md",
+            "agents/security-reviewer.md",
+            "docs/rubrics/security.md",
+        ],
+    },
+    {
+        "id": "ux-review-agent",
+        "timing": "Feedback",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "agents/ux-reviewer.md",
+            "skills/browser-check/SKILL.md",
+            "docs/templates/QUALITY_GATES.md",
+        ],
+    },
+    {
+        "id": "human-approval",
+        "timing": "Feedback",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "docs/METHODOLOGY.md",
+            "docs/templates/pfo/PERMISSION_MATRIX.md",
+            "skills/deploy/SKILL.md",
+        ],
+    },
+    {
+        "id": "learning-promotion",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "docs/templates/pfo/LEARNING_PROMOTION_GATE.md",
+            "scripts/pfo_learn.py",
+            "memory/LEARNING_REGISTRY.json",
+        ],
+    },
+]
+
+
+def fail(message: str) -> None:
+    print(f"ERROR: {message}")
+    raise SystemExit(1)
+
+
+def read(rel: str) -> str:
+    return (ROOT / rel).read_text(encoding="utf-8")
+
+
+def assert_contains(text: str, token: str, source: str) -> None:
+    if token not in text:
+        fail(f"{source} is missing {token!r}")
+
+
+def validate_doc_shape(text: str) -> None:
+    for heading in [
+        "# Control Harness",
+        "## Quadrant Matrix",
+        "## Control Inventory",
+        "## Precedence",
+        "## Operating Rules",
+        "## Lifecycle Mapping",
+        "## Addition Checklist",
+    ]:
+        assert_contains(text, heading, "docs/CONTROL_HARNESS.md")
+
+    for token in [
+        "Feedforward",
+        "Feedback",
+        "Computational",
+        "Inferential",
+        "Computational feedforward",
+        "Computational feedback",
+        "Inferential feedforward",
+        "Inferential feedback",
+    ]:
+        assert_contains(text, token, "docs/CONTROL_HARNESS.md")
+
+
+def validate_inventory(text: str) -> None:
+    seen_quadrants: set[tuple[str, str]] = set()
+    for item in CONTROL_REGISTRY:
+        control_id = item["id"]
+        assert_contains(text, f"| {control_id} |", "docs/CONTROL_HARNESS.md")
+        seen_quadrants.add((item["timing"], item["evaluator"]))
+        for artifact in item["artifacts"]:
+            if not (ROOT / artifact).is_file():
+                fail(f"{control_id} references missing artifact: {artifact}")
+            assert_contains(text, f"`{artifact}`", "docs/CONTROL_HARNESS.md")
+
+    required_quadrants = {
+        ("Feedforward", "Computational"),
+        ("Feedback", "Computational"),
+        ("Feedforward", "Inferential"),
+        ("Feedback", "Inferential"),
+    }
+    missing = required_quadrants - seen_quadrants
+    if missing:
+        labels = [f"{timing}/{evaluator}" for timing, evaluator in sorted(missing)]
+        fail("control inventory misses quadrants: " + ", ".join(labels))
+
+
+def validate_cross_docs() -> None:
+    methodology = read("docs/METHODOLOGY.md")
+    architecture = read("docs/PFO_ARCHITECTURE.md")
+    design_space = read("docs/DESIGN_SPACE.md")
+    install = read("docs/INSTALL.md")
+    workflow = read(".github/workflows/validate.yml")
+
+    for token in [
+        "## Control Harness Model",
+        "Feedforward controls",
+        "Feedback controls",
+        "Computational controls",
+        "Inferential controls",
+        "docs/CONTROL_HARNESS.md",
+    ]:
+        assert_contains(methodology, token, "docs/METHODOLOGY.md")
+
+    for token in [
+        "### 5a. Control Harness Layer",
+        "## Control Ownership",
+        "scripts/validate_control_harness.py",
+    ]:
+        assert_contains(architecture, token, "docs/PFO_ARCHITECTURE.md")
+
+    assert_contains(design_space, "Control harness taxonomy", "docs/DESIGN_SPACE.md")
+    assert_contains(install, "python3 scripts/validate_control_harness.py", "docs/INSTALL.md")
+    assert_contains(workflow, "python3 scripts/validate_control_harness.py", ".github/workflows/validate.yml")
+
+
+def validate_quadrant_counts() -> None:
+    counts: dict[tuple[str, str], int] = {}
+    for item in CONTROL_REGISTRY:
+        key = (item["timing"], item["evaluator"])
+        counts[key] = counts.get(key, 0) + 1
+    for key, minimum in {
+        ("Feedforward", "Computational"): 3,
+        ("Feedback", "Computational"): 5,
+        ("Feedforward", "Inferential"): 3,
+        ("Feedback", "Inferential"): 4,
+    }.items():
+        if counts.get(key, 0) < minimum:
+            fail(f"quadrant {key[0]}/{key[1]} has only {counts.get(key, 0)} controls")
+
+
+def validate_markdown_table(text: str) -> None:
+    inventory_rows = [
+        line for line in text.splitlines()
+        if re.match(r"^\| [a-z0-9-]+ \|", line)
+    ]
+    if len(inventory_rows) != len(CONTROL_REGISTRY):
+        fail(
+            "control inventory row count does not match registry: "
+            f"{len(inventory_rows)} != {len(CONTROL_REGISTRY)}"
+        )
+
+
+def main() -> None:
+    if not CONTROL_DOC.is_file():
+        fail("missing docs/CONTROL_HARNESS.md")
+    text = CONTROL_DOC.read_text(encoding="utf-8")
+    validate_doc_shape(text)
+    validate_inventory(text)
+    validate_quadrant_counts()
+    validate_markdown_table(text)
+    validate_cross_docs()
+    print(f"OK: {len(CONTROL_REGISTRY)} control harness entries validated across all four quadrants")
+
+
+if __name__ == "__main__":
+    main()

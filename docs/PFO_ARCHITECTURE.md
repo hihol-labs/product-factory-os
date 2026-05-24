@@ -31,6 +31,16 @@ IDEA
   -> Session State
 ```
 
+PFO also treats every guardrail as part of a four-quadrant control harness:
+
+```text
+                 Feedforward              Feedback
+Computational    contracts, schemas        tests, CI, validators
+Inferential      planning, critique        review agents, human review
+```
+
+The canonical inventory is `docs/CONTROL_HARNESS.md`.
+
 ## Logical Architecture
 
 ```text
@@ -112,6 +122,17 @@ Compiles:
 ```text
 Idea -> Idea Scorecard -> Validation Plan -> Product Blueprint -> Build Plan -> Execution Graph
 ```
+
+### 5a. Control Harness Layer
+
+The control harness classifies every PFO mechanism by timing and evaluator:
+
+- Computational feedforward: machine-readable contracts that constrain work before execution.
+- Computational feedback: repeatable scripts and commands that verify output.
+- Inferential feedforward: LLM or human reasoning that improves plans before code exists.
+- Inferential feedback: LLM or human review that judges semantic quality and risk after output exists.
+
+`scripts/validate_control_harness.py` keeps this inventory connected to docs, CI, hooks, and runtime validators.
 
 ### 6. Validation Layer
 
@@ -320,6 +341,7 @@ Deployment is blocked unless:
 - Browser-facing products have no blocking `/browser-check` findings and include target, engine, flow, screenshot/log evidence before deploy readiness.
 - GitHub, Linear, Notion, or Google Drive sync status is explicit when external tracking is in scope.
 - Strategy, testing, PFO, and security rubrics pass for their applicable scope.
+- Control harness coverage is explicit: feedforward controls set the work boundary and feedback controls verify the result, with deterministic gates preferred where possible.
 
 ## Hook And Snapshot Layer
 
@@ -332,6 +354,16 @@ PFO uses `hooks/hooks.json` and `tests/snapshots/route-snapshots.json` to keep n
 - `review-before-commit.py` runs fast validators before methodology commits.
 
 The release bar for PFO is: every skill has a route snapshot, every route snapshot has a fixture, and CI validates both.
+
+## Control Ownership
+
+PFO owns universal control mechanisms and their validation:
+
+- `docs/CONTROL_HARNESS.md` names the control model and inventory.
+- `scripts/validate_control_harness.py` checks that all four quadrants remain represented.
+- CI and release checks run the validator so new methodology work cannot silently bypass the harness.
+
+Projects own concrete product truth through `.pfo/` contracts, test plans, quality gates, and review evidence.
 
 ## Project Contract Layer
 

@@ -2,6 +2,17 @@
 
 Product Factory OS is built around small gates instead of one large generation pass. In Product Factory OS mode, those gates are controlled by classifier, template, compiler, state-machine, and memory contracts.
 
+## Control Harness Model
+
+PFO classifies every durable guardrail with two axes:
+
+- Feedforward controls shape work before execution: instructions, templates, architecture decisions, examples, task decomposition, permission policy, and verification contracts.
+- Feedback controls judge work after output exists: tests, hooks, CI, validators, security review, UX review, human review, and repair gates.
+- Computational controls are deterministic: linters, tests, schema validation, contract gates, execution graph validation, permission gates, build checks, and generated-project CI.
+- Inferential controls use LLM or human judgment: reviewer, security-reviewer, UX-reviewer, advisor, grill-me, architecture debate, and market synthesis.
+
+The full matrix and inventory live in `docs/CONTROL_HARNESS.md`. PFO prefers computational feedback for blocking invariants, uses inferential controls for semantic judgment, and promotes repeated inferential findings into deterministic checks when possible.
+
 ## Lifecycle
 
 1. Route the request.
@@ -136,6 +147,7 @@ Scores can be useful as summaries, but they must not replace the status enum.
 - `deployment/deployment-targets.json`: deploy-readiness abstraction.
 - `integrations/mcp-capabilities.json`: MCP and OpenAI/Codex plugin capability map.
 - `scripts/pfo_contract_gate.py`: project-contract gate for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution.
+- `scripts/validate_control_harness.py`: validates the four-quadrant feedforward/feedback and computational/inferential control inventory.
 
 ## Autonomous Execution Layer
 
@@ -162,6 +174,16 @@ Product Factory OS adopts the strongest Superpowers engineering discipline while
 - Strict plan granularity: executable tasks name exact files, exact commands, expected output, and exit criteria. Placeholders are plan failures.
 - Branch finish workflow: every finished branch records PR, merge, keep, or discard decision with fresh verification evidence.
 - Enforcement: `scripts/validate_plan_quality.py` blocks weak executable plans, missing TDD evidence for behavior changes, bugfixes without `ROOT_CAUSE.md`, reversed review order, and branch finish without fresh verification.
+
+## Harness Discipline
+
+Every PFO mechanism must be explainable as one of the four control types from `docs/CONTROL_HARNESS.md`.
+
+- Before implementation, the active feedforward controls must name scope, write boundaries, required artifacts, and expected verification.
+- After implementation, feedback controls must produce evidence or a repair path.
+- Computational feedback blockers cannot be waived by inferential review.
+- Inferential feedback may add blockers for issues deterministic checks cannot see.
+- New repeatable findings should be promoted into computational controls through `.pfo/LEARNING_PROMOTION_GATE.md`.
 
 ## Rubrics
 

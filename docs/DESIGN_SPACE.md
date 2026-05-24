@@ -12,6 +12,7 @@ This map tracks which external agent-engineering principles are covered by Produ
 | Context budgeting | Partial | `/handoff`, `/session-save`, `session-diagnostics.py` | Add context budget thresholds per project type |
 | Durable checkpoints beyond git | Partial | `.codex-memory/STATE.json`, `HANDOFF.md`, `PFO_RECOVERY.md` | Add checkpoint restore smoke tests |
 | Tool trust boundary | Full | hook layer, explicit side-effect metadata, explicit invocation gates | Keep dangerous route list synced with metadata |
+| Control harness taxonomy | Full | `docs/CONTROL_HARNESS.md`, `validate_control_harness.py`, CI/release wiring | Promote repeated inferential findings into deterministic gates |
 | Skill discovery | Full | trigger registry, `verify_triggers.py`, route snapshots | Add regression prompts from real misses |
 | Behavioural regression testing | Partial | fixture contracts for key skills | Expand contracts to all 32 skills over time |
 | Drift prevention | Full | meta-review, manifest drift, install sync, skill profiles | Add table row integrity checks for more docs |

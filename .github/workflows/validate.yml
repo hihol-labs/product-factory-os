@@ -32,6 +32,9 @@ jobs:
       - name: Validate Engineering Discipline v2 wiring
         run: python3 scripts/validate_plan_quality.py --self-check
 
+      - name: Validate control harness
+        run: python3 scripts/validate_control_harness.py
+
       - name: Run routing fixtures
         run: python3 scripts/run_fixtures.py
 

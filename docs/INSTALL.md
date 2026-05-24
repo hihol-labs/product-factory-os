@@ -35,6 +35,7 @@ Run validation:
 ```bash
 python3 scripts/validate_structure.py
 python3 scripts/validate_plan_quality.py /path/to/project
+python3 scripts/validate_control_harness.py
 python3 scripts/run_fixtures.py
 python3 scripts/verify_triggers.py
 python3 scripts/verify_fixture_contracts.py
@@ -163,6 +164,7 @@ Before tagging a version:
 5. Check that new or changed skills are listed in `docs/SKILL_CONTRACTS.md` and `docs/TRIGGERS.md`.
 6. Check that PFO runtime JSON contracts are valid.
 7. Validate example execution graphs with `python3 scripts/validate_execution_graph.py`.
+8. Validate the control harness with `python3 scripts/validate_control_harness.py`.
 
 ## Workspace Adoption Check
 
