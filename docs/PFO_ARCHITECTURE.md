@@ -74,6 +74,26 @@ Starter packs live in `starters/`.
 
 Golden paths live in `golden-paths/`.
 
+## Default Stack Policy
+
+PFO has a default stack preset, not a mandatory stack lock.
+
+`PFO Default Stack v1` is the golden path for new generated products:
+
+- Backend: Python, FastAPI, Pydantic, PostgreSQL, pytest, Ruff, mypy
+- Frontend: Vue, TypeScript, Vite, TailwindCSS, Vue Router, Pinia, Lucide Vue
+- Runtime and infra: Redis, S3-compatible storage such as MinIO, `just`, Docker, Nginx
+- Preferred additions: httpx for outbound HTTP, python-jose for JWT, Granian as preferred ASGI server
+
+Context-specific tools stay optional:
+
+- aiogram and Telegram Mini App SDK only for Telegram-first products
+- Directus only when an admin or low-code content panel is useful
+- PGVector when vector search is small enough to live in PostgreSQL
+- Axios may be replaced by native `fetch` when the project is simpler
+
+Deviations are allowed when product requirements, team skill, hosting, compliance, scale, or existing-project constraints justify them. The decision must be recorded in `PROJECT_ARCHITECTURE.md` with reason, risks, support cost, and verification impact.
+
 ## Layers
 
 ### 1. Intent Layer
@@ -94,6 +114,7 @@ Uses `routing/product-classifier.json` to classify:
 - Data sensitivity
 - Monetization or value-capture model
 - Recommended stack
+- Stack preset and deviation policy
 
 ### 3. Architecture Selector
 

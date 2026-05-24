@@ -2,6 +2,16 @@
 
 ## Stack
 
+## Stack Preset
+
+- Default: PFO Default Stack v1
+- Selected:
+
+## Stack Deviations
+
+| Decision | Reason | Risk | Support Cost | Verification Impact |
+|---|---|---|---|---|
+
 ## Rationale
 
 ## Data Model
@@ -17,4 +27,3 @@
 ## Observability
 
 ## Risks And Tradeoffs
-

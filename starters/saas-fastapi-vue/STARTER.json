@@ -1,7 +1,8 @@
 {
   "id": "saas-fastapi-vue",
   "productType": "saas",
-  "stack": ["FastAPI", "PostgreSQL", "Vue", "TypeScript", "Docker"],
+  "stackPreset": "pfo-default-stack-v1",
+  "stack": ["Python", "FastAPI", "Pydantic", "PostgreSQL", "Redis", "MinIO S3", "Vue", "TypeScript", "Vite", "TailwindCSS", "Docker", "Nginx", "just"],
   "folders": ["backend/app", "backend/tests", "frontend/src", "frontend/tests", "infra", "docs"],
   "commands": {
     "backendTest": "pytest",
@@ -10,4 +11,3 @@
   },
   "requiredArtifacts": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "TEST_PLAN.md", "QUALITY_GATES.md"]
 }
-

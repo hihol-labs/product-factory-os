@@ -1,7 +1,8 @@
 {
   "id": "internal-automation",
   "productType": "internal_automation",
-  "stack": ["FastAPI", "PostgreSQL", "Vue_or_CLI", "Docker"],
+  "stackPreset": "pfo-default-stack-v1",
+  "stack": ["Python", "FastAPI", "Pydantic", "PostgreSQL", "Vue_or_CLI", "TypeScript_optional", "Directus_optional", "Docker", "just"],
   "folders": ["app/workflows", "app/integrations", "tests", "docs"],
   "commands": {
     "test": "pytest",
@@ -10,4 +11,3 @@
   },
   "requiredArtifacts": ["BUSINESS_MODEL.md", "THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "QUALITY_GATES.md"]
 }
-

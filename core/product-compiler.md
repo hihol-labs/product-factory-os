@@ -43,6 +43,8 @@ DOMAIN:
 COMPLEXITY:
 REQUIRED_MODULES:
 INFRASTRUCTURE:
+STACK_PRESET:
+STACK_DEVIATION_POLICY:
 ```
 
 ### 3. Idea Scorecard
@@ -63,13 +65,14 @@ Write `VALIDATION_PLAN.md` with:
 - expected and actual signals
 - continue, pivot, or stop decision
 
-### 5. Architecture Selection
+### 5. Architecture And Stack Selection
 
 Select:
 
 - Monolith for small local MVPs
 - Modular monolith for multi-module products
 - Microservices only when scale, team, or isolation requirements justify it
+- PFO Default Stack v1 unless product requirements justify a documented deviation
 
 ### 6. Product Blueprint
 

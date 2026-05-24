@@ -19,7 +19,7 @@ The full matrix and inventory live in `docs/CONTROL_HARNESS.md`. PFO prefers com
 2. Parse intent and classify the product type.
 3. Score the idea and decide `KILL`, `TEST`, or `BUILD`.
 4. Define validation experiments for the riskiest assumptions.
-5. Select a product template and architecture pattern.
+5. Select a product template, architecture pattern, and default stack preset.
 6. Compile the idea into Product Blueprint, Build Plan, and Execution Graph.
 7. Run a phase discussion before planning detailed work.
 8. Ask only the clarifying questions that change the build.
@@ -140,6 +140,7 @@ Scores can be useful as summaries, but they must not replace the status enum.
 ## Runtime Contracts
 
 - `routing/product-classifier.json`: product classification contract.
+- `routing/product-classifier.json`: PFO Default Stack v1 preset and stack deviation policy.
 - `templates/product-templates.json`: reusable module template contract.
 - `core/product-compiler.md`: idea-to-execution-graph compiler contract.
 - `pipelines/execution-pipeline.json`: required stage and artifact contract.
@@ -202,6 +203,7 @@ Canonical checklists live under `docs/rubrics/`:
 
 - Prefer explicit user confirmation at irreversible boundaries.
 - Prefer project conventions over generic templates.
+- Prefer PFO Default Stack v1 for new products, but allow ADR-style deviations when they improve fit.
 - Prefer narrow, verifiable implementation steps.
 - Prefer fresh, task-scoped context over long accumulated chat state.
 - Keep planning documents and code synchronized.

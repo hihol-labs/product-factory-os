@@ -1,7 +1,8 @@
 {
   "id": "mini-app-vue",
   "productType": "mini_app",
-  "stack": ["Vue", "TypeScript", "Platform SDK", "FastAPI", "PostgreSQL"],
+  "stackPreset": "pfo-default-stack-v1",
+  "stack": ["Vue", "TypeScript", "Vite", "TailwindCSS", "Telegram Mini App SDK", "FastAPI", "Pydantic", "PostgreSQL", "Redis"],
   "folders": ["frontend/src", "backend/app", "tests", "infra"],
   "commands": {
     "test": "pytest && npm test",
@@ -10,4 +11,3 @@
   },
   "requiredArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "TEST_PLAN.md"]
 }
-

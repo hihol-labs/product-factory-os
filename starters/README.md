@@ -12,6 +12,8 @@ Each `STARTER.json` declares:
 
 The starter layer keeps product generation repeatable: PFO chooses a starter pack instead of inventing a scaffold from scratch.
 
+Starter stacks follow `PFO Default Stack v1` as a golden path, not a hard lock. Product-specific deviations are valid when `PROJECT_ARCHITECTURE.md` records the reason, risk, support cost, and verification impact.
+
 `pfo plan` uses the selected starter to generate missing planning artifacts:
 
 - `PRODUCT_BLUEPRINT.md`

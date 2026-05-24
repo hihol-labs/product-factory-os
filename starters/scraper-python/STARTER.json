@@ -1,7 +1,8 @@
 {
   "id": "scraper-python",
   "productType": "data_scraper",
-  "stack": ["Python", "httpx", "selectolax_or_BeautifulSoup", "PostgreSQL_or_SQLite", "Docker"],
+  "stackPreset": "pfo-default-stack-v1-data-profile",
+  "stack": ["Python", "httpx", "selectolax_or_BeautifulSoup", "Pydantic", "PostgreSQL_or_SQLite", "Redis_optional", "pytest", "Ruff", "mypy", "Docker", "just"],
   "folders": ["scraper", "scraper/parsers", "tests/fixtures", "infra"],
   "commands": {
     "test": "pytest",
@@ -10,4 +11,3 @@
   },
   "requiredArtifacts": ["DATA_CLASSIFICATION.md", "TEST_PLAN.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md"]
 }
-

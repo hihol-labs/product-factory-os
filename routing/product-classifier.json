@@ -11,9 +11,23 @@
     "REQUIRED_MODULES",
     "INFRASTRUCTURE",
     "RECOMMENDED_STACK",
+    "STACK_PRESET",
+    "STACK_DEVIATION_POLICY",
     "STRATEGY_ARTIFACTS_REQUIRED",
     "SECURITY_ARTIFACTS_REQUIRED"
   ],
+  "defaultStackPolicy": {
+    "id": "pfo-default-stack-v1",
+    "mode": "recommended_default_not_mandatory",
+    "description": "Use this stack as the golden path for new generated products unless product requirements, existing-project constraints, hosting, compliance, scale, or team skill justify another choice.",
+    "backendCore": ["Python", "FastAPI", "Pydantic", "PostgreSQL", "pytest", "Ruff", "mypy"],
+    "frontendCore": ["Vue", "TypeScript", "Vite", "TailwindCSS", "Vue Router", "Pinia", "Lucide Vue"],
+    "runtimeCore": ["Redis", "S3-compatible storage", "just", "Docker", "Nginx"],
+    "preferredAddons": ["httpx", "python-jose", "Granian"],
+    "contextualAddons": ["aiogram", "Telegram Mini App SDK", "PGVector", "Directus"],
+    "replaceableDefaults": ["Granian_or_Uvicorn", "Axios_or_fetch", "PGVector_or_dedicated_vector_db", "Directus_optional_admin_panel"],
+    "deviationPolicy": "Allowed when PROJECT_ARCHITECTURE.md records reason, risk, support cost, and verification impact."
+  },
   "productTypes": [
     {
       "id": "saas",
@@ -24,7 +38,9 @@
       "defaultMonetization": "subscription",
       "defaultDataSensitivity": "user_data",
       "requiredModules": ["auth", "billing", "database", "api", "dashboard"],
-      "recommendedStack": ["FastAPI", "PostgreSQL", "Vue", "Docker"],
+      "recommendedStack": ["Python", "FastAPI", "Pydantic", "PostgreSQL", "Redis", "MinIO S3", "Vue", "TypeScript", "Vite", "TailwindCSS", "Vue Router", "Pinia", "pytest", "Ruff", "mypy", "just", "Docker", "Nginx"],
+      "stackPreset": "pfo-default-stack-v1",
+      "stackDeviationPolicy": "deviations_allowed_with_architecture_rationale",
       "requiredStrategyArtifacts": ["MARKET_BRIEF.md", "ICP.md", "BUSINESS_MODEL.md", "GO_TO_MARKET.md"],
       "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
     },
@@ -37,7 +53,9 @@
       "defaultMonetization": "service_or_lead_generation",
       "defaultDataSensitivity": "conversation_data",
       "requiredModules": ["event_loop", "command_router", "handlers", "state_manager", "integrations"],
-      "recommendedStack": ["Python", "aiogram_or_discord.py", "PostgreSQL_or_SQLite", "Docker"],
+      "recommendedStack": ["Python", "aiogram_or_discord.py", "Pydantic", "PostgreSQL_or_SQLite", "Redis_optional", "httpx", "pytest", "Ruff", "mypy", "Docker", "just"],
+      "stackPreset": "pfo-default-stack-v1-bot-profile",
+      "stackDeviationPolicy": "platform_sdk_and_storage_may_vary_with_bot_platform",
       "requiredStrategyArtifacts": ["ICP.md", "GO_TO_MARKET.md"],
       "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
     },
@@ -50,7 +68,9 @@
       "defaultMonetization": "usage_or_internal_platform",
       "defaultDataSensitivity": "depends_on_domain",
       "requiredModules": ["routing", "controllers", "services", "middleware", "db_layer"],
-      "recommendedStack": ["FastAPI", "Pydantic", "PostgreSQL", "Docker"],
+      "recommendedStack": ["Python", "FastAPI", "Pydantic", "PostgreSQL", "pytest", "Ruff", "mypy", "httpx", "python-jose", "Granian", "Docker", "just"],
+      "stackPreset": "pfo-default-stack-v1-api-profile",
+      "stackDeviationPolicy": "deviations_allowed_with_architecture_rationale",
       "requiredStrategyArtifacts": ["MARKET_BRIEF.md"],
       "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
     },
@@ -63,7 +83,9 @@
       "defaultMonetization": "product_or_internal_value",
       "defaultDataSensitivity": "user_data",
       "requiredModules": ["frontend", "backend", "auth", "storage"],
-      "recommendedStack": ["Vue", "TypeScript", "FastAPI", "PostgreSQL"],
+      "recommendedStack": ["Vue", "TypeScript", "Vite", "TailwindCSS", "Vue Router", "Pinia", "Lucide Vue", "FastAPI", "Pydantic", "PostgreSQL", "Redis_optional"],
+      "stackPreset": "pfo-default-stack-v1-web-profile",
+      "stackDeviationPolicy": "deviations_allowed_with_architecture_rationale",
       "requiredStrategyArtifacts": ["ICP.md"],
       "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
     },
@@ -76,7 +98,9 @@
       "defaultMonetization": "lead_generation",
       "defaultDataSensitivity": "lead_contact_data",
       "requiredModules": ["page", "lead_capture", "analytics", "deployment"],
-      "recommendedStack": ["Vite", "Vue_or_static_HTML", "Netlify_or_Vercel"],
+      "recommendedStack": ["Vite", "Vue_or_static_HTML", "TypeScript_optional", "TailwindCSS", "Netlify_or_Vercel"],
+      "stackPreset": "pfo-default-stack-v1-frontend-only-profile",
+      "stackDeviationPolicy": "frontend_only_projects_may_skip_backend_defaults",
       "requiredStrategyArtifacts": ["MARKET_BRIEF.md", "ICP.md", "GO_TO_MARKET.md"],
       "requiredSecurityArtifacts": ["DATA_CLASSIFICATION.md"]
     },
@@ -89,7 +113,9 @@
       "defaultMonetization": "utility_or_internal_value",
       "defaultDataSensitivity": "local_files_or_config",
       "requiredModules": ["commands", "config", "io", "packaging"],
-      "recommendedStack": ["Python", "Typer_or_Click", "pytest"],
+      "recommendedStack": ["Python", "Typer_or_Click", "Pydantic_optional", "pytest", "Ruff", "mypy", "just"],
+      "stackPreset": "pfo-default-stack-v1-cli-profile",
+      "stackDeviationPolicy": "cli_projects_may_skip_web_and_database_defaults",
       "requiredStrategyArtifacts": ["MARKET_BRIEF.md"],
       "requiredSecurityArtifacts": ["DATA_CLASSIFICATION.md"]
     },
@@ -102,7 +128,9 @@
       "defaultMonetization": "platform_distribution",
       "defaultDataSensitivity": "platform_user_data",
       "requiredModules": ["frontend", "platform_sdk", "backend", "auth", "storage"],
-      "recommendedStack": ["Vue", "TypeScript", "FastAPI", "PostgreSQL"],
+      "recommendedStack": ["Vue", "TypeScript", "Vite", "TailwindCSS", "Telegram Mini App SDK", "FastAPI", "Pydantic", "PostgreSQL", "Redis_optional", "python-jose"],
+      "stackPreset": "pfo-default-stack-v1-mini-app-profile",
+      "stackDeviationPolicy": "platform_sdk_may_vary_with_distribution_platform",
       "requiredStrategyArtifacts": ["ICP.md", "GO_TO_MARKET.md"],
       "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
     },
@@ -115,7 +143,9 @@
       "defaultMonetization": "transaction_margin_or_sales",
       "defaultDataSensitivity": "personal_and_payment_adjacent_data",
       "requiredModules": ["catalog", "cart", "checkout", "orders", "payments", "admin"],
-      "recommendedStack": ["FastAPI", "PostgreSQL", "Vue", "Stripe_or_payment_provider", "Docker"],
+      "recommendedStack": ["Python", "FastAPI", "Pydantic", "PostgreSQL", "Redis", "MinIO S3", "Vue", "TypeScript", "Vite", "TailwindCSS", "Stripe_or_payment_provider", "pytest", "Ruff", "mypy", "Docker", "Nginx"],
+      "stackPreset": "pfo-default-stack-v1-commerce-profile",
+      "stackDeviationPolicy": "payments_and_compliance_may_require_stronger_controls",
       "requiredStrategyArtifacts": ["MARKET_BRIEF.md", "ICP.md", "BUSINESS_MODEL.md", "GO_TO_MARKET.md"],
       "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
     },
@@ -128,7 +158,9 @@
       "defaultMonetization": "data_asset_or_internal_automation",
       "defaultDataSensitivity": "collected_external_data",
       "requiredModules": ["fetch", "parse", "storage", "scheduler", "queue"],
-      "recommendedStack": ["Python", "httpx", "BeautifulSoup_or_selectolax", "PostgreSQL", "Docker"],
+      "recommendedStack": ["Python", "httpx", "BeautifulSoup_or_selectolax", "Pydantic", "PostgreSQL_or_SQLite", "Redis_optional", "pytest", "Ruff", "mypy", "Docker", "just"],
+      "stackPreset": "pfo-default-stack-v1-data-profile",
+      "stackDeviationPolicy": "scraper_storage_and_queue_may_vary_by_volume_and_source_rules",
       "requiredStrategyArtifacts": ["MARKET_BRIEF.md"],
       "requiredSecurityArtifacts": ["DATA_CLASSIFICATION.md"]
     },
@@ -141,7 +173,9 @@
       "defaultMonetization": "time_saved_or_operational_risk_reduction",
       "defaultDataSensitivity": "internal_business_data",
       "requiredModules": ["workflow", "integrations", "admin_ui", "storage", "audit_log"],
-      "recommendedStack": ["FastAPI", "PostgreSQL", "Vue_or_CLI", "Docker"],
+      "recommendedStack": ["Python", "FastAPI", "Pydantic", "PostgreSQL", "Vue_or_CLI", "TypeScript_optional", "Directus_optional", "pytest", "Ruff", "mypy", "Docker", "just"],
+      "stackPreset": "pfo-default-stack-v1-internal-tool-profile",
+      "stackDeviationPolicy": "existing_system_integrations_may_override_ui_or_admin_layer",
       "requiredStrategyArtifacts": ["BUSINESS_MODEL.md"],
       "requiredSecurityArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"]
     }
@@ -161,4 +195,3 @@
     "large": "Payments, multi-role workflows, async jobs, high scale, regulated data, or multiple deployment surfaces."
   }
 }
-

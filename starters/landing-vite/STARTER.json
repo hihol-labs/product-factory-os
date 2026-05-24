@@ -1,7 +1,8 @@
 {
   "id": "landing-vite",
   "productType": "landing_page",
-  "stack": ["Vite", "Vue_or_static_HTML", "Netlify_or_Vercel"],
+  "stackPreset": "pfo-default-stack-v1-frontend-only-profile",
+  "stack": ["Vite", "Vue_or_static_HTML", "TypeScript_optional", "TailwindCSS", "Netlify_or_Vercel"],
   "folders": ["src", "tests", "public"],
   "commands": {
     "test": "npm test",
@@ -10,4 +11,3 @@
   },
   "requiredArtifacts": ["MARKET_BRIEF.md", "ICP.md", "GO_TO_MARKET.md", "TEST_PLAN.md"]
 }
-
