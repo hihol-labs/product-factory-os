@@ -1,7 +1,8 @@
 {
   "id": "api-fastapi",
   "productType": "api_service",
-  "stack": ["FastAPI", "Pydantic", "PostgreSQL", "pytest", "Docker"],
+  "stackPreset": "pfo-default-stack-v1",
+  "stack": ["Python", "FastAPI", "Pydantic", "PostgreSQL", "pytest", "Ruff", "mypy", "Docker", "just"],
   "folders": ["app/api", "app/services", "app/models", "tests", "infra"],
   "commands": {
     "test": "pytest",
@@ -10,4 +11,3 @@
   },
   "requiredArtifacts": ["PRODUCT_BLUEPRINT.md", "PROJECT_ARCHITECTURE.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md"]
 }
-

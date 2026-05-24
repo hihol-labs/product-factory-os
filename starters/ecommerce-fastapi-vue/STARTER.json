@@ -1,7 +1,8 @@
 {
   "id": "ecommerce-fastapi-vue",
   "productType": "ecommerce",
-  "stack": ["FastAPI", "PostgreSQL", "Vue", "Payment provider", "Docker"],
+  "stackPreset": "pfo-default-stack-v1",
+  "stack": ["Python", "FastAPI", "Pydantic", "PostgreSQL", "Redis", "MinIO S3", "Vue", "TypeScript", "Vite", "TailwindCSS", "Payment provider", "Docker", "Nginx"],
   "folders": ["backend/app", "backend/tests", "frontend/src", "frontend/tests", "infra"],
   "commands": {
     "test": "pytest && npm test",
@@ -10,4 +11,3 @@
   },
   "requiredArtifacts": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "TEST_PLAN.md", "QUALITY_GATES.md"]
 }
-

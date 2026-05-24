@@ -10,6 +10,7 @@
 - `pfo manifest` now writes `.pfo/VERIFICATION_CONTRACT.json`; `pfo verify-work --pass-gate` requires a ready verification contract.
 - `pfo learning-gate` blocks unreviewed learning promotions before runtime changes.
 - Added machine-readable `.pfo/PERMISSION_MATRIX.json`, `.pfo/TOOL_CAPABILITY_REGISTRY.json`, `pfo permission-check`, `pfo event`, and `pfo tool-registry`.
+- PFO Default Stack v1 policy: FastAPI/Pydantic/PostgreSQL/Vue/TypeScript/Vite as the golden path, with documented ADR-style deviations allowed.
 
 ---
 

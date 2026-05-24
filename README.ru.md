@@ -128,6 +128,8 @@ pfo export ../my-product --target obsidian
 
 Starter packs находятся в `starters/`. Golden paths находятся в `golden-paths/`.
 
+PFO использует `PFO Default Stack v1` как golden path для новых продуктов: Python/FastAPI/Pydantic, PostgreSQL, Vue/TypeScript/Vite/TailwindCSS, Redis, S3-compatible storage, `just`, Docker и Nginx. Это preset по умолчанию, не жесткий запрет альтернатив; отклонения фиксируются в `PROJECT_ARCHITECTURE.md` с причиной, риском, ценой поддержки и влиянием на проверку.
+
 Сгенерированные проекты получают `.pfo/` contracts, `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile` и `PFO_REPORT.md`.
 
 `pfo plan` создает недостающие `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `FUNNEL_MODEL.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md` и `QUALITY_GATES.md` на основе выбранного starter, но не перезаписывает уже существующие файлы.

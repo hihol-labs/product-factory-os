@@ -324,6 +324,11 @@ def main() -> None:
     classifier = json.loads((ROOT / "routing/product-classifier.json").read_text())
     if classifier.get("version", 0) < 2:
         fail("product classifier must be version 2 or newer")
+    stack_policy = classifier.get("defaultStackPolicy", {})
+    if stack_policy.get("id") != "pfo-default-stack-v1":
+        fail("product classifier must define PFO Default Stack v1")
+    if "deviationPolicy" not in stack_policy:
+        fail("product classifier default stack policy must define deviationPolicy")
     classifier_types = {item.get("id") for item in classifier.get("productTypes", [])}
     for product_type in PFO_PRODUCT_TYPES:
         if product_type not in classifier_types:
@@ -333,6 +338,8 @@ def main() -> None:
             "defaultMonetization",
             "defaultDataSensitivity",
             "recommendedStack",
+            "stackPreset",
+            "stackDeviationPolicy",
             "requiredStrategyArtifacts",
             "requiredSecurityArtifacts",
         ]:

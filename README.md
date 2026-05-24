@@ -437,6 +437,8 @@ pfo export ../my-product --target obsidian
 
 Starter packs live in [`starters/`](starters/). Golden paths live in [`golden-paths/`](golden-paths/) and [`docs/examples/`](docs/examples/).
 
+PFO uses `PFO Default Stack v1` as the golden path for new products: Python/FastAPI/Pydantic, PostgreSQL, Vue/TypeScript/Vite/TailwindCSS, Redis, S3-compatible storage, `just`, Docker, and Nginx. It is a default preset, not a hard lock; deviations must be recorded in `PROJECT_ARCHITECTURE.md` with reason, risk, support cost, and verification impact.
+
 ## Runtime Contracts
 
 PFO runtime behavior is defined in repository contracts:

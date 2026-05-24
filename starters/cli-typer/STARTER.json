@@ -1,7 +1,8 @@
 {
   "id": "cli-typer",
   "productType": "cli_tool",
-  "stack": ["Python", "Typer", "pytest"],
+  "stackPreset": "pfo-default-stack-v1-cli-profile",
+  "stack": ["Python", "Typer", "Pydantic_optional", "pytest", "Ruff", "mypy", "just"],
   "folders": ["src", "tests", "docs"],
   "commands": {
     "test": "pytest",
@@ -10,4 +11,3 @@
   },
   "requiredArtifacts": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "TEST_PLAN.md"]
 }
-

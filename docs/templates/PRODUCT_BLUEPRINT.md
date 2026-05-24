@@ -8,6 +8,8 @@ DOMAIN:
 COMPLEXITY:
 REQUIRED_MODULES:
 INFRASTRUCTURE:
+STACK_PRESET:
+STACK_DEVIATIONS:
 ```
 
 ## Business Logic
@@ -41,4 +43,3 @@ INFRASTRUCTURE:
 - Deployment target:
 
 ## Risks And Assumptions
-
