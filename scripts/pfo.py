@@ -9,6 +9,20 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
+ALIAS_DOCUMENT_NAMES = [
+    "MASTER_CONTEXT.md",
+    "ARCHITECTURE.md",
+    "TASKS.md",
+    "PROGRESS.md",
+    "TESTING.md",
+]
+
+
+def load_alias_documents() -> dict[str, str]:
+    return {
+        name: (ROOT / "docs" / "templates" / name).read_text(encoding="utf-8")
+        for name in ALIAS_DOCUMENT_NAMES
+    }
 
 
 def run_script(name: str, args: list[str]) -> int:
@@ -225,6 +239,14 @@ def write_if_missing(path: Path, text: str) -> bool:
         return False
     path.write_text(text, encoding="utf-8")
     return True
+
+
+def write_alias_documents(project: Path) -> list[str]:
+    written = []
+    for name, text in load_alias_documents().items():
+        if write_if_missing(project / name, text):
+            written.append(name)
+    return written
 
 
 def generated_blueprint(project: Path, state: dict, starter: dict) -> str:
@@ -1372,6 +1394,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
     ensure_autonomy_state(state)
     starter = load_starter(project, state)
     written = []
+    written.extend(write_alias_documents(project))
     for path, text in [
         (project / "IDEA_SCORECARD.md", generated_idea_scorecard(state)),
         (project / "VALIDATION_PLAN.md", generated_validation_plan(state)),
@@ -1412,6 +1435,11 @@ def cmd_plan(args: argparse.Namespace) -> int:
         "EXECUTION_GRAPH.md",
         "TEST_PLAN.md",
         "QUALITY_GATES.md",
+        "MASTER_CONTEXT.md",
+        "ARCHITECTURE.md",
+        "TASKS.md",
+        "PROGRESS.md",
+        "TESTING.md",
     ])
     state["artifacts"] = sorted(artifacts)
     state["nextAction"] = "Resolve idea, validation, feedback, funnel, and build TBD fields, then run /review before build."

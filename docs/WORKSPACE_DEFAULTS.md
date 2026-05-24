@@ -48,7 +48,14 @@ AGENTS.md
 .github/workflows/validate.yml
 justfile
 PFO_REPORT.md
+MASTER_CONTEXT.md
+ARCHITECTURE.md
+TASKS.md
+PROGRESS.md
+TESTING.md
 ```
+
+The five uppercase files above are navigation aliases only. The canonical sources remain the PFO artifacts they link to.
 
 `pfo plan` creates the core planning artifacts while preserving files that already exist:
 
@@ -66,6 +73,11 @@ BUILD_PLAN.md
 EXECUTION_GRAPH.md
 TEST_PLAN.md
 QUALITY_GATES.md
+MASTER_CONTEXT.md
+ARCHITECTURE.md
+TASKS.md
+PROGRESS.md
+TESTING.md
 ```
 
 For non-trivial products, Product Factory OS may also create strategy and security artifacts:

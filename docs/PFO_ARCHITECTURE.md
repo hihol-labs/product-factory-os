@@ -301,6 +301,7 @@ Every full-cycle PFO project should maintain:
 - `CODEX.md`
 - `.codex-memory/STATE.json`
 - `.codex-memory/MEMORY.md`
+- `MASTER_CONTEXT.md`, `ARCHITECTURE.md`, `TASKS.md`, `PROGRESS.md`, and `TESTING.md` as thin navigation aliases only
 
 ## Quality Gates
 

@@ -3,4 +3,9 @@ CODEX.md
 .codex-memory/MEMORY.md
 .codex-memory/STATE.json
 .pfo/PROJECT_CONTRACT.md
+MASTER_CONTEXT.md
+ARCHITECTURE.md
+TASKS.md
+PROGRESS.md
+TESTING.md
 initial session note

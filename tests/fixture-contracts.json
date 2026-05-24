@@ -6,11 +6,11 @@
       "skill": "/adopt",
       "status": "active",
       "contract_files": {
-        "expected-files.txt": {"must_contain": ["AGENTS.md", "CODEX.md", ".codex-memory/STATE.json", ".pfo/PROJECT_CONTRACT.md"]},
+        "expected-files.txt": {"must_contain": ["AGENTS.md", "CODEX.md", ".codex-memory/STATE.json", ".pfo/PROJECT_CONTRACT.md", "MASTER_CONTEXT.md"]},
         "notes.md": {"must_contain": ["idempotent", "no application behavior changes"]}
       },
       "output_contract": {
-        "required_files": ["AGENTS.md", "CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json", ".pfo/PROJECT_CONTRACT.md"],
+        "required_files": ["AGENTS.md", "CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json", ".pfo/PROJECT_CONTRACT.md", "MASTER_CONTEXT.md", "ARCHITECTURE.md", "TASKS.md", "PROGRESS.md", "TESTING.md"],
         "any_file_must_contain": ["Product Factory OS", "ADOPTED"]
       }
     },
@@ -216,11 +216,11 @@
       "skill": "/project",
       "status": "active",
       "contract_files": {
-        "expected-files.txt": {"must_contain": ["PRODUCT_BLUEPRINT.md", "EXECUTION_GRAPH.md", ".pfo/PROJECT_CONTRACT.md"]},
+        "expected-files.txt": {"must_contain": ["PRODUCT_BLUEPRINT.md", "EXECUTION_GRAPH.md", ".pfo/PROJECT_CONTRACT.md", "MASTER_CONTEXT.md"]},
         "notes.md": {"must_contain": ["full-cycle path", "before writing code"]}
       },
       "output_contract": {
-        "required_files": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "AGENTS.md", "CODEX.md", ".codex-memory/STATE.json"],
+        "required_files": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "AGENTS.md", "CODEX.md", ".codex-memory/STATE.json", "MASTER_CONTEXT.md", "ARCHITECTURE.md", "TASKS.md", "PROGRESS.md", "TESTING.md"],
         "files_must_contain": {"EXECUTION_GRAPH.md": ["Nodes", "Transitions", "Validation checkpoints"]}
       }
     },
@@ -251,11 +251,11 @@
       "skill": "/kickstart",
       "status": "active",
       "contract_files": {
-        "expected-files.txt": {"must_contain": ["PRODUCT_BLUEPRINT.md", "EXECUTION_GRAPH.md", ".pfo/PROJECT_CONTRACT.md"]},
+        "expected-files.txt": {"must_contain": ["PRODUCT_BLUEPRINT.md", "EXECUTION_GRAPH.md", ".pfo/PROJECT_CONTRACT.md", "MASTER_CONTEXT.md"]},
         "notes.md": {"must_contain": ["voice-first", "Telegram bot", "full Product Factory OS route"]}
       },
       "output_contract": {
-        "required_files": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "PROJECT_ARCHITECTURE.md", ".codex-memory/STATE.json"],
+        "required_files": ["PRODUCT_BLUEPRINT.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "PROJECT_ARCHITECTURE.md", ".codex-memory/STATE.json", "MASTER_CONTEXT.md", "ARCHITECTURE.md", "TASKS.md", "PROGRESS.md", "TESTING.md"],
         "any_file_must_contain": ["Telegram", "bot", "validation"]
       }
     },
@@ -263,11 +263,11 @@
       "skill": "/blueprint",
       "status": "active",
       "contract_files": {
-        "expected-files.txt": {"must_contain": ["PRODUCT_BLUEPRINT.md", "PROJECT_ARCHITECTURE.md", "EXECUTION_GRAPH.md"]},
+        "expected-files.txt": {"must_contain": ["PRODUCT_BLUEPRINT.md", "PROJECT_ARCHITECTURE.md", "EXECUTION_GRAPH.md", "MASTER_CONTEXT.md"]},
         "notes.md": {"must_contain": ["planning-only", "architecture variants"]}
       },
       "output_contract": {
-        "required_files": ["PRODUCT_BLUEPRINT.md", "PROJECT_ARCHITECTURE.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md"],
+        "required_files": ["PRODUCT_BLUEPRINT.md", "PROJECT_ARCHITECTURE.md", "BUILD_PLAN.md", "EXECUTION_GRAPH.md", "MASTER_CONTEXT.md", "ARCHITECTURE.md", "TASKS.md", "PROGRESS.md", "TESTING.md"],
         "files_must_contain": {"PROJECT_ARCHITECTURE.md": ["Architecture variants", "ADR", "Adversarial"]}
       }
     },
