@@ -125,6 +125,7 @@ If any are missing, run `/adopt` first.
 - `ASSET_REGISTER.md`: repeatable product, process, template, offer, or automation assets
 - `CONTENT_BACKLOG.md`: publishable learnings and case-study candidates tied to evidence
 - `BRANCH_FINISH.md`: PR, merge, keep, or discard decision when branch cleanup is in scope
+- `MASTER_CONTEXT.md`, `ARCHITECTURE.md`, `TASKS.md`, `PROGRESS.md`, `TESTING.md`: thin navigation aliases for humans, agents, and external tools; canonical truth stays in the linked PFO artifacts.
 
 ## Gate Status
 

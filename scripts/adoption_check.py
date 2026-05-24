@@ -10,6 +10,20 @@ WORKSPACE = ROOT.parent
 PFO_TEMPLATE_DIR = ROOT / "docs" / "templates" / "pfo"
 MANAGED_START = "<!-- PFO_PROJECT_RUNTIME_START -->"
 MANAGED_END = "<!-- PFO_PROJECT_RUNTIME_END -->"
+ALIAS_DOCUMENT_NAMES = [
+    "MASTER_CONTEXT.md",
+    "ARCHITECTURE.md",
+    "TASKS.md",
+    "PROGRESS.md",
+    "TESTING.md",
+]
+
+
+def load_alias_documents() -> dict[str, str]:
+    return {
+        name: (ROOT / "docs" / "templates" / name).read_text(encoding="utf-8")
+        for name in ALIAS_DOCUMENT_NAMES
+    }
 
 IGNORED = {
     ".agents",
@@ -82,6 +96,7 @@ def status_for(path: Path) -> dict[str, object]:
         "hasProductBlueprint": is_file(path / "PRODUCT_BLUEPRINT.md"),
         "hasBuildPlan": is_file(path / "BUILD_PLAN.md"),
         "hasExecutionGraph": is_file(path / "EXECUTION_GRAPH.md"),
+        "hasAliasDocs": all(is_file(path / name) for name in ALIAS_DOCUMENT_NAMES),
         "hasGit": is_dir(path / ".git"),
     }
 
@@ -152,6 +167,13 @@ def ensure_pfo_contracts(path: Path) -> None:
             shutil.copyfile(source, target)
 
 
+def ensure_alias_documents(path: Path) -> None:
+    for name, text in load_alias_documents().items():
+        target = path / name
+        if not target.exists():
+            target.write_text(text, encoding="utf-8")
+
+
 def write_adoption_files(path: Path, workspace: Path) -> None:
     codex = path / "CODEX.md"
     agents = path / "AGENTS.md"
@@ -164,6 +186,7 @@ def write_adoption_files(path: Path, workspace: Path) -> None:
     upsert_managed_block(codex, "CODEX", block)
     upsert_managed_block(agents, "AGENTS", block)
     ensure_pfo_contracts(path)
+    ensure_alias_documents(path)
 
     memory_dir.mkdir(exist_ok=True)
     if not memory.exists():
@@ -334,6 +357,11 @@ aliases:
                         ".codex-memory/MEMORY.md",
                         ".codex-memory/STATE.json",
                         ".codex-memory/events.jsonl",
+                        "MASTER_CONTEXT.md",
+                        "ARCHITECTURE.md",
+                        "TASKS.md",
+                        "PROGRESS.md",
+                        "TESTING.md",
                     ],
                     "completedModules": [],
                     "failedValidations": [],
@@ -441,6 +469,7 @@ def main() -> None:
         flags.append("memory" if item["hasMemory"] else "no-memory")
         flags.append("state" if item["hasState"] else "no-state")
         flags.append("contracts" if item["hasPfoContracts"] else "no-contracts")
+        flags.append("aliases" if item["hasAliasDocs"] else "no-aliases")
         flags.append("pfo-docs" if item["hasPrd"] and item["hasArchitecture"] and item["hasImplementationPlan"] and item["hasProductBlueprint"] and item["hasBuildPlan"] and item["hasExecutionGraph"] else "pfo-docs-partial")
         print(f"{item['project']}: {', '.join(flags)}")
 
@@ -451,9 +480,10 @@ def main() -> None:
         or not item["hasMemory"]
         or not item["hasState"]
         or not item["hasPfoContracts"]
+        or not item["hasAliasDocs"]
     ]
     if missing:
-        print("\nRun with --write to create PFO runtime files for projects missing AGENTS, CODEX, memory, state, or contracts.")
+        print("\nRun with --write to create PFO runtime files for projects missing AGENTS, CODEX, memory, state, contracts, or alias docs.")
         sys.exit(2)
 
 

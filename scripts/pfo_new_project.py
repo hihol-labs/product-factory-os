@@ -8,6 +8,20 @@ import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
+ALIAS_DOCUMENT_NAMES = [
+    "MASTER_CONTEXT.md",
+    "ARCHITECTURE.md",
+    "TASKS.md",
+    "PROGRESS.md",
+    "TESTING.md",
+]
+
+
+def load_alias_documents() -> dict[str, str]:
+    return {
+        name: (ROOT / "docs" / "templates" / name).read_text(encoding="utf-8")
+        for name in ALIAS_DOCUMENT_NAMES
+    }
 
 
 def fail(message: str) -> None:
@@ -169,6 +183,11 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 ".codex-memory/MEMORY.md",
                 ".codex-memory/STATE.json",
                 ".codex-memory/events.jsonl",
+                "MASTER_CONTEXT.md",
+                "ARCHITECTURE.md",
+                "TASKS.md",
+                "PROGRESS.md",
+                "TESTING.md",
             ],
             "completedModules": [],
             "failedValidations": [],
@@ -310,6 +329,8 @@ def scaffold(project: Path, starter: dict) -> None:
         project / "PFO_REPORT.md",
         "# Product Factory OS Report\n\nCURRENT STATE: BOOTSTRAPPED\n\nNEXT ACTION: Run `/project -> /kickstart`.\n",
     )
+    for name, text in load_alias_documents().items():
+        write_once(project / name, text)
 
 
 def codex_md(project_name: str, idea: str, methodology: Path) -> str:
@@ -349,6 +370,11 @@ Product Factory OS must create and maintain:
 .pfo/VERIFICATION_CONTRACT.json
 .pfo/LEARNING_PROMOTION_GATE.md
 .pfo/TOOL_CAPABILITY_REGISTRY.json
+MASTER_CONTEXT.md
+ARCHITECTURE.md
+TASKS.md
+PROGRESS.md
+TESTING.md
 DISCOVERY.md
 IDEA_SCORECARD.md
 VALIDATION_PLAN.md
