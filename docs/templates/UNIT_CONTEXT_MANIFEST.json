@@ -8,6 +8,11 @@
     ".codex-memory/STATE.json",
     ".pfo/PROJECT_CONTRACT.md",
     ".pfo/SCOPE_LOCK.md",
+    ".pfo/EXECUTION_POLICY.json",
+    ".pfo/PERMISSION_MATRIX.md",
+    ".pfo/PERMISSION_MATRIX.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
+    ".pfo/TOOL_CAPABILITY_REGISTRY.json",
     "IDEA_SCORECARD.md",
     "VALIDATION_PLAN.md",
     "PRODUCT_BLUEPRINT.md",
@@ -23,10 +28,14 @@
   "forbiddenChanges": [
     "scope outside .pfo/SCOPE_LOCK.md",
     "silent production data substitution",
-    "unapproved production mutation"
+    "unapproved production mutation",
+    "commands or writes outside .pfo/EXECUTION_POLICY.json and .pfo/PERMISSION_MATRIX.json",
+    "tool or connector use outside .pfo/TOOL_CAPABILITY_REGISTRY.json"
   ],
   "dependencies": [],
-  "verificationCommands": [],
+  "verificationCommands": [
+    "commands declared in .pfo/VERIFICATION_CONTRACT.json"
+  ],
   "gates": [
     "tddRed",
     "tddGreen",
@@ -47,7 +56,12 @@
     "funnel",
     "experimentSetup",
     "experimentMetric",
-    "experimentDecision"
+    "experimentDecision",
+    "executionPolicy",
+    "permissionMatrix",
+    "verificationContract",
+    "learningPromotion",
+    "toolCapabilityRegistry"
   ],
   "engineeringDiscipline": {
     "behaviorChange": false,

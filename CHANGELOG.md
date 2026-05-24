@@ -6,6 +6,10 @@
 
 - Autoresearch-style self-improvement loop with `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric/budget state, and `pfo experiment-init` / `pfo experiment-record`.
 - Documentation, routing, templates, state schema, and plan-quality gates for baseline-first keep/discard/crash experiment decisions.
+- Project-local execution policy, permission matrix, verification contract, structured event log schema, and learning promotion gate.
+- `pfo manifest` now writes `.pfo/VERIFICATION_CONTRACT.json`; `pfo verify-work --pass-gate` requires a ready verification contract.
+- `pfo learning-gate` blocks unreviewed learning promotions before runtime changes.
+- Added machine-readable `.pfo/PERMISSION_MATRIX.json`, `.pfo/TOOL_CAPABILITY_REGISTRY.json`, `pfo permission-check`, `pfo event`, and `pfo tool-registry`.
 
 ---
 

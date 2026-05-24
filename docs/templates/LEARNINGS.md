@@ -2,6 +2,8 @@
 
 Structured source of truth: `.codex-memory/LEARNINGS.jsonl`.
 
+Promotion source of truth: `.codex-memory/LEARNING_PROPOSALS.json`, checked by `.pfo/LEARNING_PROMOTION_GATE.md`.
+
 ## Decisions
 
 ## Lessons

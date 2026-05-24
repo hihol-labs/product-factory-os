@@ -12,7 +12,7 @@
       "name": "preflight-context",
       "type": "auto-adopt-diagnostic",
       "command": "python3 hooks/preflight-context.py",
-      "description": "Auto-adopts first-level workspace projects when needed, then prints discovered docs and memory state."
+      "description": "Auto-adopts first-level workspace projects when needed, then prints discovered docs, policy contracts, memory state, and event log."
     },
     {
       "name": "session-diagnostics",

@@ -30,6 +30,7 @@ def main() -> None:
         [sys.executable, "scripts/verify_skill_profiles.py"],
         [sys.executable, "scripts/validate_hooks.py"],
         [sys.executable, "scripts/validate_runtime.py"],
+        [sys.executable, "scripts/validate_tool_registry.py", "docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json", "integrations/tool-capability-registry.json"],
         [sys.executable, "scripts/verify_manifest_drift.py"],
         [sys.executable, "scripts/verify_install_sync.py"],
     ]

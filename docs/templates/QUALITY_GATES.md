@@ -19,6 +19,10 @@
 | Spec Compliance Review |  | unit output checked against manifest/spec |  |
 | Code Quality Review |  | maintainability, simplicity, integration checks |  |
 | Unit Context Manifest |  | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
+| Execution Policy |  | `.pfo/EXECUTION_POLICY.json` |  |
+| Permission Matrix |  | `.pfo/PERMISSION_MATRIX.json`, `.pfo/PERMISSION_MATRIX.md`, `pfo permission-check` |  |
+| Verification Contract |  | `.pfo/VERIFICATION_CONTRACT.json` |  |
+| Tool Capability Registry |  | `.pfo/TOOL_CAPABILITY_REGISTRY.json`, `pfo tool-registry` |  |
 | Handoff |  | `HANDOFF.md` before session transfer, role switch, delegation, AFK, compaction, or recovery |  |
 | Work Verification |  | verification log / command output |  |
 | Experiment Loop |  | `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric and keep/discard/crash decision |  |
@@ -36,6 +40,7 @@
 | Deployment Readiness |  |  |  |
 | Branch Finish |  | PR/merge/keep/discard decision with verification |  |
 | Learning Extraction |  | `.codex-memory/LEARNINGS.md` when applicable |  |
+| Learning Promotion |  | `.pfo/LEARNING_PROMOTION_GATE.md`, `.codex-memory/LEARNING_PROPOSALS.json` |  |
 | Asset Extraction |  | `ASSET_REGISTER.md` when applicable |  |
 | Content Pipeline |  | `CONTENT_BACKLOG.md` when applicable |  |
 

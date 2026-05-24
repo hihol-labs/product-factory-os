@@ -66,6 +66,24 @@ ROOT_CAUSE_ENFORCEMENT_STAGES = {"ROOT_CAUSE_ANALYSIS"} | TDD_ENFORCEMENT_STAGES
 
 EXPERIMENT_ENFORCEMENT_STAGES = {"EXPERIMENT_READY", "EXPERIMENT_RUNNING", "EXPERIMENT_EVALUATED"}
 
+VERIFICATION_CONTRACT_STAGES = {
+    "UNIT_CONTEXT_READY",
+    "UNIT_DISPATCHED",
+    "ROOT_CAUSE_ANALYSIS",
+    "TDD_EVIDENCE",
+    "BUILDING",
+    "VERIFYING_WORK",
+    "TESTING",
+    "TWO_STAGE_REVIEW",
+    "REVIEWING",
+    "SECURITY_REVIEW",
+    "DEPENDENCY_REVIEW",
+    "HARDENING",
+    "READY_FOR_DEPLOY",
+    "BRANCH_FINISH",
+    "DEPLOYED",
+}
+
 PASS_STATUSES = {"PASSED", "PASSED_WITH_WARNINGS"}
 
 
@@ -183,6 +201,25 @@ def validate_state_gates(project: Path) -> list[str]:
     gates = state.get("gateResults", {})
     experiment = state.get("experimentLoop", {}) if isinstance(state.get("experimentLoop", {}), dict) else {}
 
+    if stage in VERIFICATION_CONTRACT_STAGES:
+        contract = read_json(project / ".pfo" / "VERIFICATION_CONTRACT.json")
+        if not contract:
+            errors.append("unit execution is missing .pfo/VERIFICATION_CONTRACT.json")
+        else:
+            commands = contract.get("commands", [])
+            if not isinstance(commands, list) or not commands:
+                errors.append("verification contract has no commands")
+            for index, command in enumerate(commands, start=1):
+                if not isinstance(command, dict):
+                    errors.append(f"verification contract command {index} must be an object")
+                    continue
+                for field in ["id", "command", "timeoutSeconds", "expectedOutput", "passFailParser"]:
+                    if not command.get(field):
+                        errors.append(f"verification contract command {index} missing {field}")
+            artifacts = contract.get("requiredArtifacts", [])
+            if not isinstance(artifacts, list) or not artifacts:
+                errors.append("verification contract has no requiredArtifacts")
+
     if requires_tdd(state, manifest) and stage in TDD_RED_ENFORCEMENT_STAGES:
         evidence = state.get("tddEvidence", {})
         if not isinstance(evidence, dict) or not evidence.get("red"):
@@ -254,6 +291,7 @@ def self_check() -> None:
         "docs/templates/BUILD_PLAN.md": EXECUTABLE_TASK_REQUIREMENTS,
         "docs/SUPERPOWERS_INTEGRATION.md": ["Engineering Discipline v2", "source of truth"],
         "scripts/pfo.py": ["tdd-evidence", "root-cause", "review-stage", "finish-branch"],
+        "docs/templates/pfo/VERIFICATION_CONTRACT.json": ["passFailParser", "requiredArtifacts"],
         "docs/AUTORESEARCH_INTEGRATION.md": ["fixed budget", "keep/discard"],
         "hooks/review-before-commit.py": ["validate_plan_quality.py"],
     }

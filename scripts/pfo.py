@@ -32,6 +32,30 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
+def append_event(project: Path, state: dict, event_type: str, status: str, payload: dict, source: str = "pfo-cli") -> None:
+    timestamp = now_iso()
+    event_id = f"event-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{len(state.get('dispatchJournal', [])) + 1}"
+    event = {
+        "id": event_id,
+        "timestamp": timestamp,
+        "eventType": event_type,
+        "status": status,
+        "project": project.name,
+        "source": source,
+        "payload": payload,
+    }
+    event_path = project / ".codex-memory" / "events.jsonl"
+    event_path.parent.mkdir(parents=True, exist_ok=True)
+    with event_path.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(event, ensure_ascii=False) + "\n")
+    state["eventLog"] = {
+        "path": ".codex-memory/events.jsonl",
+        "lastEventId": event_id,
+        "lastEventAt": timestamp,
+    }
+    add_artifact(state, ".codex-memory/events.jsonl")
+
+
 def add_artifact(state: dict, artifact: str) -> None:
     artifacts = set(state.get("artifacts", []))
     artifacts.add(artifact)
@@ -107,6 +131,12 @@ def ensure_autonomy_state(state: dict) -> None:
     state.setdefault("driftChecks", [])
     state.setdefault("knowledgeLog", [])
     state.setdefault("learningProposals", [])
+    state.setdefault("eventLog", {"path": ".codex-memory/events.jsonl", "lastEventId": "", "lastEventAt": ""})
+    state.setdefault("executionPolicy", {"path": ".pfo/EXECUTION_POLICY.json", "status": ""})
+    state.setdefault("permissionMatrix", {"path": ".pfo/PERMISSION_MATRIX.json", "humanPath": ".pfo/PERMISSION_MATRIX.md", "status": ""})
+    state.setdefault("verificationContract", {"path": ".pfo/VERIFICATION_CONTRACT.json", "status": ""})
+    state.setdefault("toolCapabilityRegistry", {"path": ".pfo/TOOL_CAPABILITY_REGISTRY.json", "status": ""})
+    state.setdefault("learningPromotionGate", {"path": ".pfo/LEARNING_PROMOTION_GATE.md", "status": ""})
     state.setdefault(
         "experimentLoop",
         {
@@ -163,6 +193,11 @@ def ensure_autonomy_state(state: dict) -> None:
         "experimentSetup",
         "experimentMetric",
         "experimentDecision",
+        "executionPolicy",
+        "permissionMatrix",
+        "verificationContract",
+        "learningPromotion",
+        "toolCapabilityRegistry",
     ]:
         gates.setdefault(gate, "")
 
@@ -714,6 +749,10 @@ def generated_quality_gates() -> str:
 | Spec Compliance Review | PENDING | unit output checked against manifest/spec |  |
 | Code Quality Review | PENDING | maintainability, simplicity, integration checks |  |
 | Unit Context Manifest | PENDING | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
+| Execution Policy | PENDING | `.pfo/EXECUTION_POLICY.json` |  |
+| Permission Matrix | PENDING | `.pfo/PERMISSION_MATRIX.json`, `.pfo/PERMISSION_MATRIX.md` |  |
+| Verification Contract | PENDING | `.pfo/VERIFICATION_CONTRACT.json` |  |
+| Tool Capability Registry | PENDING | `.pfo/TOOL_CAPABILITY_REGISTRY.json` |  |
 | Handoff | PENDING | `HANDOFF.md` before session transfer, role switch, delegation, AFK, compaction, or recovery |  |
 | Work Verification | PENDING | `pfo verify-work` evidence |  |
 | Experiment Loop | PENDING | `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric and keep/discard/crash decision |  |
@@ -731,6 +770,7 @@ def generated_quality_gates() -> str:
 | Deployment Readiness | PENDING | env vars, build, health check, rollback notes |  |
 | Branch Finish | PENDING | PR/merge/keep/discard decision with verification |  |
 | Learning Extraction | PENDING | `.codex-memory/LEARNINGS.md` when applicable |  |
+| Learning Promotion | PENDING | `.pfo/LEARNING_PROMOTION_GATE.md`, `.codex-memory/LEARNING_PROPOSALS.json` |  |
 | Asset Extraction | PENDING | ASSET_REGISTER.md updated after useful repeatable solutions |  |
 | Content Pipeline | PENDING | CONTENT_BACKLOG.md updated when learnings can become public content |  |
 
@@ -799,6 +839,11 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             ".codex-memory/STATE.json",
             ".pfo/PROJECT_CONTRACT.md",
             ".pfo/SCOPE_LOCK.md",
+            ".pfo/EXECUTION_POLICY.json",
+            ".pfo/PERMISSION_MATRIX.md",
+            ".pfo/PERMISSION_MATRIX.json",
+            ".pfo/VERIFICATION_CONTRACT.json",
+            ".pfo/TOOL_CAPABILITY_REGISTRY.json",
             "IDEA_SCORECARD.md",
             "VALIDATION_PLAN.md",
             "PRODUCT_BLUEPRINT.md",
@@ -817,15 +862,18 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "PFO_REPORT.md",
             ".codex-memory/STATE.json",
             ".codex-memory/MEMORY.md",
+            ".codex-memory/events.jsonl",
         ],
         "forbiddenChanges": [
             "scope outside `.pfo/SCOPE_LOCK.md`",
             "silent production data substitution",
             "unapproved deployment, migration, DNS, or production mutation",
             "golden-flow behavior changes without verification evidence",
+            "commands or writes outside `.pfo/EXECUTION_POLICY.json` and `.pfo/PERMISSION_MATRIX.md`",
         ],
         "dependencies": [],
         "verificationCommands": [
+            "commands declared in `.pfo/VERIFICATION_CONTRACT.json`",
             "failing test command before implementation for behavior changes",
             "passing test command after minimal implementation",
             "project test command from TEST_PLAN.md",
@@ -852,6 +900,11 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "experimentSetup",
             "experimentMetric",
             "experimentDecision",
+            "executionPolicy",
+            "permissionMatrix",
+            "verificationContract",
+            "learningPromotion",
+            "toolCapabilityRegistry",
         ],
         "engineeringDiscipline": {
             "behaviorChange": inferred_behavior_change,
@@ -882,6 +935,61 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
         "recovery": "If verification is missing or ambiguous, mark RECOVERY_REQUIRED and create PFO_RECOVERY.md.",
         "project": str(project),
     }
+
+
+def generated_verification_contract(project: Path, manifest: dict) -> dict:
+    unit_id = manifest.get("unitId", "")
+    return {
+        "version": 1,
+        "purpose": "Executable verification contract for the active PFO unit.",
+        "unitId": unit_id,
+        "createdAt": now_iso(),
+        "commands": [
+            {
+                "id": "pfo-contract-gate",
+                "command": f"{sys.executable} {ROOT / 'scripts' / 'pfo_contract_gate.py'} {project}",
+                "timeoutSeconds": 90,
+                "expectedOutput": "PFO contract gate reports PASS or PASS_WITH_WARNINGS; BLOCKED requires recovery.",
+                "passFailParser": "exit_code_zero",
+                "required": True,
+            }
+        ],
+        "requiredArtifacts": [
+            ".codex-memory/STATE.json",
+            ".pfo/UNIT_CONTEXT_MANIFEST.json",
+            ".pfo/EXECUTION_POLICY.json",
+            ".pfo/PERMISSION_MATRIX.md",
+            ".pfo/PERMISSION_MATRIX.json",
+            ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+        ],
+        "passCriteria": [
+            "All required commands exit 0.",
+            "Expected output rules match.",
+            "Required artifacts exist.",
+            "Failures are recorded as recovery, not success.",
+        ],
+        "failureMode": "RECOVERY_REQUIRED",
+    }
+
+
+def verification_contract_ready(project: Path) -> bool:
+    path = project / ".pfo" / "VERIFICATION_CONTRACT.json"
+    if not path.is_file():
+        return False
+    try:
+        contract = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return False
+    commands = contract.get("commands", [])
+    if not isinstance(commands, list) or not commands:
+        return False
+    for item in commands:
+        if not isinstance(item, dict):
+            return False
+        for field in ["id", "command", "timeoutSeconds", "expectedOutput", "passFailParser"]:
+            if not item.get(field):
+                return False
+    return True
 
 
 def clean_tsv_cell(value: object) -> str:
@@ -1345,6 +1453,9 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     pfo_dir.mkdir(exist_ok=True)
     manifest_path = pfo_dir / "UNIT_CONTEXT_MANIFEST.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    verification_contract = generated_verification_contract(project, manifest)
+    verification_path = pfo_dir / "VERIFICATION_CONTRACT.json"
+    verification_path.write_text(json.dumps(verification_contract, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     state["currentStage"] = "UNIT_CONTEXT_READY"
     state["currentNode"] = manifest["unitId"]
     state["currentUnit"] = {
@@ -1356,10 +1467,20 @@ def cmd_manifest(args: argparse.Namespace) -> int:
         "completedAt": "",
     }
     state["unitContextManifest"] = manifest
+    state["executionPolicy"] = {"path": ".pfo/EXECUTION_POLICY.json", "status": "READY"}
+    state["permissionMatrix"] = {"path": ".pfo/PERMISSION_MATRIX.json", "humanPath": ".pfo/PERMISSION_MATRIX.md", "status": "READY"}
+    state["toolCapabilityRegistry"] = {"path": ".pfo/TOOL_CAPABILITY_REGISTRY.json", "status": "READY"}
+    state["verificationContract"] = {"path": ".pfo/VERIFICATION_CONTRACT.json", "status": "READY"}
+    state["gateResults"]["executionPolicy"] = "PASSED"
+    state["gateResults"]["permissionMatrix"] = "PASSED"
+    state["gateResults"]["toolCapabilityRegistry"] = "PASSED"
+    state["gateResults"]["verificationContract"] = "PASSED"
     add_artifact(state, ".pfo/UNIT_CONTEXT_MANIFEST.json")
+    add_artifact(state, ".pfo/VERIFICATION_CONTRACT.json")
     state["nextAction"] = f"Execute unit {manifest['unitId']} using `.pfo/UNIT_CONTEXT_MANIFEST.json`."
+    append_event(project, state, "state-change", "READY", {"command": "manifest", "unitId": manifest["unitId"]})
     save_state(project, state)
-    print("OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json")
+    print("OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json and .pfo/VERIFICATION_CONTRACT.json")
     return 0
 
 
@@ -1394,6 +1515,7 @@ def cmd_handoff(args: argparse.Namespace) -> int:
     )
     add_artifact(state, "HANDOFF.md")
     state["nextAction"] = "Start the next session by reading HANDOFF.md, then .codex-memory/STATE.json."
+    append_event(project, state, "state-change", "READY", {"command": "handoff", "reason": args.reason})
     save_state(project, state)
     print("OK: wrote HANDOFF.md")
     return 0
@@ -1427,7 +1549,10 @@ def cmd_verify_work(args: argparse.Namespace) -> int:
     )
     state["telemetry"]["verificationCount"] = int(state["telemetry"].get("verificationCount") or 0) + 1
     if args.pass_gate:
+        if not verification_contract_ready(project):
+            raise SystemExit("ERROR: cannot pass verification without a ready .pfo/VERIFICATION_CONTRACT.json")
         state["gateResults"]["review"] = "PASSED"
+        state["gateResults"]["verificationContract"] = "PASSED"
         state["lastSuccessfulState"] = "VERIFYING_WORK"
         state["nextAction"] = "Run tests and quality gates, then proceed to review or next unit."
     else:
@@ -1442,6 +1567,13 @@ def cmd_verify_work(args: argparse.Namespace) -> int:
         add_artifact(state, "PFO_RECOVERY.md")
         state["nextAction"] = "Repair the failed or unclear verification path from PFO_RECOVERY.md."
         print("Generated: PFO_RECOVERY.md")
+    append_event(
+        project,
+        state,
+        "verification",
+        "PASSED" if args.pass_gate else "RECOVERY_REQUIRED",
+        {"evidence": args.evidence, "node": state.get("currentNode", "")},
+    )
     save_state(project, state)
     print(f"OK: verification recorded as {state['currentStage']}")
     return 0
@@ -1475,6 +1607,7 @@ def cmd_tdd_evidence(args: argparse.Namespace) -> int:
             state["gateResults"][gate] = "BLOCKED"
     add_artifact(state, ".codex-memory/STATE.json")
     state["nextAction"] = "Continue only after TDD red and green evidence is recorded for changed behavior."
+    append_event(project, state, "verification", "RECORDED", {"command": "tdd-evidence", "evidence": evidence.copy()})
     save_state(project, state)
     print("OK: TDD evidence recorded")
     return 0
@@ -1497,6 +1630,7 @@ def cmd_root_cause(args: argparse.Namespace) -> int:
     state["gateResults"]["rootCause"] = "PASSED" if args.summary and args.evidence else "BLOCKED"
     add_artifact(state, "ROOT_CAUSE.md")
     state["nextAction"] = "Use ROOT_CAUSE.md to implement one focused fix and verify with a regression test."
+    append_event(project, state, "gate", state["gateResults"]["rootCause"], {"command": "root-cause", "summary": args.summary})
     save_state(project, state)
     print("OK: wrote ROOT_CAUSE.md")
     return 0
@@ -1523,6 +1657,7 @@ def cmd_review_stage(args: argparse.Namespace) -> int:
         if args.stage == "spec" and args.status == "PASSED"
         else "Resolve review findings or proceed to the next gate."
     )
+    append_event(project, state, "gate", args.status, {"command": "review-stage", "stage": args.stage, "evidence": args.evidence})
     save_state(project, state)
     print(f"OK: {args.stage} review recorded as {args.status}")
     return 0
@@ -1573,6 +1708,7 @@ def cmd_finish_branch(args: argparse.Namespace) -> int:
     if not args.verification:
         state.setdefault("blockers", []).append("Branch finish requires fresh verification evidence.")
     state["nextAction"] = "Finish branch using the recorded PR/merge/keep/discard decision."
+    append_event(project, state, "gate", status, {"command": "finish-branch", "mode": args.mode, "verification": args.verification})
     save_state(project, state)
     print(f"OK: branch finish recorded as {status}")
     return 0
@@ -1601,7 +1737,70 @@ def cmd_improve(args: argparse.Namespace) -> int:
     argv = ["propose", str(args.project), "--min-confidence", str(args.min_confidence)]
     if args.registry:
         argv.extend(["--registry", str(args.registry)])
+    if args.promotion_target:
+        argv.extend(["--promotion-target", args.promotion_target])
+    for artifact in args.promotion_artifact or []:
+        argv.extend(["--promotion-artifact", artifact])
+    for check in args.promotion_check or []:
+        argv.extend(["--promotion-check", check])
+    if args.review_status:
+        argv.extend(["--review-status", args.review_status])
     return run_script("pfo_learn.py", argv)
+
+
+def cmd_learning_gate(args: argparse.Namespace) -> int:
+    argv = ["gate", str(args.project)]
+    if args.require_approved:
+        argv.append("--require-approved")
+    return run_script("pfo_learn.py", argv)
+
+
+def cmd_permission_check(args: argparse.Namespace) -> int:
+    argv = [str(args.project)]
+    if args.capability:
+        argv.extend(["--capability", args.capability])
+    if args.path:
+        argv.extend(["--path", args.path])
+    if args.command_text:
+        argv.extend(["--command", args.command_text])
+    if args.approved:
+        argv.append("--approved")
+    if args.json:
+        argv.append("--json")
+    return run_script("pfo_permission_gate.py", argv)
+
+
+def cmd_event(args: argparse.Namespace) -> int:
+    if args.event_action == "validate":
+        return run_script("pfo_event_log.py", ["validate", str(args.project)])
+    argv = [
+        "record",
+        str(args.project),
+        "--event-type",
+        args.event_type,
+        "--status",
+        args.status,
+        "--source",
+        args.source,
+    ]
+    for flag, value in [
+        ("--event-id", args.event_id),
+        ("--command", args.command_text),
+        ("--cost-notes", args.cost_notes),
+        ("--token-notes", args.token_notes),
+        ("--reason", args.reason),
+    ]:
+        if value:
+            argv.extend([flag, str(value)])
+    if args.exit_code is not None:
+        argv.extend(["--exit-code", str(args.exit_code)])
+    if args.duration_seconds is not None:
+        argv.extend(["--duration-seconds", str(args.duration_seconds)])
+    return run_script("pfo_event_log.py", argv)
+
+
+def cmd_tool_registry(args: argparse.Namespace) -> int:
+    return run_script("validate_tool_registry.py", [str(args.project / ".pfo" / "TOOL_CAPABILITY_REGISTRY.json")])
 
 
 def cmd_experiment_init(args: argparse.Namespace) -> int:
@@ -1676,6 +1875,7 @@ def cmd_experiment_init(args: argparse.Namespace) -> int:
     )
     add_artifact(state, program_rel)
     add_artifact(state, results_rel)
+    append_event(project, state, "state-change", "READY", {"command": "experiment-init", "tag": tag, "metric": args.metric})
     save_state(project, state)
     print("OK: experiment loop initialized")
     return 0
@@ -1786,6 +1986,7 @@ def cmd_experiment_record(args: argparse.Namespace) -> int:
         state["nextAction"] = "Discard this experiment's implementation change, keep the TSV evidence, and try a new idea."
     else:
         state["nextAction"] = "Treat the crash as a failed experiment unless the fix is trivial and in scope."
+    append_event(project, state, "verification", status.upper(), {"command": "experiment-record", "runId": run_id, "metric": metric_name, "value": metric_value})
     save_state(project, state)
     print(f"OK: recorded experiment {run_id} as {status}")
     return 0
@@ -1800,6 +2001,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
     state.setdefault("briefArtifacts", []).append(str(path))
     add_artifact(state, "PFO_BRIEF.html")
     state["nextAction"] = "Review PFO_BRIEF.html for status, gates, blockers, and dispatch history."
+    append_event(project, state, "state-change", "RECORDED", {"command": "brief", "mode": args.mode})
     save_state(project, state)
     print(f"OK: wrote {path}")
     return 0
@@ -1972,7 +2174,44 @@ def build_parser() -> argparse.ArgumentParser:
     improve.add_argument("--propose", action="store_true")
     improve.add_argument("--min-confidence", type=float, default=0.0)
     improve.add_argument("--registry", type=Path, default=None)
+    improve.add_argument("--promotion-target", choices=["test", "hook", "doc", "rule", "linter", "validator", "template", "skill", "route"], default="")
+    improve.add_argument("--promotion-artifact", action="append", default=[])
+    improve.add_argument("--promotion-check", action="append", default=[])
+    improve.add_argument("--review-status", choices=["PENDING", "APPROVED", "REJECTED"], default="PENDING")
     improve.set_defaults(func=cmd_improve)
+
+    learning_gate = sub.add_parser("learning-gate", help="Validate learning proposals before runtime promotion.")
+    learning_gate.add_argument("project", type=Path)
+    learning_gate.add_argument("--require-approved", action="store_true")
+    learning_gate.set_defaults(func=cmd_learning_gate)
+
+    permission_check = sub.add_parser("permission-check", help="Validate permission matrix or check one capability.")
+    permission_check.add_argument("project", type=Path)
+    permission_check.add_argument("--capability", choices=["read", "write", "test", "commit", "push", "deploy", "external_api", "secrets"])
+    permission_check.add_argument("--path", default="")
+    permission_check.add_argument("--command-text", default="")
+    permission_check.add_argument("--approved", action="store_true")
+    permission_check.add_argument("--json", action="store_true")
+    permission_check.set_defaults(func=cmd_permission_check)
+
+    event = sub.add_parser("event", help="Record or validate structured events.")
+    event.add_argument("event_action", choices=["record", "validate"])
+    event.add_argument("project", type=Path)
+    event.add_argument("--event-type", choices=["command", "gate", "approval", "verification", "state-change", "learning", "external-tool", "error"], default="command")
+    event.add_argument("--status", default="RECORDED")
+    event.add_argument("--source", default="pfo-cli")
+    event.add_argument("--event-id", default="")
+    event.add_argument("--command-text", default="")
+    event.add_argument("--exit-code", type=int, default=None)
+    event.add_argument("--duration-seconds", type=float, default=None)
+    event.add_argument("--cost-notes", default="")
+    event.add_argument("--token-notes", default="")
+    event.add_argument("--reason", default="")
+    event.set_defaults(func=cmd_event)
+
+    tool_registry = sub.add_parser("tool-registry", help="Validate project tool capability registry.")
+    tool_registry.add_argument("project", type=Path)
+    tool_registry.set_defaults(func=cmd_tool_registry)
 
     experiment_init = sub.add_parser("experiment-init", help="Create an Autoresearch-style fixed-budget experiment loop.")
     experiment_init.add_argument("project", type=Path)

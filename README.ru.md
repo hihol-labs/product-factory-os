@@ -77,8 +77,10 @@ PFO добавляет:
 - `docs/templates/FUNNEL_MODEL.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md` — слой воронки, обратной связи, итераций, активов и контента.
 - `execution/state-machine.json` — контролируемые переходы workflow.
 - `memory/session-state.schema.json` — формат восстановления состояния.
+- `memory/events.schema.json` — формат структурированного event log.
 - `deployment/deployment-targets.json` — deploy readiness checks.
 - `.pfo/*` project contracts — универсальные guardrails проекта: scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk и no silent substitution.
+- `.pfo/EXECUTION_POLICY.json`, `.pfo/PERMISSION_MATRIX.json`, `.pfo/PERMISSION_MATRIX.md`, `.pfo/VERIFICATION_CONTRACT.json`, `.pfo/TOOL_CAPABILITY_REGISTRY.json` и `.codex-memory/events.jsonl` — исполняемые policy, permissions, verification contract, tool registry и structured event log.
 
 ## Runtime CLI
 
@@ -113,6 +115,10 @@ pfo finish-branch ../my-product --mode pr --verification "checks passed" --pr-ur
 pfo brief ../my-product --mode recap
 pfo learnings ../my-product --lesson "Keep provider fallback explicit" --problem "Fallbacks drift during deploy checks" --rule "Require fallback evidence in deploy nodes" --evidence "deploy gate recovery" --confidence 0.75
 pfo improve ../my-product --from-learnings --propose
+pfo learning-gate ../my-product --require-approved
+pfo permission-check ../my-product --capability write --path .codex-memory/STATE.json
+pfo event validate ../my-product
+pfo tool-registry ../my-product
 pfo voice "создай Telegram бот для продаж"
 pfo metrics
 pfo export ../my-product --target github

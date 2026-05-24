@@ -155,6 +155,13 @@ Before execution, each node gets a task-scoped manifest:
 
 The canonical artifact is `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 
+The manifest is paired with:
+
+- `.pfo/EXECUTION_POLICY.json`: command, write, network, and approval policy.
+- `.pfo/PERMISSION_MATRIX.json` and `.pfo/PERMISSION_MATRIX.md`: read/write/test/commit/push/deploy/external API permissions.
+- `.pfo/VERIFICATION_CONTRACT.json`: required commands, expected output, timeout, pass/fail parser, and artifacts.
+- `.pfo/TOOL_CAPABILITY_REGISTRY.json`: tool/connector read-write-execute capabilities, side effects, auth needs, external data risk, fallback mode, and approval requirements.
+
 ### 9. Handoff Layer
 
 Before session transfer, role switch, delegated execution, AFK work, compaction, or recovery, PFO writes a compact transfer packet:
@@ -177,6 +184,8 @@ Execution should use fresh, task-scoped context per unit. Long chat history is n
 ### 11. Verification, Drift, And Recovery
 
 Post-unit verification fails closed. PFO records unclear evidence as recovery work, not success.
+
+`pfo verify-work --pass-gate` requires a ready `.pfo/VERIFICATION_CONTRACT.json`.
 
 Recovery covers:
 
@@ -228,7 +237,13 @@ Uses `memory/session-state.schema.json` as the canonical reloadable state contra
 
 It stores dispatch history, telemetry, recovery state, captured notes, and durable learnings in addition to basic stage and gate state.
 
+Structured events are appended to `.codex-memory/events.jsonl` for commands, gates, approvals, verification, state changes, external-tool events, errors, and learning events.
+
+`pfo event record` and `pfo event validate` provide an explicit local interface for event replay and diagnostics.
+
 Structured learnings are recorded in `.codex-memory/LEARNINGS.jsonl`. Candidate runtime improvements are proposed into `.codex-memory/LEARNING_PROPOSALS.json` and the repository-level `memory/LEARNING_REGISTRY.json`; they must pass promotion gates before changing templates, routes, gates, or skills.
+
+The project-local promotion rule lives in `.pfo/LEARNING_PROMOTION_GATE.md`; `pfo learning-gate` blocks proposals that lack evidence, promotion target, artifacts, checks, or approval when required.
 
 Reusable assets are recorded in `ASSET_REGISTER.md`. Publishable lessons, case studies, and checklists are recorded in `CONTENT_BACKLOG.md` only when they are tied to evidence and approved data boundaries.
 
@@ -274,11 +289,13 @@ Every full-cycle PFO project should maintain:
 - `HANDOFF.md` before session transfer, role switch, delegated execution, AFK, compaction, or recovery
 - `ROOT_CAUSE.md` for bugfix work
 - `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution
+- `.pfo/EXECUTION_POLICY.json`, `.pfo/PERMISSION_MATRIX.json`, `.pfo/PERMISSION_MATRIX.md`, `.pfo/VERIFICATION_CONTRACT.json`, and `.pfo/TOOL_CAPABILITY_REGISTRY.json` for executable harness control
 - `.pfo/EXPERIMENT_PROGRAM.md` and `.pfo/EXPERIMENTS.tsv` when autonomous measurement-driven iteration is in scope
 - `PFO_RECOVERY.md` when verification or state reconciliation blocks progress
 - `BRANCH_FINISH.md` when branch cleanup or PR/merge decisions are in scope
 - `PFO_BRIEF.html` when visual status, plan, diff, or recap review is useful
 - `.codex-memory/LEARNINGS.md` after significant milestones or repairs
+- `.codex-memory/events.jsonl` for structured command, gate, approval, verification, error, and learning events
 - `ASSET_REGISTER.md` after reusable solutions or patterns appear
 - `CONTENT_BACKLOG.md` when evidence-backed learnings can become public content
 - `CODEX.md`

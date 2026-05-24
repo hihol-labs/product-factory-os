@@ -10,6 +10,8 @@
     "PHASE_DISCUSSION",
     "EXECUTION_PLAN_GENERATION",
     "UNIT_CONTEXT_MANIFEST",
+    "EXECUTION_POLICY",
+    "VERIFICATION_CONTRACT",
     "HANDOFF",
     "EXPERIMENT_PROGRAM",
     "EXPERIMENT_EVALUATION",
@@ -23,6 +25,7 @@
     "BRANCH_FINISH",
     "DRIFT_RECOVERY_CHECK",
     "LEARNING_EXTRACTION",
+    "LEARNING_PROMOTION",
     "ASSET_EXTRACTION",
     "DEPLOYMENT_READINESS",
     "SESSION_PERSISTENCE"
@@ -37,6 +40,8 @@
     "PHASE_DISCUSSION": ["PHASE_CONTEXT.md"],
     "EXECUTION_PLAN_GENERATION": ["BUILD_PLAN.md", "EXECUTION_GRAPH.md", "IMPLEMENTATION_PLAN.md"],
     "UNIT_CONTEXT_MANIFEST": [".pfo/UNIT_CONTEXT_MANIFEST.json"],
+    "EXECUTION_POLICY": [".pfo/EXECUTION_POLICY.json", ".pfo/PERMISSION_MATRIX.md"],
+    "VERIFICATION_CONTRACT": [".pfo/VERIFICATION_CONTRACT.json"],
     "HANDOFF": ["HANDOFF.md when session transfer, role switch, delegation, AFK, compaction, or recovery is in scope"],
     "EXPERIMENT_PROGRAM": [".pfo/EXPERIMENT_PROGRAM.md when autonomous measurement-driven iteration is in scope"],
     "EXPERIMENT_EVALUATION": [".pfo/EXPERIMENTS.tsv", "fixed budget", "primary metric", "keep/discard/crash decision"],
@@ -50,6 +55,7 @@
     "BRANCH_FINISH": ["BRANCH_FINISH.md when branch cleanup or PR is in scope"],
     "DRIFT_RECOVERY_CHECK": ["state_reconciliation", "drift_check_log"],
     "LEARNING_EXTRACTION": [".codex-memory/LEARNINGS.md"],
+    "LEARNING_PROMOTION": [".pfo/LEARNING_PROMOTION_GATE.md", ".codex-memory/LEARNING_PROPOSALS.json when repeated-error promotion is in scope"],
     "ASSET_EXTRACTION": ["ASSET_REGISTER.md", "CONTENT_BACKLOG.md"],
     "DEPLOYMENT_READINESS": ["deployment_plan", ".env.example", "health_check", "rollback_notes"],
     "SESSION_PERSISTENCE": [".codex-memory/STATE.json", ".codex-memory/MEMORY.md", "PFO_BRIEF.html when requested"]
@@ -58,6 +64,7 @@
     "MODULAR_BUILD requires BLUEPRINT_GENERATION and EXECUTION_PLAN_GENERATION artifacts.",
     "Broad BUILD scope requires IDEA_GATE not to be KILL and MARKET_VALIDATION to name exit criteria.",
     "Autonomous or delegated execution requires UNIT_CONTEXT_MANIFEST.",
+    "Autonomous or delegated execution requires EXECUTION_POLICY and VERIFICATION_CONTRACT.",
     "Measurement-driven self-improvement requires EXPERIMENT_PROGRAM and EXPERIMENT_EVALUATION.",
     "Experiment loops must protect the evaluation harness and record baseline, metric, budget, and keep/discard/crash status.",
     "Session transfer, role switch, delegation, AFK, compaction, or recovery requires HANDOFF.",
@@ -66,6 +73,7 @@
     "TWO_STAGE_REVIEW requires spec compliance before code quality.",
     "UNIT_VERIFICATION must fail closed when evidence is missing or ambiguous.",
     "Product iteration requires feedback, metric, validation, or strategy-decision evidence.",
+    "Repeated errors must promote through LEARNING_PROMOTION before changing runtime rules.",
     "READY_FOR_DEPLOY requires passing validation gates.",
     "SESSION_PERSISTENCE runs after every major milestone."
   ]

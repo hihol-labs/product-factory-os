@@ -55,6 +55,12 @@ def has_pfo_contracts(path: Path) -> bool:
         "FORBIDDEN_CHANGES.md",
         "FALLBACK_POLICY.md",
         "SCOPE_LOCK.md",
+        "PERMISSION_MATRIX.md",
+        "PERMISSION_MATRIX.json",
+        "LEARNING_PROMOTION_GATE.md",
+        "EXECUTION_POLICY.json",
+        "VERIFICATION_CONTRACT.json",
+        "TOOL_CAPABILITY_REGISTRY.json",
     ]:
         if not (path / ".pfo" / name).is_file():
             return False
@@ -138,7 +144,9 @@ def ensure_pfo_contracts(path: Path) -> None:
     pfo_dir.mkdir(exist_ok=True)
     if not PFO_TEMPLATE_DIR.is_dir():
         return
-    for source in PFO_TEMPLATE_DIR.glob("*.md"):
+    for source in PFO_TEMPLATE_DIR.iterdir():
+        if not source.is_file() or source.suffix not in {".md", ".json"}:
+            continue
         target = pfo_dir / source.name
         if not target.exists():
             shutil.copyfile(source, target)
@@ -149,6 +157,7 @@ def write_adoption_files(path: Path, workspace: Path) -> None:
     agents = path / "AGENTS.md"
     memory_dir = path / ".codex-memory"
     memory = memory_dir / "MEMORY.md"
+    events = memory_dir / "events.jsonl"
     state = memory_dir / "STATE.json"
     block = project_runtime_block(path, workspace)
 
@@ -181,6 +190,8 @@ aliases:
 """,
             encoding="utf-8",
         )
+    if not events.exists():
+        events.write_text("", encoding="utf-8")
     if not state.exists():
         state.write_text(
             json.dumps(
@@ -266,6 +277,11 @@ aliases:
                         "experimentSetup": "",
                         "experimentMetric": "",
                         "experimentDecision": "",
+                        "executionPolicy": "",
+                        "permissionMatrix": "",
+                        "verificationContract": "",
+                        "learningPromotion": "",
+                        "toolCapabilityRegistry": "",
                         "deploymentReadiness": "",
                     },
                     "verificationHistory": [],
@@ -309,8 +325,15 @@ aliases:
                         ".pfo/FORBIDDEN_CHANGES.md",
                         ".pfo/FALLBACK_POLICY.md",
                         ".pfo/SCOPE_LOCK.md",
+                        ".pfo/PERMISSION_MATRIX.md",
+                        ".pfo/PERMISSION_MATRIX.json",
+                        ".pfo/LEARNING_PROMOTION_GATE.md",
+                        ".pfo/EXECUTION_POLICY.json",
+                        ".pfo/VERIFICATION_CONTRACT.json",
+                        ".pfo/TOOL_CAPABILITY_REGISTRY.json",
                         ".codex-memory/MEMORY.md",
                         ".codex-memory/STATE.json",
+                        ".codex-memory/events.jsonl",
                     ],
                     "completedModules": [],
                     "failedValidations": [],
@@ -331,6 +354,32 @@ aliases:
                     },
                     "knowledgeLog": [],
                     "learningProposals": [],
+                    "eventLog": {
+                        "path": ".codex-memory/events.jsonl",
+                        "lastEventId": "",
+                        "lastEventAt": "",
+                    },
+                    "executionPolicy": {
+                        "path": ".pfo/EXECUTION_POLICY.json",
+                        "status": "",
+                    },
+                    "permissionMatrix": {
+                        "path": ".pfo/PERMISSION_MATRIX.json",
+                        "humanPath": ".pfo/PERMISSION_MATRIX.md",
+                        "status": "",
+                    },
+                    "verificationContract": {
+                        "path": ".pfo/VERIFICATION_CONTRACT.json",
+                        "status": "",
+                    },
+                    "learningPromotionGate": {
+                        "path": ".pfo/LEARNING_PROMOTION_GATE.md",
+                        "status": "",
+                    },
+                    "toolCapabilityRegistry": {
+                        "path": ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+                        "status": "",
+                    },
                     "experimentLoop": {
                         "status": "",
                         "tag": "",

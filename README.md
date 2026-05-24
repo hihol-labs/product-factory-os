@@ -52,7 +52,7 @@ IDEA -> DISCOVERY -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH
      -> BUILD -> TEST -> REVIEW -> HARDEN -> DEPLOY_READY -> SAVE_STATE
 ```
 
-Every major step has an artifact. Every risky transition has a gate. Every session can be resumed from `.codex-memory/STATE.json`.
+Every major step has an artifact. Every risky transition has a gate. Every session can be resumed from `.codex-memory/STATE.json`. Execution policy, permissions, verification contracts, tool capabilities, structured events, and learning promotion gates are project-local artifacts, not chat-only instructions.
 
 ## Quick Start
 
@@ -424,6 +424,11 @@ pfo report ../my-product
 pfo finish-branch ../my-product --mode pr --verification "checks passed" --pr-url "https://github.com/..."
 pfo brief ../my-product --mode recap
 pfo learnings ../my-product --lesson "Keep provider fallback explicit"
+pfo improve ../my-product --from-learnings --propose
+pfo learning-gate ../my-product --require-approved
+pfo permission-check ../my-product --capability write --path .codex-memory/STATE.json
+pfo event validate ../my-product
+pfo tool-registry ../my-product
 pfo metrics
 pfo export ../my-product --target github
 pfo export ../my-product --target google-drive
@@ -443,6 +448,7 @@ templates/product-templates.json  Reusable module sets
 execution/state-machine.json      Valid workflow transitions
 pipelines/execution-pipeline.json Required stages and artifacts
 memory/session-state.schema.json  Reloadable state schema
+memory/events.schema.json         Structured event log schema
 deployment/deployment-targets.json Deploy-readiness checks
 interface/                        Voice-first input/output contract
 .pfo/                             Project-level invariants

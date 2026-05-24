@@ -59,6 +59,9 @@ def main() -> None:
         "validate_project.py",
         "validate_plan_quality.py",
         "pfo_contract_gate.py",
+        "pfo_permission_gate.py",
+        "pfo_event_log.py",
+        "validate_tool_registry.py",
         "voice_intent.py",
         "voice_transcribe.py",
         "pfo_metrics.py",
@@ -76,6 +79,17 @@ def main() -> None:
 
     if not (ROOT / "interface" / "voice-command-contract.json").is_file():
         fail("missing voice command contract")
+    events_schema = ROOT / "memory" / "events.schema.json"
+    if not events_schema.is_file():
+        fail("missing event log schema")
+    json.loads(events_schema.read_text(encoding="utf-8"))
+    for registry in [
+        ROOT / "docs" / "templates" / "pfo" / "TOOL_CAPABILITY_REGISTRY.json",
+        ROOT / "integrations" / "tool-capability-registry.json",
+    ]:
+        result = json.loads(registry.read_text(encoding="utf-8"))
+        if not result.get("tools"):
+            fail(f"{registry} must define tools")
     for path in ["templates/generated-ci/validate.yml", "templates/generated-ci/justfile"]:
         if not (ROOT / path).is_file():
             fail(f"missing generated-project CI template {path}")
@@ -87,6 +101,7 @@ def main() -> None:
         "integrations/github-issues.json",
         "integrations/linear.json",
         "integrations/notion.json",
+        "integrations/tool-capability-registry.json",
     ]:
         if not (ROOT / path).is_file():
             fail(f"missing runtime extension {path}")

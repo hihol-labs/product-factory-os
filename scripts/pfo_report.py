@@ -114,6 +114,9 @@ def main() -> None:
     dispatches = state.get("dispatchJournal", [])
     report.extend([f"- {item}" for item in dispatches] or ["- none"])
     telemetry = state.get("telemetry", {})
+    event_log = state.get("eventLog", {})
+    permission_matrix = state.get("permissionMatrix", {})
+    tool_registry = state.get("toolCapabilityRegistry", {})
     report.extend([
         "",
         "## Telemetry",
@@ -122,6 +125,9 @@ def main() -> None:
         f"- Verifications: `{telemetry.get('verificationCount', 0)}`",
         f"- Token notes: {telemetry.get('tokenNotes', '') or 'none'}",
         f"- Cost notes: {telemetry.get('costNotes', '') or 'none'}",
+        f"- Event log: `{event_log.get('path', '.codex-memory/events.jsonl')}` last `{event_log.get('lastEventId', '') or 'none'}`",
+        f"- Permission matrix: `{permission_matrix.get('path', '.pfo/PERMISSION_MATRIX.json')}` `{permission_matrix.get('status', '')}`",
+        f"- Tool registry: `{tool_registry.get('path', '.pfo/TOOL_CAPABILITY_REGISTRY.json')}` `{tool_registry.get('status', '')}`",
     ])
     (project / "PFO_REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
     print(f"OK: wrote {project / 'PFO_REPORT.md'}")

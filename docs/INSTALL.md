@@ -43,6 +43,7 @@ python3 scripts/verify_skill_profiles.py
 python3 scripts/validate_execution_graph.py
 python3 scripts/validate_state.py /path/to/project/.codex-memory/STATE.json
 python3 scripts/validate_runtime.py
+python3 scripts/validate_tool_registry.py docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json integrations/tool-capability-registry.json
 python3 scripts/validate_hooks.py
 python3 scripts/verify_manifest_drift.py
 python3 scripts/verify_install_sync.py

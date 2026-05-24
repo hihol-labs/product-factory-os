@@ -33,6 +33,7 @@ def main() -> None:
     run([sys.executable, "scripts/verify_skill_profiles.py"])
     run([sys.executable, "scripts/validate_execution_graph.py"])
     run([sys.executable, "scripts/validate_runtime.py"])
+    run([sys.executable, "scripts/validate_tool_registry.py", "docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json", "integrations/tool-capability-registry.json"])
     run([sys.executable, "scripts/validate_hooks.py"])
     run([sys.executable, "scripts/verify_manifest_drift.py"])
     run([sys.executable, "scripts/verify_install_sync.py"])

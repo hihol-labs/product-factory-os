@@ -36,7 +36,12 @@ KNOWLEDGE_ARTIFACTS = [
     ".codex-memory/MEMORY.md",
     ".codex-memory/LEARNINGS.md",
     ".codex-memory/LEARNING_PROPOSALS.json",
+    ".codex-memory/events.jsonl",
     ".pfo/UNIT_CONTEXT_MANIFEST.json",
+    ".pfo/EXECUTION_POLICY.json",
+    ".pfo/PERMISSION_MATRIX.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
+    ".pfo/TOOL_CAPABILITY_REGISTRY.json",
 ]
 
 
