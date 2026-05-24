@@ -3,6 +3,7 @@ from pathlib import Path
 import argparse
 import json
 import shutil
+import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,6 +25,23 @@ def load_alias_documents() -> dict[str, str]:
         name: (ROOT / "docs" / "templates" / name).read_text(encoding="utf-8")
         for name in ALIAS_DOCUMENT_NAMES
     }
+
+
+GENERATED_PLAN_FILES = [
+    "IDEA_SCORECARD.md",
+    "VALIDATION_PLAN.md",
+    "FEEDBACK_LOG.md",
+    "ITERATION_REVIEW.md",
+    "FUNNEL_MODEL.md",
+    "ASSET_REGISTER.md",
+    "CONTENT_BACKLOG.md",
+    "PRODUCT_BLUEPRINT.md",
+    "PROJECT_ARCHITECTURE.md",
+    "BUILD_PLAN.md",
+    "EXECUTION_GRAPH.md",
+    "TEST_PLAN.md",
+    "QUALITY_GATES.md",
+]
 
 IGNORED = {
     ".agents",
@@ -81,6 +99,31 @@ def has_pfo_contracts(path: Path) -> bool:
     return True
 
 
+def is_generated_pfo_project(path: Path) -> bool:
+    return (path / ".pfo-starter.json").is_file()
+
+
+def has_full_pfo_runtime(path: Path) -> bool:
+    required = [
+        path / "AGENTS.md",
+        path / "CODEX.md",
+        path / ".codex-memory" / "MEMORY.md",
+        path / ".codex-memory" / "STATE.json",
+        path / ".codex-memory" / "events.jsonl",
+        path / "PFO_REPORT.md",
+    ]
+    if is_generated_pfo_project(path):
+        required.extend(path / name for name in GENERATED_PLAN_FILES)
+    else:
+        required.extend(
+            [
+                path / "PFO_EXISTING_PROJECT_ANALYSIS.json",
+                path / "PFO_CONTRACT_GATE.json",
+            ]
+        )
+    return all(item.is_file() for item in required) and has_pfo_contracts(path)
+
+
 def status_for(path: Path) -> dict[str, object]:
     return {
         "project": path.name,
@@ -90,6 +133,7 @@ def status_for(path: Path) -> dict[str, object]:
         "hasMemory": is_file(path / ".codex-memory" / "MEMORY.md"),
         "hasState": is_file(path / ".codex-memory" / "STATE.json"),
         "hasPfoContracts": has_pfo_contracts(path),
+        "hasFullPfoRuntime": has_full_pfo_runtime(path),
         "hasPrd": is_file(path / "PRD.md"),
         "hasArchitecture": is_file(path / "PROJECT_ARCHITECTURE.md"),
         "hasImplementationPlan": is_file(path / "IMPLEMENTATION_PLAN.md"),
@@ -127,10 +171,10 @@ This existing project is adopted into Product Factory OS.
 - Methodology: `{ROOT}`
 - Project: `{path}`
 
-Before substantial implementation, Codex must use:
+Before implementation, Codex must enforce full PFO adoption automatically:
 
 ```bash
-pfo adopt {path} --analyze
+pfo adopt {path}
 ```
 
 Then route work through `/task`, write `HANDOFF.md` before session or role transfer, update `.codex-memory/STATE.json`, and respect `.pfo/` contracts. Project-local rules may add constraints, but they do not replace PFO gates, memory, or scope/data/fallback contracts.
@@ -172,6 +216,66 @@ def ensure_alias_documents(path: Path) -> None:
         target = path / name
         if not target.exists():
             target.write_text(text, encoding="utf-8")
+
+
+def methodology_revision() -> str:
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    return result.stdout.strip() if result.returncode == 0 else ""
+
+
+def mark_runtime_synced(path: Path, workspace: Path) -> None:
+    state_path = path / ".codex-memory" / "STATE.json"
+    if not state_path.is_file():
+        return
+    try:
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return
+    generated = is_generated_pfo_project(path)
+    state["pfoRuntime"] = {
+        "status": "FULLY_BOOTSTRAPPED" if generated else "FULLY_ADOPTED",
+        "methodologyPath": str(ROOT),
+        "workspace": str(workspace),
+        "methodologyRevision": methodology_revision(),
+        "mode": "automatic-workspace-runtime",
+    }
+    existing = state.setdefault("existingProject", {})
+    if isinstance(existing, dict) and not generated:
+        existing["isExistingProject"] = True
+        existing["currentTaskRoute"] = (
+            "/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save"
+        )
+    artifacts = set(state.get("artifacts", []))
+    artifacts.update(
+        [
+            "AGENTS.md",
+            "CODEX.md",
+            ".codex-memory/MEMORY.md",
+            ".codex-memory/STATE.json",
+            ".codex-memory/events.jsonl",
+            ".pfo/PROJECT_CONTRACT.md",
+            ".pfo/DATA_POLICY.md",
+            ".pfo/GOLDEN_FLOWS.md",
+            ".pfo/FORBIDDEN_CHANGES.md",
+            ".pfo/FALLBACK_POLICY.md",
+            ".pfo/SCOPE_LOCK.md",
+            ".pfo/PERMISSION_MATRIX.md",
+            ".pfo/PERMISSION_MATRIX.json",
+            ".pfo/LEARNING_PROMOTION_GATE.md",
+            ".pfo/EXECUTION_POLICY.json",
+            ".pfo/VERIFICATION_CONTRACT.json",
+            ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+            *ALIAS_DOCUMENT_NAMES,
+        ]
+    )
+    state["artifacts"] = sorted(artifacts)
+    state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def write_adoption_files(path: Path, workspace: Path) -> None:
@@ -439,6 +543,47 @@ aliases:
             + "\n",
             encoding="utf-8",
         )
+    mark_runtime_synced(path, workspace)
+
+
+def run_child(command: list[str], quiet: bool) -> int:
+    result = subprocess.run(
+        command,
+        cwd=ROOT,
+        text=True,
+        capture_output=quiet,
+        check=False,
+    )
+    if result.returncode != 0 and quiet:
+        sys.stderr.write(result.stdout + result.stderr)
+    return result.returncode
+
+
+def analyze_project(project: Path, run_gates: bool, timeout: int, report: bool, quiet: bool) -> int:
+    analyze_args = [
+        sys.executable,
+        str(ROOT / "scripts" / "existing_project_analyzer.py"),
+        str(project),
+        "--timeout",
+        str(timeout),
+    ]
+    if run_gates:
+        analyze_args.append("--run-gates")
+    code = run_child(analyze_args, quiet)
+    if code != 0:
+        return code
+    if report:
+        return run_child([sys.executable, str(ROOT / "scripts" / "pfo_report.py"), str(project)], quiet)
+    return 0
+
+
+def plan_generated_project(project: Path, report: bool, quiet: bool) -> int:
+    code = run_child([sys.executable, str(ROOT / "scripts" / "pfo.py"), "plan", str(project)], quiet)
+    if code != 0:
+        return code
+    if report:
+        return run_child([sys.executable, str(ROOT / "scripts" / "pfo_report.py"), str(project)], quiet)
+    return 0
 
 
 def main() -> None:
@@ -446,6 +591,10 @@ def main() -> None:
     parser.add_argument("--workspace", type=Path, default=WORKSPACE)
     parser.add_argument("--project", type=Path, help="Check or adopt a single existing project root.")
     parser.add_argument("--write", action="store_true", help="Create AGENTS.md, CODEX.md, .pfo/, and .codex-memory/ where missing.")
+    parser.add_argument("--analyze", action="store_true", help="Run existing-project analysis after adoption.")
+    parser.add_argument("--report", action="store_true", help="Write PFO_REPORT.md after analysis.")
+    parser.add_argument("--run-gates", action="store_true", help="Run detected project gates during analysis.")
+    parser.add_argument("--timeout", type=int, default=90)
     parser.add_argument("--json", action="store_true", help="Print JSON instead of a table.")
     args = parser.parse_args()
 
@@ -453,6 +602,14 @@ def main() -> None:
     if args.write:
         for project in projects:
             write_adoption_files(project, args.workspace.resolve())
+    if args.analyze:
+        for project in projects:
+            if is_generated_pfo_project(project):
+                code = plan_generated_project(project, args.report, args.json)
+            else:
+                code = analyze_project(project, args.run_gates, args.timeout, args.report, args.json)
+            if code != 0:
+                fail(f"full PFO adoption failed for {project}")
 
     statuses = [status_for(project) for project in projects]
 
@@ -470,6 +627,7 @@ def main() -> None:
         flags.append("state" if item["hasState"] else "no-state")
         flags.append("contracts" if item["hasPfoContracts"] else "no-contracts")
         flags.append("aliases" if item["hasAliasDocs"] else "no-aliases")
+        flags.append("full-runtime" if item["hasFullPfoRuntime"] else "partial-runtime")
         flags.append("pfo-docs" if item["hasPrd"] and item["hasArchitecture"] and item["hasImplementationPlan"] and item["hasProductBlueprint"] and item["hasBuildPlan"] and item["hasExecutionGraph"] else "pfo-docs-partial")
         print(f"{item['project']}: {', '.join(flags)}")
 
@@ -481,9 +639,10 @@ def main() -> None:
         or not item["hasState"]
         or not item["hasPfoContracts"]
         or not item["hasAliasDocs"]
+        or not item["hasFullPfoRuntime"]
     ]
     if missing:
-        print("\nRun with --write to create PFO runtime files for projects missing AGENTS, CODEX, memory, state, contracts, or alias docs.")
+        print("\nRun with --write --analyze --report to enforce full PFO runtime files for incomplete projects.")
         sys.exit(2)
 
 

@@ -38,23 +38,25 @@ Product Factory OS is the default Codex runtime for this workspace.
 - Codex home: `{codex_home}`
 - Command wrapper: `pfo`
 
-For new projects, create them through PFO:
+For new project requests, Codex must create the project through PFO automatically. The user should not need to run setup commands manually:
 
 ```bash
 pfo new <project-name> --idea "<product idea>"
-pfo plan {workspace}/<project-name>
 ```
 
-For existing projects, PFO is automatic after install. Before substantial work, Codex must ensure the project has:
+For existing projects, PFO is automatic and full after install. Before any project work, Codex must ensure the project has:
 
 ```text
 AGENTS.md
 CODEX.md
 .codex-memory/STATE.json
 .pfo/
+PFO_EXISTING_PROJECT_ANALYSIS.json
+PFO_CONTRACT_GATE.json
+PFO_REPORT.md
 ```
 
-If any of these are missing, run `pfo adopt <project> --analyze` before implementation. Project-local instructions may add constraints, but they do not replace the PFO lifecycle, gates, memory, or `.pfo/` contracts.
+If any of these are missing, Codex must run `pfo adopt <project>` before implementation. Project-local instructions may add constraints, but they do not replace the PFO lifecycle, gates, memory, or `.pfo/` contracts.
 {MANAGED_END}
 """
 
@@ -88,8 +90,13 @@ def write_workspace_policy(workspace: Path, codex_home: Path) -> None:
         "enforcement": "mandatory",
         "defaultForNewProjects": True,
         "automaticForNewProjects": True,
+        "manualUserCommandsRequired": False,
+        "codexAutoBootstrapNewProjects": True,
         "mandatoryForExistingProjects": True,
         "autoAdoptExistingProjects": True,
+        "autoAnalyzeExistingProjects": True,
+        "fullAdoptionForExistingProjects": True,
+        "autoReportProjects": True,
         "defaultNewProjectRoute": "/project -> /kickstart",
         "existingProjectRoute": "/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save",
         "requiredProjectFiles": [
@@ -109,9 +116,12 @@ def write_workspace_policy(workspace: Path, codex_home: Path) -> None:
             ".pfo/EXECUTION_POLICY.json",
             ".pfo/VERIFICATION_CONTRACT.json",
             ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+            "PFO_EXISTING_PROJECT_ANALYSIS.json",
+            "PFO_CONTRACT_GATE.json",
+            "PFO_REPORT.md",
         ],
         "pfoCommand": "pfo",
-        "nonBypassRule": "New and existing project work in this workspace must use Product Factory OS.",
+        "nonBypassRule": "New and existing project work in this workspace must use full Product Factory OS automatically.",
     }
     (workspace / "PFO_WORKSPACE.json").write_text(
         json.dumps(policy, indent=2, ensure_ascii=False) + "\n",
@@ -155,6 +165,8 @@ def adopt_workspace(workspace: Path) -> None:
         "--workspace",
         str(workspace),
         "--write",
+        "--analyze",
+        "--report",
     ]
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, check=False)
     if result.returncode not in (0, 2):

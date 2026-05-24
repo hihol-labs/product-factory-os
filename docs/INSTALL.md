@@ -14,7 +14,7 @@ If the repository is not cloned inside your projects workspace:
 bash install.sh --workspace ~/Projects
 ```
 
-The installer validates the repository, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, and `PFO_WORKSPACE.json`, then adopts existing first-level projects by creating missing project-level `AGENTS.md`, `CODEX.md`, `.codex-memory/`, and `.pfo/` files.
+The installer validates the repository, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, and `PFO_WORKSPACE.json`, then fully adopts existing first-level projects by creating missing project-level `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/`, analysis, contract gate output, and `PFO_REPORT.md`.
 
 The repository can be used in two modes:
 
@@ -101,7 +101,7 @@ python3 scripts/validate_hooks.py
 Installed hook layers:
 
 - `route-reminder.py`: suggests `/project`, `/task`, or a specialized PFO skill.
-- `preflight-context.py`: auto-adopts first-level workspace projects when needed, then prints discovered docs, state, memory, and `.pfo/` contracts.
+- `preflight-context.py`: auto-enforces full PFO runtime for first-level workspace projects when needed, then prints discovered docs, state, memory, and `.pfo/` contracts.
 - `session-diagnostics.py`: reports stale state, recovery, handoff, and telemetry warnings from project memory.
 - `skill-completeness.py`: checks skills against contracts, triggers, fixtures, and route snapshots.
 - `commit-completeness.py`: checks staged methodology diffs for supporting artifacts.
@@ -174,23 +174,23 @@ From the methodology repository:
 python3 scripts/adoption_check.py
 ```
 
-To create or refresh PFO runtime files for all first-level projects in the workspace:
+To create or refresh full PFO runtime files for all first-level projects in the workspace:
 
 ```bash
 pfo adopt
 ```
 
-This creates missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, and `.pfo/` contracts without overwriting existing project instructions.
+This creates missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, and `.pfo/` contracts without overwriting existing project instructions, then runs repository analysis and writes `PFO_REPORT.md`.
 
 ## New Project Bootstrap
 
-New projects in `/home/hihol/projects` are Product Factory OS projects by default. To create the directory and initial PFO adoption files:
+New projects in `/home/hihol/projects` are Product Factory OS projects by default. Codex should run this automatically when a user asks for a new product:
 
 ```bash
 pfo new my-product --idea "voice transcript or product idea"
 ```
 
-This creates:
+This creates runtime files, starter files, planning artifacts, execution graph, and report:
 
 ```text
 CODEX.md
@@ -201,9 +201,18 @@ AGENTS.md
 .pfo-starter.json
 .github/workflows/validate.yml
 justfile
+PFO_REPORT.md
+IDEA_SCORECARD.md
+VALIDATION_PLAN.md
+PRODUCT_BLUEPRINT.md
+PROJECT_ARCHITECTURE.md
+BUILD_PLAN.md
+EXECUTION_GRAPH.md
+TEST_PLAN.md
+QUALITY_GATES.md
 ```
 
-Then generate executable planning artifacts:
+Manual refresh remains available:
 
 ```bash
 pfo plan ../my-product
@@ -216,7 +225,7 @@ pfo validate ../my-product
 
 ```bash
 pfo new my-product --idea "voice transcript or product idea"
-pfo adopt ../existing-product --analyze --run-gates
+pfo adopt ../existing-product
 pfo analyze ../existing-product --run-gates --report
 pfo discuss ../my-product --phase phase-1
 pfo plan ../my-product

@@ -5,6 +5,7 @@ import json
 import re
 import sys
 import shutil
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
@@ -262,6 +263,11 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
             "methodology": str(methodology),
             "starter": starter["id"],
             "productTypeHint": starter["productType"],
+            "pfoRuntime": {
+                "status": "FULLY_BOOTSTRAPPED",
+                "methodologyPath": str(methodology),
+                "mode": "automatic-workspace-runtime",
+            },
         },
         indent=2,
         ensure_ascii=False,
@@ -331,6 +337,24 @@ def scaffold(project: Path, starter: dict) -> None:
     )
     for name, text in load_alias_documents().items():
         write_once(project / name, text)
+
+
+def run_auto_plan(project: Path) -> int:
+    plan = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "pfo.py"), "plan", str(project)],
+        cwd=ROOT,
+        text=True,
+        check=False,
+    )
+    if plan.returncode != 0:
+        return plan.returncode
+    report = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "pfo_report.py"), str(project)],
+        cwd=ROOT,
+        text=True,
+        check=False,
+    )
+    return report.returncode
 
 
 def codex_md(project_name: str, idea: str, methodology: Path) -> str:
@@ -480,6 +504,7 @@ def main() -> None:
     parser.add_argument("name", help="Project directory name or product name.")
     parser.add_argument("--idea", default="", help="Voice transcript or natural-language product idea.")
     parser.add_argument("--workspace", type=Path, default=WORKSPACE, help="Workspace directory.")
+    parser.add_argument("--no-plan", action="store_true", help="Only bootstrap runtime files; skip automatic planning.")
     args = parser.parse_args()
 
     project_name = slugify(args.name)
@@ -500,11 +525,19 @@ def main() -> None:
     write_once(memory_dir / "events.jsonl", "")
     write_once(memory_dir / "STATE.json", state_json(project_name, args.idea, methodology))
     scaffold(project, starter)
+    if not args.no_plan:
+        code = run_auto_plan(project)
+        if code != 0:
+            sys.exit(code)
 
     print(f"OK: bootstrapped {project}")
     print(f"Starter: {starter['id']}")
     print("Route: /project -> /kickstart")
-    print(f"Next: python3 {ROOT / 'scripts' / 'pfo.py'} plan {project}")
+    if args.no_plan:
+        print(f"Next: python3 {ROOT / 'scripts' / 'pfo.py'} plan {project}")
+    else:
+        print("Plan: generated automatically")
+        print("Report: PFO_REPORT.md")
 
 
 if __name__ == "__main__":

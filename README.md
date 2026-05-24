@@ -78,7 +78,7 @@ If the repository is not cloned inside your projects workspace, pass the workspa
 bash install.sh --workspace ~/Projects
 ```
 
-The installer validates PFO, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, and `PFO_WORKSPACE.json`, then adopts existing first-level projects without overwriting their local instructions.
+The installer validates PFO, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, and `PFO_WORKSPACE.json`, then fully adopts existing first-level projects with analysis, contract gate output, and `PFO_REPORT.md` without overwriting their local instructions.
 
 **Verify the installation:**
 
@@ -115,14 +115,15 @@ CLI entry points are available too:
 
 ```bash
 pfo new my-product --idea "SaaS for subscription tracking"
-pfo adopt ../existing-product --analyze --run-gates
-pfo plan ../my-product
+pfo adopt ../existing-product
 pfo review ../my-product
 pfo validate ../my-product
 pfo status ../my-product
 pfo resume ../my-product
 pfo export ../my-product --target obsidian
 ```
+
+`pfo new` performs bootstrap, planning, execution graph generation, and report generation in one command. In a configured workspace, Codex should run it automatically when the user asks for a new product.
 
 ## How It Works
 
@@ -385,7 +386,7 @@ CODEX_GUIDE.md
 
 ### Existing Project Adoption
 
-`/adopt` or `pfo adopt` can create missing:
+`/adopt` or `pfo adopt` enforces full runtime and can create missing:
 
 ```text
 AGENTS.md
@@ -393,9 +394,9 @@ CODEX.md
 .codex-memory/MEMORY.md
 .codex-memory/STATE.json
 .pfo/
-.pfo-starter.json
-.github/workflows/validate.yml
-justfile
+PFO_EXISTING_PROJECT_ANALYSIS.json
+PFO_CONTRACT_GATE.json
+PFO_REPORT.md
 ```
 
 ## Runtime CLI
@@ -404,7 +405,7 @@ Product Factory OS includes an executable runtime:
 
 ```bash
 pfo new my-product --idea "voice transcript or product idea"
-pfo adopt ../existing-product --analyze --run-gates
+pfo adopt ../existing-product
 pfo analyze ../existing-product --run-gates --report
 pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product

@@ -79,12 +79,13 @@
 
 Release criteria:
 
+- Workspace install and preflight enforce full PFO runtime for new and existing first-level projects.
 - Stable skill contracts and trigger registry.
 - Hook parity with the methodology: route reminders, preflight context, skill completeness, commit completeness, and review-before-commit gates.
 - Route snapshot coverage for every skill.
 - Stable runtime CLI semantics for `new`, `adopt`, `analyze`, `plan`, `build`, `test`, `review`, `validate`, `contracts`, `resume`, `report`, `voice`, `metrics`, and `export`.
 - Project-local execution policy, permissions, verification contracts, structured event logs, tool capability registry, and learning promotion gates are present for generated and adopted projects.
-- `pfo new -> pfo plan -> pfo validate` works for every starter pack.
+- `pfo new -> pfo validate` works for every starter pack because `pfo new` performs initial planning automatically.
 - Runtime validation for generated project execution graphs.
 - Rich generated-project validators for `QUALITY_GATES.md`, starter instantiation, `.pfo/` contracts, and full template compliance.
 - Documented release process and rollback policy.

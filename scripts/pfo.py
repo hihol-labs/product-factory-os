@@ -1348,7 +1348,10 @@ def generated_brief_html(project: Path, state: dict, mode: str) -> str:
 
 
 def cmd_new(args: argparse.Namespace) -> int:
-    return run_script("pfo_new_project.py", [args.name, "--idea", args.idea, "--workspace", str(args.workspace)])
+    argv = [args.name, "--idea", args.idea, "--workspace", str(args.workspace)]
+    if args.no_plan:
+        argv.append("--no-plan")
+    return run_script("pfo_new_project.py", argv)
 
 
 def cmd_adopt(args: argparse.Namespace) -> int:
@@ -1359,13 +1362,14 @@ def cmd_adopt(args: argparse.Namespace) -> int:
         argv.extend(["--workspace", str(args.workspace)])
     if args.json:
         argv.append("--json")
-    code = run_script("adoption_check.py", argv)
-    if code == 0 and args.analyze and args.project:
-        analyze_args = [str(args.project)]
-        if args.run_gates:
-            analyze_args.append("--run-gates")
-        return run_script("existing_project_analyzer.py", analyze_args)
-    return code
+    should_analyze = args.analyze or args.run_gates or (not args.no_analyze and not args.json)
+    if should_analyze:
+        argv.append("--analyze")
+        if not args.no_report:
+            argv.append("--report")
+    if args.run_gates:
+        argv.append("--run-gates")
+    return run_script("adoption_check.py", argv)
 
 
 def cmd_analyze(args: argparse.Namespace) -> int:
@@ -2100,13 +2104,16 @@ def build_parser() -> argparse.ArgumentParser:
     new.add_argument("name")
     new.add_argument("--idea", default="")
     new.add_argument("--workspace", type=Path, default=WORKSPACE)
+    new.add_argument("--no-plan", action="store_true", help="Skip automatic plan/report generation.")
     new.set_defaults(func=cmd_new)
 
     adopt = sub.add_parser("adopt", help="Adopt existing workspace projects into PFO.")
     adopt.add_argument("project", type=Path, nargs="?")
     adopt.add_argument("--workspace", type=Path, default=WORKSPACE)
     adopt.add_argument("--json", action="store_true")
-    adopt.add_argument("--analyze", action="store_true", help="Run existing-project analyzer after adopting a single project.")
+    adopt.add_argument("--analyze", action="store_true", help="Run analyzer explicitly; full adoption does this by default.")
+    adopt.add_argument("--no-analyze", action="store_true", help="Only write missing runtime files.")
+    adopt.add_argument("--no-report", action="store_true", help="Do not write PFO_REPORT.md during full adoption.")
     adopt.add_argument("--run-gates", action="store_true", help="Run detected gates during analysis.")
     adopt.set_defaults(func=cmd_adopt)
 

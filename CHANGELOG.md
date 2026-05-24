@@ -4,6 +4,8 @@
 
 ### Added
 
+- Full workspace runtime enforcement: installer/preflight now complete adoption with analysis, contract gate output, and `PFO_REPORT.md`.
+- `pfo new` now auto-generates planning artifacts, execution graph, and report without requiring a separate initial `pfo plan`.
 - Autoresearch-style self-improvement loop with `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric/budget state, and `pfo experiment-init` / `pfo experiment-record`.
 - Documentation, routing, templates, state schema, and plan-quality gates for baseline-first keep/discard/crash experiment decisions.
 - Project-local execution policy, permission matrix, verification contract, structured event log schema, and learning promotion gate.

@@ -22,6 +22,19 @@ REQUIRED_CONTRACTS = [
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
 ]
 
+PFO_RUNTIME_DIFF_EXACT_PATHS = {
+    "AGENTS.md",
+    "CODEX.md",
+    "PFO_CONTRACT_GATE.json",
+    "PFO_EXISTING_PROJECT_ANALYSIS.json",
+    "PFO_REPORT.md",
+}
+
+PFO_RUNTIME_DIFF_PREFIXES = (
+    ".codex-memory/",
+    ".pfo/",
+)
+
 TEST_PATH_MARKERS = (
     "/test/",
     "/tests/",
@@ -94,13 +107,28 @@ def run_git(project: Path, args: list[str]) -> str:
 def changed_files(project: Path) -> list[str]:
     output = run_git(project, ["diff", "--name-only"])
     staged = run_git(project, ["diff", "--cached", "--name-only"])
-    names = {line.strip() for line in (output + "\n" + staged).splitlines() if line.strip()}
+    untracked = run_git(project, ["ls-files", "--others", "--exclude-standard"])
+    names = {line.strip() for line in (output + "\n" + staged + "\n" + untracked).splitlines() if line.strip()}
     return sorted(names)
 
 
-def diff_text(project: Path) -> str:
-    unstaged = run_git(project, ["diff", "--", "."])
-    staged = run_git(project, ["diff", "--cached", "--", "."])
+def is_pfo_runtime_diff_path(path: str) -> bool:
+    normalized = path.replace("\\", "/")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    return normalized in PFO_RUNTIME_DIFF_EXACT_PATHS or normalized.startswith(PFO_RUNTIME_DIFF_PREFIXES)
+
+
+def product_changed_files(files: list[str]) -> list[str]:
+    return [path for path in files if not is_pfo_runtime_diff_path(path)]
+
+
+def diff_text(project: Path, files: list[str] | None = None) -> str:
+    if files == []:
+        return ""
+    pathspec = ["."] if files is None else files
+    unstaged = run_git(project, ["diff", "--", *pathspec])
+    staged = run_git(project, ["diff", "--cached", "--", *pathspec])
     return "\n".join(part for part in [unstaged, staged] if part)
 
 
@@ -219,8 +247,10 @@ def detect_substitution_violations(project: Path, diff: str) -> list[str]:
 
 
 def evaluate(project: Path) -> dict[str, Any]:
-    files = changed_files(project)
-    diff = diff_text(project)
+    all_files = changed_files(project)
+    runtime_files = [path for path in all_files if is_pfo_runtime_diff_path(path)]
+    files = product_changed_files(all_files)
+    diff = diff_text(project, files)
     missing = missing_contracts(project)
     placeholders = has_placeholder_contracts(project)
     json_errors = json_contract_errors(project)
@@ -256,6 +286,7 @@ def evaluate(project: Path) -> dict[str, Any]:
     return {
         "status": status,
         "changedFiles": files,
+        "runtimeChangedFiles": runtime_files,
         "riskClasses": risks,
         "missingContracts": missing,
         "placeholderContracts": placeholders,

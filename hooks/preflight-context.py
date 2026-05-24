@@ -20,6 +20,30 @@ PFO_CONTRACTS = [
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
 ]
 
+ALIAS_DOCUMENT_NAMES = [
+    "MASTER_CONTEXT.md",
+    "ARCHITECTURE.md",
+    "TASKS.md",
+    "PROGRESS.md",
+    "TESTING.md",
+]
+
+GENERATED_PLAN_FILES = [
+    "IDEA_SCORECARD.md",
+    "VALIDATION_PLAN.md",
+    "FEEDBACK_LOG.md",
+    "ITERATION_REVIEW.md",
+    "FUNNEL_MODEL.md",
+    "ASSET_REGISTER.md",
+    "CONTENT_BACKLOG.md",
+    "PRODUCT_BLUEPRINT.md",
+    "PROJECT_ARCHITECTURE.md",
+    "BUILD_PLAN.md",
+    "EXECUTION_GRAPH.md",
+    "TEST_PLAN.md",
+    "QUALITY_GATES.md",
+]
+
 
 def load_workspace_policy(cwd: Path) -> tuple[Path, dict] | None:
     for path in [cwd, *cwd.parents]:
@@ -51,7 +75,57 @@ def needs_adoption(project: Path) -> bool:
         project / ".codex-memory" / "events.jsonl",
     ]
     required.extend(project / rel for rel in PFO_CONTRACTS)
+    required.extend(project / rel for rel in ALIAS_DOCUMENT_NAMES)
     return any(not path.is_file() for path in required)
+
+
+def is_generated_pfo_project(project: Path) -> bool:
+    return (project / ".pfo-starter.json").is_file()
+
+
+def needs_full_runtime(project: Path) -> bool:
+    if needs_adoption(project):
+        return True
+    if is_generated_pfo_project(project):
+        required = [project / "PFO_REPORT.md"]
+        required.extend(project / rel for rel in GENERATED_PLAN_FILES)
+    else:
+        required = [
+            project / "PFO_EXISTING_PROJECT_ANALYSIS.json",
+            project / "PFO_CONTRACT_GATE.json",
+            project / "PFO_REPORT.md",
+        ]
+    return any(not path.is_file() for path in required)
+
+
+def run_auto_full_runtime(project: Path, workspace: Path, methodology: Path, generated: bool) -> None:
+    if generated:
+        commands = [
+            [sys.executable, str(methodology / "scripts" / "adoption_check.py"), "--project", str(project), "--workspace", str(workspace), "--write"],
+            [sys.executable, str(methodology / "scripts" / "pfo.py"), "plan", str(project)],
+            [sys.executable, str(methodology / "scripts" / "pfo_report.py"), str(project)],
+        ]
+    else:
+        commands = [
+            [
+                sys.executable,
+                str(methodology / "scripts" / "adoption_check.py"),
+                "--project",
+                str(project),
+                "--workspace",
+                str(workspace),
+                "--write",
+                "--analyze",
+                "--report",
+            ]
+        ]
+    for command in commands:
+        result = subprocess.run(command, text=True, capture_output=True, check=False)
+        if result.returncode != 0:
+            print("Product Factory OS full-runtime sync failed:")
+            print(result.stdout + result.stderr)
+            return
+    print(f"Product Factory OS full-runtime active: {project}")
 
 
 def auto_adopt(cwd: Path) -> Path:
@@ -69,22 +143,12 @@ def auto_adopt(cwd: Path) -> Path:
         return project
     if not policy.get("autoAdoptExistingProjects", True):
         return project
-    if not needs_adoption(project):
+    if not needs_full_runtime(project):
         return project
     script = methodology / "scripts" / "adoption_check.py"
     if not script.is_file():
         return project
-    result = subprocess.run(
-        [sys.executable, str(script), "--project", str(project), "--write"],
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    if result.returncode in (0, 2):
-        print(f"Product Factory OS auto-adopted: {project}")
-    else:
-        print("Product Factory OS auto-adopt failed:")
-        print(result.stdout + result.stderr)
+    run_auto_full_runtime(project, workspace, methodology, is_generated_pfo_project(project))
     return project
 
 

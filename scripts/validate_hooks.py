@@ -49,7 +49,7 @@ def main() -> None:
             fail(f"hook command references missing file: {path.relative_to(ROOT)}")
 
     preflight = (ROOT / "hooks" / "preflight-context.py").read_text(encoding="utf-8")
-    for token in ["EXECUTION_POLICY.json", "PERMISSION_MATRIX.json", "PERMISSION_MATRIX.md", "VERIFICATION_CONTRACT.json", "TOOL_CAPABILITY_REGISTRY.json", "events.jsonl"]:
+    for token in ["EXECUTION_POLICY.json", "PERMISSION_MATRIX.json", "PERMISSION_MATRIX.md", "VERIFICATION_CONTRACT.json", "TOOL_CAPABILITY_REGISTRY.json", "events.jsonl", "PFO_EXISTING_PROJECT_ANALYSIS.json", "PFO_REPORT.md"]:
         if token not in preflight:
             fail(f"preflight-context.py missing policy/event token {token}")
 

@@ -33,7 +33,7 @@ cd product-factory-os
 bash install.sh
 ```
 
-Эта одна команда валидирует PFO, ставит команду `pfo`, устанавливает hooks, пишет workspace-файлы `AGENTS.md` / `CODEX.md` / `PFO_WORKSPACE.json` и автоматически адаптирует уже существующие проекты первого уровня в workspace.
+Эта одна команда валидирует PFO, ставит команду `pfo`, устанавливает hooks, пишет workspace-файлы `AGENTS.md` / `CODEX.md` / `PFO_WORKSPACE.json` и автоматически доводит уже существующие проекты первого уровня до полного PFO-runtime: adoption files, contracts, анализ, contract gate и `PFO_REPORT.md`.
 
 Если репозиторий скачан не внутри папки проектов, укажите workspace один раз:
 
@@ -41,11 +41,13 @@ bash install.sh
 bash install.sh --workspace ~/Projects
 ```
 
-После этого открывайте любой проект в workspace через Codex. Для существующих проектов PFO runtime уже подключен; новые проекты создаются так:
+После этого открывайте любой проект в workspace через Codex. Для существующих проектов PFO runtime уже подключен полностью. Для новых проектов достаточно описать идею; Codex должен сам запустить PFO bootstrap. CLI-вариант:
 
 ```bash
 pfo new my-product --idea "SaaS для учета подписок"
 ```
+
+`pfo new` сразу создает PFO runtime, starter files, planning artifacts, execution graph и `PFO_REPORT.md`; отдельный `pfo plan` для первичного формирования больше не нужен.
 
 Опишите идею:
 
@@ -90,7 +92,7 @@ PFO теперь имеет исполняемый CLI:
 ```bash
 pfo new my-product --idea "SaaS для учета подписок"
 pfo adopt
-pfo adopt ../existing-product --analyze --run-gates
+pfo adopt ../existing-product
 pfo analyze ../existing-product --run-gates --report
 pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product
@@ -131,7 +133,7 @@ Starter packs находятся в `starters/`. Golden paths находятся
 
 PFO использует `PFO Default Stack v1` как golden path для новых продуктов: Python/FastAPI/Pydantic, PostgreSQL, Vue/TypeScript/Vite/TailwindCSS, Redis, S3-compatible storage, `just`, Docker и Nginx. Это preset по умолчанию, не жесткий запрет альтернатив; отклонения фиксируются в `PROJECT_ARCHITECTURE.md` с причиной, риском, ценой поддержки и влиянием на проверку.
 
-Сгенерированные проекты получают `.pfo/` contracts, `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile` и `PFO_REPORT.md`.
+Сгенерированные проекты автоматически получают `.pfo/` contracts, `.pfo-starter.json`, `.env.example`, `.github/workflows/validate.yml`, `justfile`, planning artifacts, execution graph и `PFO_REPORT.md`.
 
 `pfo plan` создает недостающие `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `FUNNEL_MODEL.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md` и `QUALITY_GATES.md` на основе выбранного starter, но не перезаписывает уже существующие файлы.
 
@@ -260,7 +262,6 @@ Bootstrap helper:
 
 ```bash
 pfo new my-product --idea "голосовая команда или идея продукта"
-pfo plan /home/hihol/projects/my-product
 ```
 
 ## Существующие Проекты
@@ -284,6 +285,9 @@ AGENTS.md
 .pfo/SCOPE_LOCK.md
 .codex-memory/MEMORY.md
 .codex-memory/STATE.json
+PFO_EXISTING_PROJECT_ANALYSIS.json
+PFO_CONTRACT_GATE.json
+PFO_REPORT.md
 ```
 
-Если этих файлов нет, `bash install.sh` или preflight hook создают их автоматически; вручную можно запустить `pfo adopt <project> --analyze`.
+Если этих файлов нет, `bash install.sh` или preflight hook создают их автоматически, запускают анализ и пишут `PFO_REPORT.md`; вручную достаточно `pfo adopt <project>`.

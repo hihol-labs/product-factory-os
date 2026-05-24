@@ -18,7 +18,7 @@ PFO_WORKSPACE.json
 
 ## Behavior
 
-For every new project in the workspace, Codex must automatically use:
+For every new project request in the workspace, Codex must automatically use:
 
 ```text
 /project -> /kickstart
@@ -28,14 +28,14 @@ Planning-only and guide-only routes are secondary routes. They are used only whe
 
 Voice and natural-language commands are first-class input. The user does not need to manually choose skills, agents, or workflow stages.
 
-After install, the short path is:
+After install, the user only needs to describe the product. Codex runs the bootstrap automatically. CLI equivalent:
 
 ```bash
 bash install.sh
 pfo new <project-name> --idea "<voice transcript or product idea>"
 ```
 
-The bootstrap creates:
+The bootstrap creates runtime files, starter files, planning artifacts, execution graph, and report:
 
 ```text
 CODEX.md
@@ -53,6 +53,14 @@ ARCHITECTURE.md
 TASKS.md
 PROGRESS.md
 TESTING.md
+IDEA_SCORECARD.md
+VALIDATION_PLAN.md
+PRODUCT_BLUEPRINT.md
+PROJECT_ARCHITECTURE.md
+BUILD_PLAN.md
+EXECUTION_GRAPH.md
+TEST_PLAN.md
+QUALITY_GATES.md
 ```
 
 The five uppercase files above are navigation aliases only. The canonical sources remain the PFO artifacts they link to.
@@ -97,7 +105,7 @@ For every existing project, Product Factory OS is also mandatory:
 /task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save
 ```
 
-Before major work in an existing project, PFO adoption must already be present. The installer and preflight hook create missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, and `.pfo/` contracts. If a project was added after install, run `pfo adopt <project> --analyze` or rely on the preflight hook to auto-adopt the first-level workspace project.
+Before any work in an existing project, full PFO adoption must already be present. The installer and preflight hook create missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts, analysis, contract gate output, and `PFO_REPORT.md`. If a project was added after install, run `pfo adopt <project>` or rely on the preflight hook to auto-enforce full runtime for the first-level workspace project.
 
 Hooks are installed by default in this workspace. They provide auto-adoption, route reminders, preflight context, skill completeness checks, commit completeness checks, and review-before-commit validation. Install or refresh them from the methodology repo with:
 

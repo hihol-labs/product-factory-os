@@ -64,7 +64,7 @@ def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
     if not codex.is_file():
         codex.write_text(
             "# CODEX\n\n"
-            "This project is adopted into the Product Factory OS workspace methodology.\n\n"
+            "This project is fully adopted into the Product Factory OS workspace methodology.\n\n"
             "## Rules\n\n"
             "- Follow Product Factory OS gates for significant work.\n"
             "- Save significant session context in `.codex-memory/`.\n",
@@ -73,8 +73,8 @@ def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
     if not agents.is_file():
         agents.write_text(
             "# AGENTS\n\n"
-            "This project is adopted into Product Factory OS.\n\n"
-            "Before substantial implementation, run `pfo adopt . --analyze` or `pfo analyze .` and follow `.pfo/` contracts.\n",
+            "This project is fully adopted into Product Factory OS.\n\n"
+            "Before implementation, ensure `pfo adopt .` or `pfo analyze . --report` has refreshed analysis, report, memory, and `.pfo/` contracts.\n",
             encoding="utf-8",
         )
 
@@ -395,12 +395,15 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
         gate_results[key] = value
 
     ran = {item["gate"]: item for item in analysis["gateRuns"]}
+    available_command_names = {item["name"] for item in analysis.get("availableCommands", [])}
     if "build" in ran:
         gate_results["review"] = "PASS" if ran["build"]["status"] == "PASS" else "BLOCKED"
     else:
         gate_results["review"] = "NOT_RUN"
     if "tests" in ran:
         gate_results["tests"] = "PASS" if ran["tests"]["status"] == "PASS" else "BLOCKED"
+    elif {"test", "typecheck"} & available_command_names:
+        gate_results["tests"] = "NOT_RUN"
     else:
         gate_results["tests"] = "NOT_CONFIGURED"
     deployment_blocked = (

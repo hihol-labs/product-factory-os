@@ -29,7 +29,7 @@ def classify(text: str) -> dict:
         "raw": text,
         "route": "/project -> /kickstart",
         "productTypeHint": product_type,
-        "nextCommand": "pfo new <project-name> --idea <voice transcript>",
+        "nextCommand": "Codex auto-runs: pfo new <project-name> --idea <voice transcript>",
     }
 
 

@@ -61,7 +61,7 @@ interface/
 Runtime scripts live in `scripts/`:
 
 - `pfo.py`: unified CLI
-- `install_workspace.py`: one-command workspace installer for policy files, hooks, command wrapper, and existing-project adoption
+- `install_workspace.py`: one-command workspace installer for policy files, hooks, command wrapper, full existing-project adoption, analysis, contract gate output, and reports
 - `pfo_runner.py`: execution step runner
 - `existing_project_analyzer.py`: existing-project stack, command, gate, security, and state analyzer
 - `validate_project.py`: generated-project validator
@@ -370,7 +370,7 @@ Deployment is blocked unless:
 PFO uses `hooks/hooks.json` and `tests/snapshots/route-snapshots.json` to keep natural-language routing, skill docs, fixtures, and runtime behavior aligned.
 
 - `route-reminder.py` suggests routes before Codex drifts into ad hoc work.
-- `preflight-context.py` surfaces PFO docs, state, memory, and `.pfo/` contracts.
+- `preflight-context.py` enforces full PFO runtime when needed, then surfaces PFO docs, state, memory, and `.pfo/` contracts.
 - `skill-completeness.py` verifies every skill has docs, triggers, fixtures, and route snapshots.
 - `commit-completeness.py` checks methodology diffs for supporting artifacts.
 - `review-before-commit.py` runs fast validators before methodology commits.
