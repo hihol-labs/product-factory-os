@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED = ["AGENTS.md", "CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json"]
+REQUIRED = ["AGENTS.md", "CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json", ".codex-memory/events.jsonl"]
 REQUIRED_PFO = [
     ".pfo/PROJECT_CONTRACT.md",
     ".pfo/DATA_POLICY.md",
@@ -14,6 +14,12 @@ REQUIRED_PFO = [
     ".pfo/FORBIDDEN_CHANGES.md",
     ".pfo/FALLBACK_POLICY.md",
     ".pfo/SCOPE_LOCK.md",
+    ".pfo/PERMISSION_MATRIX.md",
+    ".pfo/PERMISSION_MATRIX.json",
+    ".pfo/LEARNING_PROMOTION_GATE.md",
+    ".pfo/EXECUTION_POLICY.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
+    ".pfo/TOOL_CAPABILITY_REGISTRY.json",
 ]
 
 
@@ -26,6 +32,18 @@ def run(command: list[str]) -> None:
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True)
     if result.returncode != 0:
         fail(result.stdout + result.stderr)
+
+
+def require_json_contract(project: Path, rel: str, fields: list[str]) -> dict:
+    path = project / rel
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        fail(f"{project} has invalid {rel}: {exc}")
+    for field in fields:
+        if field not in data:
+            fail(f"{project} {rel} is missing {field}")
+    return data
 
 
 def main() -> None:
@@ -42,6 +60,33 @@ def main() -> None:
     for rel in REQUIRED_PFO:
         if not (project / rel).is_file():
             fail(f"{project} is missing {rel}")
+    require_json_contract(
+        project,
+        ".pfo/EXECUTION_POLICY.json",
+        ["commandPolicy", "writePolicy", "networkPolicy", "approvalPolicy"],
+    )
+    require_json_contract(
+        project,
+        ".pfo/PERMISSION_MATRIX.json",
+        ["actors", "capabilities", "rules"],
+    )
+    require_json_contract(
+        project,
+        ".pfo/VERIFICATION_CONTRACT.json",
+        ["commands", "requiredArtifacts", "passCriteria", "failureMode"],
+    )
+    require_json_contract(
+        project,
+        ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+        ["tools"],
+    )
+    permission_text = (project / ".pfo/PERMISSION_MATRIX.md").read_text(encoding="utf-8")
+    for token in ["Run local verification", "External API write", "Deploy or migrate production"]:
+        if token not in permission_text:
+            fail(f"{project} .pfo/PERMISSION_MATRIX.md is missing {token!r}")
+    run([sys.executable, "scripts/pfo_permission_gate.py", str(project)])
+    run([sys.executable, "scripts/pfo_event_log.py", "validate", str(project)])
+    run([sys.executable, "scripts/validate_tool_registry.py", str(project / ".pfo" / "TOOL_CAPABILITY_REGISTRY.json")])
     run([sys.executable, "scripts/pfo_contract_gate.py", str(project)])
     if (project / ".pfo-starter.json").is_file():
         run([sys.executable, "scripts/validate_starter_compliance.py", str(project)])

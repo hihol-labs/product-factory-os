@@ -5,6 +5,7 @@ Product Factory OS uses external tools only when they strengthen a specific PFO 
 ## Integration Rules
 
 - Bind every connector to a named PFO skill, agent role, or gate.
+- Register every tool in `.pfo/TOOL_CAPABILITY_REGISTRY.json` before use.
 - Prefer read-only inspection before live writes.
 - Ask before mutating external systems unless the user explicitly requested the mutation.
 - Fall back to `.pfo-integrations/` export payloads when live connector access is unavailable.

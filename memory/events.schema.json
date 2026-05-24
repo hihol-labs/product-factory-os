@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "path": ".codex-memory/events.jsonl",
+  "requiredFields": [
+    "id",
+    "timestamp",
+    "eventType",
+    "status",
+    "project",
+    "source",
+    "payload"
+  ],
+  "eventTypes": [
+    "command",
+    "gate",
+    "approval",
+    "verification",
+    "state-change",
+    "learning",
+    "external-tool",
+    "error"
+  ],
+  "payloadSchemas": {
+    "command": {
+      "recommendedFields": ["command", "exitCode", "durationSeconds", "stdoutDigest", "stderrDigest", "costNotes", "tokenNotes"]
+    },
+    "gate": {
+      "recommendedFields": ["gate", "status", "evidence", "blockers", "durationSeconds"]
+    },
+    "approval": {
+      "recommendedFields": ["capability", "approvedBy", "reason", "scope", "expiresAt"]
+    },
+    "verification": {
+      "recommendedFields": ["unitId", "command", "expectedOutput", "passFailParser", "exitCode", "artifacts"]
+    },
+    "state-change": {
+      "recommendedFields": ["from", "to", "reason"]
+    },
+    "learning": {
+      "recommendedFields": ["learningId", "candidateId", "promotionTarget", "reviewStatus"]
+    },
+    "external-tool": {
+      "recommendedFields": ["toolId", "operation", "read", "write", "authNeeded", "externalDataRisk", "fallbackMode"]
+    },
+    "error": {
+      "recommendedFields": ["errorType", "message", "recovery"]
+    }
+  }
+}

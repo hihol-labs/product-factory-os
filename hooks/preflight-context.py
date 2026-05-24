@@ -12,6 +12,12 @@ PFO_CONTRACTS = [
     ".pfo/FORBIDDEN_CHANGES.md",
     ".pfo/FALLBACK_POLICY.md",
     ".pfo/SCOPE_LOCK.md",
+    ".pfo/PERMISSION_MATRIX.md",
+    ".pfo/PERMISSION_MATRIX.json",
+    ".pfo/LEARNING_PROMOTION_GATE.md",
+    ".pfo/EXECUTION_POLICY.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
+    ".pfo/TOOL_CAPABILITY_REGISTRY.json",
 ]
 
 
@@ -42,6 +48,7 @@ def needs_adoption(project: Path) -> bool:
         project / "CODEX.md",
         project / ".codex-memory" / "MEMORY.md",
         project / ".codex-memory" / "STATE.json",
+        project / ".codex-memory" / "events.jsonl",
     ]
     required.extend(project / rel for rel in PFO_CONTRACTS)
     return any(not path.is_file() for path in required)
@@ -102,6 +109,7 @@ def main() -> None:
     found = [name for name in docs if (cwd / name).exists()]
     memory = cwd / ".codex-memory" / "MEMORY.md"
     state = cwd / ".codex-memory" / "STATE.json"
+    events = cwd / ".codex-memory" / "events.jsonl"
     contracts_found = [name for name in PFO_CONTRACTS if (cwd / name).exists()]
 
     if found:
@@ -117,6 +125,10 @@ def main() -> None:
         print("State file: .codex-memory/STATE.json")
     else:
         print("State file: none")
+    if events.exists():
+        print("Event log: .codex-memory/events.jsonl")
+    else:
+        print("Event log: none")
     if contracts_found:
         print("PFO contracts found: " + ", ".join(contracts_found))
     else:

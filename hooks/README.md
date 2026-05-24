@@ -7,7 +7,7 @@ Hooks are installed by default by `bash install.sh`. They keep Codex on the Prod
 | Layer | Hook | Purpose | Blocks |
 |---|---|---|---|
 | Routing | `route-reminder.py` | Maps natural language to `/project`, `/task`, and specialized PFO skills. | No |
-| Context | `preflight-context.py` | Auto-adopts first-level workspace projects when needed, then prints discovered PFO docs, state, memory, and `.pfo/` contracts. | No |
+| Context | `preflight-context.py` | Auto-adopts first-level workspace projects when needed, then prints discovered PFO docs, state, memory, event log, and `.pfo/` contracts. | No |
 | Diagnostics | `session-diagnostics.py` | Prints stale state, recovery, handoff, and telemetry warnings from `.codex-memory/STATE.json`. | No |
 | Skill completeness | `skill-completeness.py` | Verifies that skills have contracts, trigger entries, fixtures, and route snapshots. | Yes when used as a gate |
 | Commit completeness | `commit-completeness.py` | Checks staged methodology diffs for supporting docs, snapshots, and changelog updates. | Yes |

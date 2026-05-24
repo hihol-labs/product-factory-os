@@ -11,4 +11,8 @@ Required universal gates:
 - Fallback Policy
 - Diff Risk Classifier
 - No Silent Substitution
-
+- Execution Policy
+- Permission Matrix
+- Verification Contract
+- Tool Capability Registry
+- Learning Promotion

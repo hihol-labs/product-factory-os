@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "purpose": "Executable verification contract for the active unit.",
+  "unitId": "",
+  "createdAt": "",
+  "commandSchema": {
+    "requiredFields": [
+      "id",
+      "command",
+      "timeoutSeconds",
+      "expectedOutput",
+      "passFailParser"
+    ],
+    "allowedPassFailParsers": [
+      "exit_code_zero",
+      "stdout_contains",
+      "json_field_equals",
+      "manual_evidence"
+    ]
+  },
+  "commands": [],
+  "requiredArtifacts": [
+    ".codex-memory/STATE.json",
+    ".pfo/UNIT_CONTEXT_MANIFEST.json",
+    ".pfo/EXECUTION_POLICY.json",
+    ".pfo/PERMISSION_MATRIX.json",
+    ".pfo/PERMISSION_MATRIX.md",
+    ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+    "PFO_REPORT.md"
+  ],
+  "passCriteria": [
+    "All required commands exit 0.",
+    "Expected output rules match.",
+    "Required artifacts exist.",
+    "Failures are recorded as recovery, not success."
+  ],
+  "failureMode": "RECOVERY_REQUIRED"
+}

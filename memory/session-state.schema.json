@@ -115,6 +115,11 @@
       "experimentSetup": "",
       "experimentMetric": "",
       "experimentDecision": "",
+      "executionPolicy": "",
+      "permissionMatrix": "",
+      "verificationContract": "",
+      "learningPromotion": "",
+      "toolCapabilityRegistry": "",
       "deploymentReadiness": ""
     },
     "tddEvidence": {
@@ -177,6 +182,32 @@
     },
     "knowledgeLog": [],
     "learningProposals": [],
+    "eventLog": {
+      "path": ".codex-memory/events.jsonl",
+      "lastEventId": "",
+      "lastEventAt": ""
+    },
+    "executionPolicy": {
+      "path": ".pfo/EXECUTION_POLICY.json",
+      "status": ""
+    },
+    "permissionMatrix": {
+      "path": ".pfo/PERMISSION_MATRIX.json",
+      "humanPath": ".pfo/PERMISSION_MATRIX.md",
+      "status": ""
+    },
+    "verificationContract": {
+      "path": ".pfo/VERIFICATION_CONTRACT.json",
+      "status": ""
+    },
+    "learningPromotionGate": {
+      "path": ".pfo/LEARNING_PROMOTION_GATE.md",
+      "status": ""
+    },
+    "toolCapabilityRegistry": {
+      "path": ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+      "status": ""
+    },
     "experimentLoop": {
       "status": "",
       "tag": "",

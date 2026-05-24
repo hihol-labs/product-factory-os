@@ -14,6 +14,12 @@ REQUIRED_CONTRACTS = [
     ".pfo/FORBIDDEN_CHANGES.md",
     ".pfo/FALLBACK_POLICY.md",
     ".pfo/SCOPE_LOCK.md",
+    ".pfo/PERMISSION_MATRIX.md",
+    ".pfo/PERMISSION_MATRIX.json",
+    ".pfo/LEARNING_PROMOTION_GATE.md",
+    ".pfo/EXECUTION_POLICY.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
+    ".pfo/TOOL_CAPABILITY_REGISTRY.json",
 ]
 
 TEST_PATH_MARKERS = (
@@ -159,6 +165,43 @@ def has_placeholder_contracts(project: Path) -> list[str]:
     return placeholders
 
 
+def json_contract_errors(project: Path) -> list[str]:
+    errors: list[str] = []
+    for rel, required in {
+        ".pfo/EXECUTION_POLICY.json": ["commandPolicy", "writePolicy", "networkPolicy", "approvalPolicy"],
+        ".pfo/PERMISSION_MATRIX.json": ["actors", "capabilities", "rules"],
+        ".pfo/VERIFICATION_CONTRACT.json": ["commands", "requiredArtifacts", "passCriteria", "failureMode"],
+        ".pfo/TOOL_CAPABILITY_REGISTRY.json": ["tools"],
+    }.items():
+        path = project / rel
+        if not path.is_file():
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            errors.append(f"{rel}: invalid JSON: {exc}")
+            continue
+        for field in required:
+            if field not in data:
+                errors.append(f"{rel}: missing {field}")
+        if rel.endswith("PERMISSION_MATRIX.json"):
+            for capability in ["read", "write", "test", "commit", "push", "deploy", "external_api", "secrets"]:
+                if capability not in data.get("capabilities", {}):
+                    errors.append(f"{rel}: missing capability {capability}")
+        if rel.endswith("TOOL_CAPABILITY_REGISTRY.json"):
+            tools = data.get("tools", [])
+            if not isinstance(tools, list) or not tools:
+                errors.append(f"{rel}: tools must be a non-empty list")
+            for index, tool in enumerate(tools, start=1):
+                if not isinstance(tool, dict):
+                    errors.append(f"{rel}: tool {index} must be an object")
+                    continue
+                for field in ["id", "capabilities", "sideEffects", "authNeeded", "externalDataRisk", "fallbackMode", "approvalRequiredFor"]:
+                    if field not in tool:
+                        errors.append(f"{rel}: tool {index} missing {field}")
+    return errors
+
+
 def detect_substitution_violations(project: Path, diff: str) -> list[str]:
     violations: list[str] = []
     forbidden_terms = parse_forbidden_terms(project / ".pfo" / "FORBIDDEN_CHANGES.md")
@@ -180,8 +223,13 @@ def evaluate(project: Path) -> dict[str, Any]:
     diff = diff_text(project)
     missing = missing_contracts(project)
     placeholders = has_placeholder_contracts(project)
+    json_errors = json_contract_errors(project)
     risks = classify_risks(files, diff)
     substitution_violations = detect_substitution_violations(project, diff)
+    execution_json_errors = [item for item in json_errors if item.startswith(".pfo/EXECUTION_POLICY.json")]
+    permission_json_errors = [item for item in json_errors if item.startswith(".pfo/PERMISSION_MATRIX.json")]
+    verification_json_errors = [item for item in json_errors if item.startswith(".pfo/VERIFICATION_CONTRACT.json")]
+    tool_json_errors = [item for item in json_errors if item.startswith(".pfo/TOOL_CAPABILITY_REGISTRY.json")]
 
     blockers: list[str] = []
     warnings: list[str] = []
@@ -189,6 +237,7 @@ def evaluate(project: Path) -> dict[str, Any]:
         blockers.extend([f"missing contract: {item}" for item in missing])
     if placeholders:
         warnings.extend([f"placeholder contract content: {item}" for item in placeholders])
+    blockers.extend(json_errors)
     blockers.extend(substitution_violations)
 
     if "dependency_change" in risks and (
@@ -220,6 +269,11 @@ def evaluate(project: Path) -> dict[str, Any]:
             "fallbackPolicy": "BLOCKED" if ".pfo/FALLBACK_POLICY.md" in missing or substitution_violations else "PASS",
             "diffRisk": "PASS_WITH_WARNINGS" if warnings else "PASS",
             "noSilentSubstitution": "BLOCKED" if substitution_violations else "PASS",
+            "executionPolicy": "BLOCKED" if ".pfo/EXECUTION_POLICY.json" in missing or execution_json_errors else "PASS",
+            "permissionMatrix": "BLOCKED" if ".pfo/PERMISSION_MATRIX.md" in missing or ".pfo/PERMISSION_MATRIX.json" in missing or permission_json_errors else "PASS",
+            "verificationContract": "BLOCKED" if ".pfo/VERIFICATION_CONTRACT.json" in missing or verification_json_errors else "PASS",
+            "learningPromotion": "BLOCKED" if ".pfo/LEARNING_PROMOTION_GATE.md" in missing else "PASS",
+            "toolCapabilityRegistry": "BLOCKED" if ".pfo/TOOL_CAPABILITY_REGISTRY.json" in missing or tool_json_errors else "PASS",
         },
     }
 
@@ -260,4 +314,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

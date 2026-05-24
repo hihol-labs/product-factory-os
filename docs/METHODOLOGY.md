@@ -101,9 +101,16 @@ If any are missing, run `/adopt` first.
 - `.pfo/FALLBACK_POLICY.md`: allowed/forbidden degraded-mode behavior
 - `.pfo/SCOPE_LOCK.md`: current task boundaries and forbidden change areas
 - `.pfo/UNIT_CONTEXT_MANIFEST.json`: execution-unit input, write-scope, gate, and recovery contract
+- `.pfo/EXECUTION_POLICY.json`: command, write, network, and approval policy
+- `.pfo/PERMISSION_MATRIX.json`: machine-readable permission table for local, git, external API, secret, deploy, and migration actions
+- `.pfo/PERMISSION_MATRIX.md`: human-readable permission table
+- `.pfo/VERIFICATION_CONTRACT.json`: required verification commands, expected output, timeout, pass/fail parser, and artifacts
+- `.pfo/TOOL_CAPABILITY_REGISTRY.json`: tool and connector read/write/execute capability registry with side effects, auth, external data risk, fallback mode, and approvals
+- `.pfo/LEARNING_PROMOTION_GATE.md`: promotion path from repeated errors to tests, hooks, docs, rules, linters, validators, templates, routes, or skills
 - `.pfo/EXPERIMENT_PROGRAM.md`: Autoresearch-style fixed-budget experiment contract
 - `.pfo/EXPERIMENTS.tsv`: baseline, candidate metrics, and keep/discard/crash decisions
 - `.codex-memory/LEARNINGS.md`: durable decisions, lessons, patterns, and surprises
+- `.codex-memory/events.jsonl`: structured event log for commands, gates, approvals, verification, errors, state changes, external tools, and learning
 - `ASSET_REGISTER.md`: repeatable product, process, template, offer, or automation assets
 - `CONTENT_BACKLOG.md`: publishable learnings and case-study candidates tied to evidence
 - `BRANCH_FINISH.md`: PR, merge, keep, or discard decision when branch cleanup is in scope

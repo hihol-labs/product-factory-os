@@ -48,6 +48,11 @@ def main() -> None:
         if not path.is_file():
             fail(f"hook command references missing file: {path.relative_to(ROOT)}")
 
+    preflight = (ROOT / "hooks" / "preflight-context.py").read_text(encoding="utf-8")
+    for token in ["EXECUTION_POLICY.json", "PERMISSION_MATRIX.json", "PERMISSION_MATRIX.md", "VERIFICATION_CONTRACT.json", "TOOL_CAPABILITY_REGISTRY.json", "events.jsonl"]:
+        if token not in preflight:
+            fail(f"preflight-context.py missing policy/event token {token}")
+
     run([sys.executable, "hooks/route-reminder.py", "plan only, architecture first"], "/blueprint")
     run([sys.executable, "hooks/route-reminder.py", "latest SDK docs"], "/mcp-docs")
     run([sys.executable, "hooks/skill-completeness.py", "--skill", "project"], "OK:")

@@ -112,6 +112,11 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "experimentSetup": "",
                 "experimentMetric": "",
                 "experimentDecision": "",
+                "executionPolicy": "",
+                "permissionMatrix": "",
+                "verificationContract": "",
+                "learningPromotion": "",
+                "toolCapabilityRegistry": "",
                 "deploymentReadiness": "",
             },
             "verificationHistory": [],
@@ -155,8 +160,15 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 ".pfo/FORBIDDEN_CHANGES.md",
                 ".pfo/FALLBACK_POLICY.md",
                 ".pfo/SCOPE_LOCK.md",
+                ".pfo/PERMISSION_MATRIX.md",
+                ".pfo/PERMISSION_MATRIX.json",
+                ".pfo/LEARNING_PROMOTION_GATE.md",
+                ".pfo/EXECUTION_POLICY.json",
+                ".pfo/VERIFICATION_CONTRACT.json",
+                ".pfo/TOOL_CAPABILITY_REGISTRY.json",
                 ".codex-memory/MEMORY.md",
                 ".codex-memory/STATE.json",
+                ".codex-memory/events.jsonl",
             ],
             "completedModules": [],
             "failedValidations": [],
@@ -177,6 +189,32 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
             },
             "knowledgeLog": [],
             "learningProposals": [],
+            "eventLog": {
+                "path": ".codex-memory/events.jsonl",
+                "lastEventId": "",
+                "lastEventAt": "",
+            },
+            "executionPolicy": {
+                "path": ".pfo/EXECUTION_POLICY.json",
+                "status": "",
+            },
+            "permissionMatrix": {
+                "path": ".pfo/PERMISSION_MATRIX.json",
+                "humanPath": ".pfo/PERMISSION_MATRIX.md",
+                "status": "",
+            },
+            "verificationContract": {
+                "path": ".pfo/VERIFICATION_CONTRACT.json",
+                "status": "",
+            },
+            "learningPromotionGate": {
+                "path": ".pfo/LEARNING_PROMOTION_GATE.md",
+                "status": "",
+            },
+            "toolCapabilityRegistry": {
+                "path": ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+                "status": "",
+            },
             "experimentLoop": {
                 "status": "",
                 "tag": "",
@@ -244,7 +282,9 @@ def scaffold(project: Path, starter: dict) -> None:
     pfo_dir.mkdir(exist_ok=True)
     pfo_templates = ROOT / "docs" / "templates" / "pfo"
     if pfo_templates.is_dir():
-        for source in pfo_templates.glob("*.md"):
+        for source in pfo_templates.iterdir():
+            if not source.is_file() or source.suffix not in {".md", ".json"}:
+                continue
             target = pfo_dir / source.name
             if not target.exists():
                 shutil.copyfile(source, target)
@@ -303,6 +343,12 @@ Product Factory OS must create and maintain:
 .pfo/FORBIDDEN_CHANGES.md
 .pfo/FALLBACK_POLICY.md
 .pfo/SCOPE_LOCK.md
+.pfo/EXECUTION_POLICY.json
+.pfo/PERMISSION_MATRIX.md
+.pfo/PERMISSION_MATRIX.json
+.pfo/VERIFICATION_CONTRACT.json
+.pfo/LEARNING_PROMOTION_GATE.md
+.pfo/TOOL_CAPABILITY_REGISTRY.json
 DISCOVERY.md
 IDEA_SCORECARD.md
 VALIDATION_PLAN.md
@@ -332,6 +378,10 @@ HANDOFF.md when transfer is in scope
 - Validate risky assumptions in `VALIDATION_PLAN.md`.
 - Capture implementation decisions in `PHASE_CONTEXT.md` before detailed execution planning.
 - Build `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
+- Respect `.pfo/EXECUTION_POLICY.json` and `.pfo/PERMISSION_MATRIX.md` before commands, writes, external APIs, push, deploy, or secret access.
+- Validate `.pfo/PERMISSION_MATRIX.json` with `pfo permission-check .`.
+- Validate `.pfo/TOOL_CAPABILITY_REGISTRY.json` with `pfo tool-registry .`.
+- Keep `.pfo/VERIFICATION_CONTRACT.json` current for every active execution unit.
 - Write `HANDOFF.md` before switching sessions, roles, delegated agents, AFK execution, compaction, or recovery.
 - Behavior changes require TDD red/green evidence unless explicitly waived by project owner.
 - Bugfixes require root-cause evidence before implementation.
@@ -347,6 +397,8 @@ HANDOFF.md when transfer is in scope
 - Reusable solutions should be promoted into `ASSET_REGISTER.md`; publishable lessons go into `CONTENT_BACKLOG.md`.
 - Branch finish must record a PR, merge, keep, or discard decision with verification evidence.
 - Extract durable decisions, lessons, patterns, and surprises into `.codex-memory/LEARNINGS.md`.
+- Promote repeated errors only through `.pfo/LEARNING_PROMOTION_GATE.md`.
+- Record significant commands, gates, approvals, verification, errors, and learning events in `.codex-memory/events.jsonl`.
 - Use `pfo export . --target obsidian` when a local Obsidian knowledge graph is needed; keep `.pfo-integrations/obsidian/` generated.
 - Session state is saved after significant milestones.
 
@@ -419,6 +471,7 @@ def main() -> None:
     write_once(project / "CODEX.md", codex_md(project_name, args.idea, methodology))
     write_once(project / "AGENTS.md", agents_md(project_name, args.idea, methodology))
     write_once(memory_dir / "MEMORY.md", memory_md(project_name, args.idea))
+    write_once(memory_dir / "events.jsonl", "")
     write_once(memory_dir / "STATE.json", state_json(project_name, args.idea, methodology))
     scaffold(project, starter)
 

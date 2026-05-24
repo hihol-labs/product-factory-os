@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import argparse
+from datetime import datetime, timezone
 import json
 import sys
 
@@ -39,6 +40,40 @@ def load_state(project: Path) -> tuple[Path, dict]:
 
 def save(path: Path, state: dict) -> None:
     path.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def add_artifact(state: dict, artifact: str) -> None:
+    artifacts = set(state.get("artifacts", []))
+    artifacts.add(artifact)
+    state["artifacts"] = sorted(artifacts)
+
+
+def append_event(project: Path, state: dict, event_type: str, status: str, payload: dict) -> None:
+    timestamp = now_iso()
+    event_id = f"event-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{len(state.get('verificationHistory', [])) + 1}"
+    event = {
+        "id": event_id,
+        "timestamp": timestamp,
+        "eventType": event_type,
+        "status": status,
+        "project": project.name,
+        "source": "pfo-runner",
+        "payload": payload,
+    }
+    path = project / ".codex-memory" / "events.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(event, ensure_ascii=False) + "\n")
+    state["eventLog"] = {
+        "path": ".codex-memory/events.jsonl",
+        "lastEventId": event_id,
+        "lastEventAt": timestamp,
+    }
+    add_artifact(state, ".codex-memory/events.jsonl")
 
 
 def next_graph_node(project: Path, current: str) -> str:
@@ -98,6 +133,7 @@ def main() -> None:
         state["nextAction"] = "Run review, PFO, strategy, testing, security, dependency, and hardening gates as applicable."
 
     history.append({"mode": args.mode, "stage": state["currentStage"], "node": state.get("currentNode", "")})
+    append_event(project, state, "state-change", state["currentStage"], {"mode": args.mode, "node": state.get("currentNode", "")})
     save(state_path, state)
     print(f"OK: {args.mode} step recorded for {project}")
 

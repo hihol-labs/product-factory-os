@@ -59,6 +59,30 @@ def add_artifact(state: dict, artifact: str) -> None:
     state["artifacts"] = sorted(artifacts)
 
 
+def append_event(project: Path, state: dict, event_type: str, status: str, payload: dict) -> None:
+    timestamp = now_iso()
+    event_id = f"event-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{len(state.get('knowledgeLog', [])) + 1}"
+    event = {
+        "id": event_id,
+        "timestamp": timestamp,
+        "eventType": event_type,
+        "status": status,
+        "project": project.name,
+        "source": "pfo-learn",
+        "payload": payload,
+    }
+    path = project / ".codex-memory" / "events.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(event, ensure_ascii=False) + "\n")
+    state["eventLog"] = {
+        "path": ".codex-memory/events.jsonl",
+        "lastEventId": event_id,
+        "lastEventAt": timestamp,
+    }
+    add_artifact(state, ".codex-memory/events.jsonl")
+
+
 def infer_scope(project: Path, state: dict) -> str:
     starter = state.get("starter")
     product_type = state.get("productTypeHint") or state.get("classification", {}).get("productType")
@@ -170,6 +194,7 @@ def cmd_record(args: argparse.Namespace) -> int:
     add_artifact(state, ".codex-memory/LEARNINGS.md")
     add_artifact(state, ".codex-memory/LEARNINGS.jsonl")
     state["nextAction"] = "Run `pfo improve <project> --from-learnings --propose` to turn candidate rules into reviewed improvements."
+    append_event(project, state, "learning", entry["status"], {"id": entry["id"], "rule": entry.get("proposedRule", "")})
     save_state(project, state)
     print("OK: recorded structured learning")
     return 0
@@ -193,6 +218,12 @@ def candidate_from_learning(learning: dict) -> Optional[dict]:
         "evidence": learning.get("evidence", []),
         "confidence": normalize_confidence(learning.get("confidence")),
         "status": "PROPOSED",
+        "promotion": {
+            "target": "review-required",
+            "artifacts": [],
+            "checks": [],
+            "reviewStatus": "PENDING",
+        },
         "promotionGates": [
             "python3 scripts/validate_structure.py",
             "python3 scripts/validate_runtime.py",
@@ -237,6 +268,13 @@ def cmd_propose(args: argparse.Namespace) -> int:
             continue
         if candidate["confidence"] < args.min_confidence:
             continue
+        if args.promotion_target:
+            candidate["promotion"] = {
+                "target": args.promotion_target,
+                "artifacts": args.promotion_artifact or [],
+                "checks": args.promotion_check or [],
+                "reviewStatus": args.review_status,
+            }
         candidates.append(candidate)
 
     if not candidates:
@@ -271,8 +309,73 @@ def cmd_propose(args: argparse.Namespace) -> int:
     state["learningProposals"] = candidates
     add_artifact(state, ".codex-memory/LEARNING_PROPOSALS.json")
     state["nextAction"] = "Review proposed learning rules, run promotion gates, then apply approved changes to PFO templates, routing, gates, or skills."
+    append_event(project, state, "learning", "PROPOSED", {"candidateCount": len(candidates)})
     save_state(project, state)
     print(f"OK: proposed {len(candidates)} learning rule(s)")
+    return 0
+
+
+def candidate_gate_errors(candidate: dict, require_approved: bool) -> list[str]:
+    errors: list[str] = []
+    allowed_targets = {"test", "hook", "doc", "rule", "linter", "validator", "template", "skill", "route"}
+    promotion = candidate.get("promotion", {}) if isinstance(candidate.get("promotion", {}), dict) else {}
+    target = promotion.get("target") or candidate.get("promotionTarget", "")
+    artifacts = promotion.get("artifacts") or candidate.get("promotionArtifacts", [])
+    checks = promotion.get("checks") or candidate.get("promotionChecks", [])
+    review_status = promotion.get("reviewStatus") or candidate.get("reviewStatus", "")
+
+    if not candidate.get("evidence"):
+        errors.append(f"{candidate.get('id', '<unknown>')}: missing evidence")
+    if target not in allowed_targets:
+        errors.append(f"{candidate.get('id', '<unknown>')}: promotion target must be one of {sorted(allowed_targets)}")
+    if not isinstance(artifacts, list) or not artifacts:
+        errors.append(f"{candidate.get('id', '<unknown>')}: missing promotion artifacts")
+    if not isinstance(checks, list) or not checks:
+        errors.append(f"{candidate.get('id', '<unknown>')}: missing promotion checks")
+    if require_approved and review_status != "APPROVED":
+        errors.append(f"{candidate.get('id', '<unknown>')}: reviewStatus must be APPROVED")
+    return errors
+
+
+def cmd_gate(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    proposal_path = project / ".codex-memory" / "LEARNING_PROPOSALS.json"
+    if not proposal_path.is_file():
+        fail("missing .codex-memory/LEARNING_PROPOSALS.json; run propose first")
+    proposal = read_json(proposal_path, {})
+    candidates = proposal.get("candidateRules", [])
+    if not isinstance(candidates, list) or not candidates:
+        fail("learning proposal has no candidateRules")
+
+    errors: list[str] = []
+    for candidate in candidates:
+        if not isinstance(candidate, dict):
+            errors.append("candidateRules contains a non-object item")
+            continue
+        if candidate.get("status") == "REJECTED":
+            continue
+        errors.extend(candidate_gate_errors(candidate, args.require_approved))
+
+    gate_status = "PASSED" if not errors else "BLOCKED"
+    state.setdefault("gateResults", {})["learningPromotion"] = gate_status
+    state["learningPromotionGate"] = {
+        "path": ".pfo/LEARNING_PROMOTION_GATE.md",
+        "status": gate_status,
+        "checkedAt": now_iso(),
+    }
+    if errors:
+        state.setdefault("blockers", []).extend(errors)
+        state["nextAction"] = "Fill learning proposal target, artifacts, checks, and review status before changing PFO runtime."
+    else:
+        state["nextAction"] = "Apply the approved learning promotion and rerun the declared checks."
+    append_event(project, state, "gate", gate_status, {"command": "learning-gate", "errors": errors})
+    save_state(project, state)
+    if errors:
+        for error in errors:
+            print(f"ERROR: {error}")
+        return 1
+    print("OK: learning promotion gate passed")
     return 0
 
 
@@ -297,7 +400,16 @@ def build_parser() -> argparse.ArgumentParser:
     propose.add_argument("project", type=Path)
     propose.add_argument("--registry", type=Path, default=DEFAULT_REGISTRY)
     propose.add_argument("--min-confidence", type=float, default=0.0)
+    propose.add_argument("--promotion-target", choices=["test", "hook", "doc", "rule", "linter", "validator", "template", "skill", "route"], default="")
+    propose.add_argument("--promotion-artifact", action="append", default=[])
+    propose.add_argument("--promotion-check", action="append", default=[])
+    propose.add_argument("--review-status", choices=["PENDING", "APPROVED", "REJECTED"], default="PENDING")
     propose.set_defaults(func=cmd_propose)
+
+    gate = sub.add_parser("gate", help="Validate learning proposals before promoting them into runtime changes.")
+    gate.add_argument("project", type=Path)
+    gate.add_argument("--require-approved", action="store_true")
+    gate.set_defaults(func=cmd_gate)
 
     return parser
 

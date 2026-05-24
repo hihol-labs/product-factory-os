@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "canonicalCapabilityRegistry": "integrations/tool-capability-registry.json",
   "providers": {
     "context7": {
       "purpose": "fresh library and framework documentation",

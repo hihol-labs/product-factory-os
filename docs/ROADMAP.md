@@ -83,6 +83,7 @@ Release criteria:
 - Hook parity with the methodology: route reminders, preflight context, skill completeness, commit completeness, and review-before-commit gates.
 - Route snapshot coverage for every skill.
 - Stable runtime CLI semantics for `new`, `adopt`, `analyze`, `plan`, `build`, `test`, `review`, `validate`, `contracts`, `resume`, `report`, `voice`, `metrics`, and `export`.
+- Project-local execution policy, permissions, verification contracts, structured event logs, tool capability registry, and learning promotion gates are present for generated and adopted projects.
 - `pfo new -> pfo plan -> pfo validate` works for every starter pack.
 - Runtime validation for generated project execution graphs.
 - Rich generated-project validators for `QUALITY_GATES.md`, starter instantiation, `.pfo/` contracts, and full template compliance.

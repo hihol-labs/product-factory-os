@@ -36,7 +36,9 @@ def ensure_pfo_contracts(project: Path) -> list[str]:
     pfo_dir.mkdir(exist_ok=True)
     if not PFO_TEMPLATE_DIR.is_dir():
         return created
-    for source in PFO_TEMPLATE_DIR.glob("*.md"):
+    for source in PFO_TEMPLATE_DIR.iterdir():
+        if not source.is_file() or source.suffix not in {".md", ".json"}:
+            continue
         target = pfo_dir / source.name
         if not target.exists():
             shutil.copyfile(source, target)
@@ -47,13 +49,16 @@ def ensure_pfo_contracts(project: Path) -> list[str]:
 def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
     ensure_pfo_contracts(project)
     state_path = project / ".codex-memory" / "STATE.json"
+    memory = project / ".codex-memory" / "MEMORY.md"
+    events = project / ".codex-memory" / "events.jsonl"
+    memory.parent.mkdir(parents=True, exist_ok=True)
+    if not events.is_file():
+        events.write_text("", encoding="utf-8")
     if state_path.is_file():
         return state_path, read_json(state_path)
 
-    memory = project / ".codex-memory" / "MEMORY.md"
     codex = project / "CODEX.md"
     agents = project / "AGENTS.md"
-    memory.parent.mkdir(parents=True, exist_ok=True)
     if not memory.is_file():
         memory.write_text("# Memory\n\n", encoding="utf-8")
     if not codex.is_file():
@@ -90,8 +95,15 @@ def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
         ".pfo/FORBIDDEN_CHANGES.md",
         ".pfo/FALLBACK_POLICY.md",
         ".pfo/SCOPE_LOCK.md",
+        ".pfo/PERMISSION_MATRIX.md",
+        ".pfo/PERMISSION_MATRIX.json",
+        ".pfo/LEARNING_PROMOTION_GATE.md",
+        ".pfo/EXECUTION_POLICY.json",
+        ".pfo/VERIFICATION_CONTRACT.json",
+        ".pfo/TOOL_CAPABILITY_REGISTRY.json",
         ".codex-memory/MEMORY.md",
         ".codex-memory/STATE.json",
+        ".codex-memory/events.jsonl",
     ]
     state["nextAction"] = "Run existing-project analyzer."
     write_json(state_path, state)
