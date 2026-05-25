@@ -7,15 +7,10 @@ import sys
 import shutil
 import subprocess
 
+from pfo_alias_targets import ALIAS_DOCUMENT_NAMES, missing_targets_for_text
+
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
-ALIAS_DOCUMENT_NAMES = [
-    "MASTER_CONTEXT.md",
-    "ARCHITECTURE.md",
-    "TASKS.md",
-    "PROGRESS.md",
-    "TESTING.md",
-]
 
 
 def load_alias_documents() -> dict[str, str]:
@@ -40,6 +35,13 @@ def write_once(path: Path, text: str) -> None:
     if path.exists():
         return
     path.write_text(text, encoding="utf-8")
+
+
+def write_alias_documents_if_valid(project: Path) -> None:
+    for name, text in load_alias_documents().items():
+        if missing_targets_for_text(project, name, text):
+            continue
+        write_once(project / name, text)
 
 
 def state_json(project_name: str, idea: str, methodology: Path) -> str:
@@ -335,8 +337,6 @@ def scaffold(project: Path, starter: dict) -> None:
         project / "PFO_REPORT.md",
         "# Product Factory OS Report\n\nCURRENT STATE: BOOTSTRAPPED\n\nNEXT ACTION: Run `/project -> /kickstart`.\n",
     )
-    for name, text in load_alias_documents().items():
-        write_once(project / name, text)
 
 
 def run_auto_plan(project: Path) -> int:
@@ -534,6 +534,7 @@ def main() -> None:
     print(f"Starter: {starter['id']}")
     print("Route: /project -> /kickstart")
     if args.no_plan:
+        write_alias_documents_if_valid(project)
         print(f"Next: python3 {ROOT / 'scripts' / 'pfo.py'} plan {project}")
     else:
         print("Plan: generated automatically")

@@ -92,6 +92,7 @@ def check_output_contract(fixture: Path, data: dict) -> list[str]:
             "forbidden_files",
             "stdout_must_contain",
             "files_must_contain",
+            "files_must_not_contain",
             "any_file_must_contain",
         ]
     )
@@ -143,6 +144,15 @@ def validate_output(fixture_name: str, contract: dict, output_dir: Path, stdout_
         for token in tokens:
             if token.lower() not in text.lower():
                 errors.append(f"{fixture_name}: {rel} missing {token!r}")
+
+    for rel, tokens in output.get("files_must_not_contain", {}).items():
+        target = output_dir / rel
+        if not target.is_file():
+            continue
+        text = read_output_file(target)
+        for token in tokens:
+            if token.lower() in text.lower():
+                errors.append(f"{fixture_name}: {rel} contains forbidden {token!r}")
 
     all_text = "\n".join(read_output_file(path) for path in output_files(output_dir))
     for token in output.get("any_file_must_contain", []):

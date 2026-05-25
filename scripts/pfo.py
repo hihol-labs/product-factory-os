@@ -7,6 +7,8 @@ import json
 import subprocess
 import sys
 
+from pfo_alias_targets import missing_targets_for_text
+
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
 ALIAS_DOCUMENT_NAMES = [
@@ -244,6 +246,9 @@ def write_if_missing(path: Path, text: str) -> bool:
 def write_alias_documents(project: Path) -> list[str]:
     written = []
     for name, text in load_alias_documents().items():
+        errors = missing_targets_for_text(project, name, text)
+        if errors:
+            raise SystemExit("ERROR: refusing to create alias document with missing target(s):\n" + "\n".join(f"- {item}" for item in errors))
         if write_if_missing(project / name, text):
             written.append(name)
     return written
@@ -1413,7 +1418,6 @@ def cmd_plan(args: argparse.Namespace) -> int:
     ensure_autonomy_state(state)
     starter = load_starter(project, state)
     written = []
-    written.extend(write_alias_documents(project))
     for path, text in [
         (project / "IDEA_SCORECARD.md", generated_idea_scorecard(state)),
         (project / "VALIDATION_PLAN.md", generated_validation_plan(state)),
@@ -1436,6 +1440,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
         if code != 0:
             return code
         written.append("EXECUTION_GRAPH.md")
+    written.extend(write_alias_documents(project))
     state["currentStage"] = "PLAN_READY"
     state["classification"]["productType"] = state["classification"].get("productType") or starter.get("productType", "")
     state["architecture"]["backend"] = state["architecture"].get("backend") or ", ".join(starter.get("stack", []))

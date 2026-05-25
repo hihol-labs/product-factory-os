@@ -7,6 +7,8 @@ import subprocess
 import sys
 from typing import Any
 
+from pfo_alias_targets import missing_alias_targets
+
 REQUIRED_CONTRACTS = [
     ".pfo/PROJECT_CONTRACT.md",
     ".pfo/DATA_POLICY.md",
@@ -254,6 +256,7 @@ def evaluate(project: Path) -> dict[str, Any]:
     missing = missing_contracts(project)
     placeholders = has_placeholder_contracts(project)
     json_errors = json_contract_errors(project)
+    alias_target_errors = missing_alias_targets(project)
     risks = classify_risks(files, diff)
     substitution_violations = detect_substitution_violations(project, diff)
     execution_json_errors = [item for item in json_errors if item.startswith(".pfo/EXECUTION_POLICY.json")]
@@ -268,6 +271,7 @@ def evaluate(project: Path) -> dict[str, Any]:
     if placeholders:
         warnings.extend([f"placeholder contract content: {item}" for item in placeholders])
     blockers.extend(json_errors)
+    blockers.extend(alias_target_errors)
     blockers.extend(substitution_violations)
 
     if "dependency_change" in risks and (
@@ -290,9 +294,11 @@ def evaluate(project: Path) -> dict[str, Any]:
         "riskClasses": risks,
         "missingContracts": missing,
         "placeholderContracts": placeholders,
+        "aliasTargetErrors": alias_target_errors,
         "blockers": blockers,
         "warnings": warnings,
         "gates": {
+            "aliasTargets": "BLOCKED" if alias_target_errors else "PASS",
             "scopeLock": "BLOCKED" if missing or substitution_violations else ("PASS_WITH_WARNINGS" if warnings else "PASS"),
             "dataAuthenticity": "BLOCKED" if substitution_violations else "PASS",
             "goldenFlows": "BLOCKED" if ".pfo/GOLDEN_FLOWS.md" in missing else ("PASS_WITH_WARNINGS" if ".pfo/GOLDEN_FLOWS.md" in placeholders else "PASS"),

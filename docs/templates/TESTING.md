@@ -8,7 +8,6 @@ This is a navigation alias. Canonical verification sources stay in the files bel
 - Gate status and evidence: `QUALITY_GATES.md`
 - Verification contract: `.pfo/VERIFICATION_CONTRACT.json`
 - Golden flows: `.pfo/GOLDEN_FLOWS.md`
-- CI workflow: `.github/workflows/validate.yml`
 
 ## Rule
 

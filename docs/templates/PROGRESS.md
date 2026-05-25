@@ -7,8 +7,6 @@ This is a navigation alias. Canonical progress sources stay in the files below.
 - Reloadable state: `.codex-memory/STATE.json`
 - Session memory: `.codex-memory/MEMORY.md`
 - Event log: `.codex-memory/events.jsonl`
-- Handoff packet: `HANDOFF.md`
-- Durable learnings: `.codex-memory/LEARNINGS.md`
 - Quality gate status: `QUALITY_GATES.md`
 
 ## Rule

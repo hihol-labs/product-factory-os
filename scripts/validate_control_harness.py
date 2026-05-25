@@ -93,6 +93,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "alias-integrity",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo_alias_targets.py",
+            "scripts/pfo_contract_gate.py",
+            "docs/templates/existing/MASTER_CONTEXT.md",
+        ],
+    },
+    {
         "id": "methodology-ci",
         "timing": "Feedback",
         "evaluator": "Computational",
