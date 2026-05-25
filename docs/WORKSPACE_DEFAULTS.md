@@ -63,7 +63,7 @@ TEST_PLAN.md
 QUALITY_GATES.md
 ```
 
-The five uppercase files above are navigation aliases only. The canonical sources remain the PFO artifacts they link to.
+The five uppercase files above are navigation aliases only. For new projects, the canonical sources remain the PFO artifacts created by `pfo plan`.
 
 `pfo plan` creates the core planning artifacts while preserving files that already exist:
 
@@ -105,7 +105,9 @@ For every existing project, Product Factory OS is also mandatory:
 /task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save
 ```
 
-Before any work in an existing project, full PFO adoption must already be present. The installer and preflight hook create missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts, analysis, contract gate output, and `PFO_REPORT.md`. If a project was added after install, run `pfo adopt <project>` or rely on the preflight hook to auto-enforce full runtime for the first-level workspace project.
+Before any work in an existing project, full PFO adoption must already be present. The installer and preflight hook create missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts, existing-project-safe alias indexes, analysis, contract gate output, and `PFO_REPORT.md`. If a project was added after install, run `pfo adopt <project>` or rely on the preflight hook to auto-enforce full runtime for the first-level workspace project.
+
+Existing-project alias indexes must link only to files that exist. Missing Product Compiler docs such as `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, or `QUALITY_GATES.md` are not linked until intentionally created.
 
 Hooks are installed by default in this workspace. They provide auto-adoption, route reminders, preflight context, skill completeness checks, commit completeness checks, and review-before-commit validation. Install or refresh them from the methodology repo with:
 

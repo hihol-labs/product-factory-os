@@ -23,5 +23,33 @@
       ],
       "min_scenario_count": 4
     }
+  },
+  "output_contract": {
+    "files_must_not_contain": {
+      "MASTER_CONTEXT.md": [
+        "PRODUCT_BLUEPRINT.md",
+        "PROJECT_ARCHITECTURE.md",
+        "QUALITY_GATES.md"
+      ],
+      "ARCHITECTURE.md": [
+        "PRODUCT_BLUEPRINT.md",
+        "PROJECT_ARCHITECTURE.md"
+      ],
+      "TASKS.md": [
+        "BUILD_PLAN.md",
+        "EXECUTION_GRAPH.md",
+        "IMPLEMENTATION_PLAN.md"
+      ],
+      "PROGRESS.md": [
+        "QUALITY_GATES.md",
+        "HANDOFF.md",
+        ".codex-memory/LEARNINGS.md"
+      ],
+      "TESTING.md": [
+        "TEST_PLAN.md",
+        "QUALITY_GATES.md",
+        ".github/workflows/validate.yml"
+      ]
+    }
   }
 }

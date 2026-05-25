@@ -26,12 +26,18 @@ Add Product Factory OS context to an existing project.
    - `.pfo/` contracts
 3. Create or update `AGENTS.md` and `CODEX.md` with marked Product Factory OS sections.
 4. Create `.codex-memory/`, `.pfo/`, and initial state.
-5. Record stack, available commands, known docs, and current task route in `.codex-memory/STATE.json`.
-6. Add missing Product Compiler docs only when needed for the requested change:
+5. Create existing-project alias indexes only from targets that already exist:
+   - `MASTER_CONTEXT.md`
+   - `ARCHITECTURE.md`
+   - `TASKS.md`
+   - `PROGRESS.md`
+   - `TESTING.md`
+6. Record stack, available commands, known docs, and current task route in `.codex-memory/STATE.json`.
+7. Add missing Product Compiler docs only when needed for the requested change:
    - `PRODUCT_BLUEPRINT.md`
    - `BUILD_PLAN.md`
    - `EXECUTION_GRAPH.md`
-7. Route to `/task` after adoption.
+8. Route to `/task` after adoption.
 
 ## Existing Project State
 
@@ -60,4 +66,5 @@ Before final output, verify:
 - Do not alter application behavior.
 - Do not overwrite existing project-local instructions; append/update marked PFO sections.
 - Do not skip `.codex-memory/STATE.json`.
+- Do not create alias/index files that point to absent Product Compiler docs.
 - Do not start major implementation until the existing project has been analyzed and the task route is classified.

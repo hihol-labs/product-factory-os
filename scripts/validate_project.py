@@ -5,6 +5,8 @@ import json
 import subprocess
 import sys
 
+from pfo_alias_targets import missing_alias_targets
+
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = ["AGENTS.md", "CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json", ".codex-memory/events.jsonl"]
 REQUIRED_PFO = [
@@ -55,6 +57,9 @@ def main() -> None:
     for rel in REQUIRED:
         if not (project / rel).is_file():
             fail(f"{project} is missing {rel}")
+    alias_errors = missing_alias_targets(project)
+    if alias_errors:
+        fail(f"{project} has broken alias target(s):\n" + "\n".join(alias_errors))
 
     run([sys.executable, "scripts/validate_state.py", str(project / ".codex-memory" / "STATE.json")])
     for rel in REQUIRED_PFO:

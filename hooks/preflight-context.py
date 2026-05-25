@@ -4,6 +4,10 @@ import json
 import subprocess
 import sys
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from pfo_alias_targets import missing_alias_targets
+
 
 PFO_CONTRACTS = [
     ".pfo/PROJECT_CONTRACT.md",
@@ -95,7 +99,7 @@ def needs_full_runtime(project: Path) -> bool:
             project / "PFO_CONTRACT_GATE.json",
             project / "PFO_REPORT.md",
         ]
-    return any(not path.is_file() for path in required)
+    return any(not path.is_file() for path in required) or bool(missing_alias_targets(project))
 
 
 def run_auto_full_runtime(project: Path, workspace: Path, methodology: Path, generated: bool) -> None:

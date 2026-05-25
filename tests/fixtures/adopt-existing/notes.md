@@ -17,3 +17,7 @@ Running adoption inside the Product Factory OS methodology repository itself is 
 ## Scenario 4: Guard Rails
 
 Application source files are not rewritten, existing local instructions are preserved, and behavior remains unchanged.
+
+## Scenario 5: Alias Targets
+
+An existing repository without Product Compiler docs must not receive index files that link to missing `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, or `QUALITY_GATES.md`.

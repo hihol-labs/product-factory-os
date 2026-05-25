@@ -34,6 +34,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | verification-contract | Expected checks before execution starts | Feedforward | Computational | `docs/templates/pfo/VERIFICATION_CONTRACT.json`, `docs/templates/TEST_PLAN.md`, `docs/templates/QUALITY_GATES.md` |
 | market-validation | Evidence before broad product scope | Feedforward | Inferential | `skills/market-scan/SKILL.md`, `docs/templates/VALIDATION_PLAN.md`, `docs/templates/MARKET_BRIEF.md` |
 | route-regression | Route, fixture, trigger, and skill drift checks | Feedback | Computational | `scripts/run_fixtures.py`, `scripts/verify_triggers.py`, `scripts/verify_fixture_contracts.py` |
+| alias-integrity | Navigation alias target existence | Feedback | Computational | `scripts/pfo_alias_targets.py`, `scripts/pfo_contract_gate.py`, `docs/templates/existing/MASTER_CONTEXT.md` |
 | methodology-ci | Repository-level deterministic validation | Feedback | Computational | `.github/workflows/validate.yml`, `scripts/validate_structure.py`, `scripts/validate_runtime.py`, `scripts/meta_review.py` |
 | project-ci | Generated-project validation | Feedback | Computational | `templates/generated-ci/validate.yml`, `scripts/validate_project.py`, `scripts/pfo_contract_gate.py` |
 | engineering-discipline | TDD, root-cause, two-stage review, branch finish | Feedback | Computational | `scripts/validate_plan_quality.py`, `docs/templates/ROOT_CAUSE.md`, `docs/templates/BRANCH_FINISH.md` |
@@ -69,7 +70,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | Route request | `intent-routing`, `product-classification` | `route-regression` |
 | Plan product | `planning-documents`, `market-validation`, `adversarial-planning` | `review-agent` |
 | Dispatch unit | `unit-context`, `verification-contract` | `engineering-discipline` |
-| Build behavior | `verification-contract`, `docs/templates/TEST_PLAN.md` | tests, `engineering-discipline`, `project-ci` |
+| Build behavior | `verification-contract`, `docs/templates/TEST_PLAN.md` | tests, `engineering-discipline`, `project-ci`, `alias-integrity` |
 | Review work | rubrics and quality gate expectations | `review-agent`, `security-review-agent`, `ux-review-agent` when applicable |
 | Deploy readiness | permission matrix, deployment target, rollback expectations | `methodology-ci`, `project-ci`, security/deps/hardening/browser gates |
 | Learn and improve | learning promotion policy | `learning-promotion`, fixture and validator updates |

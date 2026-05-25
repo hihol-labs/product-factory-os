@@ -125,7 +125,7 @@ If any are missing, run `/adopt` first.
 - `ASSET_REGISTER.md`: repeatable product, process, template, offer, or automation assets
 - `CONTENT_BACKLOG.md`: publishable learnings and case-study candidates tied to evidence
 - `BRANCH_FINISH.md`: PR, merge, keep, or discard decision when branch cleanup is in scope
-- `MASTER_CONTEXT.md`, `ARCHITECTURE.md`, `TASKS.md`, `PROGRESS.md`, `TESTING.md`: thin navigation aliases for humans, agents, and external tools; canonical truth stays in the linked PFO artifacts.
+- `MASTER_CONTEXT.md`, `ARCHITECTURE.md`, `TASKS.md`, `PROGRESS.md`, `TESTING.md`: thin navigation aliases for humans, agents, and external tools; canonical truth stays in the linked artifacts. New-project aliases may link to Product Compiler docs after `pfo plan`; existing-project aliases must link only to files that already exist.
 
 ## Gate Status
 
@@ -148,7 +148,8 @@ Scores can be useful as summaries, but they must not replace the status enum.
 - `memory/session-state.schema.json`: reloadable state format.
 - `deployment/deployment-targets.json`: deploy-readiness abstraction.
 - `integrations/mcp-capabilities.json`: MCP and OpenAI/Codex plugin capability map.
-- `scripts/pfo_contract_gate.py`: project-contract gate for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution.
+- `scripts/pfo_contract_gate.py`: project-contract gate for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, no silent substitution, and alias target integrity.
+- `scripts/pfo_alias_targets.py`: alias/index target checker for `MASTER_CONTEXT.md`, `ARCHITECTURE.md`, `TASKS.md`, `PROGRESS.md`, and `TESTING.md`.
 - `scripts/validate_control_harness.py`: validates the four-quadrant feedforward/feedback and computational/inferential control inventory.
 
 ## Autonomous Execution Layer
@@ -160,7 +161,7 @@ Product Factory OS adopts the strongest GSD execution ideas without copying its 
 - Fresh-context dispatch: agents should execute units from the manifest, not from accumulated chat context.
 - Atomic progress: every meaningful unit records dispatch, verification, and next action in state.
 - Fail-closed verification: missing or ambiguous evidence creates a repair path, not a pass.
-- Drift and recovery: stale state, missing artifacts, unexpected worktree changes, and blocked verification are first-class recovery cases.
+- Drift and recovery: stale state, missing artifacts, broken alias targets, unexpected worktree changes, and blocked verification are first-class recovery cases.
 - Telemetry: record unit duration, commands, token or cost notes when available, and gate outcomes.
 - Autoresearch-style experiments: use one protected metric, fixed budget, baseline-first result logging, and keep/discard/crash decisions for self-improvement loops.
 - Learnings: extract reusable decisions, patterns, lessons, and surprises into project memory.

@@ -344,6 +344,8 @@ Every full-cycle PFO project should maintain:
 - `.codex-memory/STATE.json`
 - `.codex-memory/MEMORY.md`
 - `MASTER_CONTEXT.md`, `ARCHITECTURE.md`, `TASKS.md`, `PROGRESS.md`, and `TESTING.md` as thin navigation aliases only
+- Existing-project alias indexes are generated from `docs/templates/existing/` and may link only to files that already exist.
+- `scripts/pfo_alias_targets.py` and `scripts/pfo_contract_gate.py` block broken alias targets.
 
 ## Quality Gates
 

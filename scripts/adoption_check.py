@@ -6,18 +6,42 @@ import shutil
 import subprocess
 import sys
 
+from pfo_alias_targets import ALIAS_DOCUMENT_NAMES, missing_alias_targets, missing_targets_for_text
+
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
 PFO_TEMPLATE_DIR = ROOT / "docs" / "templates" / "pfo"
+EXISTING_ALIAS_TEMPLATE_DIR = ROOT / "docs" / "templates" / "existing"
 MANAGED_START = "<!-- PFO_PROJECT_RUNTIME_START -->"
 MANAGED_END = "<!-- PFO_PROJECT_RUNTIME_END -->"
-ALIAS_DOCUMENT_NAMES = [
-    "MASTER_CONTEXT.md",
-    "ARCHITECTURE.md",
-    "TASKS.md",
-    "PROGRESS.md",
-    "TESTING.md",
-]
+OPTIONAL_EXISTING_ALIAS_REFERENCES = {
+    "MASTER_CONTEXT.md": [
+        ("Active project plan", "CURRENT_PLAN.md"),
+        ("Historical launch context", "LAUNCH_PLAN.md"),
+        ("Existing project analysis", "PFO_EXISTING_PROJECT_ANALYSIS.json"),
+        ("PFO report", "PFO_REPORT.md"),
+    ],
+    "ARCHITECTURE.md": [
+        ("Existing project analysis", "PFO_EXISTING_PROJECT_ANALYSIS.json"),
+        ("Project architecture notes", "docs/PROJECT_ARCHITECTURE.md"),
+        ("Implementation plan", "docs/IMPLEMENTATION_PLAN.md"),
+    ],
+    "TASKS.md": [
+        ("Active project plan", "CURRENT_PLAN.md"),
+        ("Implementation plan", "docs/IMPLEMENTATION_PLAN.md"),
+        ("Contract gate status", "PFO_CONTRACT_GATE.json"),
+    ],
+    "PROGRESS.md": [
+        ("Active project plan", "CURRENT_PLAN.md"),
+        ("PFO report", "PFO_REPORT.md"),
+        ("Contract gate status", "PFO_CONTRACT_GATE.json"),
+    ],
+    "TESTING.md": [
+        ("Active gate checklist", "CURRENT_PLAN.md"),
+        ("PFO report", "PFO_REPORT.md"),
+        ("Contract gate status", "PFO_CONTRACT_GATE.json"),
+    ],
+}
 
 
 def load_alias_documents() -> dict[str, str]:
@@ -25,6 +49,20 @@ def load_alias_documents() -> dict[str, str]:
         name: (ROOT / "docs" / "templates" / name).read_text(encoding="utf-8")
         for name in ALIAS_DOCUMENT_NAMES
     }
+
+
+def load_existing_alias_documents(project: Path) -> dict[str, str]:
+    documents = {
+        name: (EXISTING_ALIAS_TEMPLATE_DIR / name).read_text(encoding="utf-8")
+        for name in ALIAS_DOCUMENT_NAMES
+    }
+    for name, references in OPTIONAL_EXISTING_ALIAS_REFERENCES.items():
+        lines = [f"- {label}: `{rel}`" for label, rel in references if (project / rel).exists()]
+        if not lines:
+            continue
+        block = "\n## Existing Project Sources\n\n" + "\n".join(lines) + "\n"
+        documents[name] = documents[name].replace("\n## Rule\n", block + "\n## Rule\n")
+    return documents
 
 
 GENERATED_PLAN_FILES = [
@@ -121,7 +159,7 @@ def has_full_pfo_runtime(path: Path) -> bool:
                 path / "PFO_CONTRACT_GATE.json",
             ]
         )
-    return all(item.is_file() for item in required) and has_pfo_contracts(path)
+    return all(item.is_file() for item in required) and has_pfo_contracts(path) and not missing_alias_targets(path)
 
 
 def status_for(path: Path) -> dict[str, object]:
@@ -141,6 +179,7 @@ def status_for(path: Path) -> dict[str, object]:
         "hasBuildPlan": is_file(path / "BUILD_PLAN.md"),
         "hasExecutionGraph": is_file(path / "EXECUTION_GRAPH.md"),
         "hasAliasDocs": all(is_file(path / name) for name in ALIAS_DOCUMENT_NAMES),
+        "hasValidAliasTargets": not missing_alias_targets(path),
         "hasGit": is_dir(path / ".git"),
     }
 
@@ -212,7 +251,14 @@ def ensure_pfo_contracts(path: Path) -> None:
 
 
 def ensure_alias_documents(path: Path) -> None:
-    for name, text in load_alias_documents().items():
+    generated = is_generated_pfo_project(path)
+    documents = load_alias_documents() if generated else load_existing_alias_documents(path)
+    for name, text in documents.items():
+        errors = missing_targets_for_text(path, name, text)
+        if errors:
+            if generated:
+                continue
+            fail("refusing to create alias document with missing target(s):\n" + "\n".join(f"- {item}" for item in errors))
         target = path / name
         if not target.exists():
             target.write_text(text, encoding="utf-8")
@@ -238,12 +284,15 @@ def mark_runtime_synced(path: Path, workspace: Path) -> None:
     except json.JSONDecodeError:
         return
     generated = is_generated_pfo_project(path)
+    alias_errors = missing_alias_targets(path)
     state["pfoRuntime"] = {
-        "status": "FULLY_BOOTSTRAPPED" if generated else "FULLY_ADOPTED",
+        "status": "ALIAS_TARGETS_BROKEN" if alias_errors else ("FULLY_BOOTSTRAPPED" if generated else "FULLY_ADOPTED"),
         "methodologyPath": str(ROOT),
         "workspace": str(workspace),
         "methodologyRevision": methodology_revision(),
         "mode": "automatic-workspace-runtime",
+        "aliasTargetStatus": "BROKEN" if alias_errors else "PASS",
+        "aliasTargetErrors": alias_errors,
     }
     existing = state.setdefault("existingProject", {})
     if isinstance(existing, dict) and not generated:
@@ -290,7 +339,6 @@ def write_adoption_files(path: Path, workspace: Path) -> None:
     upsert_managed_block(codex, "CODEX", block)
     upsert_managed_block(agents, "AGENTS", block)
     ensure_pfo_contracts(path)
-    ensure_alias_documents(path)
 
     memory_dir.mkdir(exist_ok=True)
     if not memory.exists():
@@ -543,6 +591,7 @@ aliases:
             + "\n",
             encoding="utf-8",
         )
+    ensure_alias_documents(path)
     mark_runtime_synced(path, workspace)
 
 
@@ -627,6 +676,7 @@ def main() -> None:
         flags.append("state" if item["hasState"] else "no-state")
         flags.append("contracts" if item["hasPfoContracts"] else "no-contracts")
         flags.append("aliases" if item["hasAliasDocs"] else "no-aliases")
+        flags.append("alias-targets" if item["hasValidAliasTargets"] else "broken-alias-targets")
         flags.append("full-runtime" if item["hasFullPfoRuntime"] else "partial-runtime")
         flags.append("pfo-docs" if item["hasPrd"] and item["hasArchitecture"] and item["hasImplementationPlan"] and item["hasProductBlueprint"] and item["hasBuildPlan"] and item["hasExecutionGraph"] else "pfo-docs-partial")
         print(f"{item['project']}: {', '.join(flags)}")
@@ -639,6 +689,7 @@ def main() -> None:
         or not item["hasState"]
         or not item["hasPfoContracts"]
         or not item["hasAliasDocs"]
+        or not item["hasValidAliasTargets"]
         or not item["hasFullPfoRuntime"]
     ]
     if missing:

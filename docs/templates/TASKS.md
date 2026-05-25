@@ -6,8 +6,7 @@ This is a navigation alias. Canonical task sources stay in the files below.
 
 - Ordered build plan: `BUILD_PLAN.md`
 - Execution nodes and transitions: `EXECUTION_GRAPH.md`
-- Detailed implementation steps: `IMPLEMENTATION_PLAN.md`
-- Active unit scope: `.pfo/UNIT_CONTEXT_MANIFEST.json`
+- Runtime contracts: `.pfo/`
 - Current state and next action: `.codex-memory/STATE.json`
 
 ## Rule

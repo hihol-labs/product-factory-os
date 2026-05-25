@@ -8,7 +8,6 @@ This is a navigation alias. Canonical architecture sources stay in the files bel
 - Product blueprint and entities: `PRODUCT_BLUEPRINT.md`
 - Runtime contracts: `.pfo/`
 - Scope and forbidden changes: `.pfo/SCOPE_LOCK.md`, `.pfo/FORBIDDEN_CHANGES.md`
-- Security assumptions: `THREAT_MODEL.md`, `DATA_CLASSIFICATION.md`
 
 ## Rule
 
