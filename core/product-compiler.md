@@ -15,6 +15,7 @@ Idea
   -> Phase Context
   -> Build Plan
   -> Execution Graph
+  -> Next Step Review
   -> Unit Context Manifest
   -> TDD And Review Gates
   -> Feedback, Assets, And Content
@@ -114,7 +115,19 @@ Write `EXECUTION_GRAPH.md` with:
 - Validation checkpoints
 - Rollback or repair action for failed gates
 
-### 10. Unit Context Manifest
+### 10. Next Step Review
+
+Write `NEXT_STEP.md` before every major implementation iteration with:
+
+- current state in product-owner language
+- visible roadmap
+- one recommended next step
+- alternatives
+- explicit decision needed: confirm, change, or stop
+
+Major implementation must not start until the next step is approved or changed by the user.
+
+### 11. Unit Context Manifest
 
 Write `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution with:
 
@@ -125,7 +138,7 @@ Write `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution
 - verification commands
 - gates and recovery behavior
 
-### 11. Handoff
+### 12. Handoff
 
 Write `HANDOFF.md` before session transfer, role switch, delegated execution, AFK, compaction, or recovery with:
 
@@ -137,7 +150,7 @@ Write `HANDOFF.md` before session transfer, role switch, delegated execution, AF
 - verification commands
 - blockers and first action
 
-### 12. Test And Gate Plan
+### 13. Test And Gate Plan
 
 Write `TEST_PLAN.md` and `QUALITY_GATES.md` with:
 
@@ -151,7 +164,7 @@ Write `TEST_PLAN.md` and `QUALITY_GATES.md` with:
 - Evidence slots
 - Accepted-risk section
 
-### 12. Feedback, Assets, And Content
+### 14. Feedback, Assets, And Content
 
 Write or update:
 

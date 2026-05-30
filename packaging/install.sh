@@ -7,6 +7,7 @@ INSTALL_HOOKS=1
 ADOPT_WORKSPACE=1
 INSTALL_BIN=1
 WRITE_WORKSPACE_POLICY=1
+WRITE_GLOBAL_POLICY=1
 SKIP_CHECKS=0
 
 usage() {
@@ -22,6 +23,7 @@ Options:
   --no-adopt             Do not adopt existing first-level workspace projects.
   --no-bin               Do not install the pfo command wrapper into ~/.local/bin.
   --no-workspace-policy  Do not write workspace CODEX.md, AGENTS.md, and PFO_WORKSPACE.json.
+  --no-global-policy     Do not write global PFO_GLOBAL.json auto-connect policy.
   --skip-checks          Skip validation checks.
   -h, --help          Show this help.
 EOF
@@ -51,6 +53,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --no-workspace-policy)
       WRITE_WORKSPACE_POLICY=0
+      shift
+      ;;
+    --no-global-policy)
+      WRITE_GLOBAL_POLICY=0
       shift
       ;;
     --skip-checks)
@@ -88,6 +94,9 @@ if [[ "$INSTALL_BIN" -eq 0 ]]; then
 fi
 if [[ "$WRITE_WORKSPACE_POLICY" -eq 0 ]]; then
   INSTALL_ARGS+=(--no-workspace-policy)
+fi
+if [[ "$WRITE_GLOBAL_POLICY" -eq 0 ]]; then
+  INSTALL_ARGS+=(--no-global-policy)
 fi
 
 python3 "$ROOT/scripts/install_workspace.py" "${INSTALL_ARGS[@]}"

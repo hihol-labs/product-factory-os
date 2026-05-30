@@ -120,6 +120,7 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "specComplianceReview": "",
                 "codeQualityReview": "",
                 "branchFinish": "",
+                "nextStepApproval": "PENDING",
                 "handoff": "",
                 "security": "",
                 "dependencies": "",
@@ -163,6 +164,26 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "cleanupDecision": "",
                 "recordedAt": "",
             },
+            "humanSteering": {
+                "approvalRequired": True,
+                "approvalStatus": "PENDING",
+                "approvedBy": "",
+                "approvedAt": "",
+                "lastPrompt": "Ask the user to confirm, change, or stop before implementation.",
+                "lastIterationSummary": "Project runtime is bootstrapped. Planning and first implementation step need user steering.",
+                "recommendedNextStep": "Review the generated roadmap and approve the first implementation slice.",
+                "alternatives": [
+                    "Approve the recommended first implementation slice.",
+                    "Change MVP scope before implementation.",
+                    "Pause and review planning artifacts."
+                ],
+                "pendingQuestions": [
+                    "Do you approve the recommended next step?",
+                    "Should scope or priority change before implementation?"
+                ],
+                "visibleRoadmap": [],
+                "completedIterations": [],
+            },
             "dispatchJournal": [],
             "decisionLog": [],
             "capturedNotes": [],
@@ -191,6 +212,7 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "TASKS.md",
                 "PROGRESS.md",
                 "TESTING.md",
+                "NEXT_STEP.md",
             ],
             "completedModules": [],
             "failedValidations": [],
@@ -260,7 +282,7 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "mergeStatus": "",
             },
             "blockers": [],
-            "nextAction": "Route the voice/text idea through /project -> /kickstart and create Product Factory OS compiler artifacts.",
+            "nextAction": "Ask product steering questions, show the visible roadmap, then request approval before the first implementation slice.",
             "project": project_name,
             "methodology": str(methodology),
             "starter": starter["id"],
@@ -337,6 +359,9 @@ def scaffold(project: Path, starter: dict) -> None:
         project / "PFO_REPORT.md",
         "# Product Factory OS Report\n\nCURRENT STATE: BOOTSTRAPPED\n\nNEXT ACTION: Run `/project -> /kickstart`.\n",
     )
+    next_step_template = ROOT / "docs" / "templates" / "NEXT_STEP.md"
+    if next_step_template.is_file():
+        write_once(project / "NEXT_STEP.md", next_step_template.read_text(encoding="utf-8"))
 
 
 def run_auto_plan(project: Path) -> int:
@@ -413,6 +438,7 @@ PROJECT_ARCHITECTURE.md
 PHASE_CONTEXT.md
 BUILD_PLAN.md
 EXECUTION_GRAPH.md
+NEXT_STEP.md
 IMPLEMENTATION_PLAN.md
 .pfo/UNIT_CONTEXT_MANIFEST.json
 HANDOFF.md when transfer is in scope
@@ -427,6 +453,7 @@ HANDOFF.md when transfer is in scope
 - Score ideas before broad build scope in `IDEA_SCORECARD.md`.
 - Validate risky assumptions in `VALIDATION_PLAN.md`.
 - Capture implementation decisions in `PHASE_CONTEXT.md` before detailed execution planning.
+- Update `NEXT_STEP.md` and record `gateResults.nextStepApproval=PASSED` before major implementation starts.
 - Build `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
 - Respect `.pfo/EXECUTION_POLICY.json` and `.pfo/PERMISSION_MATRIX.md` before commands, writes, external APIs, push, deploy, or secret access.
 - Validate `.pfo/PERMISSION_MATRIX.json` with `pfo permission-check .`.
@@ -467,7 +494,7 @@ This project is automatically governed by Product Factory OS.
 - Initial idea: {idea or "not captured yet"}
 - Methodology: {methodology}
 
-Use `/project -> /kickstart` for new product work and `/task` routes for ongoing changes. Write `HANDOFF.md` before session or role transfer. Respect `.pfo/` contracts, update `.codex-memory/STATE.json`, and run the smallest relevant verification before finishing.
+Use `/project -> /kickstart` for new product work and `/task` routes for ongoing changes. Require `NEXT_STEP.md` plus next-step approval before major implementation. Write `HANDOFF.md` before session or role transfer. Respect `.pfo/` contracts, update `.codex-memory/STATE.json`, and run the smallest relevant verification before finishing.
 """
 
 

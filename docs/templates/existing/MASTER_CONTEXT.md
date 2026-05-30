@@ -6,6 +6,7 @@ This is a navigation alias for an existing project adopted into Product Factory 
 
 - Project-local operating rules: `AGENTS.md`
 - Agent-facing runtime rules: `CODEX.md`
+- User-facing next-step approval: `NEXT_STEP.md`
 - Session memory: `.codex-memory/MEMORY.md`
 - Reloadable state: `.codex-memory/STATE.json`
 - PFO runtime contracts: `.pfo/`

@@ -24,7 +24,7 @@ NEXT_STATE: BUILDING
 
 | From | To | Requires | On Failure |
 |---|---|---|---|
-| PLAN_READY | BUILDING | review not blocked | fix planning docs |
+| PLAN_READY | BUILDING | review not blocked and next step approved | fix planning docs or NEXT_STEP.md |
 | N1 | N2 | scaffold verified | repair scaffold |
 | N2 | N3 | schema verified | fix schema |
 | N3 | N4 | auth tests pass | fix auth |
@@ -37,6 +37,7 @@ NEXT_STATE: BUILDING
 ## Validation Checkpoints
 
 - Architecture Validation: required before N1.
+- Next Step Approval: required before each major implementation node starts.
 - Dependency Check: required before N8.
 - Test Coverage Check: required after N3-N7.
 - Security Review: required before deploy-ready.
@@ -45,4 +46,3 @@ NEXT_STATE: BUILDING
 ## Repair Paths
 
 Failed module validation returns to the same node. Failed deployment readiness returns to N8. Failed architecture validation returns to planning docs.
-

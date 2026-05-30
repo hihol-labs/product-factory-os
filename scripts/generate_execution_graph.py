@@ -44,7 +44,7 @@ def main() -> None:
     for node, module in nodes:
         lines.append(f"| {node} | {module} | BUILD_PLAN.md | module output | verification command |")
     lines.extend(["", "## Transitions", "", "| From | To | Requires | On Failure |", "|---|---|---|---|"])
-    lines.append("| PLAN_READY | N1 | idea gate not KILL and review not blocked | fix planning or validation docs |")
+    lines.append("| PLAN_READY | N1 | idea gate not KILL, review not blocked, and next step approved | fix planning, validation docs, or NEXT_STEP.md |")
     for idx, (node, _) in enumerate(nodes):
         target = nodes[idx + 1][0] if idx + 1 < len(nodes) else "READY_FOR_DEPLOY"
         lines.append(f"| {node} | {target} | {node} verified | repair {node} |")
@@ -57,6 +57,7 @@ def main() -> None:
         "- Market Validation: required when market risk is material.",
         "- Feedback/Funnel Check: required for iteration, acquisition, or conversion work.",
         "- Handoff: required before session transfer, role switch, delegation, AFK, compaction, or recovery.",
+        "- Next Step Approval: required before each major implementation node starts.",
         "- Dependency Check: required before READY_FOR_DEPLOY.",
         "- Test Coverage Check: required after behavior nodes.",
         "- Security Review: required before deploy-ready.",

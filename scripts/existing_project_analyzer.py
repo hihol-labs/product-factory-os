@@ -30,6 +30,81 @@ def write_json(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def default_human_steering() -> dict[str, Any]:
+    return {
+        "approvalRequired": True,
+        "approvalStatus": "PENDING",
+        "approvedBy": "",
+        "approvedAt": "",
+        "lastPrompt": "Ask the user to confirm, change, or stop before implementation.",
+        "lastIterationSummary": "Existing project is adopted into Product Factory OS.",
+        "recommendedNextStep": "Choose and approve the next task-specific implementation step.",
+        "alternatives": [
+            "Approve the recommended next task.",
+            "Change scope or priority.",
+            "Pause and review project state."
+        ],
+        "pendingQuestions": [
+            "Do you approve the recommended next step?",
+            "Should scope or priority change before implementation?"
+        ],
+        "visibleRoadmap": [],
+        "completedIterations": [],
+    }
+
+
+def backfill_human_steering(state: dict[str, Any]) -> dict[str, Any]:
+    gate_results = state.setdefault("gateResults", {})
+    gate_results.setdefault("nextStepApproval", "PENDING")
+    if not gate_results.get("nextStepApproval"):
+        gate_results["nextStepApproval"] = "PENDING"
+    steering = state.setdefault("humanSteering", default_human_steering())
+    if not isinstance(steering, dict):
+        steering = default_human_steering()
+        state["humanSteering"] = steering
+    for key, value in default_human_steering().items():
+        steering.setdefault(key, value)
+    if not steering.get("approvalStatus"):
+        steering["approvalStatus"] = "PENDING"
+    if steering.get("approvalStatus") == "PENDING":
+        steering["approvalRequired"] = True
+    if not steering.get("recommendedNextStep"):
+        steering["recommendedNextStep"] = default_human_steering()["recommendedNextStep"]
+    artifacts = set(state.get("artifacts", []))
+    artifacts.add("NEXT_STEP.md")
+    state["artifacts"] = sorted(artifacts)
+    return state
+
+
+def ensure_next_step_template(project: Path) -> None:
+    source = ROOT / "docs" / "templates" / "NEXT_STEP.md"
+    target = project / "NEXT_STEP.md"
+    if source.is_file() and not target.exists():
+        target.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+
+
+def write_next_step(project: Path, state: dict[str, Any]) -> None:
+    steering = state.get("humanSteering", {}) if isinstance(state.get("humanSteering"), dict) else {}
+    target = project / "NEXT_STEP.md"
+    target.write_text(
+        "# Next Step\n\n"
+        "This is the user-facing steering checkpoint.\n\n"
+        "## Where We Are\n\n"
+        f"- Product: {project.name}\n"
+        f"- Current outcome: {steering.get('lastIterationSummary', 'Existing project is adopted into PFO.')}\n"
+        f"- Recommended next step: {steering.get('recommendedNextStep', 'Choose the next task.')}\n"
+        f"- Approval status: {steering.get('approvalStatus', 'PENDING')}\n\n"
+        "## Visible Roadmap\n\n"
+        "| Step | Outcome | Status |\n|---|---|---|\n"
+        "| 1 | Analyze existing project | done |\n"
+        "| 2 | Choose a narrow task | pending |\n"
+        "| 3 | Approve next implementation step | pending |\n\n"
+        "## Decision Needed\n\n"
+        "Confirm, change, or stop before another major implementation iteration starts.\n",
+        encoding="utf-8",
+    )
+
+
 def ensure_pfo_contracts(project: Path) -> list[str]:
     created: list[str] = []
     pfo_dir = project / ".pfo"
@@ -55,7 +130,11 @@ def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
     if not events.is_file():
         events.write_text("", encoding="utf-8")
     if state_path.is_file():
-        return state_path, read_json(state_path)
+        state = backfill_human_steering(read_json(state_path))
+        ensure_next_step_template(project)
+        write_next_step(project, state)
+        write_json(state_path, state)
+        return state_path, state
 
     codex = project / "CODEX.md"
     agents = project / "AGENTS.md"
@@ -105,7 +184,10 @@ def ensure_state(project: Path) -> tuple[Path, dict[str, Any]]:
         ".codex-memory/STATE.json",
         ".codex-memory/events.jsonl",
     ]
-    state["nextAction"] = "Run existing-project analyzer."
+    state = backfill_human_steering(state)
+    state["nextAction"] = "Run existing-project analyzer, then review NEXT_STEP.md before major implementation work."
+    ensure_next_step_template(project)
+    write_next_step(project, state)
     write_json(state_path, state)
     return state_path, state
 
@@ -422,11 +504,25 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
     if gate_results["tests"] == "NOT_CONFIGURED":
         blockers.append("No root test/typecheck script was detected.")
     state["blockers"] = blockers
-    state["nextAction"] = (
-        "Resolve analyzer blockers before deploy readiness."
+    steering = state.setdefault("humanSteering", default_human_steering())
+    steering["approvalRequired"] = True
+    steering["approvalStatus"] = "PENDING"
+    steering["lastIterationSummary"] = analysis["summary"]
+    steering["recommendedNextStep"] = (
+        "Resolve analyzer blockers before any implementation work."
         if blockers
-        else "Project gates passed; continue with task-specific PFO execution graph."
+        else "Choose and approve the next task-specific implementation step."
     )
+    steering["alternatives"] = [
+        "Fix analyzer blockers first.",
+        "Open a narrow task plan before implementation.",
+        "Pause and review PFO_EXISTING_PROJECT_ANALYSIS.json.",
+    ]
+    steering["pendingQuestions"] = ["Confirm the next task before implementation starts."]
+    gate_results["nextStepApproval"] = "PENDING"
+    ensure_next_step_template(project)
+    write_next_step(project, state)
+    state["nextAction"] = "Review NEXT_STEP.md and approve or change the next task before implementation."
     state.setdefault("artifacts", [])
     for artifact in [
         "PFO_EXISTING_PROJECT_ANALYSIS.json",

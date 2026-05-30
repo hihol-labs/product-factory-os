@@ -8,7 +8,14 @@ import sys
 from pfo_alias_targets import missing_alias_targets
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED = ["AGENTS.md", "CODEX.md", ".codex-memory/MEMORY.md", ".codex-memory/STATE.json", ".codex-memory/events.jsonl"]
+REQUIRED = [
+    "AGENTS.md",
+    "CODEX.md",
+    "NEXT_STEP.md",
+    ".codex-memory/MEMORY.md",
+    ".codex-memory/STATE.json",
+    ".codex-memory/events.jsonl",
+]
 REQUIRED_PFO = [
     ".pfo/PROJECT_CONTRACT.md",
     ".pfo/DATA_POLICY.md",
@@ -101,8 +108,19 @@ def main() -> None:
     run([sys.executable, "scripts/validate_plan_quality.py", str(project)])
 
     state = json.loads((project / ".codex-memory" / "STATE.json").read_text(encoding="utf-8"))
+    steering = state.get("humanSteering", {})
+    if not isinstance(steering, dict):
+        fail(f"{project} state is missing humanSteering object")
+    next_step_gate = state.get("gateResults", {}).get("nextStepApproval")
+    if next_step_gate not in {"PENDING", "PASSED", "PASSED_WITH_WARNINGS", "BLOCKED"}:
+        fail(f"{project} state gateResults.nextStepApproval must be PENDING, PASSED, PASSED_WITH_WARNINGS, or BLOCKED")
+    if steering.get("approvalStatus") not in {"PENDING", "APPROVED", "CONSUMED", "CHANGED", "BLOCKED"}:
+        fail(f"{project} state humanSteering.approvalStatus must be PENDING, APPROVED, CONSUMED, CHANGED, or BLOCKED")
+    if not steering.get("recommendedNextStep"):
+        fail(f"{project} state humanSteering.recommendedNextStep must not be empty")
     planned_or_later = {
         "PLAN_READY",
+        "NEXT_STEP_REVIEW",
         "UNIT_CONTEXT_READY",
         "UNIT_DISPATCHED",
         "ROOT_CAUSE_ANALYSIS",
@@ -133,6 +151,7 @@ def main() -> None:
             "PROJECT_ARCHITECTURE.md",
             "BUILD_PLAN.md",
             "EXECUTION_GRAPH.md",
+            "NEXT_STEP.md",
             "TEST_PLAN.md",
             "QUALITY_GATES.md",
         ]:

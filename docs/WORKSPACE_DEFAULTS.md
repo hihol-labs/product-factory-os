@@ -1,6 +1,6 @@
 # Workspace Defaults
 
-This document describes the mandatory Product Factory OS workspace behavior for `/home/hihol/projects`.
+This document describes the mandatory Product Factory OS workspace behavior and the global auto-connect behavior.
 
 ## Files
 
@@ -16,9 +16,18 @@ PFO_WORKSPACE.json
 
 `PFO_WORKSPACE.json` is the machine-readable policy file for scripts and future tooling.
 
+The installer also writes global policy files:
+
+```text
+$CODEX_HOME/PFO_GLOBAL.json
+~/.pfo/PFO_GLOBAL.json
+```
+
+These files let the preflight hook find the Product Factory OS methodology from any local project folder, even when the project is outside the default workspace.
+
 ## Behavior
 
-For every new project request in the workspace, Codex must automatically use:
+For every new project request in any local folder where Codex is working, Codex must automatically use:
 
 ```text
 /project -> /kickstart
@@ -65,6 +74,14 @@ QUALITY_GATES.md
 
 The five uppercase files above are navigation aliases only. For new projects, the canonical sources remain the PFO artifacts created by `pfo plan`.
 
+Repository policy for new projects:
+
+- The local project folder is the canonical starting point.
+- If the folder is not already a repository, initialize local Git before implementation so changes are traceable.
+- GitHub repository creation is optional. It must not block project bootstrap.
+- Publish or connect GitHub only after explicit user request, explicit workspace policy, or `/github-workflow` scope.
+- When GitHub is connected, record the remote URL and sync status in PFO state or architecture notes.
+
 `pfo plan` creates the core planning artifacts while preserving files that already exist:
 
 ```text
@@ -99,17 +116,17 @@ THREAT_MODEL.md
 DATA_CLASSIFICATION.md
 ```
 
-For every existing project, Product Factory OS is also mandatory:
+For every existing project, including projects outside the default workspace, Product Factory OS is also mandatory:
 
 ```text
 /task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save
 ```
 
-Before any work in an existing project, full PFO adoption must already be present. The installer and preflight hook create missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts, existing-project-safe alias indexes, analysis, contract gate output, and `PFO_REPORT.md`. If a project was added after install, run `pfo adopt <project>` or rely on the preflight hook to auto-enforce full runtime for the first-level workspace project.
+Before any work in an existing project, full PFO adoption must already be present. The installer and preflight hook create missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts, existing-project-safe alias indexes, analysis, contract gate output, `NEXT_STEP.md`, and `PFO_REPORT.md`. If a project was added after install, run `pfo adopt <project>` or rely on the preflight hook to auto-enforce full runtime for the detected project root.
 
 Existing-project alias indexes must link only to files that exist. Missing Product Compiler docs such as `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, or `QUALITY_GATES.md` are not linked until intentionally created.
 
-Hooks are installed by default in this workspace. They provide auto-adoption, route reminders, preflight context, skill completeness checks, commit completeness checks, and review-before-commit validation. Install or refresh them from the methodology repo with:
+Hooks are installed by default. They provide global/workspace auto-adoption, route reminders, preflight context, skill completeness checks, commit completeness checks, and review-before-commit validation. Install or refresh them from the methodology repo with:
 
 ```bash
 bash install.sh

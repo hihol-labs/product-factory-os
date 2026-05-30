@@ -23,6 +23,7 @@
 | Permission Matrix |  | `.pfo/PERMISSION_MATRIX.json`, `.pfo/PERMISSION_MATRIX.md`, `pfo permission-check` |  |
 | Verification Contract |  | `.pfo/VERIFICATION_CONTRACT.json` |  |
 | Tool Capability Registry |  | `.pfo/TOOL_CAPABILITY_REGISTRY.json`, `pfo tool-registry` |  |
+| Next Step Approval |  | `NEXT_STEP.md` user decision before the next major implementation step |  |
 | Control Harness Feedforward |  | active instructions, contracts, scope, and verification expectations are named before work starts |  |
 | Control Harness Computational Feedback |  | deterministic checks: tests, validators, CI, schema, build, or contract gate |  |
 | Control Harness Inferential Feedback |  | reviewer/security/UX/human judgment evidence when semantic risk exists |  |

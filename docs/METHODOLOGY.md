@@ -63,6 +63,8 @@ Existing project task
   -> state save
 ```
 
+This applies globally after install. The preflight hook reads `PFO_GLOBAL.json`, detects the current project root outside the default workspace, and runs adoption/analysis before implementation.
+
 Before substantial changes, the project must have:
 
 - `CODEX.md`
@@ -76,6 +78,16 @@ Before substantial changes, the project must have:
 - `.codex-memory/STATE.json`
 
 If any are missing, run `/adopt` first.
+
+## New Project Repository Policy
+
+New projects are local-first. The mandatory bootstrap target is a project directory inside the configured workspace.
+
+- Initialize local Git before implementation when the project is not already a repository, so changes are traceable from the first build step.
+- Do not require a GitHub repository to create a PFO project.
+- Create or connect a GitHub repository only when the user requests it, when PR/CI/release workflow is in scope, or when workspace policy explicitly enables it.
+- When a remote repository exists, track `repositoryUrl` and sync status in project state or architecture notes.
+- Use `/github-workflow` for GitHub issues, PRs, CI, releases, and publication; use `/tool-sync` only for export or external planning sync.
 
 ## Core Documents
 

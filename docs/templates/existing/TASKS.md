@@ -7,6 +7,7 @@ This is a navigation alias for an existing project adopted into Product Factory 
 - Project-local operating rules: `AGENTS.md`
 - Agent-facing runtime rules: `CODEX.md`
 - Active scope: `.pfo/SCOPE_LOCK.md`
+- User-facing next-step approval: `NEXT_STEP.md`
 - Verification contract: `.pfo/VERIFICATION_CONTRACT.json`
 - Reloadable state and next action: `.codex-memory/STATE.json`
 
