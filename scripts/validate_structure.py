@@ -67,6 +67,8 @@ REQUIRED_FILES = [
     "docs/templates/FEEDBACK_LOG.md",
     "docs/templates/ITERATION_REVIEW.md",
     "docs/templates/FUNNEL_MODEL.md",
+    "docs/templates/LAUNCH_MATURITY_GATE.md",
+    "docs/templates/SCALE_MOAT_REGISTER.md",
     "docs/templates/ASSET_REGISTER.md",
     "docs/templates/CONTENT_BACKLOG.md",
     "docs/templates/MARKET_BRIEF.md",

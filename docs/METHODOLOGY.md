@@ -18,33 +18,37 @@ The full matrix and inventory live in `docs/CONTROL_HARNESS.md`. PFO prefers com
 1. Route the request.
 2. Parse intent and classify the product type.
 3. Score the idea and decide `KILL`, `TEST`, or `BUILD`.
-4. Define validation experiments for the riskiest assumptions.
-5. Select a product template, architecture pattern, and default stack preset.
-6. Compile the idea into Product Blueprint, Build Plan, and Execution Graph.
-7. Run a phase discussion before planning detailed work.
-8. Ask only the clarifying questions that change the build.
-9. Produce documents before code.
-10. Review the documents before implementation.
-11. Build a unit context manifest before executing a node.
-12. Write `/handoff` before session transfer, role switch, delegated execution, AFK, compaction, or recovery.
-13. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
-14. Implement execution graph nodes in small, isolated units.
-15. Record dispatches, verification commands, cost or token notes, and recovery decisions.
-16. For measurement-driven self-improvement, initialize an experiment loop with one metric, a fixed budget, protected evaluation files, and a results TSV.
-17. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
-18. For bugfixes, record root-cause evidence before changing code.
-19. Run `/browser-check` for browser-facing critical flows.
-20. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
-21. Verify work fail-closed: unclear verification does not pass.
-22. Run two-stage review: spec compliance first, code quality second.
-23. Review before commit or deploy.
-24. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
-25. Finish branches with an explicit PR, merge, keep, or discard decision.
-26. Extract durable learnings after completed milestones or significant repairs.
-27. Promote repeatable solutions into assets and content candidates.
-28. Harden production-facing services.
-29. Deploy only after explicit confirmation.
-30. Save reloadable session memory.
+4. Run the evidence quality gate: real conversations, past behavior evidence, contradicting evidence, and BUILD truth conditions.
+5. Define validation experiments and customer discovery interview discipline for the riskiest assumptions.
+6. Run adversarial discovery when market or competitor risk matters.
+7. Select a product template, architecture pattern, and default stack preset.
+8. Compile the idea into Product Blueprint, Build Plan, and Execution Graph.
+9. Run a phase discussion before planning detailed work.
+10. Ask only the clarifying questions that change the build.
+11. Produce documents before code.
+12. Review the documents before implementation.
+13. Build a unit context manifest before executing a node.
+14. Write `/handoff` before session transfer, role switch, delegated execution, AFK, compaction, or recovery.
+15. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
+16. Implement execution graph nodes in small, isolated units.
+17. Record dispatches, verification commands, cost or token notes, and recovery decisions.
+18. For measurement-driven self-improvement, initialize an experiment loop with one metric, a fixed budget, protected evaluation files, and a results TSV.
+19. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
+20. For bugfixes, record root-cause evidence before changing code.
+21. Run `/browser-check` for browser-facing critical flows.
+22. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
+23. Before MVP launch, define activation, retention, PMF signals, and false-positive traction when market risk is material.
+24. Use optional launch maturity and scale moat artifacts only when stage and risk justify them.
+25. Verify work fail-closed: unclear verification does not pass.
+26. Run two-stage review: spec compliance first, code quality second.
+27. Review before commit or deploy.
+28. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
+29. Finish branches with an explicit PR, merge, keep, or discard decision.
+30. Extract durable learnings after completed milestones or significant repairs.
+31. Promote repeatable solutions into assets and content candidates.
+32. Harden production-facing services.
+33. Deploy only after explicit confirmation.
+34. Save reloadable session memory.
 
 ## Existing Project Lifecycle
 
@@ -79,14 +83,14 @@ If any are missing, run `/adopt` first.
 
 ## Core Documents
 
-- `DISCOVERY.md`: market, users, alternatives, positioning, MVP scope
-- `IDEA_SCORECARD.md`: idea score, evidence, weaknesses, and KILL/TEST/BUILD decision
-- `VALIDATION_PLAN.md`: riskiest assumptions, experiments, expected signals, and exit decision
-- `MARKET_BRIEF.md`: problem, segment, alternatives, differentiation, market entry
+- `DISCOVERY.md`: market, users, customer discovery plan, alternatives, positioning, MVP scope
+- `IDEA_SCORECARD.md`: idea score, evidence quality, weaknesses, contradicting evidence, BUILD truth conditions, and KILL/TEST/BUILD decision
+- `VALIDATION_PLAN.md`: riskiest assumptions, interview discipline, experiments, expected signals, actual signals, and exit decision
+- `MARKET_BRIEF.md`: problem, segment, alternatives, adversarial discovery, differentiation, market entry
 - `ICP.md`: primary user, buyer, jobs, pain signals, adoption trigger
 - `BUSINESS_MODEL.md`: value capture, pricing or ROI, cost drivers
-- `GO_TO_MARKET.md`: channel, offer, activation path, feedback loop, metrics
-- `FUNNEL_MODEL.md`: traffic, lead, activation, conversion, retention stages and bottleneck
+- `GO_TO_MARKET.md`: channel, offer, activation path, MVP measurement contract, feedback loop, metrics
+- `FUNNEL_MODEL.md`: traffic, lead, activation, conversion, retention stages, PMF signals, false-positive traction, and bottleneck
 - `FEEDBACK_LOG.md`: feedback sources, evidence, patterns, and triggered decisions
 - `ITERATION_REVIEW.md`: iteration inputs, changes, outcomes, and keep/revert/iterate decision
 - `PRD.md`: user stories, acceptance criteria, non-goals, launch criteria
@@ -124,6 +128,8 @@ If any are missing, run `/adopt` first.
 - `.codex-memory/events.jsonl`: structured event log for commands, gates, approvals, verification, errors, state changes, external tools, and learning
 - `ASSET_REGISTER.md`: repeatable product, process, template, offer, or automation assets
 - `CONTENT_BACKLOG.md`: publishable learnings and case-study candidates tied to evidence
+- `LAUNCH_MATURITY_GATE.md`: optional founder bottleneck and ops automation/delegation audit for launch-stage products
+- `SCALE_MOAT_REGISTER.md`: optional domain knowledge, edge case, data flywheel, workflow integration, switching-cost, and defensibility register for scale-stage products
 - `BRANCH_FINISH.md`: PR, merge, keep, or discard decision when branch cleanup is in scope
 - `MASTER_CONTEXT.md`, `ARCHITECTURE.md`, `TASKS.md`, `PROGRESS.md`, `TESTING.md`: thin navigation aliases for humans, agents, and external tools; canonical truth stays in the linked artifacts. New-project aliases may link to Product Compiler docs after `pfo plan`; existing-project aliases must link only to files that already exist.
 
@@ -209,6 +215,10 @@ Canonical checklists live under `docs/rubrics/`:
 - Prefer fresh, task-scoped context over long accumulated chat state.
 - Keep planning documents and code synchronized.
 - Kill weak ideas before they become build scope.
+- Treat user behavior evidence as stronger than opinions, compliments, or future-intent answers.
+- Require adversarial discovery when confirmation bias could distort strategy.
+- Define MVP measurement before launch so early curiosity is not mistaken for PMF.
+- Keep launch maturity and scale moat checks optional unless the product stage requires them.
 - Treat validation signals and feedback as the source of product iteration.
 - Treat content and reusable assets as outputs of evidence, not activity.
 - Treat TDD evidence, tests, and two-stage review as part of implementation, not cleanup.

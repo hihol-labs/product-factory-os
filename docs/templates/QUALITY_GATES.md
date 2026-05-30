@@ -5,10 +5,14 @@
 | Gate | Status | Evidence | Blockers |
 |---|---|---|---|
 | Idea Gate |  | `IDEA_SCORECARD.md` KILL/TEST/BUILD decision |  |
+| Evidence Quality |  | real user conversations, past behavior evidence, contradicting evidence, BUILD truth conditions |  |
+| Adversarial Discovery |  | `MARKET_BRIEF.md` adversarial discovery answers |  |
 | Market Validation |  | `VALIDATION_PLAN.md` experiments and signals |  |
 | Strategy |  |  |  |
 | Feedback Loop |  | `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md` |  |
-| Funnel |  | `FUNNEL_MODEL.md` metrics or not-applicable note |  |
+| Funnel |  | `FUNNEL_MODEL.md` metrics, MVP measurement contract, or not-applicable note |  |
+| Launch Maturity |  | `LAUNCH_MATURITY_GATE.md` when launch-stage ops maturity is in scope |  |
+| Scale Moat |  | `SCALE_MOAT_REGISTER.md` when scale, enterprise, or defensibility is in scope |  |
 | Architecture |  |  |  |
 | Tests |  |  |  |
 | Review |  |  |  |

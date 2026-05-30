@@ -33,15 +33,17 @@ IDEA -> IDEA_SCORECARD -> VALIDATION_PLAN -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> 
 1. Intent Parsing
 2. Product Classification
 3. Idea Gate
-4. Market Validation
-5. Architecture Selection
-6. Blueprint Generation
-7. Execution Plan Generation
-8. Modular Build
-9. Test Generation
-8. Validation Gates
-9. Deployment Readiness
-10. Session Persistence
+4. Evidence Quality Gate
+5. Market Validation
+6. Adversarial Discovery
+7. Architecture Selection
+8. Blueprint Generation
+9. Execution Plan Generation
+10. Modular Build
+11. Test Generation
+12. Validation Gates
+13. Deployment Readiness
+14. Session Persistence
 
 Если этап завершен неуспешно, система возвращается к предыдущей ремонтируемой стадии.
 
@@ -153,9 +155,13 @@ RECOMMENDED_STACK:
 Idea -> Idea Scorecard -> Validation Plan -> Product Blueprint -> Build Plan -> Execution Graph
 ```
 
-`IDEA_SCORECARD.md` включает score, evidence, weaknesses, kill criteria и решение KILL / TEST / BUILD.
+`IDEA_SCORECARD.md` включает score, evidence quality, реальные разговоры, evidence прошлого поведения, contradicting evidence, BUILD truth conditions, weaknesses, kill criteria и решение KILL / TEST / BUILD.
 
-`VALIDATION_PLAN.md` включает risky assumptions, experiments, expected signals, actual signals и continue / pivot / stop decision.
+`VALIDATION_PLAN.md` включает risky assumptions, customer discovery interview discipline, five-interview debrief, experiments, expected signals, actual signals и continue / pivot / stop decision.
+
+`MARKET_BRIEF.md` при market/competitor risk включает adversarial discovery: почему идея может быть плохой, почему конкурент может победить, какие альтернативы пользователь уже использует и какие неприятные сигналы игнорируются.
+
+`FUNNEL_MODEL.md` и `GO_TO_MARKET.md` перед MVP launch включают activation criteria, Day 7 / Day 30 retention target when applicable, false-positive traction и PMF signals.
 
 `PRODUCT_BLUEPRINT.md` включает бизнес-логику, сущности, модули, интерфейсы, зависимости и инфраструктуру.
 

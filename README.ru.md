@@ -76,8 +76,10 @@ PFO добавляет:
 - `routing/product-classifier.json` — классификация SaaS, ботов, API, web apps, landing pages, CLI, mini apps, e-commerce, scrapers и internal automation.
 - `templates/product-templates.json` — библиотека модульных шаблонов.
 - `core/product-compiler.md` — компилятор idea -> Product Blueprint -> Build Plan -> Execution Graph.
-- `docs/templates/IDEA_SCORECARD.md` и `VALIDATION_PLAN.md` — gate для слабых идей, гипотез и рыночных сигналов до расширения scope.
-- `docs/templates/FUNNEL_MODEL.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md` — слой воронки, обратной связи, итераций, активов и контента.
+- `docs/templates/IDEA_SCORECARD.md` и `VALIDATION_PLAN.md` — gate для слабых идей, evidence quality, customer discovery, гипотез и рыночных сигналов до расширения scope.
+- `docs/templates/MARKET_BRIEF.md` — рыночный и adversarial discovery слой: конкуренты, альтернативы, неприятные сигналы и дифференциация.
+- `docs/templates/FUNNEL_MODEL.md`, `GO_TO_MARKET.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md` — слой воронки, MVP measurement, обратной связи, итераций, активов и контента.
+- `docs/templates/LAUNCH_MATURITY_GATE.md` и `SCALE_MOAT_REGISTER.md` — опциональные Launch/Scale maturity artifacts, не обязательные для каждого MVP.
 - `execution/state-machine.json` — контролируемые переходы workflow.
 - `memory/session-state.schema.json` — формат восстановления состояния.
 - `memory/events.schema.json` — формат структурированного event log.
@@ -218,22 +220,26 @@ python3 scripts/meta_review.py
 
 1. Требования задокументированы.
 2. Идея имеет `KILL`, `TEST` или `BUILD` решение в `IDEA_SCORECARD.md`.
-3. Рискованные гипотезы проверяются через `VALIDATION_PLAN.md`.
-4. Классификация продукта и архитектурный шаблон явные.
-5. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md` и `EXECUTION_GRAPH.md` согласованы.
-6. Для автономной или delegated-работы есть `.pfo/UNIT_CONTEXT_MANIFEST.json`.
-7. Перед передачей сессии или роли есть `HANDOFF.md`.
-8. Для автономного улучшения есть `.pfo/EXPERIMENT_PROGRAM.md`, baseline, фиксированный budget, metric и keep/discard/crash лог.
-9. Для behavior changes есть TDD red/green/refactor evidence или явное исключение.
-10. Для bugfixes есть root-cause evidence до фикса.
-11. Feedback, funnel и iteration decisions привязаны к сигналам, а не активности.
-12. Reusable outcomes попадают в `ASSET_REGISTER.md` или `CONTENT_BACKLOG.md`.
-13. Verification не является неясной: missing/ambiguous evidence ведет в recovery, а не в pass.
-14. Spec compliance review выполнен до code quality review.
-15. Review status не равен `BLOCKED`.
-16. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
-17. Branch finish фиксирует PR, merge, keep или discard decision, если это в scope.
-18. Контекст сессии сохранён через `/session-save`.
+3. Evidence quality отделяет реальные разговоры, прошлое поведение и опровергающие данные от мнений и founder belief.
+4. Рискованные гипотезы проверяются через `VALIDATION_PLAN.md`.
+5. Market/competitor risk проходит adversarial discovery в `MARKET_BRIEF.md`, когда это применимо.
+6. До MVP launch определены activation, retention, PMF signals и false-positive traction, если рынок важен.
+7. Launch/Scale maturity artifacts используются только когда стадия действительно требует их.
+8. Классификация продукта и архитектурный шаблон явные.
+9. `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md` и `EXECUTION_GRAPH.md` согласованы.
+10. Для автономной или delegated-работы есть `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+11. Перед передачей сессии или роли есть `HANDOFF.md`.
+12. Для автономного улучшения есть `.pfo/EXPERIMENT_PROGRAM.md`, baseline, фиксированный budget, metric и keep/discard/crash лог.
+13. Для behavior changes есть TDD red/green/refactor evidence или явное исключение.
+14. Для bugfixes есть root-cause evidence до фикса.
+15. Feedback, funnel и iteration decisions привязаны к сигналам, а не активности.
+16. Reusable outcomes попадают в `ASSET_REGISTER.md` или `CONTENT_BACKLOG.md`.
+17. Verification не является неясной: missing/ambiguous evidence ведет в recovery, а не в pass.
+18. Spec compliance review выполнен до code quality review.
+19. Review status не равен `BLOCKED`.
+20. `.pfo/` contracts не нарушены: scope lock, data authenticity, golden flows, regression contract, fallback policy, diff risk, no silent substitution.
+21. Branch finish фиксирует PR, merge, keep или discard decision, если это в scope.
+22. Контекст сессии сохранён через `/session-save`.
 
 ## Документация
 

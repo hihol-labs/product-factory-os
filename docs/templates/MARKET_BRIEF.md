@@ -8,6 +8,15 @@
 
 ## Differentiation
 
+## Adversarial Discovery
+
+| Question | Answer | Evidence | PFO Impact |
+|---|---|---|---|
+| Why might this idea be wrong? |  |  |  |
+| Why might a competitor win? |  |  |  |
+| What alternatives do users already use? |  |  |  |
+| What uncomfortable signals are we ignoring? |  |  |  |
+
 ## Recent Community Signals
 
 | Date | Topic | Source | Signal | Engagement Or Odds | Confidence | PFO Impact |

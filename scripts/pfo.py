@@ -528,6 +528,23 @@ TBD
 
 TBD
 
+## Evidence Quality Gate
+
+| Check | Evidence | Status |
+|---|---|---|
+| Real user conversations count | TBD | PENDING |
+| Past behavior evidence, not future intent | TBD | PENDING |
+| Contradicting evidence found | TBD | PENDING |
+| BUILD truth conditions | TBD | PENDING |
+
+## Supporting Evidence
+
+- TBD
+
+## Contradicting Evidence
+
+- TBD
+
 ## Score
 
 | Criterion | Score 1-5 | Evidence | Notes |
@@ -572,6 +589,15 @@ def generated_validation_plan(state: dict) -> str:
 
 {idea}
 
+## Evidence Quality Gate
+
+| Check | Minimum Evidence | Actual Evidence | Status |
+|---|---|---|---|
+| Real user conversations | Count and segment fit are explicit | TBD | PENDING |
+| Past behavior evidence | Users describe what they did, bought, used, hacked together, or abandoned | TBD | PENDING |
+| Contradicting evidence | Evidence against the hypothesis is recorded | TBD | PENDING |
+| BUILD truth conditions | Conditions that must be true before broad build scope are explicit | TBD | PENDING |
+
 ## Riskiest Assumptions
 
 | Assumption | Risk | Evidence Needed | Owner | Deadline |
@@ -579,6 +605,29 @@ def generated_validation_plan(state: dict) -> str:
 | Target segment has the problem | high | interview, signup, usage, or purchase intent signal | TBD | TBD |
 | MVP scope can produce a useful outcome | medium | prototype test or workflow completion signal | TBD | TBD |
 | Acquisition path reaches the segment | medium | channel test or direct outreach response | TBD | TBD |
+
+## Customer Discovery Interviews
+
+### Target Interview Profile
+
+TBD
+
+### Question Discipline
+
+- Ask about the last real occurrence, not hypothetical future use.
+- Avoid leading questions, solution pitching, and social-desirability prompts.
+- Capture exact words when they reveal urgency, workaround, budget, or indifference.
+
+### Forbidden Or Leading Questions
+
+| Question | Why It Is Weak | Replacement |
+|---|---|---|
+| Would you use this? | Future intent is weak evidence. | Tell me about the last time this problem happened. |
+
+### Five-Interview Debrief
+
+| Batch | Supporting Evidence | Contradicting Evidence | Surprise | Decision |
+|---|---|---|---|---|
 
 ## Experiments
 
@@ -687,6 +736,24 @@ TBD
 
 TBD
 
+## MVP Measurement Contract
+
+| Signal | Target | Instrumentation | False Positive To Avoid |
+|---|---:|---|---|
+| Activation criteria | TBD | TBD | Signups without activation |
+| Day 7 retention | TBD | TBD | Launch curiosity without repeat use |
+| Day 30 retention | TBD | TBD | Short-term incentive usage |
+| Revenue or qualified willingness to pay | TBD | TBD | Compliments without budget |
+| Referral or organic pull | TBD | TBD | Founder-driven outreach only |
+
+## PMF Evidence
+
+- Retention: TBD
+- Revenue: TBD
+- Referral: TBD
+- Sean Ellis test: TBD
+- Pull vs push signal: TBD
+
 ## Funnel Stages
 
 | Stage | User Action | Current Rate | Target Rate | Instrumentation | Bottleneck |
@@ -777,10 +844,14 @@ def generated_quality_gates() -> str:
 | Gate | Status | Evidence | Blockers |
 |---|---|---|---|
 | Idea Gate | PENDING | IDEA_SCORECARD.md decision is KILL, TEST, or BUILD |  |
+| Evidence Quality | PENDING | real user conversations, past behavior evidence, contradicting evidence, BUILD truth conditions |  |
+| Adversarial Discovery | PENDING | MARKET_BRIEF.md adversarial discovery answers |  |
 | Market Validation | PENDING | VALIDATION_PLAN.md signals and exit decision |  |
 | Strategy | PENDING | DISCOVERY.md / MARKET_BRIEF.md when applicable |  |
 | Feedback Loop | PENDING | FEEDBACK_LOG.md and ITERATION_REVIEW.md when users exist |  |
-| Funnel | PENDING | FUNNEL_MODEL.md for acquisition or conversion work |  |
+| Funnel | PENDING | FUNNEL_MODEL.md metrics, MVP measurement contract, or not-applicable note |  |
+| Launch Maturity | PENDING | LAUNCH_MATURITY_GATE.md when launch-stage ops maturity is in scope |  |
+| Scale Moat | PENDING | SCALE_MOAT_REGISTER.md when scale, enterprise, or defensibility is in scope |  |
 | Architecture | PENDING | PRODUCT_BLUEPRINT.md, PROJECT_ARCHITECTURE.md, BUILD_PLAN.md |  |
 | Tests | PENDING | TEST_PLAN.md and test command output |  |
 | Review | PENDING | `/review` result |  |

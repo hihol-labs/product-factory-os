@@ -77,9 +77,23 @@ CONTROL_REGISTRY = [
         "timing": "Feedforward",
         "evaluator": "Inferential",
         "artifacts": [
+            "skills/discover/SKILL.md",
             "skills/market-scan/SKILL.md",
+            "docs/templates/IDEA_SCORECARD.md",
             "docs/templates/VALIDATION_PLAN.md",
             "docs/templates/MARKET_BRIEF.md",
+            "docs/templates/FUNNEL_MODEL.md",
+            "docs/templates/GO_TO_MARKET.md",
+        ],
+    },
+    {
+        "id": "maturity-stage-gates",
+        "timing": "Feedforward",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "skills/strategy/SKILL.md",
+            "docs/templates/LAUNCH_MATURITY_GATE.md",
+            "docs/templates/SCALE_MOAT_REGISTER.md",
         ],
     },
     {

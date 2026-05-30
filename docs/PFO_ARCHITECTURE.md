@@ -160,15 +160,20 @@ The control harness classifies every PFO mechanism by timing and evaluator:
 Prevents broad build scope from hiding weak demand. It records:
 
 - idea score and KILL/TEST/BUILD decision
+- evidence quality: real user conversations, past behavior evidence, contradicting evidence, and BUILD truth conditions
 - riskiest assumptions
+- customer discovery interview discipline and five-interview debriefs
 - validation experiments
 - expected and actual market signals
+- adversarial discovery for market and competitor risk
 - feedback sources
-- funnel bottlenecks
+- MVP measurement, false-positive traction, PMF signals, and funnel bottlenecks
 
 When product, ICP, competitor, launch, or roadmap risk depends on current public demand, PFO routes through `/market-scan` before scoring or replanning. `/market-scan` uses Last30Days when available and normalizes recent community signals into `MARKET_BRIEF.md`, `VALIDATION_PLAN.md`, and related strategy artifacts.
 
-Canonical artifacts are `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, and `FUNNEL_MODEL.md`.
+Canonical artifacts are `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `MARKET_BRIEF.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `FUNNEL_MODEL.md`, and `GO_TO_MARKET.md`.
+
+`LAUNCH_MATURITY_GATE.md` and `SCALE_MOAT_REGISTER.md` are optional maturity artifacts. They are used only when launch-stage operations, enterprise readiness, scale, or defensibility are in scope.
 
 ### 7. Phase Discussion Layer
 
@@ -315,6 +320,8 @@ Every full-cycle PFO project should maintain:
 - `BUSINESS_MODEL.md` when value capture matters
 - `GO_TO_MARKET.md` when launch or acquisition matters
 - `FUNNEL_MODEL.md` when acquisition, activation, conversion, or retention matters
+- `LAUNCH_MATURITY_GATE.md` when launch-stage founder bottleneck or operations maturity is in scope
+- `SCALE_MOAT_REGISTER.md` when scale, enterprise, vertical depth, or defensibility is in scope
 - `FEEDBACK_LOG.md` when user or market feedback exists
 - `ITERATION_REVIEW.md` after feedback-driven product changes
 - `PRD.md`
@@ -352,7 +359,10 @@ Every full-cycle PFO project should maintain:
 Deployment is blocked unless:
 
 - The idea gate is not `KILL` for the current build scope.
-- Validation, feedback, and funnel evidence are explicit when market risk is material.
+- Evidence quality, contradicting evidence, validation, feedback, and funnel evidence are explicit when market risk is material.
+- Adversarial discovery is complete when market or competitor risk is material.
+- MVP measurement defines activation, retention, PMF signals, and false-positive traction before launch when relevant.
+- Launch maturity and scale moat checks are present only when the stage requires them.
 - Architecture matches implementation.
 - Changed behavior has tests or a documented non-production limitation.
 - TDD red/green/refactor evidence is recorded for behavior changes, or an explicit exception exists.

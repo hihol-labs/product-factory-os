@@ -52,6 +52,7 @@ STACK_DEVIATION_POLICY:
 Write `IDEA_SCORECARD.md` with:
 
 - evidence-backed score
+- evidence quality gate: real user conversation count, past behavior evidence, contradicting evidence, and BUILD truth conditions
 - weak assumptions
 - KILL, TEST, or BUILD decision
 - kill criteria
@@ -61,8 +62,10 @@ Write `IDEA_SCORECARD.md` with:
 Write `VALIDATION_PLAN.md` with:
 
 - riskiest assumptions
+- customer discovery interview discipline and five-interview debriefs
 - validation experiments
 - expected and actual signals
+- supporting and contradicting evidence
 - continue, pivot, or stop decision
 
 ### 5. Architecture And Stack Selection
@@ -162,3 +165,12 @@ Write or update:
 - `CONTENT_BACKLOG.md`
 
 These artifacts keep iteration tied to evidence and turn repeatable outcomes into reusable assets.
+
+### 15. Optional Launch And Scale Maturity
+
+Use only when the project stage requires it:
+
+- `LAUNCH_MATURITY_GATE.md`: founder bottleneck audit, automation/delegation map, and launch-stage operating readiness.
+- `SCALE_MOAT_REGISTER.md`: domain knowledge, edge-case scenarios, data flywheel, workflow integration, switching cost, and defensibility narrative.
+
+These are optional maturity artifacts, not core MVP requirements.

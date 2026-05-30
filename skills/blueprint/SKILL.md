@@ -21,6 +21,7 @@ Ask only for details that change the plan:
 
 - Product goal and primary user
 - Idea score, target segment, and riskiest assumption
+- Evidence quality: real user conversations, past behavior evidence, contradicting evidence, and BUILD truth conditions
 - Must-have user flows
 - Data that must be stored
 - Authentication and roles
@@ -29,6 +30,7 @@ Ask only for details that change the plan:
 - Deadline or first milestone
 - Fresh market or community signal need when public demand, competitors, launch, ICP, or roadmap risk matters
 - First channel, offer, funnel, or feedback source when launch matters
+- Launch maturity or scale defensibility context when the product is beyond MVP
 - Non-goals and constraints
 
 If the user says "you decide", choose a conservative default and record it as `Assumption: user deferred`.
@@ -68,6 +70,8 @@ If the user says "you decide", choose a conservative default and record it as `A
    - `BUSINESS_MODEL.md` when revenue, cost saving, or value capture matters
    - `GO_TO_MARKET.md` when launch or user acquisition matters
    - `FUNNEL_MODEL.md` when acquisition, activation, conversion, or retention matters
+   - `LAUNCH_MATURITY_GATE.md` when launch-stage founder bottleneck or ops readiness is in scope
+   - `SCALE_MOAT_REGISTER.md` when scale, enterprise, vertical depth, or defensibility is in scope
    - `FEEDBACK_LOG.md` when feedback collection is in scope
    - `ITERATION_REVIEW.md` when improving an existing product or MVP
    - `ASSET_REGISTER.md` when reusable assets may be produced
@@ -100,10 +104,13 @@ Default to supplement. Do not silently replace user-authored documents.
 ## Document Requirements
 
 - `PRD.md`: user stories, acceptance criteria, non-goals, launch criteria.
-- `IDEA_SCORECARD.md`: evidence-backed KILL, TEST, or BUILD decision.
-- `VALIDATION_PLAN.md`: riskiest assumptions, experiments, expected signals, and exit decision.
-- `MARKET_BRIEF.md`: problem, segment, alternatives, differentiation, recent community signals, top complaints, and evidence links.
-- `FUNNEL_MODEL.md`: traffic, lead, activation, conversion, retention stages and bottleneck.
+- `IDEA_SCORECARD.md`: evidence-backed KILL, TEST, or BUILD decision, real conversation count, past behavior evidence, contradicting evidence, and BUILD truth conditions.
+- `VALIDATION_PLAN.md`: riskiest assumptions, customer discovery interview discipline, five-interview debrief, experiments, expected signals, and exit decision.
+- `MARKET_BRIEF.md`: problem, segment, alternatives, differentiation, adversarial discovery, recent community signals, top complaints, and evidence links.
+- `FUNNEL_MODEL.md`: traffic, lead, activation, conversion, retention stages, MVP measurement contract, false-positive traction, PMF signals, and bottleneck.
+- `GO_TO_MARKET.md`: launch goal, channel, offer, activation path, MVP measurement contract, funnel summary, feedback loop, and success metrics.
+- `LAUNCH_MATURITY_GATE.md`: optional founder bottleneck audit and ops automation/delegation map for launch-stage products.
+- `SCALE_MOAT_REGISTER.md`: optional domain knowledge, edge-case, data flywheel, workflow integration, switching-cost, and defensibility register.
 - `FEEDBACK_LOG.md`: feedback sources, evidence, patterns, and triggered decisions.
 - `ITERATION_REVIEW.md`: inputs, changes, outcome, and keep/revert/iterate/pivot/stop decision.
 - `ASSET_REGISTER.md`: reusable product, process, template, offer, or automation assets.
@@ -127,6 +134,7 @@ Default to supplement. Do not silently replace user-authored documents.
 - Problem
 - Users
 - Alternatives
+- Customer discovery plan and interview discipline
 - Positioning
 - Hypotheses
 - MVP scope
@@ -212,6 +220,7 @@ Before final output, verify:
 - Keep names and entities consistent across all documents.
 - Treat `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, and `EXECUTION_GRAPH.md` as the Product Compiler outputs.
 - Treat `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md` as gates before broad build scope.
+- Treat evidence quality and adversarial discovery as blockers for broad build scope when market risk is material.
 - Treat `/market-scan` output as evidence for strategy artifacts, not as permission to skip validation experiments.
 - Do not move to implementation until the execution graph can reach `PLAN_READY`.
 - Stop with `BLOCKED` if the user refuses to answer a question that determines architecture or data safety.
@@ -222,6 +231,8 @@ Before final output, verify:
 - All required documents exist.
 - `/review` status is `PASSED` or `PASSED_WITH_WARNINGS`.
 - Idea gate, validation plan, funnel, feedback, and asset/content assumptions are explicit when applicable.
+- Evidence quality, contradicting evidence, customer discovery discipline, and false-positive traction are explicit when market risk is material.
+- Launch maturity and scale moat artifacts are present only when the stage requires them.
 - Fresh market or community signal gaps are explicit when they affect product or launch risk.
 - Product type, template modules, architecture pattern, and execution graph are explicit.
 - Remaining assumptions are explicitly listed.
