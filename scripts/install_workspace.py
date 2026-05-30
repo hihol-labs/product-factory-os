@@ -129,6 +129,25 @@ def write_workspace_policy(workspace: Path, codex_home: Path) -> None:
     )
 
 
+def write_global_policy(workspace: Path, codex_home: Path) -> None:
+    policy = {
+        "methodology": "product-factory-os",
+        "methodologyPath": str(ROOT),
+        "defaultWorkspace": str(workspace),
+        "codexHome": str(codex_home),
+        "enforcement": "global",
+        "autoAdoptAnyProject": True,
+        "autoAnalyzeExistingProjects": True,
+        "autoReportProjects": True,
+        "defaultNewProjectRoute": "/project -> /kickstart",
+        "existingProjectRoute": "/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save",
+        "nonBypassRule": "Any local project opened in Codex should auto-connect to Product Factory OS, even outside the default workspace.",
+    }
+    for target in [codex_home / "PFO_GLOBAL.json", Path.home() / ".pfo" / "PFO_GLOBAL.json"]:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(policy, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
 def install_hooks(codex_home: Path) -> Path:
     target = codex_home / "hooks" / "product-factory-os"
     target.mkdir(parents=True, exist_ok=True)
@@ -184,6 +203,7 @@ def main() -> None:
     parser.add_argument("--no-adopt", action="store_true")
     parser.add_argument("--no-bin", action="store_true")
     parser.add_argument("--no-workspace-policy", action="store_true")
+    parser.add_argument("--no-global-policy", action="store_true")
     args = parser.parse_args()
 
     workspace = args.workspace.expanduser().resolve()
@@ -195,6 +215,8 @@ def main() -> None:
 
     if not args.no_workspace_policy:
         write_workspace_policy(workspace, codex_home)
+    if not args.no_global_policy:
+        write_global_policy(workspace, codex_home)
     hook_target = None if args.no_hooks else install_hooks(codex_home)
     bin_target = None if args.no_bin else install_bin()
     if not args.no_adopt:
@@ -208,6 +230,7 @@ def main() -> None:
     if hook_target:
         print(f"Hooks: {hook_target}")
     print("Daily use: open any project in the workspace; PFO instructions and state are already present.")
+    print("Global use: open any local project; the preflight hook will auto-connect PFO from PFO_GLOBAL.json.")
 
 
 if __name__ == "__main__":

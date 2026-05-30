@@ -17,6 +17,7 @@ def main() -> None:
         starter = json.loads(starter_path.read_text(encoding="utf-8"))
     classification = state.get("classification", {})
     existing = state.get("existingProject", {})
+    steering = state.get("humanSteering", {}) if isinstance(state.get("humanSteering", {}), dict) else {}
 
     report = [
         "# Product Factory OS Report",
@@ -36,6 +37,14 @@ def main() -> None:
         f"- Recovery: `{state.get('recoveryState', {}).get('status', '')}` {state.get('recoveryState', {}).get('reason', '')}",
         f"- Root cause: `{state.get('rootCause', {}).get('status', '')}` {state.get('rootCause', {}).get('summary', '')}",
         f"- Handoff: `{state.get('handoff', {}).get('status', '')}` {state.get('handoff', {}).get('reason', '')}",
+        "",
+        "## Human Steering",
+        "",
+        f"- Approval required: `{steering.get('approvalRequired', False)}`",
+        f"- Approval status: `{steering.get('approvalStatus', '')}`",
+        f"- Recommended next step: {steering.get('recommendedNextStep', '') or 'none'}",
+        f"- Last iteration summary: {steering.get('lastIterationSummary', '') or 'none'}",
+        f"- Steering artifact: `NEXT_STEP.md`",
         "",
         "## Experiment Loop",
         "",

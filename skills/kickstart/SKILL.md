@@ -46,17 +46,18 @@ Announce the selected mode and why.
 6. Use `/mcp-docs` when dependency, SDK, framework, or platform details may be stale.
 7. Run `/review` before writing application code.
 8. Run `/handoff` before switching sessions, roles, delegated agents, AFK execution, compaction, or recovery.
-9. Scaffold project structure, tooling, environment examples, and test framework.
-10. Implement modules from `BUILD_PLAN.md` and `EXECUTION_GRAPH.md` step by step.
-11. After each behavior change, run or create tests via `/test`.
-12. For user-facing browser flows, run `/browser-check` before ship readiness.
-13. Capture feedback and iteration outcomes in `FEEDBACK_LOG.md` and `ITERATION_REVIEW.md` when users or tests produce signals.
-14. Promote reusable solutions into `ASSET_REGISTER.md` and `CONTENT_BACKLOG.md` when evidence exists.
-15. Review significant changes with `/review`.
-16. Before production work, run `/security-audit`, `/deps-audit`, and `/harden`.
-17. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external roadmap sync is in scope.
-18. Deploy only after explicit user confirmation.
-19. Run `/session-save`.
+9. Before each major implementation iteration, write or update `NEXT_STEP.md`, show the visible roadmap, recommend one next step, list alternatives, and get user approval or changed direction.
+10. Scaffold project structure, tooling, environment examples, and test framework.
+11. Implement modules from `BUILD_PLAN.md` and `EXECUTION_GRAPH.md` step by step.
+12. After each behavior change, run or create tests via `/test`.
+13. For user-facing browser flows, run `/browser-check` before ship readiness.
+14. Capture feedback and iteration outcomes in `FEEDBACK_LOG.md` and `ITERATION_REVIEW.md` when users or tests produce signals.
+15. Promote reusable solutions into `ASSET_REGISTER.md` and `CONTENT_BACKLOG.md` when evidence exists.
+16. Review significant changes with `/review`.
+17. Before production work, run `/security-audit`, `/deps-audit`, and `/harden`.
+18. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external roadmap sync is in scope.
+19. Deploy only after explicit user confirmation.
+20. Run `/session-save`.
 
 ## Phase Details
 
@@ -79,6 +80,7 @@ Implementation can start only when:
 - `EXECUTION_GRAPH.md` exists.
 - `IMPLEMENTATION_PLAN.md` exists.
 - `HANDOFF.md` exists when implementation is transferred to another session, role, delegated agent, AFK run, or recovery pass.
+- `NEXT_STEP.md` exists and the user has approved or changed the next major implementation step.
 - Review status is not `BLOCKED`.
 - The user has approved the plan when the project is new.
 
@@ -97,13 +99,18 @@ Create the minimum viable structure implied by the architecture:
 
 For each execution graph node or implementation step:
 
-1. Restate the step and intended files.
-2. Make the smallest coherent change.
-3. Add or update tests.
-4. Run the narrowest relevant verification.
-5. Fix failures before continuing.
-6. Update `CODEX.md` status.
-7. Update `.codex-memory/STATE.json` when the milestone changes.
+1. Close the previous iteration with: where we are, what changed, verification, blockers, and what remains.
+2. Show the visible roadmap from `EXECUTION_GRAPH.md` in user-facing language.
+3. Recommend exactly one next step, plus 2-3 alternatives.
+4. Ask the user to confirm, change, or stop before major implementation starts.
+5. Record the decision in `NEXT_STEP.md` and `.codex-memory/STATE.json`.
+6. Restate the approved step and intended files.
+7. Make the smallest coherent change.
+8. Add or update tests.
+9. Run the narrowest relevant verification.
+10. Fix failures before continuing.
+11. Update `CODEX.md` status.
+12. Update `.codex-memory/STATE.json` when the milestone changes.
 
 ### 5. Ship Gate
 
@@ -123,7 +130,7 @@ Before final output, verify:
 
 - Route, side-effect, and confirmation requirements match metadata.
 - Required artifacts or read-only result are explicit.
-- Verification, blockers, and next route are stated.
+- Verification, blockers, visible roadmap, recommended next step, alternatives, and required user decision are stated.
 
 ## Rules
 
@@ -133,6 +140,8 @@ Before final output, verify:
 - Do not deploy or migrate production data without explicit confirmation.
 - Keep `CODEX.md` status updated as steps complete.
 - Keep `.codex-memory/STATE.json` aligned with the state machine.
+- Do not start a major implementation step without `NEXT_STEP.md` and recorded next-step approval.
+- Do not expose internal state-machine jargon as the primary user instruction; translate it into product-owner language.
 - Do not expand from a `TEST` idea into a full `BUILD` scope without validation evidence.
 - Do not treat meetings, commits, or generated docs as progress unless a gate, signal, decision, or reusable asset changes.
 - Never continue past a `BLOCKED` gate unless the user explicitly changes the requirement or accepts a documented non-production limitation.
@@ -155,6 +164,7 @@ Before final output, verify:
 - Review status is not `BLOCKED`.
 - README explains setup and deployment.
 - Product Factory OS state is saved in `.codex-memory/STATE.json`.
+- `NEXT_STEP.md` explains the visible roadmap, recommended next step, alternatives, and decision needed.
 - `QUALITY_GATES.md` or equivalent state gate results are updated.
 - Session memory is saved.
 
@@ -167,3 +177,4 @@ End with:
 - Verification performed
 - Known gaps
 - Next recommended step
+- Decision needed from the user

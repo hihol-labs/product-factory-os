@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import json
+import os
 import subprocess
 import sys
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
-from pfo_alias_targets import missing_alias_targets
-
 
 PFO_CONTRACTS = [
     ".pfo/PROJECT_CONTRACT.md",
@@ -44,9 +40,57 @@ GENERATED_PLAN_FILES = [
     "PROJECT_ARCHITECTURE.md",
     "BUILD_PLAN.md",
     "EXECUTION_GRAPH.md",
+    "NEXT_STEP.md",
     "TEST_PLAN.md",
     "QUALITY_GATES.md",
 ]
+
+
+def discover_methodology(cwd: Path) -> Path | None:
+    candidates = []
+    env_path = os.environ.get("PFO_METHODOLOGY_PATH")
+    if env_path:
+        candidates.append(Path(env_path))
+    for policy in [*find_policy_files(cwd), global_policy_file()]:
+        if policy and policy.is_file():
+            try:
+                data = json.loads(policy.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                continue
+            if data.get("methodologyPath"):
+                candidates.append(Path(data["methodologyPath"]))
+    for parent in Path(__file__).resolve().parents:
+        candidates.append(parent)
+    for candidate in candidates:
+        if (candidate / "scripts" / "pfo.py").is_file() and (candidate / "docs" / "METHODOLOGY.md").is_file():
+            return candidate.resolve()
+    return None
+
+
+def global_policy_file() -> Path:
+    codex_home = Path(os.environ.get("CODEX_HOME", Path.home() / ".codex"))
+    return codex_home / "PFO_GLOBAL.json"
+
+
+def home_policy_file() -> Path:
+    return Path.home() / ".pfo" / "PFO_GLOBAL.json"
+
+
+def find_policy_files(cwd: Path) -> list[Path]:
+    files = []
+    for path in [cwd, *cwd.parents]:
+        files.append(path / "PFO_WORKSPACE.json")
+    files.append(home_policy_file())
+    return files
+
+
+def missing_alias_targets_for(methodology: Path, project: Path) -> list[str]:
+    sys.path.insert(0, str(methodology / "scripts"))
+    try:
+        from pfo_alias_targets import missing_alias_targets
+    except ImportError:
+        return []
+    return missing_alias_targets(project)
 
 
 def load_workspace_policy(cwd: Path) -> tuple[Path, dict] | None:
@@ -60,6 +104,24 @@ def load_workspace_policy(cwd: Path) -> tuple[Path, dict] | None:
     return None
 
 
+def load_global_policy(cwd: Path) -> dict | None:
+    for path in [global_policy_file(), home_policy_file()]:
+        if path.is_file():
+            try:
+                return json.loads(path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                return None
+    methodology = discover_methodology(cwd)
+    if methodology:
+        return {
+            "methodologyPath": str(methodology),
+            "autoAdoptAnyProject": True,
+            "autoAnalyzeExistingProjects": True,
+            "autoReportProjects": True,
+        }
+    return None
+
+
 def first_level_project(cwd: Path, workspace: Path) -> Path | None:
     try:
         rel = cwd.resolve().relative_to(workspace.resolve())
@@ -70,10 +132,34 @@ def first_level_project(cwd: Path, workspace: Path) -> Path | None:
     return workspace / rel.parts[0]
 
 
+def project_root_anywhere(cwd: Path) -> Path | None:
+    markers = [
+        ".git",
+        "package.json",
+        "pyproject.toml",
+        "Cargo.toml",
+        "go.mod",
+        "pom.xml",
+        "README.md",
+        "AGENTS.md",
+        "CODEX.md",
+    ]
+    home = Path.home().resolve()
+    for path in [cwd, *cwd.parents]:
+        if path.resolve() == home or path.parent == path:
+            break
+        if any((path / marker).exists() for marker in markers):
+            return path
+    if cwd.resolve() != home and cwd.parent != cwd and not cwd.name.startswith("."):
+        return cwd
+    return None
+
+
 def needs_adoption(project: Path) -> bool:
     required = [
         project / "AGENTS.md",
         project / "CODEX.md",
+        project / "NEXT_STEP.md",
         project / ".codex-memory" / "MEMORY.md",
         project / ".codex-memory" / "STATE.json",
         project / ".codex-memory" / "events.jsonl",
@@ -87,7 +173,7 @@ def is_generated_pfo_project(project: Path) -> bool:
     return (project / ".pfo-starter.json").is_file()
 
 
-def needs_full_runtime(project: Path) -> bool:
+def needs_full_runtime(methodology: Path, project: Path) -> bool:
     if needs_adoption(project):
         return True
     if is_generated_pfo_project(project):
@@ -98,8 +184,9 @@ def needs_full_runtime(project: Path) -> bool:
             project / "PFO_EXISTING_PROJECT_ANALYSIS.json",
             project / "PFO_CONTRACT_GATE.json",
             project / "PFO_REPORT.md",
+            project / "NEXT_STEP.md",
         ]
-    return any(not path.is_file() for path in required) or bool(missing_alias_targets(project))
+    return any(not path.is_file() for path in required) or bool(missing_alias_targets_for(methodology, project))
 
 
 def run_auto_full_runtime(project: Path, workspace: Path, methodology: Path, generated: bool) -> None:
@@ -134,20 +221,27 @@ def run_auto_full_runtime(project: Path, workspace: Path, methodology: Path, gen
 
 def auto_adopt(cwd: Path) -> Path:
     loaded = load_workspace_policy(cwd)
-    if not loaded:
+    policy = loaded[1] if loaded else (load_global_policy(cwd) or {})
+    methodology = Path(policy.get("methodologyPath", "")) if policy else discover_methodology(cwd)
+    if not methodology or not methodology.exists():
         return cwd
-    workspace, policy = loaded
-    project = first_level_project(cwd, workspace)
+    if loaded:
+        workspace = loaded[0]
+        project = first_level_project(cwd, workspace)
+    else:
+        project = project_root_anywhere(cwd)
+        workspace = project.parent if project else cwd.parent
     if not project or not project.is_dir():
         return cwd
-    methodology = Path(policy.get("methodologyPath", ""))
     if methodology and (project == methodology or methodology in project.parents):
         return project
     if project.name in {"product-factory-os", "idea-to-deploy"} or project.name.startswith("."):
         return project
-    if not policy.get("autoAdoptExistingProjects", True):
+    if loaded and not policy.get("autoAdoptExistingProjects", True):
         return project
-    if not needs_full_runtime(project):
+    if not loaded and not policy.get("autoAdoptAnyProject", True):
+        return project
+    if not needs_full_runtime(methodology, project):
         return project
     script = methodology / "scripts" / "adoption_check.py"
     if not script.is_file():

@@ -32,6 +32,7 @@ Ask only for details that change the plan:
 - Non-goals and constraints
 
 If the user says "you decide", choose a conservative default and record it as `Assumption: user deferred`.
+If the user gives only a generic creation request, ask product-steering questions before selecting a starter or implementation path.
 
 ## Process
 
@@ -82,6 +83,7 @@ If the user says "you decide", choose a conservative default and record it as `A
    - `BUILD_PLAN.md`
    - `EXECUTION_GRAPH.md`
    - `IMPLEMENTATION_PLAN.md`
+   - `NEXT_STEP.md`
    - `HANDOFF.md` when implementation will start in another session or role
    - `README.md`
    - `CODEX.md`
@@ -117,6 +119,7 @@ Default to supplement. Do not silently replace user-authored documents.
 - `BUILD_PLAN.md`: module order, dependencies, verification, exit criteria.
 - `EXECUTION_GRAPH.md`: nodes, transitions, validation checkpoints, repair paths.
 - `IMPLEMENTATION_PLAN.md`: ordered steps, touched files, verification per step.
+- `NEXT_STEP.md`: user-facing roadmap, recommended next step, alternatives, and explicit decision needed before implementation.
 - `HANDOFF.md`: compact transfer packet for session, role, delegation, AFK, compaction, or recovery handoff.
 - `CODEX.md`: project context, decisions, status table, handoff and session-save rules.
 
@@ -189,6 +192,14 @@ Default to supplement. Do not silently replace user-authored documents.
 - Tests or verification command for each step
 - Exit criteria for each step
 
+`NEXT_STEP.md`:
+
+- Current product-owner-readable state
+- Visible roadmap
+- One recommended next step
+- Alternatives
+- Decision needed: confirm, change, or stop
+
 `CODEX.md`:
 
 - Project summary
@@ -203,7 +214,7 @@ Before final output, verify:
 
 - Route, side-effect, and confirmation requirements match metadata.
 - Required artifacts or read-only result are explicit.
-- Verification, blockers, and next route are stated.
+- Verification, blockers, visible roadmap, recommended next step, alternatives, and required user decision are stated.
 
 ## Rules
 
@@ -214,6 +225,8 @@ Before final output, verify:
 - Treat `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md` as gates before broad build scope.
 - Treat `/market-scan` output as evidence for strategy artifacts, not as permission to skip validation experiments.
 - Do not move to implementation until the execution graph can reach `PLAN_READY`.
+- Do not move to implementation until `NEXT_STEP.md` has a user-approved or user-changed next step.
+- Translate PFO internal states into plain product-owner language in user-facing summaries.
 - Stop with `BLOCKED` if the user refuses to answer a question that determines architecture or data safety.
 - If `/review` returns `BLOCKED`, offer doc fixes before implementation.
 
@@ -225,4 +238,4 @@ Before final output, verify:
 - Fresh market or community signal gaps are explicit when they affect product or launch risk.
 - Product type, template modules, architecture pattern, and execution graph are explicit.
 - Remaining assumptions are explicitly listed.
-- The user has a clear next route: `/kickstart`, `/guide`, or manual review.
+- The user has a clear visible roadmap and a decision point: approve the recommended step, change it, or stop for review.

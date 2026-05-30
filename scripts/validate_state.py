@@ -36,6 +36,16 @@ def validate_state(path: Path) -> None:
         fail(f"{path}: decisionLog must be a list")
     if not isinstance(state.get("artifacts"), list):
         fail(f"{path}: artifacts must be a list")
+    if not isinstance(state.get("humanSteering"), dict):
+        fail(f"{path}: humanSteering must be an object")
+    steering = state.get("humanSteering", {})
+    if not steering.get("approvalStatus"):
+        fail(f"{path}: humanSteering.approvalStatus must not be empty")
+    if not steering.get("recommendedNextStep"):
+        fail(f"{path}: humanSteering.recommendedNextStep must not be empty")
+    gates = state.get("gateResults", {})
+    if "nextStepApproval" not in gates:
+        fail(f"{path}: gateResults.nextStepApproval must be present")
     if not state.get("nextAction"):
         fail(f"{path}: nextAction must not be empty")
 
@@ -55,4 +65,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

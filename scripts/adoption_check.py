@@ -77,6 +77,7 @@ GENERATED_PLAN_FILES = [
     "PROJECT_ARCHITECTURE.md",
     "BUILD_PLAN.md",
     "EXECUTION_GRAPH.md",
+    "NEXT_STEP.md",
     "TEST_PLAN.md",
     "QUALITY_GATES.md",
 ]
@@ -117,6 +118,59 @@ def is_dir(path: Path) -> bool:
         return False
 
 
+def default_human_steering() -> dict:
+    return {
+        "approvalRequired": True,
+        "approvalStatus": "PENDING",
+        "approvedBy": "",
+        "approvedAt": "",
+        "lastPrompt": "Ask the user to confirm, change, or stop before implementation.",
+        "lastIterationSummary": "Project is adopted into Product Factory OS.",
+        "recommendedNextStep": "Choose and approve the next task-specific implementation step.",
+        "alternatives": [
+            "Approve the recommended next task.",
+            "Change scope or priority.",
+            "Pause and review project state."
+        ],
+        "pendingQuestions": [
+            "Do you approve the recommended next step?",
+            "Should scope or priority change before implementation?"
+        ],
+        "visibleRoadmap": [],
+        "completedIterations": [],
+    }
+
+
+def backfill_human_steering(path: Path) -> None:
+    state_path = path / ".codex-memory" / "STATE.json"
+    if not state_path.is_file():
+        return
+    try:
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return
+    gate_results = state.setdefault("gateResults", {})
+    gate_results.setdefault("nextStepApproval", "PENDING")
+    if not gate_results.get("nextStepApproval"):
+        gate_results["nextStepApproval"] = "PENDING"
+    steering = state.setdefault("humanSteering", default_human_steering())
+    if not isinstance(steering, dict):
+        steering = default_human_steering()
+        state["humanSteering"] = steering
+    for key, value in default_human_steering().items():
+        steering.setdefault(key, value)
+    if not steering.get("approvalStatus"):
+        steering["approvalStatus"] = "PENDING"
+    if steering.get("approvalStatus") == "PENDING":
+        steering["approvalRequired"] = True
+    if not steering.get("recommendedNextStep"):
+        steering["recommendedNextStep"] = default_human_steering()["recommendedNextStep"]
+    artifacts = set(state.get("artifacts", []))
+    artifacts.add("NEXT_STEP.md")
+    state["artifacts"] = sorted(artifacts)
+    state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
 def has_pfo_contracts(path: Path) -> bool:
     for name in [
         "PROJECT_CONTRACT.md",
@@ -149,6 +203,7 @@ def has_full_pfo_runtime(path: Path) -> bool:
         path / ".codex-memory" / "STATE.json",
         path / ".codex-memory" / "events.jsonl",
         path / "PFO_REPORT.md",
+        path / "NEXT_STEP.md",
     ]
     if is_generated_pfo_project(path):
         required.extend(path / name for name in GENERATED_PLAN_FILES)
@@ -443,6 +498,7 @@ aliases:
                         "specComplianceReview": "",
                         "codeQualityReview": "",
                         "branchFinish": "",
+                        "nextStepApproval": "",
                         "handoff": "",
                         "security": "",
                         "dependencies": "",
@@ -486,6 +542,7 @@ aliases:
                         "cleanupDecision": "",
                         "recordedAt": "",
                     },
+                    "humanSteering": default_human_steering(),
                     "dispatchJournal": [],
                     "decisionLog": [],
                     "capturedNotes": [],
@@ -514,6 +571,7 @@ aliases:
                         "TASKS.md",
                         "PROGRESS.md",
                         "TESTING.md",
+                        "NEXT_STEP.md",
                     ],
                     "completedModules": [],
                     "failedValidations": [],
@@ -583,7 +641,7 @@ aliases:
                         "mergeStatus": "",
                     },
                     "blockers": [],
-                    "nextAction": "PFO is active. Run `pfo adopt <project> --analyze` before major work.",
+                    "nextAction": "PFO is active. Review NEXT_STEP.md and approve the next major implementation step before build work.",
                 },
                 indent=2,
                 ensure_ascii=False,
@@ -591,6 +649,10 @@ aliases:
             + "\n",
             encoding="utf-8",
         )
+    next_step_template = ROOT / "docs" / "templates" / "NEXT_STEP.md"
+    if next_step_template.is_file() and not (path / "NEXT_STEP.md").exists():
+        (path / "NEXT_STEP.md").write_text(next_step_template.read_text(encoding="utf-8"), encoding="utf-8")
+    backfill_human_steering(path)
     ensure_alias_documents(path)
     mark_runtime_synced(path, workspace)
 

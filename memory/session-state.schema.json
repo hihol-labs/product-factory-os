@@ -17,6 +17,7 @@
     "completedModules",
     "failedValidations",
     "blockers",
+    "humanSteering",
     "nextAction"
   ],
   "stateTemplate": {
@@ -99,6 +100,7 @@
       "specComplianceReview": "",
       "codeQualityReview": "",
       "branchFinish": "",
+      "nextStepApproval": "",
       "handoff": "",
       "security": "",
       "dependencies": "",
@@ -155,6 +157,19 @@
       "prUrl": "",
       "cleanupDecision": "",
       "recordedAt": ""
+    },
+    "humanSteering": {
+      "approvalRequired": false,
+      "approvalStatus": "",
+      "approvedBy": "",
+      "approvedAt": "",
+      "lastPrompt": "",
+      "lastIterationSummary": "",
+      "recommendedNextStep": "",
+      "alternatives": [],
+      "pendingQuestions": [],
+      "visibleRoadmap": [],
+      "completedIterations": []
     },
     "verificationHistory": [],
     "dispatchJournal": [],

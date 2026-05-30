@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "Product Factory OS hooks for automatic full workspace adoption, routing reminders, context diagnostics, and methodology completeness gates.",
+  "description": "Product Factory OS hooks for automatic global/workspace project adoption, routing reminders, context diagnostics, and methodology completeness gates.",
   "hooks": [
     {
       "name": "route-reminder",
@@ -12,7 +12,7 @@
       "name": "preflight-context",
       "type": "auto-adopt-diagnostic",
       "command": "python3 hooks/preflight-context.py",
-      "description": "Auto-enforces full PFO runtime for first-level workspace projects when needed, then prints discovered docs, policy contracts, memory state, and event log."
+      "description": "Auto-enforces full PFO runtime for workspace projects and any local project discovered through PFO_GLOBAL.json, then prints discovered docs, policy contracts, memory state, and event log."
     },
     {
       "name": "session-diagnostics",

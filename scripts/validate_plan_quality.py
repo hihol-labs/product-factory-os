@@ -26,6 +26,7 @@ EXECUTABLE_TASK_REQUIREMENTS = [
     "Exact files",
     "Exact verification command",
     "Expected output",
+    "User-facing next-step approval",
     "TDD red and green evidence",
     "Root-cause evidence",
     "Spec compliance review",
@@ -60,6 +61,12 @@ REVIEW_ENFORCEMENT_STAGES = {
     "BRANCH_FINISH",
     "DEPLOYED",
     "SESSION_SAVED",
+}
+
+NEXT_STEP_APPROVAL_STAGES = {
+    "UNIT_DISPATCHED",
+    "TDD_EVIDENCE",
+    "BUILDING",
 }
 
 ROOT_CAUSE_ENFORCEMENT_STAGES = {"ROOT_CAUSE_ANALYSIS"} | TDD_ENFORCEMENT_STAGES
@@ -283,12 +290,22 @@ def validate_state_gates(project: Path) -> list[str]:
             if str(gates.get("experimentDecision", "")) not in PASS_STATUSES:
                 errors.append("experiment loop has no passing experimentDecision gate")
 
+    if stage in NEXT_STEP_APPROVAL_STAGES:
+        steering = state.get("humanSteering", {}) if isinstance(state.get("humanSteering", {}), dict) else {}
+        if not (project / "NEXT_STEP.md").is_file():
+            errors.append("implementation started without NEXT_STEP.md")
+        if not passed(str(gates.get("nextStepApproval", ""))):
+            errors.append("implementation started without passing nextStepApproval gate")
+        if steering.get("approvalStatus") not in {"APPROVED", "CONSUMED"}:
+            errors.append("implementation started without recorded human steering approval")
+
     return errors
 
 
 def self_check() -> None:
     checks = {
         "docs/templates/BUILD_PLAN.md": EXECUTABLE_TASK_REQUIREMENTS,
+        "docs/templates/NEXT_STEP.md": ["Decision Needed", "Visible Roadmap", "Recommended Next Step"],
         "docs/SUPERPOWERS_INTEGRATION.md": ["Engineering Discipline v2", "source of truth"],
         "scripts/pfo.py": ["tdd-evidence", "root-cause", "review-stage", "finish-branch"],
         "docs/templates/pfo/VERIFICATION_CONTRACT.json": ["passFailParser", "requiredArtifacts"],

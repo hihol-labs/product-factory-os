@@ -18,6 +18,7 @@
     "PRODUCT_BLUEPRINT.md",
     "BUILD_PLAN.md",
     "EXECUTION_GRAPH.md",
+    "NEXT_STEP.md with approved or changed user-facing next step",
     ".pfo/EXPERIMENT_PROGRAM.md when autonomous measurement-driven iteration is in scope",
     ".pfo/EXPERIMENTS.tsv when autonomous measurement-driven iteration is in scope",
     "FEEDBACK_LOG.md or FUNNEL_MODEL.md when iteration or growth is in scope",
@@ -60,6 +61,7 @@
     "executionPolicy",
     "permissionMatrix",
     "verificationContract",
+    "nextStepApproval",
     "learningPromotion",
     "toolCapabilityRegistry"
   ],

@@ -6,6 +6,7 @@ This is a navigation alias for an existing project adopted into Product Factory 
 
 - Reloadable state: `.codex-memory/STATE.json`
 - Session memory: `.codex-memory/MEMORY.md`
+- User-facing next-step approval: `NEXT_STEP.md`
 - Event log: `.codex-memory/events.jsonl`
 - Agent-facing runtime rules: `CODEX.md`
 

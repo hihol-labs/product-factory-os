@@ -13,6 +13,7 @@ Every executable task must include:
 - Exact files to create or modify.
 - Exact verification command.
 - Expected output or failure mode.
+- User-facing next-step approval in `NEXT_STEP.md` before major implementation starts.
 - TDD red and green evidence for behavior changes.
 - Root-cause evidence for bugfixes.
 - Spec compliance review before code quality review.

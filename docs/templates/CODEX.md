@@ -30,6 +30,7 @@ Run `pfo contracts . --write` during review.
 - Score ideas in `IDEA_SCORECARD.md` before broad build scope.
 - Validate risky assumptions in `VALIDATION_PLAN.md`.
 - Capture phase decisions in `PHASE_CONTEXT.md` before detailed planning.
+- Update `NEXT_STEP.md` and get next-step approval before major implementation.
 - Create `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
 - Keep `.pfo/VERIFICATION_CONTRACT.json` current for each active unit.
 - Follow `.pfo/EXECUTION_POLICY.json` and `.pfo/PERMISSION_MATRIX.md` before commands, writes, external APIs, secret access, push, deploy, or migration.
