@@ -6,6 +6,19 @@
 
 ## Problem Evidence
 
+## Evidence Quality Gate
+
+| Check | Evidence | Status |
+|---|---|---|
+| Real user conversations count |  |  |
+| Past behavior evidence, not future intent |  |  |
+| Contradicting evidence found |  |  |
+| BUILD truth conditions |  |  |
+
+## Supporting Evidence
+
+## Contradicting Evidence
+
 ## Score
 
 | Criterion | Score 1-5 | Evidence | Notes |

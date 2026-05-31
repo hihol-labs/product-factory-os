@@ -452,6 +452,10 @@ HANDOFF.md when transfer is in scope
 - Codex performs routing automatically.
 - Score ideas before broad build scope in `IDEA_SCORECARD.md`.
 - Validate risky assumptions in `VALIDATION_PLAN.md`.
+- Broad market-facing scope requires evidence quality: real conversations, past behavior evidence, contradicting evidence, and BUILD truth conditions.
+- Use `MARKET_BRIEF.md` for adversarial discovery when market or competitor risk matters.
+- Define activation, retention, PMF signals, and false-positive traction in `FUNNEL_MODEL.md` or `GO_TO_MARKET.md` before MVP launch.
+- Use `LAUNCH_MATURITY_GATE.md` and `SCALE_MOAT_REGISTER.md` only when launch, scale, enterprise, or defensibility is in scope.
 - Capture implementation decisions in `PHASE_CONTEXT.md` before detailed execution planning.
 - Update `NEXT_STEP.md` and record `gateResults.nextStepApproval=PASSED` before major implementation starts.
 - Build `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.

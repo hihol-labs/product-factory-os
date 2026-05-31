@@ -19,6 +19,8 @@ PLANNING_ARTIFACTS = [
     "ICP.md",
     "BUSINESS_MODEL.md",
     "GO_TO_MARKET.md",
+    "LAUNCH_MATURITY_GATE.md",
+    "SCALE_MOAT_REGISTER.md",
     "PRD.md",
     "PRODUCT_BLUEPRINT.md",
     "PROJECT_ARCHITECTURE.md",

@@ -8,6 +8,8 @@ This project is governed by Product Factory OS.
 - Existing project work routes through `/task`.
 - Significant work updates `.codex-memory/STATE.json`.
 - Broad product scope requires `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md`.
+- Broad market-facing scope also requires evidence quality: real conversations, past behavior, contradicting evidence, and BUILD truth conditions.
+- Launch/scale maturity artifacts are optional and used only when that stage is in scope.
 - Scope, data, fallback, and golden-flow rules live in `.pfo/`.
 - Execution policy lives in `.pfo/EXECUTION_POLICY.json`.
 - Permissions live in `.pfo/PERMISSION_MATRIX.json` and `.pfo/PERMISSION_MATRIX.md`.

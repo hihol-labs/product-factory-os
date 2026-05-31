@@ -24,7 +24,7 @@ Use `docs/rubrics/strategy.md` for product, idea-gate, validation, funnel, feedb
 3. Compare impact, risk, cost, reversibility, time, strategic fit, and validation path.
 4. Give a recommendation with assumptions.
 5. Name what would change the recommendation.
-6. Identify the next artifact that should change if the decision is accepted, such as `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FUNNEL_MODEL.md`, `ITERATION_REVIEW.md`, `ASSET_REGISTER.md`, or `CONTENT_BACKLOG.md`.
+6. Identify the next artifact that should change if the decision is accepted, such as `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `MARKET_BRIEF.md`, `FUNNEL_MODEL.md`, `GO_TO_MARKET.md`, `LAUNCH_MATURITY_GATE.md`, `SCALE_MOAT_REGISTER.md`, `ITERATION_REVIEW.md`, `ASSET_REGISTER.md`, or `CONTENT_BACKLOG.md`.
 
 ## Self-validation
 

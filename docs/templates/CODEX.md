@@ -29,6 +29,10 @@ Run `pfo contracts . --write` during review.
 
 - Score ideas in `IDEA_SCORECARD.md` before broad build scope.
 - Validate risky assumptions in `VALIDATION_PLAN.md`.
+- Broad build scope requires evidence quality: real conversations, past behavior, contradicting evidence, and BUILD truth conditions.
+- Use `MARKET_BRIEF.md` for adversarial discovery when market or competitor risk matters.
+- Define activation, retention, PMF signals, and false-positive traction in `FUNNEL_MODEL.md` or `GO_TO_MARKET.md` before MVP launch.
+- Use `LAUNCH_MATURITY_GATE.md` and `SCALE_MOAT_REGISTER.md` only when launch, scale, enterprise, or defensibility is in scope.
 - Capture phase decisions in `PHASE_CONTEXT.md` before detailed planning.
 - Update `NEXT_STEP.md` and get next-step approval before major implementation.
 - Create `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.

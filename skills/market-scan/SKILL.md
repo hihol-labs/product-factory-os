@@ -34,7 +34,7 @@ Preferred research engine: `last30days` from `mvanhorn/last30days-skill`.
 6. Update decision impact:
    - `IDEA_SCORECARD.md`: evidence, weaknesses, KILL/TEST/BUILD impact.
    - `VALIDATION_PLAN.md`: Last 30 Days signal, source, engagement, confidence, next experiment.
-   - `MARKET_BRIEF.md`: recent community signals, top complaints, alternatives, evidence links.
+   - `MARKET_BRIEF.md`: recent community signals, adversarial discovery, top complaints, alternatives, evidence links.
    - `FEEDBACK_LOG.md`: public feedback patterns when they influence iteration.
    - `CONTENT_BACKLOG.md`: public content candidates only when evidence is approved for reuse.
 
@@ -47,6 +47,7 @@ TOPIC:
 FRESH SIGNALS:
 TOP COMPLAINTS:
 ALTERNATIVES:
+ADVERSARIAL DISCOVERY:
 CONFIDENCE:
 PFO ARTIFACT IMPACT:
 NEXT VALIDATION STEP:
@@ -68,4 +69,5 @@ Before final output, verify:
 - Do not send secrets, private customer data, unreleased product details, or proprietary code to external research tools.
 - Cite source links when available.
 - Separate verified evidence from assumptions.
+- Surface competitor advantages and uncomfortable negative signals instead of only supportive evidence.
 - Recent social engagement is a signal, not proof. Convert it into validation experiments before broad build scope.

@@ -35,6 +35,8 @@ As needed:
 - `ASSET_REGISTER.md`
 - `CONTENT_BACKLOG.md`
 - `LAUNCH_PLAN.md`
+- `LAUNCH_MATURITY_GATE.md` when launch-stage ops readiness is in scope
+- `SCALE_MOAT_REGISTER.md` when scale, enterprise, or defensibility is in scope
 - `BACKLOG.md`
 - `docs/adr/YYYY-MM-DD-decision.md`
 
@@ -50,11 +52,15 @@ As needed:
    - value proposition
    - MVP scope
    - idea score and KILL/TEST/BUILD decision
+   - evidence quality: real conversations, past behavior evidence, contradicting evidence, BUILD truth conditions
    - validation experiments and exit criteria
+   - adversarial discovery: failure case, competitor win case, current alternatives, ignored uncomfortable signals
    - monetization or value-capture model
    - acquisition path
-   - funnel stages and bottleneck
+   - funnel stages, MVP measurement contract, false-positive traction, and bottleneck
    - feedback loop and iteration decision
+   - optional launch maturity audit when the founder or operator is becoming a bottleneck
+   - optional scale moat register when domain knowledge, edge cases, data flywheel, workflow integration, or switching cost matter
    - fixed metric experiment loop when autonomous self-improvement is requested
    - asset and content candidates
    - launch success metrics
@@ -78,5 +84,6 @@ Before final output, verify:
 - Do not rewrite history; append dated decisions.
 - Do not allow large implementation work to start when strategy Critical checks fail for a non-trivial product.
 - Do not count activity as progress unless it changes a signal, gate, decision, or reusable asset.
+- Do not count founder enthusiasm, compliments, or future-intent answers as strong demand evidence.
 - For Autoresearch-style work, use one metric, fixed budget, protected evaluation, baseline-first logging, and keep/discard/crash decisions.
 - Do not treat recent social buzz as validated demand. Convert it into `VALIDATION_PLAN.md` experiments and decision criteria.
