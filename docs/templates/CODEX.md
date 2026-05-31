@@ -34,6 +34,7 @@ Run `pfo contracts . --write` during review.
 - Define activation, retention, PMF signals, and false-positive traction in `FUNNEL_MODEL.md` or `GO_TO_MARKET.md` before MVP launch.
 - Use `LAUNCH_MATURITY_GATE.md` and `SCALE_MOAT_REGISTER.md` only when launch, scale, enterprise, or defensibility is in scope.
 - Capture phase decisions in `PHASE_CONTEXT.md` before detailed planning.
+- Update `NEXT_STEP.md` and get next-step approval before major implementation.
 - Create `.pfo/UNIT_CONTEXT_MANIFEST.json` before autonomous or delegated execution.
 - Keep `.pfo/VERIFICATION_CONTRACT.json` current for each active unit.
 - Follow `.pfo/EXECUTION_POLICY.json` and `.pfo/PERMISSION_MATRIX.md` before commands, writes, external APIs, secret access, push, deploy, or migration.

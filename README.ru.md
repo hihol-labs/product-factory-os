@@ -33,7 +33,7 @@ cd product-factory-os
 bash install.sh
 ```
 
-Эта одна команда валидирует PFO, ставит команду `pfo`, устанавливает hooks, пишет workspace-файлы `AGENTS.md` / `CODEX.md` / `PFO_WORKSPACE.json` и автоматически доводит уже существующие проекты первого уровня до полного PFO-runtime: adoption files, contracts, анализ, contract gate и `PFO_REPORT.md`.
+Эта одна команда валидирует PFO, ставит команду `pfo`, устанавливает hooks, пишет workspace-файлы `AGENTS.md` / `CODEX.md` / `PFO_WORKSPACE.json`, глобальные `PFO_GLOBAL.json` policy-файлы и автоматически доводит уже существующие проекты первого уровня до полного PFO-runtime: adoption files, contracts, анализ, contract gate, `NEXT_STEP.md` и `PFO_REPORT.md`.
 
 Если репозиторий скачан не внутри папки проектов, укажите workspace один раз:
 
@@ -48,6 +48,8 @@ pfo new my-product --idea "SaaS для учета подписок"
 ```
 
 `pfo new` сразу создает PFO runtime, starter files, planning artifacts, execution graph и `PFO_REPORT.md`; отдельный `pfo plan` для первичного формирования больше не нужен.
+
+Новые проекты создаются local-first: обязательна папка проекта в workspace, локальный Git инициализируется до реализации, если репозитория еще нет. GitHub-репозиторий не является обязательным для bootstrap; его создание или подключение выполняется отдельно через `/github-workflow`, когда пользователь явно просит публикацию, PR/CI/release workflow или это задано workspace policy.
 
 Опишите идею:
 
@@ -256,7 +258,7 @@ python3 scripts/meta_review.py
 
 ## Автоматическое Создание Проектов
 
-В `/home/hihol/projects` новые проекты должны запускаться через Product Factory OS автоматически:
+В любой локальной папке, где Codex работает над проектом, PFO должен подключаться автоматически через глобальный `PFO_GLOBAL.json`. Новые проекты запускаются через Product Factory OS:
 
 ```text
 /project -> /kickstart

@@ -14,7 +14,7 @@ If the repository is not cloned inside your projects workspace:
 bash install.sh --workspace ~/Projects
 ```
 
-The installer validates the repository, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, and `PFO_WORKSPACE.json`, then fully adopts existing first-level projects by creating missing project-level `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/`, analysis, contract gate output, and `PFO_REPORT.md`.
+The installer validates the repository, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, `PFO_WORKSPACE.json`, and global `PFO_GLOBAL.json` policy files, then fully adopts existing first-level projects by creating missing project-level `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/`, analysis, contract gate output, `NEXT_STEP.md`, and `PFO_REPORT.md`.
 
 The repository can be used in two modes:
 
@@ -101,7 +101,7 @@ python3 scripts/validate_hooks.py
 Installed hook layers:
 
 - `route-reminder.py`: suggests `/project`, `/task`, or a specialized PFO skill.
-- `preflight-context.py`: auto-enforces full PFO runtime for first-level workspace projects when needed, then prints discovered docs, state, memory, and `.pfo/` contracts.
+- `preflight-context.py`: auto-enforces full PFO runtime for workspace projects and any local project discovered through `PFO_GLOBAL.json`, then prints discovered docs, state, memory, and `.pfo/` contracts.
 - `session-diagnostics.py`: reports stale state, recovery, handoff, and telemetry warnings from project memory.
 - `skill-completeness.py`: checks skills against contracts, triggers, fixtures, and route snapshots.
 - `commit-completeness.py`: checks staged methodology diffs for supporting artifacts.
@@ -184,7 +184,7 @@ This creates missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, and `.pfo/` cont
 
 ## New Project Bootstrap
 
-New projects in `/home/hihol/projects` are Product Factory OS projects by default. Codex should run this automatically when a user asks for a new product:
+New projects are Product Factory OS projects by default. Codex should run this automatically when a user asks for a new product, whether the project is in the default workspace or another local folder:
 
 ```bash
 pfo new my-product --idea "voice transcript or product idea"

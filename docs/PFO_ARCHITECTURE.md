@@ -74,6 +74,15 @@ Starter packs live in `starters/`.
 
 Golden paths live in `golden-paths/`.
 
+## Repository Policy
+
+PFO new-project bootstrap is local-first. The project directory inside the configured workspace is the required starting point; GitHub is an optional external integration.
+
+- Initialize local Git before implementation when the generated project is not already a repository.
+- Keep GitHub creation or connection behind explicit user intent, `/github-workflow` scope, or workspace policy.
+- Record `repositoryUrl` and sync status in project state or architecture notes when a remote exists.
+- Treat GitHub issues, PRs, CI, releases, and publication as `/github-workflow`, not as a prerequisite for project creation.
+
 ## Default Stack Policy
 
 PFO has a default stack preset, not a mandatory stack lock.

@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_GRAPH = ROOT / "docs" / "examples" / "golden-path-booking-app" / "EXECUTION_GRAPH.md"
 CHECKPOINTS = [
     "Architecture Validation",
+    "Next Step Approval",
     "Dependency Check",
     "Test Coverage Check",
     "Security Review",

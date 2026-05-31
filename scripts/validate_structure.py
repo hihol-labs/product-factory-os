@@ -84,6 +84,7 @@ REQUIRED_FILES = [
     "docs/templates/DATA_CLASSIFICATION.md",
     "docs/templates/TEST_PLAN.md",
     "docs/templates/QUALITY_GATES.md",
+    "docs/templates/NEXT_STEP.md",
     "docs/templates/PHASE_CONTEXT.md",
     "docs/templates/HANDOFF.md",
     "docs/templates/UNIT_CONTEXT_MANIFEST.json",
@@ -390,6 +391,7 @@ def main() -> None:
         "CLASSIFIED",
         "PHASE_DISCUSSION",
         "PLAN_READY",
+        "NEXT_STEP_REVIEW",
         "UNIT_CONTEXT_READY",
         "EXPERIMENT_READY",
         "EXPERIMENT_RUNNING",
@@ -427,6 +429,7 @@ def main() -> None:
         "verificationHistory",
         "decisionLog",
         "lastSuccessfulState",
+        "humanSteering",
         "nextAction",
     ]:
         if field not in memory_schema.get("requiredFields", []):
@@ -436,6 +439,7 @@ def main() -> None:
     for stage in [
         "PRODUCT_CLASSIFICATION",
         "PHASE_DISCUSSION",
+        "NEXT_STEP_REVIEW",
         "UNIT_CONTEXT_MANIFEST",
         "HANDOFF",
         "EXPERIMENT_PROGRAM",

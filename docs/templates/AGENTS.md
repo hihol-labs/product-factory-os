@@ -16,6 +16,7 @@ This project is governed by Product Factory OS.
 - Tool capabilities live in `.pfo/TOOL_CAPABILITY_REGISTRY.json`.
 - Autonomous or delegated work requires `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 - Active units require `.pfo/VERIFICATION_CONTRACT.json`.
+- Major implementation requires `NEXT_STEP.md` and `gateResults.nextStepApproval=PASSED`.
 - Autonomous self-improvement requires `.pfo/EXPERIMENT_PROGRAM.md`, a fixed metric/budget, and `.pfo/EXPERIMENTS.tsv`.
 - Session or role transfer requires `HANDOFF.md`.
 - Behavior changes require TDD red/green evidence.

@@ -78,7 +78,7 @@ If the repository is not cloned inside your projects workspace, pass the workspa
 bash install.sh --workspace ~/Projects
 ```
 
-The installer validates PFO, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, and `PFO_WORKSPACE.json`, then fully adopts existing first-level projects with analysis, contract gate output, and `PFO_REPORT.md` without overwriting their local instructions.
+The installer validates PFO, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, `PFO_WORKSPACE.json`, and global `PFO_GLOBAL.json` policy files, then fully adopts existing first-level projects with analysis, contract gate output, `NEXT_STEP.md`, and `PFO_REPORT.md` without overwriting their local instructions.
 
 **Verify the installation:**
 

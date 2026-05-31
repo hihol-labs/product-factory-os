@@ -2,6 +2,7 @@ AGENTS.md
 CODEX.md
 .codex-memory/MEMORY.md
 .codex-memory/STATE.json
+NEXT_STEP.md
 .pfo/PROJECT_CONTRACT.md
 MASTER_CONTEXT.md
 ARCHITECTURE.md

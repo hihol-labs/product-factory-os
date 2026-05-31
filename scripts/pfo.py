@@ -78,6 +78,49 @@ def add_artifact(state: dict, artifact: str) -> None:
     state["artifacts"] = sorted(artifacts)
 
 
+def default_human_steering() -> dict:
+    return {
+        "approvalRequired": True,
+        "approvalStatus": "PENDING",
+        "approvedBy": "",
+        "approvedAt": "",
+        "lastPrompt": "Ask the user to confirm, change, or stop before implementation.",
+        "lastIterationSummary": "PFO runtime is active and waiting for next-step steering.",
+        "recommendedNextStep": "Choose and approve the next task-specific implementation step.",
+        "alternatives": [
+            "Approve the recommended next step.",
+            "Change scope or priority.",
+            "Pause and review the plan."
+        ],
+        "pendingQuestions": [
+            "Do you approve the recommended next step?",
+            "Should scope or priority change before implementation?"
+        ],
+        "visibleRoadmap": [],
+        "completedIterations": [],
+    }
+
+
+def ensure_human_steering(state: dict) -> dict:
+    steering = state.setdefault("humanSteering", default_human_steering())
+    if not isinstance(steering, dict):
+        steering = default_human_steering()
+        state["humanSteering"] = steering
+    for key, value in default_human_steering().items():
+        steering.setdefault(key, value)
+    if not steering.get("approvalStatus"):
+        steering["approvalStatus"] = "PENDING"
+    if steering.get("approvalStatus") == "PENDING":
+        steering["approvalRequired"] = True
+    if not steering.get("recommendedNextStep"):
+        steering["recommendedNextStep"] = default_human_steering()["recommendedNextStep"]
+    gates = state.setdefault("gateResults", {})
+    gates.setdefault("nextStepApproval", "PENDING")
+    if not gates.get("nextStepApproval"):
+        gates["nextStepApproval"] = "PENDING"
+    return steering
+
+
 def ensure_autonomy_state(state: dict) -> None:
     state.setdefault("currentPhase", "")
     state.setdefault(
@@ -203,6 +246,7 @@ def ensure_autonomy_state(state: dict) -> None:
         "specComplianceReview",
         "codeQualityReview",
         "branchFinish",
+        "nextStepApproval",
         "handoff",
         "assetExtraction",
         "contentPipeline",
@@ -216,6 +260,7 @@ def ensure_autonomy_state(state: dict) -> None:
         "toolCapabilityRegistry",
     ]:
         gates.setdefault(gate, "")
+    ensure_human_steering(state)
 
 
 def load_starter(project: Path, state: dict) -> dict:
@@ -399,17 +444,18 @@ def generated_build_plan(starter: dict) -> str:
 | 1 | Starter baseline and contracts | CODEX.md, `.pfo/` | starter files, `.env.example`, CI | `python3 scripts/pfo.py validate <project>` | project validates under PFO |
 | 2 | Idea and validation gate | initial intent | IDEA_SCORECARD.md, VALIDATION_PLAN.md | review scorecard decision | weak ideas are killed or narrowed before build |
 | 3 | GTM and feedback model | validation plan | GO_TO_MARKET.md, FUNNEL_MODEL.md, FEEDBACK_LOG.md | measurable signal and funnel bottleneck named | market test can be measured |
-| 4 | Phase decisions and unit manifest | PRODUCT_BLUEPRINT.md, PHASE_CONTEXT.md | BUILD_PLAN.md, EXECUTION_GRAPH.md, `.pfo/UNIT_CONTEXT_MANIFEST.json` | `pfo manifest <project>` | execution unit has scoped context |
-| 5 | Handoff gate | plan, manifest, state | HANDOFF.md | `pfo handoff <project>` when transfer is needed | next actor can start without chat history |
-| 6 | TDD evidence loop | `.pfo/UNIT_CONTEXT_MANIFEST.json` | tests, minimal source files | `pfo tdd-evidence <project> --red ... --green ...` | red and green evidence recorded |
-| 7 | Product domain model | PRODUCT_BLUEPRINT.md | backend, database, shared types | `{test_command}` | core entities covered by tests |
-| 8 | Primary user flow | domain model | frontend, API, bot, or CLI handlers | smoke path from TEST_PLAN.md | golden flow documented and verified |
-| 9 | Feedback-driven iteration | primary flow | FEEDBACK_LOG.md, ITERATION_REVIEW.md | iteration decision recorded | changes are tied to signal, not activity |
-| 10 | Asset and content extraction | completed milestone | ASSET_REGISTER.md, CONTENT_BACKLOG.md | reusable asset candidate recorded | repeatable solutions become assets |
-| 11 | Two-stage review | implemented unit | review notes, `QUALITY_GATES.md` | `pfo review-stage <project> --stage spec ...` and `--stage quality ...` | spec and code-quality reviews recorded |
-| 12 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
-| 13 | Branch finish | quality gates | branch, PR, merge notes | `pfo finish-branch <project> --mode pr --verification ...` | merge/PR/keep/discard decision explicit |
-| 14 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
+| 4 | Next-step steering | BUILD_PLAN.md, EXECUTION_GRAPH.md | NEXT_STEP.md | user confirms, changes, or pauses | owner knows what happens next |
+| 5 | Phase decisions and unit manifest | PRODUCT_BLUEPRINT.md, PHASE_CONTEXT.md | BUILD_PLAN.md, EXECUTION_GRAPH.md, `.pfo/UNIT_CONTEXT_MANIFEST.json` | `pfo manifest <project>` | execution unit has scoped context |
+| 6 | Handoff gate | plan, manifest, state | HANDOFF.md | `pfo handoff <project>` when transfer is needed | next actor can start without chat history |
+| 7 | TDD evidence loop | `.pfo/UNIT_CONTEXT_MANIFEST.json` | tests, minimal source files | `pfo tdd-evidence <project> --red ... --green ...` | red and green evidence recorded |
+| 8 | Product domain model | PRODUCT_BLUEPRINT.md | backend, database, shared types | `{test_command}` | core entities covered by tests |
+| 9 | Primary user flow | domain model | frontend, API, bot, or CLI handlers | smoke path from TEST_PLAN.md | golden flow documented and verified |
+| 10 | Feedback-driven iteration | primary flow | FEEDBACK_LOG.md, ITERATION_REVIEW.md | iteration decision recorded | changes are tied to signal, not activity |
+| 11 | Asset and content extraction | completed milestone | ASSET_REGISTER.md, CONTENT_BACKLOG.md | reusable asset candidate recorded | repeatable solutions become assets |
+| 12 | Two-stage review | implemented unit | review notes, `QUALITY_GATES.md` | `pfo review-stage <project> --stage spec ...` and `--stage quality ...` | spec and code-quality reviews recorded |
+| 13 | Quality gates | implemented flow | TEST_PLAN.md, QUALITY_GATES.md | review/security/deps/harden gates | no critical blocker remains |
+| 14 | Branch finish | quality gates | branch, PR, merge notes | `pfo finish-branch <project> --mode pr --verification ...` | merge/PR/keep/discard decision explicit |
+| 15 | Deploy readiness | quality gates | Docker, CI, docs, rollback notes | `{build_command}` | READY_FOR_DEPLOY can be reached |
 
 ## Executable Tasks
 
@@ -419,6 +465,7 @@ Every executable task must include:
 - Exact files to create or modify.
 - Exact verification command.
 - Expected output or failure mode.
+- User-facing next-step approval in `NEXT_STEP.md` before major implementation starts.
 - TDD red and green evidence for behavior changes.
 - Root-cause evidence for bugfixes.
 - Spec compliance review before code quality review.
@@ -866,6 +913,7 @@ def generated_quality_gates() -> str:
 | Permission Matrix | PENDING | `.pfo/PERMISSION_MATRIX.json`, `.pfo/PERMISSION_MATRIX.md` |  |
 | Verification Contract | PENDING | `.pfo/VERIFICATION_CONTRACT.json` |  |
 | Tool Capability Registry | PENDING | `.pfo/TOOL_CAPABILITY_REGISTRY.json` |  |
+| Next Step Approval | PENDING | `NEXT_STEP.md` user decision before the next major implementation step |  |
 | Handoff | PENDING | `HANDOFF.md` before session transfer, role switch, delegation, AFK, compaction, or recovery |  |
 | Work Verification | PENDING | `pfo verify-work` evidence |  |
 | Experiment Loop | PENDING | `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric and keep/discard/crash decision |  |
@@ -962,6 +1010,7 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "PRODUCT_BLUEPRINT.md",
             "BUILD_PLAN.md",
             "EXECUTION_GRAPH.md",
+            "NEXT_STEP.md with approved or changed user-facing next step",
             "FEEDBACK_LOG.md and FUNNEL_MODEL.md when user acquisition or iteration is in scope",
             "PHASE_CONTEXT.md when present",
             ".pfo/EXPERIMENT_PROGRAM.md when autonomous measurement-driven iteration is in scope",
@@ -1018,6 +1067,7 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "verificationContract",
             "learningPromotion",
             "toolCapabilityRegistry",
+            "nextStepApproval",
         ],
         "engineeringDiscipline": {
             "behaviorChange": inferred_behavior_change,
@@ -1222,6 +1272,111 @@ def callout_list(kind: str, title: str, values: list, fallback: str) -> str:
     return callout(kind, title, body)
 
 
+def graph_roadmap(project: Path, state: dict) -> list[dict[str, str]]:
+    graph = project / "EXECUTION_GRAPH.md"
+    completed = set(state.get("completedModules", []))
+    current = str(state.get("currentNode", ""))
+    roadmap: list[dict[str, str]] = []
+    if graph.is_file():
+        for line in graph.read_text(encoding="utf-8").splitlines():
+            if not line.startswith("| N"):
+                continue
+            cells = [cell.strip() for cell in line.strip("|").split("|")]
+            if len(cells) < 2 or not cells[0].startswith("N") or not cells[0][1:].isdigit():
+                continue
+            step = cells[0]
+            if step in completed:
+                status = "done"
+            elif step == current:
+                status = "current"
+            else:
+                status = "pending"
+            roadmap.append({"step": step, "outcome": cells[1], "status": status})
+    return roadmap[:12]
+
+
+def format_roadmap_table(roadmap: list[dict[str, str]]) -> str:
+    if not roadmap:
+        return "| Step | Outcome | Status |\n|---|---|---|\n| 1 | Define the first product milestone | pending |"
+    lines = ["| Step | Outcome | Status |", "|---|---|---|"]
+    for item in roadmap:
+        lines.append(f"| {item.get('step', '')} | {item.get('outcome', '')} | {item.get('status', '')} |")
+    return "\n".join(lines)
+
+
+def generated_next_step_doc(project: Path, state: dict) -> str:
+    steering = ensure_human_steering(state)
+    roadmap = steering.get("visibleRoadmap") or graph_roadmap(project, state)
+    alternatives = steering.get("alternatives") or [
+        "Continue with the recommended step.",
+        "Change scope before implementation.",
+        "Stop and review the current plan.",
+    ]
+    questions = steering.get("pendingQuestions") or ["Confirm, change, or stop before the next major implementation step."]
+    return f"""# Next Step
+
+This is the user-facing project steering checkpoint. It intentionally avoids internal state-machine terminology.
+
+## Where We Are
+
+- Product: {state.get("intent", "") or project.name}
+- Current outcome: {steering.get("lastIterationSummary") or "Planning is ready for user review."}
+- Recommended next step: {steering.get("recommendedNextStep") or state.get("nextAction", "") or "Choose the next product step."}
+- Approval status: {steering.get("approvalStatus") or "PENDING"}
+
+## Visible Roadmap
+
+{format_roadmap_table(roadmap)}
+
+## Recommended Next Step
+
+- Step: {steering.get("recommendedNextStep") or "Select the first implementation slice."}
+- Why now: It is the smallest coherent step that moves the product forward.
+- Files likely touched: use `BUILD_PLAN.md` and `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+- Verification: use `TEST_PLAN.md` and `.pfo/VERIFICATION_CONTRACT.json`.
+
+## Alternatives
+
+{markdown_list(alternatives, "Continue, change scope, or stop for review.")}
+
+## Decision Needed
+
+{markdown_list(questions, "Confirm the next step before another major implementation iteration starts.")}
+"""
+
+
+def set_next_step_pending(
+    project: Path,
+    state: dict,
+    summary: str,
+    recommended: str,
+    alternatives: list[str] | None = None,
+    questions: list[str] | None = None,
+) -> None:
+    steering = ensure_human_steering(state)
+    steering["approvalRequired"] = True
+    steering["approvalStatus"] = "PENDING"
+    steering["approvedBy"] = ""
+    steering["approvedAt"] = ""
+    steering["lastIterationSummary"] = summary
+    steering["recommendedNextStep"] = recommended
+    steering["alternatives"] = alternatives or [
+        "Proceed with the recommended next step.",
+        "Revise product scope or priorities first.",
+        "Pause implementation and review the plan.",
+    ]
+    steering["pendingQuestions"] = questions or [
+        "Do you approve the recommended next step?",
+        "Should scope or priority change before implementation?",
+    ]
+    steering["visibleRoadmap"] = graph_roadmap(project, state)
+    steering["lastPrompt"] = "Ask the user to confirm, change, or stop before continuing."
+    state["gateResults"]["nextStepApproval"] = "PENDING"
+    state["nextAction"] = f"Ask the user to approve or change the next step: {recommended}"
+    add_artifact(state, "NEXT_STEP.md")
+    (project / "NEXT_STEP.md").write_text(generated_next_step_doc(project, state), encoding="utf-8")
+
+
 def generated_handoff_doc(project: Path, state: dict, from_role: str, to_role: str, reason: str, note: str) -> str:
     manifest = state.get("unitContextManifest", {}) if isinstance(state.get("unitContextManifest"), dict) else {}
     current_unit = state.get("currentUnit", {}) if isinstance(state.get("currentUnit"), dict) else {}
@@ -1376,6 +1531,7 @@ Recorded: {now_iso()}
 
 def generated_brief_html(project: Path, state: dict, mode: str) -> str:
     gates = state.get("gateResults", {})
+    steering = state.get("humanSteering", {}) if isinstance(state.get("humanSteering", {}), dict) else {}
     gate_rows = "\n".join(
         f"<tr><td>{escape(str(name))}</td><td>{escape(str(status))}</td></tr>"
         for name, status in gates.items()
@@ -1409,8 +1565,11 @@ def generated_brief_html(project: Path, state: dict, mode: str) -> str:
     <div class="card"><strong>Stage</strong><br>{escape(str(state.get("currentStage", "")))}</div>
     <div class="card"><strong>Node</strong><br>{escape(str(state.get("currentNode", "")))}</div>
     <div class="card"><strong>Next</strong><br>{escape(str(state.get("nextAction", "")))}</div>
+    <div class="card"><strong>User Approval</strong><br>{escape(str(steering.get("approvalStatus", "")))}</div>
     <div class="card"><strong>Last Good</strong><br>{escape(str(state.get("lastSuccessfulState", "")))}</div>
   </section>
+  <h2>Recommended Next Step</h2>
+  <p>{escape(str(steering.get("recommendedNextStep", "")))}</p>
   <h2>Gates</h2>
   <table><thead><tr><th>Gate</th><th>Status</th></tr></thead><tbody>{gate_rows}</tbody></table>
   <h2>Blockers</h2>
@@ -1475,6 +1634,7 @@ def cmd_status(args: argparse.Namespace) -> int:
         "gateResults": state.get("gateResults", {}),
         "recoveryState": state.get("recoveryState", {}),
         "handoff": state.get("handoff", {}),
+        "humanSteering": state.get("humanSteering", {}),
         "tddEvidence": state.get("tddEvidence", {}),
         "rootCause": state.get("rootCause", {}),
         "reviewStages": state.get("reviewStages", {}),
@@ -1528,6 +1688,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
         "PROJECT_ARCHITECTURE.md",
         "BUILD_PLAN.md",
         "EXECUTION_GRAPH.md",
+        "NEXT_STEP.md",
         "TEST_PLAN.md",
         "QUALITY_GATES.md",
         "MASTER_CONTEXT.md",
@@ -1537,8 +1698,18 @@ def cmd_plan(args: argparse.Namespace) -> int:
         "TESTING.md",
     ])
     state["artifacts"] = sorted(artifacts)
-    state["nextAction"] = "Resolve idea, validation, feedback, funnel, and build TBD fields, then run /review before build."
     state.setdefault("decisionLog", []).append({"event": "pfo plan requested", "note": args.note})
+    set_next_step_pending(
+        project,
+        state,
+        "Planning artifacts are ready. User review is required before implementation.",
+        "Resolve open product decisions, review the visible roadmap, then approve the first implementation slice.",
+        [
+            "Approve the first implementation slice.",
+            "Change the roadmap or MVP scope.",
+            "Pause and review the planning documents manually.",
+        ],
+    )
     save_state(project, state)
     print("OK: plan stage recorded")
     if written:
@@ -1562,7 +1733,17 @@ def cmd_discuss(args: argparse.Namespace) -> int:
     state["currentStage"] = "PHASE_DISCUSSION"
     state.setdefault("decisionLog", []).append({"event": "phase discussion", "phase": phase, "note": args.note})
     add_artifact(state, "PHASE_CONTEXT.md")
-    state["nextAction"] = "Review PHASE_CONTEXT.md, resolve open questions, then run `pfo plan` and `pfo manifest`."
+    set_next_step_pending(
+        project,
+        state,
+        "Phase decisions were captured. Open questions must be resolved before detailed execution.",
+        "Review PHASE_CONTEXT.md, resolve open questions, then refresh the plan and unit manifest.",
+        [
+            "Resolve open questions and continue planning.",
+            "Change the phase goal.",
+            "Stop implementation until the product owner reviews the decisions.",
+        ],
+    )
     save_state(project, state)
     return 0
 
@@ -1600,7 +1781,17 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     state["gateResults"]["verificationContract"] = "PASSED"
     add_artifact(state, ".pfo/UNIT_CONTEXT_MANIFEST.json")
     add_artifact(state, ".pfo/VERIFICATION_CONTRACT.json")
-    state["nextAction"] = f"Execute unit {manifest['unitId']} using `.pfo/UNIT_CONTEXT_MANIFEST.json`."
+    set_next_step_pending(
+        project,
+        state,
+        f"Unit {manifest['unitId']} is scoped and ready for user approval.",
+        f"Execute unit {manifest['unitId']}: {manifest['goal']}",
+        [
+            f"Approve unit {manifest['unitId']} and start implementation.",
+            "Change the unit goal or scope.",
+            "Pause and review BUILD_PLAN.md / EXECUTION_GRAPH.md.",
+        ],
+    )
     append_event(project, state, "state-change", "READY", {"command": "manifest", "unitId": manifest["unitId"]})
     save_state(project, state)
     print("OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json and .pfo/VERIFICATION_CONTRACT.json")
@@ -1641,6 +1832,31 @@ def cmd_handoff(args: argparse.Namespace) -> int:
     append_event(project, state, "state-change", "READY", {"command": "handoff", "reason": args.reason})
     save_state(project, state)
     print("OK: wrote HANDOFF.md")
+    return 0
+
+
+def cmd_approve_next(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    steering = ensure_human_steering(state)
+    steering["approvalRequired"] = False
+    steering["approvalStatus"] = "APPROVED"
+    steering["approvedBy"] = args.by
+    steering["approvedAt"] = now_iso()
+    if args.note:
+        steering["lastPrompt"] = args.note
+    state.setdefault("gateResults", {})["nextStepApproval"] = "PASSED"
+    recommended = steering.get("recommendedNextStep") or state.get("nextAction", "")
+    state.setdefault("decisionLog", []).append(
+        {"event": "next step approved", "by": args.by, "note": args.note, "nextStep": recommended}
+    )
+    state["nextAction"] = f"Execute the approved next step: {recommended}"
+    add_artifact(state, "NEXT_STEP.md")
+    (project / "NEXT_STEP.md").write_text(generated_next_step_doc(project, state), encoding="utf-8")
+    append_event(project, state, "approval", "PASSED", {"command": "approve-next", "by": args.by, "note": args.note})
+    save_state(project, state)
+    print("OK: next step approved")
     return 0
 
 
@@ -2214,6 +2430,12 @@ def build_parser() -> argparse.ArgumentParser:
     handoff.add_argument("--reason", default="session-transfer")
     handoff.add_argument("--note", default="")
     handoff.set_defaults(func=cmd_handoff)
+
+    approve_next = sub.add_parser("approve-next", help="Record user approval for the recommended next implementation step.")
+    approve_next.add_argument("project", type=Path)
+    approve_next.add_argument("--by", default="user")
+    approve_next.add_argument("--note", default="")
+    approve_next.set_defaults(func=cmd_approve_next)
 
     manifest = sub.add_parser("manifest", help="Write a task-scoped unit context manifest.")
     manifest.add_argument("project", type=Path)
