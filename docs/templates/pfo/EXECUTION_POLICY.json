@@ -26,6 +26,8 @@
     "allowedWriteAreas": [
       ".codex-memory/",
       ".pfo/",
+      "plans/",
+      "reports/",
       "PFO_REPORT.md"
     ],
     "protectedPaths": [

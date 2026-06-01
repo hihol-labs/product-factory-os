@@ -10,7 +10,7 @@ cd product-factory-os
 bash install.sh
 ```
 
-Then open any workspace project with Codex and describe what you want to build or fix. Product Factory OS routes the work automatically. [Full install guide](docs/INSTALL.md) | [Golden path](docs/examples/golden-path-booking-app) | [Skill contracts](docs/SKILL_CONTRACTS.md).
+Then open any workspace project with Codex and describe what you want to build or fix. Product Factory OS routes the work automatically. [Full install guide](docs/INSTALL.md) | [Golden path](docs/examples/golden-path-booking-app) | [Skill contracts](docs/SKILL_CONTRACTS.md) | [Harness integration](docs/HARNESS_ENGINEERING_DEMO_INTEGRATION.md).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Skills: 32](https://img.shields.io/badge/Skills-32-green.svg)](#skills)
@@ -327,6 +327,7 @@ See [docs/CALL_GRAPH.md](docs/CALL_GRAPH.md).
 |---|---|
 | `route-reminder.py` | Suggests `/project`, `/task`, or a specialized PFO skill. |
 | `preflight-context.py` | Loads discovered docs, state, memory, and `.pfo/` contracts before work. |
+| `security-guard.py` | Blocks real `.env` access and recursive directory deletion before tool execution. |
 | `session-diagnostics.py` | Reports stale state, recovery, handoff, and telemetry warnings. |
 | `skill-completeness.py` | Checks skill changes against contracts, triggers, fixtures, and snapshots. |
 | `commit-completeness.py` | Blocks incomplete methodology commits. |

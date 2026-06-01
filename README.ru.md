@@ -15,7 +15,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 - Trigger registry для маршрутизации естественного языка
 - Rubrics для review, security, dependency audit и production readiness
 - Route snapshots и fixtures для проверки всех skill routes
-- Workspace hook layer: auto-adoption, route reminders, preflight context, skill completeness, commit completeness и review-before-commit gates
+- Workspace hook layer: auto-adoption, route reminders, preflight context, security guard, skill completeness, commit completeness и review-before-commit gates
 - Workspace-default правила для `/home/hihol/projects`
 - Маршруты OpenAI/Codex plugin, MCP и research для Context7, Last30Days, Browser Use, GitHub, Codex Security, Linear, Notion и Google Drive
 - PFO runtime contracts: classifier, template library, product compiler, state machine, execution pipeline, memory schema, deployment abstraction и voice-first interface
@@ -202,6 +202,7 @@ python3 scripts/production_readiness.py
 - [v0.6.0 Release Notes](docs/RELEASE_NOTES_v0.6.0.md)
 - [v0.5.0 Release Notes](docs/RELEASE_NOTES_v0.5.0.md)
 - [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
+- [Harness Engineering Demo Integration](docs/HARNESS_ENGINEERING_DEMO_INTEGRATION.md)
 
 ## Проверка
 

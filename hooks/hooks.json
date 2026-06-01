@@ -15,6 +15,12 @@
       "description": "Auto-enforces full PFO runtime for workspace projects and any local project discovered through PFO_GLOBAL.json, then prints discovered docs, policy contracts, memory state, and event log."
     },
     {
+      "name": "security-guard",
+      "type": "pre-tool-enforcement",
+      "command": "python3 hooks/security-guard.py",
+      "description": "Denies real .env access and recursive directory deletion before tool execution."
+    },
+    {
       "name": "session-diagnostics",
       "type": "context-diagnostic",
       "command": "python3 hooks/session-diagnostics.py",

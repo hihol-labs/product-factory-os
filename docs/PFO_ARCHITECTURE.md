@@ -392,6 +392,7 @@ PFO uses `hooks/hooks.json` and `tests/snapshots/route-snapshots.json` to keep n
 
 - `route-reminder.py` suggests routes before Codex drifts into ad hoc work.
 - `preflight-context.py` enforces full PFO runtime when needed, then surfaces PFO docs, state, memory, and `.pfo/` contracts.
+- `security-guard.py` blocks real `.env` access and recursive directory deletion before tool execution.
 - `skill-completeness.py` verifies every skill has docs, triggers, fixtures, and route snapshots.
 - `commit-completeness.py` checks methodology diffs for supporting artifacts.
 - `review-before-commit.py` runs fast validators before methodology commits.

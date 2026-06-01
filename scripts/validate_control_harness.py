@@ -73,6 +73,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "session-security-guard",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "hooks/security-guard.py",
+            "hooks/hooks.json",
+            "docs/templates/pfo/EXECUTION_POLICY.json",
+        ],
+    },
+    {
         "id": "market-validation",
         "timing": "Feedforward",
         "evaluator": "Inferential",

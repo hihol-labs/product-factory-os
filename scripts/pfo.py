@@ -4,6 +4,7 @@ import argparse
 from datetime import datetime, timezone
 from html import escape
 import json
+import re
 import subprocess
 import sys
 
@@ -139,6 +140,11 @@ def ensure_autonomy_state(state: dict) -> None:
             "dependencies": [],
             "verificationCommands": [],
             "gates": [],
+            "pivLoop": {
+                "planPath": "plans/unit-piv-plan.md",
+                "implementationReportPath": "reports/unit-implementation-report.md",
+                "sequence": ["plan", "implement", "validate", "review"],
+            },
             "engineeringDiscipline": {
                 "behaviorChange": False,
                 "bugfix": False,
@@ -1010,6 +1016,8 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "PRODUCT_BLUEPRINT.md",
             "BUILD_PLAN.md",
             "EXECUTION_GRAPH.md",
+            "active PIV plan under plans/ before implementation",
+            "active implementation report under reports/ before review",
             "NEXT_STEP.md with approved or changed user-facing next step",
             "FEEDBACK_LOG.md and FUNNEL_MODEL.md when user acquisition or iteration is in scope",
             "PHASE_CONTEXT.md when present",
@@ -1022,6 +1030,8 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "files listed by the active execution graph node",
             "tests for changed behavior",
             "PFO_REPORT.md",
+            "plans/",
+            "reports/",
             ".codex-memory/STATE.json",
             ".codex-memory/MEMORY.md",
             ".codex-memory/events.jsonl",
@@ -1069,6 +1079,18 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "toolCapabilityRegistry",
             "nextStepApproval",
         ],
+        "pivLoop": {
+            "sourcePattern": "harness-engineering-demo PIV loop",
+            "planPath": piv_paths(node)[0],
+            "implementationReportPath": piv_paths(node)[1],
+            "sequence": ["plan", "implement", "validate", "review"],
+            "rules": [
+                "write the PIV plan before implementation",
+                "run task-level validation before moving to the next task",
+                "run the full verification contract before completion",
+                "write the implementation report before review",
+            ],
+        },
         "engineeringDiscipline": {
             "behaviorChange": inferred_behavior_change,
             "bugfix": inferred_bugfix,
@@ -1124,6 +1146,7 @@ def generated_verification_contract(project: Path, manifest: dict) -> dict:
             ".pfo/PERMISSION_MATRIX.md",
             ".pfo/PERMISSION_MATRIX.json",
             ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+            piv_paths(unit_id)[0],
         ],
         "passCriteria": [
             "All required commands exit 0.",
@@ -1153,6 +1176,137 @@ def verification_contract_ready(project: Path) -> bool:
             if not item.get(field):
                 return False
     return True
+
+
+def slugify_unit(value: str) -> str:
+    slug = re.sub(r"[^a-zA-Z0-9._-]+", "-", str(value or "unit").strip()).strip("-._").lower()
+    return slug or "unit"
+
+
+def piv_paths(unit_id: str) -> tuple[str, str]:
+    slug = slugify_unit(unit_id)
+    return f"plans/{slug}-piv-plan.md", f"reports/{slug}-implementation-report.md"
+
+
+def generated_piv_plan(project: Path, manifest: dict, verification_contract: dict) -> str:
+    _, report_path = piv_paths(str(manifest.get("unitId", "")))
+    commands = verification_contract.get("commands", [])
+    command_lines = []
+    for item in commands if isinstance(commands, list) else []:
+        if isinstance(item, dict) and item.get("command"):
+            command_lines.append(str(item["command"]))
+    return f"""# PIV Plan: {manifest.get("unitId", "")}
+
+Project: `{project.name}`
+Created: {now_iso()}
+Implementation report: `{report_path}`
+
+## Goal
+
+{manifest.get("goal", "Execute the active PFO unit.")}
+
+## Read Before Implementing
+
+{markdown_list(manifest.get("requiredInputs", []), "CODEX.md, BUILD_PLAN.md, EXECUTION_GRAPH.md, and .pfo/UNIT_CONTEXT_MANIFEST.json")}
+
+## Scope
+
+Allowed writes:
+
+{markdown_list(manifest.get("allowedWriteAreas", []), "Only files listed by the active execution graph node")}
+
+Forbidden changes:
+
+{markdown_list(manifest.get("forbiddenChanges", []), "Out-of-scope behavior, real secrets, destructive operations, and production mutations")}
+
+## Ordered Tasks
+
+### Task 1 - Context lock
+
+- What: read the required inputs and identify exact files before editing.
+- Validate: active `.pfo/UNIT_CONTEXT_MANIFEST.json` and `.pfo/VERIFICATION_CONTRACT.json` exist.
+
+### Task 2 - Implement the smallest unit
+
+- What: change only the scoped files needed for the unit goal.
+- Pattern: follow the closest existing implementation in the target project.
+- Gotcha: behavior changes need red and green evidence; bugfixes need `ROOT_CAUSE.md`.
+- Validate: run the narrowest relevant command before continuing.
+
+### Task 3 - Full validation gate
+
+- What: run every command declared in `.pfo/VERIFICATION_CONTRACT.json`.
+- Validate:
+
+```bash
+{chr(10).join(command_lines) if command_lines else "# Add project-specific commands to .pfo/VERIFICATION_CONTRACT.json"}
+```
+
+### Task 4 - Report and review
+
+- What: record implementation evidence in `{report_path}`.
+- Validate: run spec compliance review before code quality review.
+
+## Acceptance Criteria
+
+- [ ] Unit goal is satisfied.
+- [ ] Required commands pass or recovery is recorded.
+- [ ] `pfo verify-work {project} --evidence "<commands passed>" --pass-gate` writes `{report_path}`.
+- [ ] Spec compliance review is recorded before code quality review.
+"""
+
+
+def generated_piv_report(project: Path, state: dict, evidence: str) -> str:
+    current_unit = state.get("currentUnit", {}) if isinstance(state.get("currentUnit"), dict) else {}
+    manifest = state.get("unitContextManifest", {}) if isinstance(state.get("unitContextManifest"), dict) else {}
+    unit_id = current_unit.get("id") or manifest.get("unitId") or state.get("currentNode") or "unit"
+    plan_path, _ = piv_paths(str(unit_id))
+    gates = state.get("gateResults", {}) if isinstance(state.get("gateResults"), dict) else {}
+    gate_rows = "\n".join(
+        f"| {name} | {status or 'PENDING'} |"
+        for name, status in sorted(gates.items())
+    ) or "| none | PENDING |"
+    history = state.get("verificationHistory", []) if isinstance(state.get("verificationHistory"), list) else []
+    last_history = history[-5:]
+    history_rows = "\n".join(
+        f"| {item.get('mode', '') if isinstance(item, dict) else ''} | {item.get('node', '') if isinstance(item, dict) else ''} | {item.get('evidence', '') if isinstance(item, dict) else ''} |"
+        for item in last_history
+    ) or "| verify-work | | no evidence recorded |"
+    return f"""# Implementation Report: {unit_id}
+
+Project: `{project.name}`
+Created: {now_iso()}
+Plan: `{plan_path}`
+
+## Goal
+
+{current_unit.get("goal") or manifest.get("goal") or "Execute the active PFO unit."}
+
+## Evidence
+
+{evidence or "No evidence string was provided."}
+
+## Validation History
+
+| Mode | Node | Evidence |
+|---|---|---|
+{history_rows}
+
+## Gate Results
+
+| Gate | Status |
+|---|---|
+{gate_rows}
+
+## Review Order
+
+- [ ] Spec compliance review recorded with `pfo review-stage --stage spec`.
+- [ ] Code quality review recorded with `pfo review-stage --stage quality`.
+
+## Status
+
+Ready for review if all required commands passed and no blocking gate remains.
+"""
 
 
 def clean_tsv_cell(value: object) -> str:
@@ -1760,6 +1914,10 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     verification_contract = generated_verification_contract(project, manifest)
     verification_path = pfo_dir / "VERIFICATION_CONTRACT.json"
     verification_path.write_text(json.dumps(verification_contract, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    plan_rel = manifest["pivLoop"]["planPath"]
+    plan_path = project / plan_rel
+    plan_path.parent.mkdir(parents=True, exist_ok=True)
+    plan_path.write_text(generated_piv_plan(project, manifest, verification_contract), encoding="utf-8")
     state["currentStage"] = "UNIT_CONTEXT_READY"
     state["currentNode"] = manifest["unitId"]
     state["currentUnit"] = {
@@ -1769,6 +1927,7 @@ def cmd_manifest(args: argparse.Namespace) -> int:
         "owner": "PFO",
         "startedAt": "",
         "completedAt": "",
+        "planPath": plan_rel,
     }
     state["unitContextManifest"] = manifest
     state["executionPolicy"] = {"path": ".pfo/EXECUTION_POLICY.json", "status": "READY"}
@@ -1781,11 +1940,12 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     state["gateResults"]["verificationContract"] = "PASSED"
     add_artifact(state, ".pfo/UNIT_CONTEXT_MANIFEST.json")
     add_artifact(state, ".pfo/VERIFICATION_CONTRACT.json")
+    add_artifact(state, plan_rel)
     set_next_step_pending(
         project,
         state,
         f"Unit {manifest['unitId']} is scoped and ready for user approval.",
-        f"Execute unit {manifest['unitId']}: {manifest['goal']}",
+        f"Execute PIV plan {plan_rel}: {manifest['goal']}",
         [
             f"Approve unit {manifest['unitId']} and start implementation.",
             "Change the unit goal or scope.",
@@ -1794,7 +1954,7 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     )
     append_event(project, state, "state-change", "READY", {"command": "manifest", "unitId": manifest["unitId"]})
     save_state(project, state)
-    print("OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json and .pfo/VERIFICATION_CONTRACT.json")
+    print(f"OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json, .pfo/VERIFICATION_CONTRACT.json, and {plan_rel}")
     return 0
 
 
@@ -1894,6 +2054,16 @@ def cmd_verify_work(args: argparse.Namespace) -> int:
         state["gateResults"]["verificationContract"] = "PASSED"
         state["lastSuccessfulState"] = "VERIFYING_WORK"
         state["nextAction"] = "Run tests and quality gates, then proceed to review or next unit."
+        manifest = state.get("unitContextManifest", {}) if isinstance(state.get("unitContextManifest"), dict) else {}
+        piv_loop = manifest.get("pivLoop", {}) if isinstance(manifest.get("pivLoop"), dict) else {}
+        unit_id = state.get("currentUnit", {}).get("id", "") if isinstance(state.get("currentUnit"), dict) else ""
+        report_rel = piv_loop.get("implementationReportPath") or piv_paths(unit_id or state.get("currentNode", ""))[1]
+        report_path = project / report_rel
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(generated_piv_report(project, state, args.evidence), encoding="utf-8")
+        state["lastImplementationReport"] = report_rel
+        add_artifact(state, report_rel)
+        print(f"Generated: {report_rel}")
     else:
         state["currentStage"] = "RECOVERY_REQUIRED"
         state["recoveryState"] = {

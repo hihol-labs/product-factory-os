@@ -134,6 +134,7 @@ REQUIRED_FILES = [
     "hooks/README.md",
     "hooks/route-reminder.py",
     "hooks/preflight-context.py",
+    "hooks/security-guard.py",
     "hooks/session-diagnostics.py",
     "hooks/skill-completeness.py",
     "hooks/commit-completeness.py",
@@ -466,7 +467,7 @@ def main() -> None:
 
     hooks = json.loads((ROOT / "hooks/hooks.json").read_text())
     hook_names = {hook.get("name") for hook in hooks.get("hooks", [])}
-    for expected_hook in ["route-reminder", "preflight-context", "session-diagnostics", "skill-completeness", "commit-completeness", "review-before-commit"]:
+    for expected_hook in ["route-reminder", "preflight-context", "security-guard", "session-diagnostics", "skill-completeness", "commit-completeness", "review-before-commit"]:
         if expected_hook not in hook_names:
             fail(f"hooks/hooks.json is missing hook {expected_hook}")
 
