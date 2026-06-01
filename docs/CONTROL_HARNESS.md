@@ -1,6 +1,6 @@
 # Control Harness
 
-Product Factory OS uses a four-quadrant control harness to keep agent work bounded, testable, and reviewable. This implements the agent harness engineering stance described by Addy Osmani: improve the model-plus-harness system by turning observed failures into durable controls.
+Product Factory OS uses a four-quadrant control harness to keep agent work bounded, testable, and reviewable. This implements the agent harness engineering stance described by Addy Osmani and the coding-agent user harness model described on martinfowler.com: improve the model-plus-harness system by turning observed failures into durable controls, and make correct output more likely before human review.
 
 The model separates controls by timing and evaluator:
 
@@ -10,6 +10,8 @@ The model separates controls by timing and evaluator:
 | Feedback | Controls that judge work after output exists. | They must produce evidence, a gate status, or a repair path. Missing evidence fails closed. |
 | Computational | Deterministic or scriptable controls. | They are preferred for blocking gates because they are cheap, repeatable, and auditable. |
 | Inferential | LLM or human judgment controls. | They are used for semantic review, ambiguity, product judgment, security reasoning, UX judgment, and adversarial critique. |
+
+In Fowler's terminology, feedforward controls are guides and feedback controls are sensors. PFO should pair guides with sensors whenever practical, and sensor output should be written so an agent can self-correct from it.
 
 ## Quadrant Matrix
 
@@ -35,11 +37,15 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | session-security-guard | Pre-tool safety boundary for secrets and destructive operations | Feedforward | Computational | `hooks/security-guard.py`, `hooks/hooks.json`, `docs/templates/pfo/EXECUTION_POLICY.json` |
 | context-economy | Progressive context loading, output offloading, and reset handoff policy | Feedforward | Computational | `docs/AGENT_HARNESS_ENGINEERING.md`, `skills/handoff/SKILL.md`, `docs/templates/HANDOFF.md` |
 | tool-surface-discipline | Minimal trusted tool and connector menu with side effects and explicit degraded modes | Feedforward | Computational | `docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json`, `integrations/tool-capability-registry.json`, `docs/AGENT_HARNESS_ENGINEERING.md` |
+| harness-templates | Product topology templates that bundle structure, guides, sensors, and regulation targets | Feedforward | Computational | `templates/product-templates.json`, `starters/README.md`, `golden-paths/README.md` |
 | market-validation | Evidence before broad product scope, including evidence quality, customer discovery discipline, adversarial discovery, and MVP measurement | Feedforward | Inferential | `skills/discover/SKILL.md`, `skills/market-scan/SKILL.md`, `docs/templates/IDEA_SCORECARD.md`, `docs/templates/VALIDATION_PLAN.md`, `docs/templates/MARKET_BRIEF.md`, `docs/templates/FUNNEL_MODEL.md`, `docs/templates/GO_TO_MARKET.md` |
 | maturity-stage-gates | Optional launch and scale maturity checks | Feedforward | Inferential | `skills/strategy/SKILL.md`, `docs/templates/LAUNCH_MATURITY_GATE.md`, `docs/templates/SCALE_MOAT_REGISTER.md` |
+| harnessability-assessment | Project structure and topology judgment that determines how cheaply PFO can guide and sensor work | Feedforward | Inferential | `docs/DESIGN_SPACE.md`, `docs/PFO_ARCHITECTURE.md`, `docs/AGENT_HARNESS_ENGINEERING.md` |
 | route-regression | Route, fixture, trigger, and skill drift checks | Feedback | Computational | `scripts/run_fixtures.py`, `scripts/verify_triggers.py`, `scripts/verify_fixture_contracts.py` |
 | alias-integrity | Navigation alias target existence | Feedback | Computational | `scripts/pfo_alias_targets.py`, `scripts/pfo_contract_gate.py`, `docs/templates/existing/MASTER_CONTEXT.md` |
 | methodology-ci | Repository-level deterministic validation | Feedback | Computational | `.github/workflows/validate.yml`, `scripts/validate_structure.py`, `scripts/validate_runtime.py`, `scripts/meta_review.py` |
+| quality-left-scheduling | Sensor placement by cost, speed, and criticality before commit, in CI, and at release gates | Feedback | Computational | `hooks/review-before-commit.py`, `.github/workflows/validate.yml`, `scripts/production_readiness.py` |
+| continuous-health-sensors | Drift, benchmark, state, and runtime-health checks outside one change lifecycle | Feedback | Computational | `scripts/production_readiness.py`, `scripts/pfo_metrics.py`, `scripts/validate_runtime.py` |
 | project-ci | Generated-project validation | Feedback | Computational | `templates/generated-ci/validate.yml`, `scripts/validate_project.py`, `scripts/pfo_contract_gate.py` |
 | engineering-discipline | TDD, root-cause, two-stage review, branch finish | Feedback | Computational | `scripts/validate_plan_quality.py`, `docs/templates/ROOT_CAUSE.md`, `docs/templates/BRANCH_FINISH.md` |
 | browser-smoke | Browser-facing critical-flow verification | Feedback | Computational | `skills/browser-check/SKILL.md`, `skills/browser-check/playwright/run.js`, `docs/templates/TEST_PLAN.md` |
@@ -47,6 +53,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | security-review-agent | Security reasoning and audit findings | Feedback | Inferential | `skills/security-audit/SKILL.md`, `agents/security-reviewer.md`, `docs/rubrics/security.md` |
 | ux-review-agent | UX, visual, accessibility, and interaction judgment | Feedback | Inferential | `agents/ux-reviewer.md`, `skills/browser-check/SKILL.md`, `docs/templates/QUALITY_GATES.md` |
 | human-approval | Irreversible or production-impacting boundary approval | Feedback | Inferential | `docs/METHODOLOGY.md`, `docs/templates/pfo/PERMISSION_MATRIX.md`, `skills/deploy/SKILL.md` |
+| human-steering | Human attention routed to unclear intent, accepted risk, load-bearing convention, and harness gaps | Feedback | Inferential | `docs/METHODOLOGY.md`, `.codex-memory/STATE.json`, `NEXT_STEP.md` |
 | learning-promotion | Turn repeated failures into stronger controls | Feedback | Computational | `docs/templates/pfo/LEARNING_PROMOTION_GATE.md`, `scripts/pfo_learn.py`, `memory/LEARNING_REGISTRY.json` |
 
 ## Precedence
@@ -63,9 +70,11 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 - Use inferential controls for ambiguity, threat reasoning, architecture tradeoffs, product judgment, and UX quality.
 - Do not ship a high-risk workflow with only inferential controls when a deterministic check can be added.
 - Do not add a new skill, hook, gate, or CI command without assigning it to a quadrant.
+- Do not add a guide without naming the sensor that will prove it worked, unless the guide is explicitly advisory.
 - Do not add a new rule unless it traces to observed failure evidence or a hard external constraint.
 - Keep project `AGENTS.md`, skill prompts, and tool registries concise; remove controls that no longer encode a real model or workflow limitation.
 - Every blocking feedback control must return evidence and one of `BLOCKED`, `PASSED_WITH_WARNINGS`, or `PASSED`, or a script exit code.
+- Sensor output should be optimized for self-correction: exact failure, expected condition, relevant file or command, and recovery hint.
 - Feedforward controls must name the expected feedback controls before implementation starts.
 - Repeated inferential findings should be promoted into scripts, tests, schemas, templates, or hooks through the learning promotion gate.
 
@@ -74,12 +83,12 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | PFO Stage | Required Feedforward Controls | Required Feedback Controls |
 |---|---|---|
 | Route request | `intent-routing`, `product-classification` | `route-regression` |
-| Plan product | `planning-documents`, `market-validation`, `adversarial-planning` | `review-agent` |
-| Dispatch unit | `unit-context`, `verification-contract` | `engineering-discipline` |
-| Build behavior | `verification-contract`, `docs/templates/TEST_PLAN.md` | tests, `engineering-discipline`, `project-ci`, `alias-integrity` |
+| Plan product | `planning-documents`, `market-validation`, `adversarial-planning`, `harnessability-assessment` | `review-agent` |
+| Dispatch unit | `unit-context`, `verification-contract`, `harness-templates` when topology is selected | `engineering-discipline` |
+| Build behavior | `verification-contract`, `docs/templates/TEST_PLAN.md` | tests, `engineering-discipline`, `project-ci`, `alias-integrity`, `quality-left-scheduling` |
 | Review work | rubrics and quality gate expectations | `review-agent`, `security-review-agent`, `ux-review-agent` when applicable |
 | Deploy readiness | permission matrix, deployment target, rollback expectations | `methodology-ci`, `project-ci`, security/deps/hardening/browser gates |
-| Learn and improve | learning promotion policy | `learning-promotion`, fixture and validator updates |
+| Learn and improve | learning promotion policy | `learning-promotion`, `continuous-health-sensors`, fixture and validator updates |
 
 ## Addition Checklist
 
@@ -87,9 +96,11 @@ When adding or changing a PFO control:
 
 1. Classify it by timing: feedforward or feedback.
 2. Classify it by evaluator: computational or inferential.
-3. Name the behaviour it exists to produce or the failure it prevents.
-4. Name the artifact that stores the rule.
-5. Name the command, reviewer, or evidence that proves it ran.
-6. Define whether it blocks, warns, or only advises.
-7. Add or update CI/validator coverage when the control is deterministic.
-8. Update `docs/CONTROL_HARNESS.md` and run `python3 scripts/validate_control_harness.py`.
+3. Classify what it regulates: maintainability, architecture fitness, or behaviour.
+4. Name the behaviour it exists to produce or the failure it prevents.
+5. Name the artifact that stores the guide or sensor.
+6. Name the command, reviewer, or evidence that proves it ran.
+7. Define whether it blocks, warns, or only advises.
+8. Place sensors as far left as cost, speed, and criticality allow.
+9. Add or update CI/validator coverage when the control is deterministic.
+10. Update `docs/CONTROL_HARNESS.md` and run `python3 scripts/validate_control_harness.py`.

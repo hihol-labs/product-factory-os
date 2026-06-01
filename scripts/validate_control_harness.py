@@ -103,6 +103,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "harness-templates",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "templates/product-templates.json",
+            "starters/README.md",
+            "golden-paths/README.md",
+        ],
+    },
+    {
         "id": "market-validation",
         "timing": "Feedforward",
         "evaluator": "Inferential",
@@ -124,6 +134,16 @@ CONTROL_REGISTRY = [
             "skills/strategy/SKILL.md",
             "docs/templates/LAUNCH_MATURITY_GATE.md",
             "docs/templates/SCALE_MOAT_REGISTER.md",
+        ],
+    },
+    {
+        "id": "harnessability-assessment",
+        "timing": "Feedforward",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "docs/DESIGN_SPACE.md",
+            "docs/PFO_ARCHITECTURE.md",
+            "docs/AGENT_HARNESS_ENGINEERING.md",
         ],
     },
     {
@@ -155,6 +175,26 @@ CONTROL_REGISTRY = [
             "scripts/validate_structure.py",
             "scripts/validate_runtime.py",
             "scripts/meta_review.py",
+        ],
+    },
+    {
+        "id": "quality-left-scheduling",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "hooks/review-before-commit.py",
+            ".github/workflows/validate.yml",
+            "scripts/production_readiness.py",
+        ],
+    },
+    {
+        "id": "continuous-health-sensors",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/production_readiness.py",
+            "scripts/pfo_metrics.py",
+            "scripts/validate_runtime.py",
         ],
     },
     {
@@ -228,6 +268,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "human-steering",
+        "timing": "Feedback",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "docs/METHODOLOGY.md",
+            ".codex-memory/STATE.json",
+            "NEXT_STEP.md",
+        ],
+    },
+    {
         "id": "learning-promotion",
         "timing": "Feedback",
         "evaluator": "Computational",
@@ -275,6 +325,8 @@ def validate_doc_shape(text: str) -> None:
         "Computational feedback",
         "Inferential feedforward",
         "Inferential feedback",
+        "guides",
+        "sensors",
     ]:
         assert_contains(text, token, "docs/CONTROL_HARNESS.md")
 
@@ -316,6 +368,8 @@ def validate_cross_docs() -> None:
         "Feedback controls",
         "Computational controls",
         "Inferential controls",
+        "guides",
+        "sensors",
         "docs/CONTROL_HARNESS.md",
     ]:
         assert_contains(methodology, token, "docs/METHODOLOGY.md")
@@ -323,16 +377,26 @@ def validate_cross_docs() -> None:
     for token in [
         "### 5a. Control Harness Layer",
         "## Control Ownership",
+        "maintainability, architecture fitness, and behaviour",
         "scripts/validate_control_harness.py",
     ]:
         assert_contains(architecture, token, "docs/PFO_ARCHITECTURE.md")
 
     assert_contains(design_space, "Control harness taxonomy", "docs/DESIGN_SPACE.md")
+    assert_contains(design_space, "Harnessability", "docs/DESIGN_SPACE.md")
+    assert_contains(design_space, "quality-left sensor scheduling", "docs/DESIGN_SPACE.md")
     for token in [
+        "## Outer Harness Goals",
+        "## Guides And Sensors",
         "## Ratchet",
+        "## Quality Left",
+        "## Regulation Categories",
         "## Context Economy",
         "## Tool Surface Discipline",
+        "## Harnessability",
+        "## Harness Templates",
         "## Evaluator Split",
+        "## Human Steering",
     ]:
         assert_contains(agent_harness, token, "docs/AGENT_HARNESS_ENGINEERING.md")
     assert_contains(install, "python3 scripts/validate_control_harness.py", "docs/INSTALL.md")

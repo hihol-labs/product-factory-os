@@ -1,8 +1,32 @@
 {
   "version": 1,
   "purpose": "Executable verification contract for the active PFO unit.",
-  "unitId": "harness-engineering-addy",
-  "createdAt": "2026-06-01T14:34:57+00:00",
+  "unitId": "harness-efficiency-metric-publish",
+  "createdAt": "2026-06-01T19:45:04+00:00",
+  "sensorPolicy": {
+    "qualityLeft": "Run fast computational sensors locally before broader or inferential gates.",
+    "regulates": [
+      "maintainability",
+      "architecture_fitness",
+      "behaviour"
+    ],
+    "localFastSensors": [
+      "targeted tests",
+      "validators",
+      "lint or schema checks",
+      "contract gates"
+    ],
+    "pipelineSensors": [
+      "full fixture suite",
+      "production readiness",
+      "security/dependency gates when applicable"
+    ],
+    "continuousSensors": [
+      "state freshness",
+      "dependency drift",
+      "benchmarks or runtime health when available"
+    ]
+  },
   "commands": [
     {
       "id": "pfo-contract-gate",
@@ -20,7 +44,7 @@
     ".pfo/PERMISSION_MATRIX.md",
     ".pfo/PERMISSION_MATRIX.json",
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-    "plans/harness-engineering-addy-piv-plan.md"
+    "plans/harness-efficiency-metric-publish-piv-plan.md"
   ],
   "passCriteria": [
     "All required commands exit 0.",

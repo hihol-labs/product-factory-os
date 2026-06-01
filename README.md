@@ -87,6 +87,8 @@ python3 scripts/production_readiness.py
 pfo metrics
 ```
 
+`pfo metrics` includes `harnessEfficiency`: verified-unit count, repair loops per verified unit, verification/gate pass rates, and time from unit manifest to first successful verification.
+
 See [docs/INSTALL.md](docs/INSTALL.md) for local development, hook policy, smoke prompts, and release checks.
 
 ### Usage

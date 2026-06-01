@@ -1,0 +1,76 @@
+# Implementation Report: harness-efficiency-metric-publish
+
+Project: `product-factory-os`
+Created: 2026-06-01T19:46:14+00:00
+Plan: `plans/harness-efficiency-metric-publish-piv-plan.md`
+
+## Goal
+
+Add harness efficiency metric, verify PFO compatibility, commit all changes, push branch, and open a PR
+
+## Evidence
+
+Added harnessEfficiency metric to pfo_metrics.py with time-to-first-valid-unit, repair loops per verified unit, verification pass rate, and gate pass rate; metrics command produced JSON; validate_structure, validate_state, pfo_contract_gate PASS_WITH_WARNINGS, validate_runtime, validate_control_harness, and production_readiness passed
+
+## Validation History
+
+| Mode | Node | Evidence |
+|---|---|---|
+| existing-project-analyze |  |  |
+| verify-work | harness-engineering-fowler | Fowler harness model integrated into docs, product harness templates, pfo manifest/verification generation, and validators; validate_structure, validate_control_harness, validate_runtime, validate_state, pfo_contract_gate PASS_WITH_WARNINGS, and production_readiness passed |
+| review-stage |  | Fowler article concepts are mapped into PFO operating docs, control inventory, lifecycle rules, product harness templates, and generated unit/verification contracts |
+| review-stage |  | py_compile, validate_structure, validate_control_harness, validate_runtime, validate_state, pfo_contract_gate PASS_WITH_WARNINGS, and production_readiness passed |
+| verify-work | harness-efficiency-metric-publish | Added harnessEfficiency metric to pfo_metrics.py with time-to-first-valid-unit, repair loops per verified unit, verification pass rate, and gate pass rate; metrics command produced JSON; validate_structure, validate_state, pfo_contract_gate PASS_WITH_WARNINGS, validate_runtime, validate_control_harness, and production_readiness passed |
+
+## Gate Results
+
+| Gate | Status |
+|---|---|
+| aliasTargets | PASS |
+| architecture | PASS_WITH_WARNINGS |
+| assetExtraction | PENDING |
+| branchFinish | PENDING |
+| codeQualityReview | PASSED |
+| contentPipeline | PENDING |
+| dataAuthenticity | PASS |
+| dependencies | NOT_RUN |
+| deploymentReadiness | PASS |
+| diffRisk | PASS_WITH_WARNINGS |
+| executionPolicy | PASSED |
+| experimentDecision | PENDING |
+| experimentMetric | PENDING |
+| experimentSetup | PENDING |
+| fallbackPolicy | PASS |
+| feedbackLoop | PENDING |
+| funnel | PENDING |
+| goldenFlows | PASS |
+| handoff | PENDING |
+| hardening | NOT_RUN |
+| ideaGate | PENDING |
+| learningPromotion | PASS |
+| marketValidation | PENDING |
+| nextStepApproval | PENDING |
+| noSilentSubstitution | PASS |
+| permissionMatrix | PASSED |
+| regressionContract | PASS_WITH_WARNINGS |
+| review | PASSED |
+| rootCause | PENDING |
+| scopeLock | PASS_WITH_WARNINGS |
+| security | PASS |
+| specComplianceReview | PASSED |
+| strategy | PASS |
+| tddGreen | PENDING |
+| tddRed | PENDING |
+| tddRefactor | PENDING |
+| tests | NOT_CONFIGURED |
+| toolCapabilityRegistry | PASSED |
+| verificationContract | PASSED |
+
+## Review Order
+
+- [ ] Spec compliance review recorded with `pfo review-stage --stage spec`.
+- [ ] Code quality review recorded with `pfo review-stage --stage quality`.
+
+## Status
+
+Ready for review if all required commands passed and no blocking gate remains.

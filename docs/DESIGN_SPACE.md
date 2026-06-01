@@ -15,6 +15,11 @@ This map tracks which external agent-engineering principles are covered by Produ
 | Tool trust boundary | Full | hook layer, explicit side-effect metadata, explicit invocation gates | Keep dangerous route list synced with metadata |
 | Tool surface discipline | Full | tool selection policy, capability registry, approval metadata | Prune overlapping tools from real usage traces |
 | Control harness taxonomy | Full | `docs/CONTROL_HARNESS.md`, `validate_control_harness.py`, CI/release wiring | Promote repeated inferential findings into deterministic gates |
+| quality-left sensor scheduling | Full | `hooks/review-before-commit.py`, `.github/workflows/validate.yml`, `scripts/production_readiness.py`, verification contracts | Add cost tiers and runtime duration telemetry after enough real runs |
+| Regulation categories | Full | maintainability, architecture fitness, and behaviour categories in `docs/AGENT_HARNESS_ENGINEERING.md` and `docs/CONTROL_HARNESS.md` | Add category coverage summaries to reports |
+| Harnessability | Partial | starter structure, golden paths, contracts, typed schemas where available, current-task scope locks | Add explicit harnessability score to repository analysis |
+| Harness templates | Partial | `templates/product-templates.json`, starter packs, golden paths | Version topology guide/sensor bundles and detect drift between template and generated project |
+| Human steering | Full | `NEXT_STEP.md`, `.codex-memory/STATE.json`, approval gates, review roles | Add stale or conflicting sensor warnings to session diagnostics |
 | Harness ratchet | Full | `LEARNING_PROMOTION_GATE.md`, `pfo_learn.py`, `memory/LEARNING_REGISTRY.json` | Add automatic stale-rule review later |
 | Skill discovery | Full | trigger registry, `verify_triggers.py`, route snapshots | Add regression prompts from real misses |
 | Behavioural regression testing | Partial | fixture contracts for key skills | Expand contracts to all 32 skills over time |
@@ -45,3 +50,5 @@ This map tracks which external agent-engineering principles are covered by Produ
 2. Behavioural contracts cover the highest-risk skills first, not all 32.
 3. Marketplace screenshots are represented by a generated hero image, not a real product screenshot.
 4. Live deployment and migration dry-runs are still contract-level, not environment-level.
+5. Harnessability is described but not yet scored by the analyzer.
+6. Harness template version drift is not yet checked against generated projects.

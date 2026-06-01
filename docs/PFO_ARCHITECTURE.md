@@ -162,6 +162,16 @@ The control harness classifies every PFO mechanism by timing and evaluator:
 - Inferential feedforward: LLM or human reasoning that improves plans before code exists.
 - Inferential feedback: LLM or human review that judges semantic quality and risk after output exists.
 
+In Fowler's guide/sensor vocabulary, feedforward controls are guides and feedback controls are sensors. PFO also tags controls by what they regulate: maintainability, architecture fitness, and behaviour. This keeps a route from treating style checks, architecture drift checks, and user-visible correctness as the same kind of evidence.
+
+Sensor scheduling follows quality-left rules:
+
+- fast computational sensors run during local work and before handoff;
+- broader or expensive sensors repeat in CI, release, or production-readiness gates;
+- continuous health sensors watch drift, stale state, dependencies, benchmarks, and runtime signals outside one change lifecycle.
+
+Product templates are harness templates: each topology should carry structure, guide defaults, fast sensors, pipeline sensors, and regulation categories.
+
 `scripts/validate_control_harness.py` keeps this inventory connected to docs, CI, hooks, and runtime validators.
 
 ### 6. Validation Layer

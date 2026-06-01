@@ -1069,6 +1069,41 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
                 "record a fallback or blocker when a required tool is unavailable",
             ],
         },
+        "harnessPolicy": {
+            "sourcePattern": "Martin Fowler coding-agent user harness",
+            "guideSensorPairing": "Blocking guides should name the feedback sensors that prove or repair them.",
+            "regulationCategories": ["maintainability", "architecture_fitness", "behaviour"],
+            "qualityLeft": {
+                "localFastSensors": [
+                    "targeted tests",
+                    "validators",
+                    "lint or schema checks",
+                    "contract gates relevant to touched files",
+                ],
+                "pipelineSensors": [
+                    "full fixture suite",
+                    "production readiness",
+                    "security/dependency review when risk warrants it",
+                ],
+                "continuousSensors": [
+                    "state freshness",
+                    "dependency drift",
+                    "benchmark or runtime health signals when available",
+                ],
+            },
+            "harnessabilityChecks": [
+                "clear module boundaries",
+                "available verification commands",
+                "golden flows or fixtures for behaviour changes",
+                "observable logs or health checks for runtime work",
+            ],
+            "humanSteering": [
+                "unclear intent",
+                "accepted risk",
+                "load-bearing convention",
+                "conflicting or missing sensor evidence",
+            ],
+        },
         "gates": [
             "tddRed",
             "tddGreen",
@@ -1147,6 +1182,13 @@ def generated_verification_contract(project: Path, manifest: dict) -> dict:
         "purpose": "Executable verification contract for the active PFO unit.",
         "unitId": unit_id,
         "createdAt": now_iso(),
+        "sensorPolicy": {
+            "qualityLeft": "Run fast computational sensors locally before broader or inferential gates.",
+            "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+            "localFastSensors": ["targeted tests", "validators", "lint or schema checks", "contract gates"],
+            "pipelineSensors": ["full fixture suite", "production readiness", "security/dependency gates when applicable"],
+            "continuousSensors": ["state freshness", "dependency drift", "benchmarks or runtime health when available"],
+        },
         "commands": [
             {
                 "id": "pfo-contract-gate",
@@ -1236,6 +1278,13 @@ Allowed writes:
 Forbidden changes:
 
 {markdown_list(manifest.get("forbiddenChanges", []), "Out-of-scope behavior, real secrets, destructive operations, and production mutations")}
+
+## Harness Policy
+
+- Pair feedforward guides with feedback sensors where practical.
+- Regulate maintainability, architecture fitness, and behaviour explicitly.
+- Run fast computational sensors before broader or inferential gates.
+- Use human steering for unclear intent, accepted risk, load-bearing conventions, or missing sensor evidence.
 
 ## Ordered Tasks
 

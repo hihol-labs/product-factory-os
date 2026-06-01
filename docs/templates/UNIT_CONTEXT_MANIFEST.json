@@ -66,6 +66,45 @@
       "Record a fallback or blocker when a required tool is unavailable."
     ]
   },
+  "harnessPolicy": {
+    "sourcePattern": "Martin Fowler coding-agent user harness",
+    "guideSensorPairing": "Blocking guides should name the feedback sensors that prove or repair them.",
+    "regulationCategories": [
+      "maintainability",
+      "architecture_fitness",
+      "behaviour"
+    ],
+    "qualityLeft": {
+      "localFastSensors": [
+        "targeted tests",
+        "validators",
+        "lint or schema checks",
+        "contract gates relevant to touched files"
+      ],
+      "pipelineSensors": [
+        "full fixture suite",
+        "production readiness",
+        "security/dependency review when risk warrants it"
+      ],
+      "continuousSensors": [
+        "state freshness",
+        "dependency drift",
+        "benchmark or runtime health signals when available"
+      ]
+    },
+    "harnessabilityChecks": [
+      "clear module boundaries",
+      "available verification commands",
+      "golden flows or fixtures for behaviour changes",
+      "observable logs or health checks for runtime work"
+    ],
+    "humanSteering": [
+      "unclear intent",
+      "accepted risk",
+      "load-bearing convention",
+      "conflicting or missing sensor evidence"
+    ]
+  },
   "gates": [
     "tddRed",
     "tddGreen",
