@@ -78,7 +78,7 @@ If the repository is not cloned inside your projects workspace, pass the workspa
 bash install.sh --workspace ~/Projects
 ```
 
-The installer validates PFO, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, `PFO_WORKSPACE.json`, and global `PFO_GLOBAL.json` policy files, then fully adopts existing first-level projects with analysis, contract gate output, `NEXT_STEP.md`, and `PFO_REPORT.md` without overwriting their local instructions.
+The installer validates PFO, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, `PFO_WORKSPACE.json`, and global `PFO_GLOBAL.json` policy files with default-on Codex `/goal` mode, then fully adopts existing first-level projects with analysis, contract gate output, `NEXT_STEP.md`, and `PFO_REPORT.md` without overwriting their local instructions.
 
 **Verify the installation:**
 
@@ -110,6 +110,8 @@ Fix this checkout bug and add a regression test.
 ```
 
 Product Factory OS routes it through `/task` to `/bugfix`, `/test`, `/review`, `/security-audit`, `/browser-check`, or another daily-work skill.
+
+For every non-trivial new or existing project request, PFO keeps Codex `/goal` mode active by default. The goal names the requested outcome and the active PFO route, then stays open until gates, verification, and state-save are done.
 
 CLI entry points are available too:
 
@@ -160,6 +162,8 @@ For existing repositories:
 /task -> adoption-check -> repository-analysis -> task-classification
       -> daily-work skill -> gates -> state-save
 ```
+
+Codex `/goal` mode wraps both routes by default: start or continue the goal before implementation, then complete it only after the PFO exit gates pass.
 
 ## End-to-End Example
 

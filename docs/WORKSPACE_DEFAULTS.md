@@ -25,6 +25,8 @@ $CODEX_HOME/PFO_GLOBAL.json
 
 These files let the preflight hook find the Product Factory OS methodology from any local project folder, even when the project is outside the default workspace.
 
+`PFO_WORKSPACE.json` and `PFO_GLOBAL.json` also carry `codexGoalMode`. This makes Codex `/goal` mode part of the PFO runtime rather than a manual per-session habit.
+
 ## Behavior
 
 For every new project request in any local folder where Codex is working, Codex must automatically use:
@@ -32,6 +34,8 @@ For every new project request in any local folder where Codex is working, Codex 
 ```text
 /project -> /kickstart
 ```
+
+For every non-trivial PFO project request, Codex must create or continue a `/goal` objective that names the user outcome and the active PFO route. The goal stays active through implementation, gates, verification, and state-save. It is complete only when both the requested outcome and the PFO exit gates are satisfied.
 
 Planning-only and guide-only routes are secondary routes. They are used only when the user explicitly says not to build code or explicitly asks to convert existing docs into a guide.
 
@@ -121,6 +125,8 @@ For every existing project, including projects outside the default workspace, Pr
 ```text
 /task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save
 ```
+
+The same default `/goal` rule applies to existing projects before the `/task` route starts. The goal objective should include the requested change and the selected daily-work route.
 
 Before any work in an existing project, full PFO adoption must already be present. The installer and preflight hook create missing `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/` contracts, existing-project-safe alias indexes, analysis, contract gate output, `NEXT_STEP.md`, and `PFO_REPORT.md`. If a project was added after install, run `pfo adopt <project>` or rely on the preflight hook to auto-enforce full runtime for the detected project root.
 

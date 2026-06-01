@@ -271,7 +271,7 @@ Before implementation, Codex must enforce full PFO adoption automatically:
 pfo adopt {path}
 ```
 
-Then route work through `/task`, write `HANDOFF.md` before session or role transfer, update `.codex-memory/STATE.json`, and respect `.pfo/` contracts. Project-local rules may add constraints, but they do not replace PFO gates, memory, or scope/data/fallback contracts.
+Then route work through `/task`, write `HANDOFF.md` before session or role transfer, update `.codex-memory/STATE.json`, and respect `.pfo/` contracts. Codex `/goal` mode is default-on for non-trivial work: create or continue the goal before implementation, and keep it active through gates, verification, and state-save. Project-local rules may add constraints, but they do not replace PFO gates, memory, or scope/data/fallback contracts.
 {MANAGED_END}
 """
 
@@ -350,6 +350,11 @@ def mark_runtime_synced(path: Path, workspace: Path) -> None:
         "workspace": str(workspace),
         "methodologyRevision": methodology_revision(),
         "mode": "automatic-workspace-runtime",
+        "codexGoalMode": {
+            "enabled": True,
+            "defaultOn": True,
+            "route": "/project -> /kickstart" if generated else "/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save",
+        },
         "aliasTargetStatus": "BROKEN" if alias_errors else "PASS",
         "aliasTargetErrors": alias_errors,
     }

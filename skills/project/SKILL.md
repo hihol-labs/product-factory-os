@@ -19,16 +19,17 @@ Use this skill when the user wants to create a new project, app, service, site, 
 
 1. Decide whether this is a new project or existing-code work.
 2. If the user mentions stack traces, existing files, failing tests, current modules, or recent commits, route to `/task`.
-3. Capture the initial Product Factory OS intent:
+3. For non-trivial new-project work, Codex `/goal` mode is default-on. Create or continue a goal that names the product outcome and selected PFO route before implementation.
+4. Capture the initial Product Factory OS intent:
    - product type signal
    - domain
    - complexity signal
    - infrastructure signal
-4. If this is new work, ask one route question unless the answer is already obvious:
+5. If this is new work, ask one route question unless the answer is already obvious:
    - `A` Full cycle: plan, implement, test, review, deploy.
    - `B` Planning only: create documents, no code.
    - `C` Existing docs: create an execution guide from current docs.
-5. Route:
+6. Route:
    - `A` -> `/kickstart`
    - `B` -> `/blueprint`
    - `C` -> `/guide`

@@ -122,6 +122,13 @@ def load_global_policy(cwd: Path) -> dict | None:
     return None
 
 
+def load_active_policy(cwd: Path) -> dict:
+    loaded = load_workspace_policy(cwd)
+    if loaded:
+        return loaded[1]
+    return load_global_policy(cwd) or {}
+
+
 def first_level_project(cwd: Path, workspace: Path) -> Path | None:
     try:
         rel = cwd.resolve().relative_to(workspace.resolve())
@@ -273,6 +280,7 @@ def main() -> None:
     state = cwd / ".codex-memory" / "STATE.json"
     events = cwd / ".codex-memory" / "events.jsonl"
     contracts_found = [name for name in PFO_CONTRACTS if (cwd / name).exists()]
+    goal_policy = load_active_policy(cwd).get("codexGoalMode", {})
 
     if found:
         print("Product Factory OS docs found: " + ", ".join(found))
@@ -295,6 +303,8 @@ def main() -> None:
         print("PFO contracts found: " + ", ".join(contracts_found))
     else:
         print("PFO contracts found: none")
+    if goal_policy.get("enabled"):
+        print("Codex /goal mode: default-on for non-trivial PFO project work; keep the goal active through gates, verification, and state-save.")
 
 
 if __name__ == "__main__":

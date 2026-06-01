@@ -16,6 +16,17 @@ GLOBAL_MANAGED_START = "<!-- PFO_GLOBAL_RUNTIME_START -->"
 GLOBAL_MANAGED_END = "<!-- PFO_GLOBAL_RUNTIME_END -->"
 
 
+def codex_goal_mode_policy() -> dict:
+    return {
+        "enabled": True,
+        "defaultOn": True,
+        "scope": "new-and-existing-local-projects",
+        "startRule": "At the start of any non-trivial PFO project request, Codex must create or continue a /goal objective that names the user outcome and active PFO route.",
+        "completionRule": "Keep the goal active through implementation, gates, verification, and state-save. Mark complete only when the requested outcome and PFO exit gates are satisfied.",
+        "blockedRule": "Mark blocked only when PFO cannot continue without user input or an external state change.",
+    }
+
+
 def fail(message: str) -> None:
     print(f"ERROR: {message}")
     raise SystemExit(1)
@@ -59,6 +70,8 @@ PFO_REPORT.md
 ```
 
 If any of these are missing, Codex must run `pfo adopt <project>` before implementation. Project-local instructions may add constraints, but they do not replace the PFO lifecycle, gates, memory, or `.pfo/` contracts.
+
+Codex `/goal` mode is part of the PFO runtime. At the start of any non-trivial local project request, Codex must create or continue a goal whose objective names the user outcome and the active PFO route. Keep that goal active until implementation, gates, verification, and state-save are complete.
 {MANAGED_END}
 """
 
@@ -99,6 +112,7 @@ def write_workspace_policy(workspace: Path, codex_home: Path) -> None:
         "autoAnalyzeExistingProjects": True,
         "fullAdoptionForExistingProjects": True,
         "autoReportProjects": True,
+        "codexGoalMode": codex_goal_mode_policy(),
         "defaultNewProjectRoute": "/project -> /kickstart",
         "existingProjectRoute": "/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save",
         "requiredProjectFiles": [
@@ -141,6 +155,7 @@ def write_global_policy(workspace: Path, codex_home: Path) -> None:
         "autoAdoptAnyProject": True,
         "autoAnalyzeExistingProjects": True,
         "autoReportProjects": True,
+        "codexGoalMode": codex_goal_mode_policy(),
         "defaultNewProjectRoute": "/project -> /kickstart",
         "existingProjectRoute": "/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save",
         "nonBypassRule": "Any local project opened in Codex should auto-connect to Product Factory OS, even outside the default workspace.",
@@ -160,8 +175,11 @@ Product Factory OS is the default methodology for Codex work on this computer.
 - Default workspace: `{workspace}`
 - New projects route: `/project -> /kickstart`
 - Existing projects route: `/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save`
+- Codex `/goal` mode: default-on for every non-trivial PFO project task
 
 For any local project, including projects outside the default workspace, Codex must auto-connect Product Factory OS from `PFO_GLOBAL.json` and ensure adoption before implementation. The user should not need to run setup commands manually.
+
+At the start of any non-trivial local project request, Codex must create or continue a `/goal` objective that names the user outcome and active PFO route. Keep it active through implementation, gates, verification, and state-save; complete it only after the requested outcome and PFO exit gates are satisfied.
 {GLOBAL_MANAGED_END}
 """
 
@@ -223,6 +241,7 @@ def write_windows_global_policy(workspace: Path, codex_home: Path) -> None:
         "autoAdoptAnyProject": True,
         "autoAnalyzeExistingProjects": True,
         "autoReportProjects": True,
+        "codexGoalMode": codex_goal_mode_policy(),
         "defaultNewProjectRoute": "/project -> /kickstart",
         "existingProjectRoute": "/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save",
         "nonBypassRule": "Any local project opened in Codex should auto-connect to Product Factory OS, even outside the default workspace.",

@@ -5,6 +5,7 @@
 ### Added
 
 - Full workspace runtime enforcement: installer/preflight now complete adoption with analysis, contract gate output, and `PFO_REPORT.md`.
+- Default-on Codex `/goal` mode is now part of workspace/global PFO policy, project adoption, `pfo new`, and preflight context.
 - Existing-project-safe alias templates and alias target validation gates prevent adopted repositories from being marked fully adopted while index files point to missing canonical docs.
 - `pfo new` now auto-generates planning artifacts, execution graph, and report without requiring a separate initial `pfo plan`.
 - Autoresearch-style self-improvement loop with `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric/budget state, and `pfo experiment-init` / `pfo experiment-record`.

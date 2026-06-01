@@ -29,6 +29,8 @@ CODEX.md
 
 If any are missing, route to `/adopt` first.
 
+For non-trivial existing-code work, Codex `/goal` mode is default-on. Create or continue a goal that names the requested change and selected daily-work route before implementation, then keep it active through gates, verification, and state-save.
+
 Then inspect:
 
 - repository structure

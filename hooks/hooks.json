@@ -12,7 +12,7 @@
       "name": "preflight-context",
       "type": "auto-adopt-diagnostic",
       "command": "python3 hooks/preflight-context.py",
-      "description": "Auto-enforces full PFO runtime for workspace projects and any local project discovered through PFO_GLOBAL.json, then prints discovered docs, policy contracts, memory state, and event log."
+      "description": "Auto-enforces full PFO runtime for workspace projects and any local project discovered through PFO_GLOBAL.json, then prints discovered docs, policy contracts, memory state, event log, and Codex /goal mode status."
     },
     {
       "name": "security-guard",

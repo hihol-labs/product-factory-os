@@ -291,6 +291,11 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "status": "FULLY_BOOTSTRAPPED",
                 "methodologyPath": str(methodology),
                 "mode": "automatic-workspace-runtime",
+                "codexGoalMode": {
+                    "enabled": True,
+                    "defaultOn": True,
+                    "route": "/project -> /kickstart",
+                },
             },
         },
         indent=2,
@@ -450,6 +455,7 @@ HANDOFF.md when transfer is in scope
 
 - Voice or natural-language commands are accepted as the primary interface.
 - Codex performs routing automatically.
+- Codex `/goal` mode is default-on for non-trivial PFO project work; keep the goal active through gates, verification, and state-save.
 - Score ideas before broad build scope in `IDEA_SCORECARD.md`.
 - Validate risky assumptions in `VALIDATION_PLAN.md`.
 - Broad market-facing scope requires evidence quality: real conversations, past behavior evidence, contradicting evidence, and BUILD truth conditions.
@@ -498,7 +504,7 @@ This project is automatically governed by Product Factory OS.
 - Initial idea: {idea or "not captured yet"}
 - Methodology: {methodology}
 
-Use `/project -> /kickstart` for new product work and `/task` routes for ongoing changes. Require `NEXT_STEP.md` plus next-step approval before major implementation. Write `HANDOFF.md` before session or role transfer. Respect `.pfo/` contracts, update `.codex-memory/STATE.json`, and run the smallest relevant verification before finishing.
+Use `/project -> /kickstart` for new product work and `/task` routes for ongoing changes. Codex `/goal` mode is default-on for non-trivial PFO project work; keep the goal active until gates, verification, and state-save are done. Require `NEXT_STEP.md` plus next-step approval before major implementation. Write `HANDOFF.md` before session or role transfer. Respect `.pfo/` contracts, update `.codex-memory/STATE.json`, and run the smallest relevant verification before finishing.
 """
 
 
