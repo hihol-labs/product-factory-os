@@ -317,6 +317,10 @@ def ensure_alias_documents(path: Path) -> None:
         target = path / name
         if not target.exists():
             target.write_text(text, encoding="utf-8")
+            continue
+        current_errors = missing_targets_for_text(path, name, target.read_text(encoding="utf-8"))
+        if current_errors:
+            target.write_text(text, encoding="utf-8")
 
 
 def methodology_revision() -> str:
