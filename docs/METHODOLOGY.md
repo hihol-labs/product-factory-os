@@ -13,6 +13,12 @@ PFO classifies every durable guardrail with two axes:
 
 The full matrix and inventory live in `docs/CONTROL_HARNESS.md`. PFO prefers computational feedback for blocking invariants, uses inferential controls for semantic judgment, and promotes repeated inferential findings into deterministic checks when possible.
 
+## Codex Goal Mode
+
+Codex `/goal` mode is default-on inside Product Factory OS. For every non-trivial local project request, Codex creates or continues one goal before implementation. The objective names the user outcome and the active PFO route, for example `/project -> /kickstart` for new products or `/task -> /bugfix` for existing-code work.
+
+The goal stays active through implementation, gates, verification, and state-save. It is marked complete only when the requested outcome and PFO exit gates are satisfied. It is marked blocked only when PFO cannot continue without user input or an external state change.
+
 ## Lifecycle
 
 1. Route the request.
@@ -68,6 +74,8 @@ Existing project task
 ```
 
 This applies globally after install. The preflight hook reads `PFO_GLOBAL.json`, detects the current project root outside the default workspace, and runs adoption/analysis before implementation.
+
+The default `/goal` rule applies before the `/task` route starts. Existing-project goals should include the requested change, adoption/analysis state if relevant, and the selected daily-work route.
 
 Before substantial changes, the project must have:
 

@@ -7,7 +7,7 @@ Hooks are installed by default by `bash install.sh`. They keep Codex on the Prod
 | Layer | Hook | Purpose | Blocks |
 |---|---|---|---|
 | Routing | `route-reminder.py` | Maps natural language to `/project`, `/task`, and specialized PFO skills. | No |
-| Context | `preflight-context.py` | Auto-enforces full PFO runtime for workspace projects and any local project discovered through `PFO_GLOBAL.json`, then prints discovered PFO docs, state, memory, event log, and `.pfo/` contracts. | No |
+| Context | `preflight-context.py` | Auto-enforces full PFO runtime for workspace projects and any local project discovered through `PFO_GLOBAL.json`, then prints discovered PFO docs, state, memory, event log, `.pfo/` contracts, and Codex `/goal` mode status. | No |
 | Security | `security-guard.py` | Blocks real `.env` reads/writes and recursive directory deletion before tool execution. | Yes |
 | Diagnostics | `session-diagnostics.py` | Prints stale state, recovery, handoff, and telemetry warnings from `.codex-memory/STATE.json`. | No |
 | Skill completeness | `skill-completeness.py` | Verifies that skills have contracts, trigger entries, fixtures, and route snapshots. | Yes when used as a gate |
@@ -34,7 +34,7 @@ The plugin manifest points to `hooks/hooks.json`. For local development, run:
 bash install.sh
 ```
 
-The installer copies hook scripts into `${CODEX_HOME:-$HOME/.codex}/hooks/product-factory-os/`, writes workspace policy files, and writes global `PFO_GLOBAL.json` files so Codex can connect PFO for projects outside the default workspace.
+The installer copies hook scripts into `${CODEX_HOME:-$HOME/.codex}/hooks/product-factory-os/`, writes workspace policy files, and writes global `PFO_GLOBAL.json` files so Codex can connect PFO and default Codex `/goal` mode for projects outside the default workspace.
 
 ## Policy
 

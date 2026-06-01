@@ -6,6 +6,7 @@ This project is governed by Product Factory OS.
 
 - New product work routes through `/project -> /kickstart`.
 - Existing project work routes through `/task`.
+- Codex `/goal` mode is default-on for non-trivial PFO project work. Start or continue a goal before implementation, and finish it only after gates, verification, and state-save.
 - Significant work updates `.codex-memory/STATE.json`.
 - Broad product scope requires `IDEA_SCORECARD.md` and `VALIDATION_PLAN.md`.
 - Broad market-facing scope also requires evidence quality: real conversations, past behavior, contradicting evidence, and BUILD truth conditions.
