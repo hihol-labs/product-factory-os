@@ -13,7 +13,7 @@ bash install.sh
 Then open any workspace project with Codex and describe what you want to build or fix. Product Factory OS routes the work automatically. [Full install guide](docs/INSTALL.md) | [Golden path](docs/examples/golden-path-booking-app) | [Skill contracts](docs/SKILL_CONTRACTS.md) | [Harness integration](docs/HARNESS_ENGINEERING_DEMO_INTEGRATION.md).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills: 32](https://img.shields.io/badge/Skills-32-green.svg)](#skills)
+[![Skills: 33](https://img.shields.io/badge/Skills-33-green.svg)](#skills)
 [![Agents: 15](https://img.shields.io/badge/Agents-15-orange.svg)](#agents)
 [![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-purple.svg)](.codex-plugin/plugin.json)
 [![validate](https://github.com/hihol-labs/product-factory-os/actions/workflows/validate.yml/badge.svg)](https://github.com/hihol-labs/product-factory-os/actions/workflows/validate.yml)
@@ -45,7 +45,7 @@ Codex can write code, but product work drifts without a runtime:
 
 ## The Solution
 
-**Product Factory OS** turns Codex into a gated product factory: 32 skills, 15 specialist roles, runtime contracts, hooks, fixtures, validators, and CLI workflows that move work through a deterministic pipeline:
+**Product Factory OS** turns Codex into a gated product factory: 33 skills, 15 specialist roles, runtime contracts, hooks, fixtures, validators, and CLI workflows that move work through a deterministic pipeline:
 
 ```text
 IDEA -> DISCOVERY -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH
@@ -148,6 +148,7 @@ You: "I want to build a tutor booking app"
  /kickstart      /blueprint    /guide
     |
     +-- /discover and optional /market-scan
+    +-- optional /seo for organic acquisition, content, and technical SEO
     +-- Product classifier selects template modules
     +-- Product compiler writes blueprint, architecture, plan, graph
     +-- Review gate checks docs before build
@@ -206,6 +207,7 @@ Harness engineering reference: [`docs/AGENT_HARNESS_ENGINEERING.md`](docs/AGENT_
 |---|---|
 | `/discover` | Turns an idea into market, user, scope, hypothesis, and validation notes. |
 | `/market-scan` | Fresh public market and community signal scan for validation, ICP, competitors, launch, and roadmap decisions. |
+| `/seo` | Audits technical SEO, search intent, metadata, structured data, content gaps, and organic acquisition measurement. |
 | `/blueprint` | Planning-only workflow that compiles an idea into PFO product documents without implementation. |
 | `/guide` | Converts existing project documents into a step-by-step Codex execution guide. |
 | `/strategy` | Replans an existing product after context changes. |
@@ -294,6 +296,7 @@ PFO keeps workflow chains shallow and bounded:
   -> /kickstart
        -> /discover
        -> /market-scan
+       -> /seo
        -> /blueprint
        -> /mcp-docs
        -> /review
@@ -312,7 +315,7 @@ PFO keeps workflow chains shallow and bounded:
   -> /guide
 
 /task
-  -> /bugfix, /refactor, /doc, /test, /perf, /review
+  -> /bugfix, /refactor, /doc, /test, /perf, /seo, /review
   -> /security-audit, /deps-audit, /migrate, /harden, /infra, /deploy
   -> /mcp-docs, /browser-check, /github-workflow, /tool-sync
   -> /handoff, /obsidian-export, /session-save, /strategy, /advisor, /grill-me

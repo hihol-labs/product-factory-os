@@ -20,6 +20,7 @@ ROUTES = [
     (r"\b(refactor|cleanup|simplify|clean up)\b|рефакторинг|почисти код|упрости", "/task -> /refactor"),
     (r"\b(update docs|readme|api docs|documentation)\b|обнови документаци|readme|api docs", "/task -> /doc"),
     (r"\b(explain code|how does this work|walk me through)\b|объясни код|как это работает", "/task -> /explain"),
+    (r"\b(seo|seo audit|search engine optimization|organic traffic|technical seo|meta tags?|sitemap|robots\.txt|canonical|schema markup|structured data|search console|indexing|keyword intent|content optimization)\b|поисков(ая|ую) оптимизац|органическ(ий|ого|ому|им|ом|ая|ую) трафик|мета.?тег|индексац|семантическ(ое|ого) ядро|сниппет", "/task -> /seo"),
     (r"\b(slow|optimi[sz]e|bottleneck|performance)\b|медленно|оптимизируй|узкое место|производительност", "/task -> /perf"),
     (r"\b(latest docs|current api|sdk docs|framework version|context7|mcp)\b|свеж(ая|ие) документаци|актуальн(ый|ая) api|документаци[яи] sdk", "/task -> /mcp-docs"),
     (r"\b(create skill|new pfo skill|new skill|add workflow|skill creator|skill-create|custom skill|domain pack|premium pack skill)\b|создай skill|нов(ый|ого) pfo skill|нов(ый|ого) skill|добавь workflow|расширь pfo|кастомн(ый|ого) skill", "/task -> /skill-create"),

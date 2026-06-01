@@ -10,6 +10,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /kickstart
        -> /discover
        -> /market-scan
+       -> /seo
        -> /blueprint
        -> product compiler
        -> execution graph
@@ -39,6 +40,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /doc
   -> /test
   -> /perf
+  -> /seo
   -> /mcp-docs
   -> /skill-create
   -> /browser-check
@@ -60,6 +62,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
 
 /strategy
   -> /market-scan
+  -> /seo
   -> pfo experiment-init / pfo experiment-record
   -> /advisor
   -> /grill-me

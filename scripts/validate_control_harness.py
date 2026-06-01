@@ -127,6 +127,17 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "seo-growth",
+        "timing": "Feedforward",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "skills/seo/SKILL.md",
+            "docs/templates/CONTENT_BACKLOG.md",
+            "docs/templates/GO_TO_MARKET.md",
+            "docs/templates/VALIDATION_PLAN.md",
+        ],
+    },
+    {
         "id": "maturity-stage-gates",
         "timing": "Feedforward",
         "evaluator": "Inferential",

@@ -1,8 +1,8 @@
 {
   "version": 1,
   "purpose": "Executable verification contract for the active PFO unit.",
-  "unitId": "harness-efficiency-metric-publish",
-  "createdAt": "2026-06-01T19:45:04+00:00",
+  "unitId": "seo-plugin-skill",
+  "createdAt": "2026-06-01T19:50:22+00:00",
   "sensorPolicy": {
     "qualityLeft": "Run fast computational sensors locally before broader or inferential gates.",
     "regulates": [
@@ -29,10 +29,90 @@
   },
   "commands": [
     {
+      "id": "seo-skill-completeness",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/hooks/skill-completeness.py --skill seo",
+      "timeoutSeconds": 90,
+      "expectedOutput": "SEO skill has docs, triggers, fixture, and route snapshot coverage.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "structure",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_structure.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "PFO runtime contracts and core methodology files are present.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "route-fixtures",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/run_fixtures.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Fixture routes and hook reminder match expectations.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "trigger-drift",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_triggers.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Trigger phrases route to the expected skill.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "fixture-contracts",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_fixture_contracts.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Behavioural fixture contracts validate.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "headless-fixtures",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/run_headless_fixtures.py --mode mock",
+      "timeoutSeconds": 120,
+      "expectedOutput": "Headless fixture mocks pass.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "control-harness",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_control_harness.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Control harness entries validate.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "skill-profiles",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_skill_profiles.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Skill side-effect profiles are complete.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "manifest-drift",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_manifest_drift.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Manifest, marketplace, and public counts match.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
       "id": "pfo-contract-gate",
       "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os",
       "timeoutSeconds": 90,
       "expectedOutput": "PFO contract gate reports PASS or PASS_WITH_WARNINGS; BLOCKED requires recovery.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "production-readiness",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/production_readiness.py",
+      "timeoutSeconds": 180,
+      "expectedOutput": "Production readiness suite passes.",
       "passFailParser": "exit_code_zero",
       "required": true
     }
@@ -44,7 +124,7 @@
     ".pfo/PERMISSION_MATRIX.md",
     ".pfo/PERMISSION_MATRIX.json",
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-    "plans/harness-efficiency-metric-publish-piv-plan.md"
+    "plans/seo-plugin-skill-piv-plan.md"
   ],
   "passCriteria": [
     "All required commands exit 0.",

@@ -190,6 +190,21 @@
         "files_must_contain": {"MARKET_BRIEF.md": ["signals", "sources", "confidence"]}
       }
     },
+    "seo-optimization": {
+      "skill": "/seo",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["SEO_AUDIT.md", "CONTENT_BACKLOG.md", "VALIDATION_PLAN.md"]},
+        "notes.md": {"must_contain": ["SEO effectiveness", "no fabricated rankings"]}
+      },
+      "output_contract": {
+        "required_files": ["SEO_AUDIT.md", "CONTENT_BACKLOG.md", "VALIDATION_PLAN.md"],
+        "files_must_contain": {
+          "SEO_AUDIT.md": ["SEO SURFACE", "TECHNICAL SEO FINDINGS", "MEASUREMENT"],
+          "VALIDATION_PLAN.md": ["baseline", "metric", "decision"]
+        }
+      }
+    },
     "mcp-docs": {
       "skill": "/mcp-docs",
       "status": "active",
@@ -303,6 +318,18 @@
       },
       "output_contract": {
         "stdout_must_contain": ["security", "Critical", "status"]
+      }
+    },
+    "seo-optimization": {
+      "skill": "/seo",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["SEO_AUDIT.md", "CONTENT_BACKLOG.md", "VALIDATION_PLAN.md"]},
+        "notes.md": {"must_contain": ["SEO effectiveness", "no fabricated rankings"]}
+      },
+      "output_contract": {
+        "required_files": ["SEO_AUDIT.md"],
+        "any_file_must_contain": ["indexing", "metadata", "search intent", "priority"]
       }
     },
     "session-save": {

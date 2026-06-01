@@ -21,6 +21,8 @@
     "handoff",
     "mcp",
     "browser-testing",
+    "seo",
+    "organic-growth",
     "github",
     "linear",
     "google-drive",
@@ -44,6 +46,7 @@
       "Code Review",
       "Project Planning",
       "Market Research",
+      "SEO",
       "Testing",
       "Integrations",
       "Knowledge Export"
@@ -53,6 +56,7 @@
     "termsOfServiceURL": "https://github.com/hihol-labs/product-factory-os",
     "defaultPrompt": [
       "Turn my app idea into a Product Factory OS execution graph.",
+      "Run an SEO audit for this landing page.",
       "Review this project before I ship.",
       "Save the current session context."
     ],
