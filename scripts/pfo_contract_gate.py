@@ -82,6 +82,13 @@ TRANSPARENT_TERMS = (
     "cache",
     "fixture",
     "test",
+    "explicit",
+    "approved",
+    "approval",
+    "visible",
+    "declared",
+    "record",
+    "documented",
     "недоступ",
     "ошиб",
     "повтор",
@@ -201,7 +208,7 @@ def json_contract_errors(project: Path) -> list[str]:
         ".pfo/EXECUTION_POLICY.json": ["commandPolicy", "writePolicy", "networkPolicy", "approvalPolicy"],
         ".pfo/PERMISSION_MATRIX.json": ["actors", "capabilities", "rules"],
         ".pfo/VERIFICATION_CONTRACT.json": ["commands", "requiredArtifacts", "passCriteria", "failureMode"],
-        ".pfo/TOOL_CAPABILITY_REGISTRY.json": ["tools"],
+        ".pfo/TOOL_CAPABILITY_REGISTRY.json": ["tools", "selectionPolicy"],
     }.items():
         path = project / rel
         if not path.is_file():
@@ -219,6 +226,11 @@ def json_contract_errors(project: Path) -> list[str]:
                 if capability not in data.get("capabilities", {}):
                     errors.append(f"{rel}: missing capability {capability}")
         if rel.endswith("TOOL_CAPABILITY_REGISTRY.json"):
+            selection_policy = data.get("selectionPolicy")
+            if not isinstance(selection_policy, dict):
+                errors.append(f"{rel}: selectionPolicy must be an object")
+            elif selection_policy.get("mode") != "progressive-disclosure":
+                errors.append(f"{rel}: selectionPolicy.mode must be progressive-disclosure")
             tools = data.get("tools", [])
             if not isinstance(tools, list) or not tools:
                 errors.append(f"{rel}: tools must be a non-empty list")

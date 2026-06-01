@@ -30,6 +30,14 @@ def validate_registry(path: Path) -> None:
         data = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         fail(f"{path}: invalid JSON: {exc}")
+    selection_policy = data.get("selectionPolicy")
+    if not isinstance(selection_policy, dict):
+        fail(f"{path}: selectionPolicy must be an object")
+    if selection_policy.get("mode") != "progressive-disclosure":
+        fail(f"{path}: selectionPolicy.mode must be progressive-disclosure")
+    rules = selection_policy.get("rules")
+    if not isinstance(rules, list) or len(rules) < 3:
+        fail(f"{path}: selectionPolicy.rules must contain at least three rules")
     tools = data.get("tools")
     if not isinstance(tools, list) or not tools:
         fail(f"{path}: tools must be a non-empty list")

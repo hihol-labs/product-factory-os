@@ -13,6 +13,8 @@ PFO classifies every durable guardrail with two axes:
 
 The full matrix and inventory live in `docs/CONTROL_HARNESS.md`. PFO prefers computational feedback for blocking invariants, uses inferential controls for semantic judgment, and promotes repeated inferential findings into deterministic checks when possible.
 
+PFO uses agent harness engineering as the operating frame: work backwards from desired behaviour or observed failure, then add the smallest prompt, tool, hook, state, permission, verification, or review control that changes future runs. The source integration guide is `docs/AGENT_HARNESS_ENGINEERING.md`.
+
 ## Codex Goal Mode
 
 Codex `/goal` mode is default-on inside Product Factory OS. For every non-trivial local project request, Codex creates or continues one goal before implementation. The objective names the user outcome and the active PFO route, for example `/project -> /kickstart` for new products or `/task -> /bugfix` for existing-code work.
@@ -33,7 +35,7 @@ The goal stays active through implementation, gates, verification, and state-sav
 10. Ask only the clarifying questions that change the build.
 11. Produce documents before code.
 12. Review the documents before implementation.
-13. Build a unit context manifest before executing a node.
+13. Build a unit context manifest before executing a node, including context and tool policy for the active unit.
 14. Write `/handoff` before session transfer, role switch, delegated execution, AFK, compaction, or recovery.
 15. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
 16. Implement execution graph nodes in small, isolated units.
@@ -50,7 +52,7 @@ The goal stays active through implementation, gates, verification, and state-sav
 27. Review before commit or deploy.
 28. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
 29. Finish branches with an explicit PR, merge, keep, or discard decision.
-30. Extract durable learnings after completed milestones or significant repairs.
+30. Extract durable learnings after completed milestones or significant repairs, and promote repeated failures through the harness ratchet.
 31. Promote repeatable solutions into assets and content candidates.
 32. Harden production-facing services.
 33. Deploy only after explicit confirmation.
@@ -142,6 +144,7 @@ New projects are local-first. The mandatory bootstrap target is a project direct
 - `.pfo/VERIFICATION_CONTRACT.json`: required verification commands, expected output, timeout, pass/fail parser, and artifacts
 - `.pfo/TOOL_CAPABILITY_REGISTRY.json`: tool and connector read/write/execute capability registry with side effects, auth, external data risk, fallback mode, and approvals
 - `.pfo/LEARNING_PROMOTION_GATE.md`: promotion path from repeated errors to tests, hooks, docs, rules, linters, validators, templates, routes, or skills
+- `docs/AGENT_HARNESS_ENGINEERING.md`: PFO operating standard for ratcheting observed agent failures into context, tool, hook, verification, and review controls
 - `.pfo/EXPERIMENT_PROGRAM.md`: Autoresearch-style fixed-budget experiment contract
 - `.pfo/EXPERIMENTS.tsv`: baseline, candidate metrics, and keep/discard/crash decisions
 - `.codex-memory/LEARNINGS.md`: durable decisions, lessons, patterns, and surprises

@@ -10,9 +10,12 @@ This map tracks which external agent-engineering principles are covered by Produ
 | Surgical changes | Full | `.pfo/FORBIDDEN_CHANGES.md`, scope lock, diff risk gate | Add more starter-specific negative contracts |
 | Goal-driven execution | Full | execution graph nodes, unit manifests, done criteria | Strengthen generated-project validators |
 | Context budgeting | Partial | `/handoff`, `/session-save`, `session-diagnostics.py` | Add context budget thresholds per project type |
+| Context economy | Full | `docs/AGENT_HARNESS_ENGINEERING.md`, `HANDOFF.md`, unit context policy | Add numeric thresholds after more real traces |
 | Durable checkpoints beyond git | Partial | `.codex-memory/STATE.json`, `HANDOFF.md`, `PFO_RECOVERY.md` | Add checkpoint restore smoke tests |
 | Tool trust boundary | Full | hook layer, explicit side-effect metadata, explicit invocation gates | Keep dangerous route list synced with metadata |
+| Tool surface discipline | Full | tool selection policy, capability registry, approval metadata | Prune overlapping tools from real usage traces |
 | Control harness taxonomy | Full | `docs/CONTROL_HARNESS.md`, `validate_control_harness.py`, CI/release wiring | Promote repeated inferential findings into deterministic gates |
+| Harness ratchet | Full | `LEARNING_PROMOTION_GATE.md`, `pfo_learn.py`, `memory/LEARNING_REGISTRY.json` | Add automatic stale-rule review later |
 | Skill discovery | Full | trigger registry, `verify_triggers.py`, route snapshots | Add regression prompts from real misses |
 | Behavioural regression testing | Partial | fixture contracts for key skills | Expand contracts to all 32 skills over time |
 | Drift prevention | Full | meta-review, manifest drift, install sync, skill profiles | Add table row integrity checks for more docs |
@@ -34,6 +37,7 @@ This map tracks which external agent-engineering principles are covered by Produ
 - Session diagnostics: project state freshness, recovery, handoff, and telemetry are surfaced at prompt time.
 - Install sync guard: hook manifest, installer, docs, and CI must remain aligned.
 - Marketplace polish: local marketplace metadata includes a hero image.
+- Agent harness engineering: PFO now maps model-plus-harness failures to context economy, tool surface discipline, evaluator split, and learning ratchet controls.
 
 ## Open Gaps
 

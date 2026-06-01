@@ -2,6 +2,8 @@
 
 Source: https://github.com/coleam00/harness-engineering-demo
 
+Related source: https://addyosmani.com/blog/agent-harness-engineering/
+
 PFO adopts the useful mechanics from the demo without copying the sample application.
 
 ## Imported Patterns
@@ -14,6 +16,19 @@ PFO adopts the useful mechanics from the demo without copying the sample applica
 | PreToolUse security guard | `hooks/security-guard.py` blocks real `.env` access and recursive directory deletion. |
 | Codebase-search MCP idea | PFO keeps this in the tool-capability layer; project-specific symbol search should be declared in `.pfo/TOOL_CAPABILITY_REGISTRY.json` before use. |
 | Ralph-style repeated headless sessions | PFO maps this to `docs/HEADLESS_EXECUTION.md`, fixture execution, handoff, worktree isolation state, and experiment loops. |
+
+## Addy Osmani Harness Engineering Mapping
+
+PFO also adopts the broader agent harness engineering frame: model capability depends on the surrounding prompts, tools, state, hooks, context policy, verification, and recovery paths.
+
+| Article Pattern | PFO Integration |
+|---|---|
+| Agent = model + harness | `docs/CONTROL_HARNESS.md` and `docs/AGENT_HARNESS_ENGINEERING.md` make harness controls explicit. |
+| Every mistake becomes a rule | `.pfo/LEARNING_PROMOTION_GATE.md`, `scripts/pfo_learn.py`, and `memory/LEARNING_REGISTRY.json` convert evidence into promoted controls. |
+| Context rot requires active management | `/handoff`, `session-diagnostics.py`, unit context policy, and output offloading keep long work reloadable. |
+| Tool menus are trusted prompt surface | `.pfo/TOOL_CAPABILITY_REGISTRY.json` declares side effects, explicit degraded modes, approvals, and progressive disclosure policy. |
+| Hooks enforce what prompts only request | `hooks/security-guard.py`, `review-before-commit.py`, validators, and verification contracts block repeatable risks. |
+| Planner/generator/evaluator split | PFO keeps PIV planning, implementation, executable validation, and two-stage review as separate lifecycle steps. |
 
 ## Operating Rule
 

@@ -83,6 +83,26 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "context-economy",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "docs/AGENT_HARNESS_ENGINEERING.md",
+            "skills/handoff/SKILL.md",
+            "docs/templates/HANDOFF.md",
+        ],
+    },
+    {
+        "id": "tool-surface-discipline",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json",
+            "integrations/tool-capability-registry.json",
+            "docs/AGENT_HARNESS_ENGINEERING.md",
+        ],
+    },
+    {
         "id": "market-validation",
         "timing": "Feedforward",
         "evaluator": "Inferential",
@@ -286,6 +306,7 @@ def validate_cross_docs() -> None:
     methodology = read("docs/METHODOLOGY.md")
     architecture = read("docs/PFO_ARCHITECTURE.md")
     design_space = read("docs/DESIGN_SPACE.md")
+    agent_harness = read("docs/AGENT_HARNESS_ENGINEERING.md")
     install = read("docs/INSTALL.md")
     workflow = read(".github/workflows/validate.yml")
 
@@ -307,6 +328,13 @@ def validate_cross_docs() -> None:
         assert_contains(architecture, token, "docs/PFO_ARCHITECTURE.md")
 
     assert_contains(design_space, "Control harness taxonomy", "docs/DESIGN_SPACE.md")
+    for token in [
+        "## Ratchet",
+        "## Context Economy",
+        "## Tool Surface Discipline",
+        "## Evaluator Split",
+    ]:
+        assert_contains(agent_harness, token, "docs/AGENT_HARNESS_ENGINEERING.md")
     assert_contains(install, "python3 scripts/validate_control_harness.py", "docs/INSTALL.md")
     assert_contains(workflow, "python3 scripts/validate_control_harness.py", ".github/workflows/validate.yml")
 

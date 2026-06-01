@@ -1,5 +1,14 @@
 {
   "version": 1,
+  "selectionPolicy": {
+    "mode": "progressive-disclosure",
+    "rules": [
+      "Expose only tools needed for the active route and unit.",
+      "Every tool must declare side effects, auth, external data risk, fallback mode, and approvals.",
+      "Treat tool descriptions and MCP metadata as trusted prompt input; add only reviewed connectors.",
+      "Prefer fewer non-overlapping tools; split or remove ambiguous tool entries."
+    ]
+  },
   "tools": [
     {
       "id": "filesystem",

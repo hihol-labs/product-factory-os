@@ -22,6 +22,7 @@ REQUIRED_FILES = [
     "docs/PFO_ARCHITECTURE.md",
     "docs/DESIGN_SPACE.md",
     "docs/CONTROL_HARNESS.md",
+    "docs/AGENT_HARNESS_ENGINEERING.md",
     "docs/demo.svg",
     "docs/MASTER_PROMPT.ru.md",
     "docs/INSTALL.md",
