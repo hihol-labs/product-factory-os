@@ -6,14 +6,16 @@ Product Factory OS is built around small gates instead of one large generation p
 
 PFO classifies every durable guardrail with two axes:
 
-- Feedforward controls shape work before execution: instructions, templates, architecture decisions, examples, task decomposition, permission policy, and verification contracts.
-- Feedback controls judge work after output exists: tests, hooks, CI, validators, security review, UX review, human review, and repair gates.
+- Feedforward controls, or guides, shape work before execution: instructions, templates, architecture decisions, examples, task decomposition, permission policy, and verification contracts.
+- Feedback controls, or sensors, judge work after output exists: tests, hooks, CI, validators, security review, UX review, human review, and repair gates.
 - Computational controls are deterministic: linters, tests, schema validation, contract gates, execution graph validation, permission gates, build checks, and generated-project CI.
 - Inferential controls use LLM or human judgment: reviewer, security-reviewer, UX-reviewer, advisor, grill-me, architecture debate, and market synthesis.
 
 The full matrix and inventory live in `docs/CONTROL_HARNESS.md`. PFO prefers computational feedback for blocking invariants, uses inferential controls for semantic judgment, and promotes repeated inferential findings into deterministic checks when possible.
 
-PFO uses agent harness engineering as the operating frame: work backwards from desired behaviour or observed failure, then add the smallest prompt, tool, hook, state, permission, verification, or review control that changes future runs. The source integration guide is `docs/AGENT_HARNESS_ENGINEERING.md`.
+PFO uses agent harness engineering as the operating frame: work backwards from desired behaviour or observed failure, then add the smallest prompt, tool, hook, state, permission, verification, or review control that changes future runs. Controls must also name what they regulate: maintainability, architecture fitness, or behaviour.
+
+PFO keeps quality left by running fast computational sensors locally, repeating them in CI or release gates, and reserving slower inferential or broad sensors for higher-risk decisions. The source integration guide is `docs/AGENT_HARNESS_ENGINEERING.md`.
 
 ## Codex Goal Mode
 
@@ -36,27 +38,29 @@ The goal stays active through implementation, gates, verification, and state-sav
 11. Produce documents before code.
 12. Review the documents before implementation.
 13. Build a unit context manifest before executing a node, including context and tool policy for the active unit.
-14. Write `/handoff` before session transfer, role switch, delegated execution, AFK, compaction, or recovery.
-15. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
-16. Implement execution graph nodes in small, isolated units.
-17. Record dispatches, verification commands, cost or token notes, and recovery decisions.
-18. For measurement-driven self-improvement, initialize an experiment loop with one metric, a fixed budget, protected evaluation files, and a results TSV.
-19. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
-20. For bugfixes, record root-cause evidence before changing code.
-21. Run `/browser-check` for browser-facing critical flows.
-22. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
-23. Before MVP launch, define activation, retention, PMF signals, and false-positive traction when market risk is material.
-24. Use optional launch maturity and scale moat artifacts only when stage and risk justify them.
-25. Verify work fail-closed: unclear verification does not pass.
-26. Run two-stage review: spec compliance first, code quality second.
-27. Review before commit or deploy.
-28. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
-29. Finish branches with an explicit PR, merge, keep, or discard decision.
-30. Extract durable learnings after completed milestones or significant repairs, and promote repeated failures through the harness ratchet.
-31. Promote repeatable solutions into assets and content candidates.
-32. Harden production-facing services.
-33. Deploy only after explicit confirmation.
-34. Save reloadable session memory.
+14. Check harnessability for the active unit: clear structure, contracts, golden flows, command availability, and sensor coverage.
+15. Write `/handoff` before session transfer, role switch, delegated execution, AFK, compaction, or recovery.
+16. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
+17. Implement execution graph nodes in small, isolated units.
+18. Run fast local sensors as early as possible: targeted tests, validators, lint, schema checks, route checks.
+19. Record dispatches, verification commands, cost or token notes, and recovery decisions.
+20. For measurement-driven self-improvement, initialize an experiment loop with one metric, a fixed budget, protected evaluation files, and a results TSV.
+21. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
+22. For bugfixes, record root-cause evidence before changing code.
+23. Run `/browser-check` for browser-facing critical flows.
+24. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
+25. Before MVP launch, define activation, retention, PMF signals, and false-positive traction when market risk is material.
+26. Use optional launch maturity and scale moat artifacts only when stage and risk justify them.
+27. Verify work fail-closed: unclear verification does not pass.
+28. Run two-stage review: spec compliance first, code quality second.
+29. Review before commit or deploy.
+30. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
+31. Finish branches with an explicit PR, merge, keep, or discard decision.
+32. Extract durable learnings after completed milestones or significant repairs, and promote repeated failures through the harness ratchet.
+33. Promote repeatable solutions into assets and content candidates.
+34. Harden production-facing services.
+35. Deploy only after explicit confirmation.
+36. Save reloadable session memory.
 
 ## Existing Project Lifecycle
 
@@ -141,7 +145,7 @@ New projects are local-first. The mandatory bootstrap target is a project direct
 - `.pfo/EXECUTION_POLICY.json`: command, write, network, and approval policy
 - `.pfo/PERMISSION_MATRIX.json`: machine-readable permission table for local, git, external API, secret, deploy, and migration actions
 - `.pfo/PERMISSION_MATRIX.md`: human-readable permission table
-- `.pfo/VERIFICATION_CONTRACT.json`: required verification commands, expected output, timeout, pass/fail parser, and artifacts
+- `.pfo/VERIFICATION_CONTRACT.json`: required verification commands, expected output, timeout, pass/fail parser, artifacts, and sensor timing policy
 - `.pfo/TOOL_CAPABILITY_REGISTRY.json`: tool and connector read/write/execute capability registry with side effects, auth, external data risk, fallback mode, and approvals
 - `.pfo/LEARNING_PROMOTION_GATE.md`: promotion path from repeated errors to tests, hooks, docs, rules, linters, validators, templates, routes, or skills
 - `docs/AGENT_HARNESS_ENGINEERING.md`: PFO operating standard for ratcheting observed agent failures into context, tool, hook, verification, and review controls

@@ -271,6 +271,12 @@ Open `dashboard/index.html` locally or generate metrics:
 python3 scripts/pfo.py metrics --workspace /home/hihol/projects > dashboard/metrics.json
 ```
 
+The metrics payload includes `harnessEfficiency`, a comparable signal for recent methodology effectiveness:
+
+- `timeToFirstValidUnitSeconds`: seconds from unit manifest to first passing verification.
+- `repairLoopsPerVerifiedUnit`: lower is better; repeated blockers or failed validations increase it.
+- `verificationPassRate` and `gatePassRate`: higher means the harness is catching and guiding work before late review.
+
 ## Release Check
 
 ```bash

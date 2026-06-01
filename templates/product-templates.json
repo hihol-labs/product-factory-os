@@ -6,70 +6,150 @@
       "defaultFolders": ["backend/app", "backend/tests", "frontend/src", "frontend/tests", "infra", "docs"],
       "testMinimums": ["auth tests", "core API tests", "permission tests", "dashboard smoke", "billing webhook mocks"],
       "securityMinimums": ["tenant isolation", "secret handling", "session/cookie policy", "rate limit on auth"],
-      "deployMinimums": ["Dockerfile", ".env.example", "health check", "rollback notes"]
+      "deployMinimums": ["Dockerfile", ".env.example", "health check", "rollback notes"],
+      "harnessTemplate": {
+        "topology": "subscription SaaS",
+        "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+        "guides": ["tenant model", "billing lifecycle", "dashboard flows"],
+        "fastSensors": ["auth tests", "permission tests", "dashboard smoke"],
+        "pipelineSensors": ["contract gate", "billing webhook contract tests", "security review"],
+        "continuousSensors": ["dependency scan", "health check", "billing drift"]
+      }
     },
     "messaging_bot": {
       "modules": ["event_loop", "handlers", "state_manager", "integrations", "command_router"],
       "defaultFolders": ["bot", "bot/handlers", "bot/services", "tests", "infra"],
       "testMinimums": ["command routing tests", "handler flow tests", "state transition tests", "integration mocks"],
       "securityMinimums": ["token env vars", "admin command permissions", "input validation", "rate limiting"],
-      "deployMinimums": ["Dockerfile", "process manager or webhook notes", ".env.example"]
+      "deployMinimums": ["Dockerfile", "process manager or webhook notes", ".env.example"],
+      "harnessTemplate": {
+        "topology": "message-driven bot",
+        "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+        "guides": ["command map", "state model", "integration contract"],
+        "fastSensors": ["command routing tests", "handler flow tests", "state transition tests"],
+        "pipelineSensors": ["integration contract tests", "permission tests", "contract gate"],
+        "continuousSensors": ["token rotation check", "error-rate monitor", "dead-letter review"]
+      }
     },
     "api_service": {
       "modules": ["routing", "controllers", "services", "middleware", "db_layer"],
       "defaultFolders": ["app/api", "app/services", "app/models", "tests", "infra"],
       "testMinimums": ["route contract tests", "service tests", "validation error tests", "auth/permission tests"],
       "securityMinimums": ["auth middleware", "input validation", "CORS policy", "rate limiting"],
-      "deployMinimums": ["Dockerfile", "health check", ".env.example", "rollback notes"]
+      "deployMinimums": ["Dockerfile", "health check", ".env.example", "rollback notes"],
+      "harnessTemplate": {
+        "topology": "business API service",
+        "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+        "guides": ["route contract", "service boundary", "data model"],
+        "fastSensors": ["route contract tests", "service tests", "validation error tests"],
+        "pipelineSensors": ["auth/permission tests", "contract gate", "schema validation"],
+        "continuousSensors": ["latency SLO", "error-rate monitor", "dependency scan"]
+      }
     },
     "web_app": {
       "modules": ["frontend", "backend", "auth", "storage"],
       "defaultFolders": ["frontend/src", "frontend/tests", "backend/app", "backend/tests"],
       "testMinimums": ["form tests", "core flow smoke", "API contract tests", "responsive/accessibility checks"],
       "securityMinimums": ["auth boundaries", "XSS-safe rendering", "CSRF/cookie policy where relevant"],
-      "deployMinimums": ["build command", ".env.example", "static or server deployment notes"]
+      "deployMinimums": ["build command", ".env.example", "static or server deployment notes"],
+      "harnessTemplate": {
+        "topology": "interactive web app",
+        "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+        "guides": ["component boundaries", "API contract", "golden flows"],
+        "fastSensors": ["form tests", "core flow smoke", "API contract tests"],
+        "pipelineSensors": ["build command", "responsive/accessibility checks", "browser smoke"],
+        "continuousSensors": ["web vitals", "error-rate monitor", "dependency scan"]
+      }
     },
     "landing_page": {
       "modules": ["page_sections", "lead_capture", "analytics", "deployment"],
       "defaultFolders": ["src", "tests", "public"],
       "testMinimums": ["lead form test", "responsive smoke", "analytics hook check"],
       "securityMinimums": ["spam control", "no secret exposure", "privacy note for lead data"],
-      "deployMinimums": ["Vercel or Netlify config", "build command", "publish directory"]
+      "deployMinimums": ["Vercel or Netlify config", "build command", "publish directory"],
+      "harnessTemplate": {
+        "topology": "conversion landing page",
+        "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+        "guides": ["offer", "lead form contract", "analytics events"],
+        "fastSensors": ["lead form test", "responsive smoke", "analytics hook check"],
+        "pipelineSensors": ["build command", "privacy review", "contract gate"],
+        "continuousSensors": ["conversion monitor", "form error monitor", "link check"]
+      }
     },
     "cli_tool": {
       "modules": ["commands", "config", "io", "packaging"],
       "defaultFolders": ["src", "tests", "docs"],
       "testMinimums": ["command parsing tests", "error code tests", "file/stdin/stdout tests"],
       "securityMinimums": ["safe file paths", "no shell injection", "config secret handling"],
-      "deployMinimums": ["packaging notes", "install command", "release artifact"]
+      "deployMinimums": ["packaging notes", "install command", "release artifact"],
+      "harnessTemplate": {
+        "topology": "command-line tool",
+        "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+        "guides": ["command contract", "I/O policy", "error model"],
+        "fastSensors": ["command parsing tests", "error code tests", "file/stdin/stdout tests"],
+        "pipelineSensors": ["packaging check", "shell-injection review", "release artifact check"],
+        "continuousSensors": ["dependency scan", "usage regression review", "docs drift check"]
+      }
     },
     "mini_app": {
       "modules": ["frontend", "platform_sdk", "backend", "auth", "storage"],
       "defaultFolders": ["frontend/src", "backend/app", "tests", "infra"],
       "testMinimums": ["platform init test", "auth handshake test", "core UI flow", "backend contract tests"],
       "securityMinimums": ["platform signature validation", "auth boundaries", "data classification"],
-      "deployMinimums": ["platform config", "frontend build", "backend health check"]
+      "deployMinimums": ["platform config", "frontend build", "backend health check"],
+      "harnessTemplate": {
+        "topology": "platform mini app",
+        "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+        "guides": ["platform lifecycle", "auth handshake", "golden UI flow"],
+        "fastSensors": ["platform init test", "auth handshake test", "core UI flow"],
+        "pipelineSensors": ["frontend build", "backend contract tests", "signature validation"],
+        "continuousSensors": ["platform SDK drift", "health check", "error-rate monitor"]
+      }
     },
     "ecommerce": {
       "modules": ["catalog", "cart", "checkout", "orders", "payments", "admin"],
       "defaultFolders": ["backend/app", "backend/tests", "frontend/src", "frontend/tests", "infra"],
       "testMinimums": ["catalog tests", "cart tests", "checkout tests", "payment webhook mocks", "order state tests"],
       "securityMinimums": ["payment provider isolation", "admin permissions", "PII handling", "audit log"],
-      "deployMinimums": ["Dockerfile", "health check", "migration step", "rollback notes"]
+      "deployMinimums": ["Dockerfile", "health check", "migration step", "rollback notes"],
+      "harnessTemplate": {
+        "topology": "transactional commerce service",
+        "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+        "guides": ["checkout contract", "order state machine", "payment boundary"],
+        "fastSensors": ["catalog tests", "cart tests", "checkout tests"],
+        "pipelineSensors": ["payment webhook contract tests", "order state tests", "security review"],
+        "continuousSensors": ["payment failure monitor", "order drift review", "dependency scan"]
+      }
     },
     "data_scraper": {
       "modules": ["fetch", "parse", "storage", "scheduler", "queue"],
       "defaultFolders": ["scraper", "scraper/parsers", "tests/fixtures", "infra"],
       "testMinimums": ["parser fixture tests", "fetch retry tests", "scheduler dry run", "storage tests"],
       "securityMinimums": ["robots/terms note", "rate limit", "credential handling", "safe output storage"],
-      "deployMinimums": ["scheduler config", "Dockerfile", "logs", "retry/failure notes"]
+      "deployMinimums": ["scheduler config", "Dockerfile", "logs", "retry/failure notes"],
+      "harnessTemplate": {
+        "topology": "scheduled data ingestion",
+        "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+        "guides": ["source policy", "parser fixture", "retry contract"],
+        "fastSensors": ["parser fixture tests", "fetch retry tests", "scheduler dry run"],
+        "pipelineSensors": ["storage tests", "robots/terms review", "contract gate"],
+        "continuousSensors": ["source drift monitor", "rate-limit monitor", "dead-letter review"]
+      }
     },
     "internal_automation": {
       "modules": ["workflow", "integrations", "admin_ui", "storage", "audit_log"],
       "defaultFolders": ["app/workflows", "app/integrations", "tests", "docs"],
       "testMinimums": ["workflow tests", "integration mocks", "audit log tests", "permission tests"],
       "securityMinimums": ["least privilege integrations", "audit trail", "secret handling", "role boundaries"],
-      "deployMinimums": ["runbook", "health check", ".env.example", "rollback notes"]
+      "deployMinimums": ["runbook", "health check", ".env.example", "rollback notes"],
+      "harnessTemplate": {
+        "topology": "internal workflow automation",
+        "regulates": ["maintainability", "architecture_fitness", "behaviour"],
+        "guides": ["workflow contract", "integration policy", "audit requirements"],
+        "fastSensors": ["workflow tests", "integration contract tests", "audit log tests"],
+        "pipelineSensors": ["permission tests", "least-privilege review", "contract gate"],
+        "continuousSensors": ["integration drift monitor", "audit sampling", "health check"]
+      }
     }
   },
   "moduleContracts": {
@@ -95,4 +175,3 @@
     "queue": ["producer", "consumer", "dead_letter_policy", "retry_policy"]
   }
 }
-

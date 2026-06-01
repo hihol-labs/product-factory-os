@@ -5,8 +5,8 @@ This is the user-facing project steering checkpoint. It intentionally avoids int
 ## Where We Are
 
 - Product: Existing project `product-factory-os` analyzed by Product Factory OS.
-- Current outcome: Unit harness-engineering-addy is scoped and ready for user approval.
-- Recommended next step: Execute PIV plan plans/harness-engineering-addy-piv-plan.md: Integrate Addy Osmani agent harness engineering patterns into PFO docs, templates, and validators
+- Current outcome: Unit seo-plugin-skill is scoped and ready for user approval.
+- Recommended next step: Execute PIV plan plans/seo-plugin-skill-piv-plan.md: Integrate SEO optimization workflow into PFO plugin runtime
 - Approval status: PENDING
 
 ## Visible Roadmap
@@ -17,14 +17,14 @@ This is the user-facing project steering checkpoint. It intentionally avoids int
 
 ## Recommended Next Step
 
-- Step: Execute PIV plan plans/harness-engineering-addy-piv-plan.md: Integrate Addy Osmani agent harness engineering patterns into PFO docs, templates, and validators
+- Step: Execute PIV plan plans/seo-plugin-skill-piv-plan.md: Integrate SEO optimization workflow into PFO plugin runtime
 - Why now: It is the smallest coherent step that moves the product forward.
 - Files likely touched: use `BUILD_PLAN.md` and `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 - Verification: use `TEST_PLAN.md` and `.pfo/VERIFICATION_CONTRACT.json`.
 
 ## Alternatives
 
-- Approve unit harness-engineering-addy and start implementation.
+- Approve unit seo-plugin-skill and start implementation.
 - Change the unit goal or scope.
 - Pause and review BUILD_PLAN.md / EXECUTION_GRAPH.md.
 

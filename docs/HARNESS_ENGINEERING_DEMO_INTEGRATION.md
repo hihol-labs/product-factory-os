@@ -4,6 +4,8 @@ Source: https://github.com/coleam00/harness-engineering-demo
 
 Related source: https://addyosmani.com/blog/agent-harness-engineering/
 
+Related source: https://martinfowler.com/articles/harness-engineering.html
+
 PFO adopts the useful mechanics from the demo without copying the sample application.
 
 ## Imported Patterns
@@ -29,6 +31,19 @@ PFO also adopts the broader agent harness engineering frame: model capability de
 | Tool menus are trusted prompt surface | `.pfo/TOOL_CAPABILITY_REGISTRY.json` declares side effects, explicit degraded modes, approvals, and progressive disclosure policy. |
 | Hooks enforce what prompts only request | `hooks/security-guard.py`, `review-before-commit.py`, validators, and verification contracts block repeatable risks. |
 | Planner/generator/evaluator split | PFO keeps PIV planning, implementation, executable validation, and two-stage review as separate lifecycle steps. |
+
+## Martin Fowler Harness Engineering Mapping
+
+PFO also adopts Fowler's coding-agent user harness vocabulary and lifecycle placement rules.
+
+| Article Pattern | PFO Integration |
+|---|---|
+| Guides and sensors | Feedforward controls are guides; feedback controls are sensors in `docs/CONTROL_HARNESS.md` and `docs/AGENT_HARNESS_ENGINEERING.md`. |
+| Quality left | Fast computational sensors run locally and before handoff; broader or expensive sensors repeat in CI, release, or production-readiness gates. |
+| Maintainability, architecture fitness, behaviour | PFO classifies harness controls and product templates by the category they regulate. |
+| Harnessability | PFO treats clear module boundaries, typed contracts, golden flows, logs, and fixtures as first-class generation constraints. |
+| Harness templates | `templates/product-templates.json` carries topology-level guide/sensor bundles, backed by starter packs and golden paths. |
+| Human steering | `NEXT_STEP.md`, `.codex-memory/STATE.json`, review roles, and approval gates route human attention to unclear intent, accepted risk, and harness gaps. |
 
 ## Operating Rule
 

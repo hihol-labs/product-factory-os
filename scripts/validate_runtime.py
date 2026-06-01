@@ -15,6 +15,7 @@ PRODUCT_TYPES = {
     "mini_app",
     "internal_automation",
 }
+HARNESS_REGULATION_CATEGORIES = {"maintainability", "architecture_fitness", "behaviour"}
 
 
 def fail(message: str) -> None:
@@ -23,6 +24,28 @@ def fail(message: str) -> None:
 
 
 def main() -> None:
+    product_templates_path = ROOT / "templates" / "product-templates.json"
+    product_templates = json.loads(product_templates_path.read_text(encoding="utf-8"))
+    templates = product_templates.get("templates", {})
+    if not isinstance(templates, dict) or not templates:
+        fail("templates/product-templates.json must define templates")
+    for name, template in templates.items():
+        if not isinstance(template, dict):
+            fail(f"template {name} must be an object")
+        harness = template.get("harnessTemplate")
+        if not isinstance(harness, dict):
+            fail(f"template {name} missing harnessTemplate")
+        for field in ["topology", "regulates", "guides", "fastSensors", "pipelineSensors", "continuousSensors"]:
+            if field not in harness:
+                fail(f"template {name} harnessTemplate missing {field}")
+        regulates = set(harness.get("regulates", []))
+        if not HARNESS_REGULATION_CATEGORIES.issubset(regulates):
+            fail(f"template {name} harnessTemplate must regulate maintainability, architecture_fitness, and behaviour")
+        for field in ["guides", "fastSensors", "pipelineSensors", "continuousSensors"]:
+            value = harness.get(field)
+            if not isinstance(value, list) or not value:
+                fail(f"template {name} harnessTemplate.{field} must be a non-empty list")
+
     starters = {}
     for path in (ROOT / "starters").glob("*/STARTER.json"):
         data = json.loads(path.read_text(encoding="utf-8"))

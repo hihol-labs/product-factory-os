@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "unitId": "harness-engineering-addy",
-  "goal": "Integrate Addy Osmani agent harness engineering patterns into PFO docs, templates, and validators",
-  "createdAt": "2026-06-01T14:34:57+00:00",
+  "unitId": "seo-plugin-skill",
+  "goal": "Integrate SEO optimization workflow into PFO plugin runtime",
+  "createdAt": "2026-06-01T19:50:22+00:00",
   "requiredInputs": [
     "CODEX.md",
     ".codex-memory/STATE.json",
@@ -29,8 +29,22 @@
     "ROOT_CAUSE.md for bugfix units"
   ],
   "allowedWriteAreas": [
-    "files listed by the active execution graph node",
-    "tests for changed behavior",
+    "skills/seo/",
+    "docs/SKILL_CONTRACTS.md",
+    "docs/TRIGGERS.md",
+    "docs/CALL_GRAPH.md",
+    "docs/CONTROL_HARNESS.md",
+    "hooks/route-reminder.py",
+    "scripts/validate_structure.py",
+    "scripts/validate_control_harness.py",
+    "tests/fixtures/seo-optimization/",
+    "tests/snapshots/route-snapshots.json",
+    "tests/fixture-contracts.json",
+    "README.md",
+    "README.ru.md",
+    "CHANGELOG.md",
+    ".codex-plugin/plugin.json",
+    "marketplace/marketplace-entry.json",
     "PFO_REPORT.md",
     "plans/",
     "reports/",
@@ -47,11 +61,17 @@
   ],
   "dependencies": [],
   "verificationCommands": [
-    "commands declared in `.pfo/VERIFICATION_CONTRACT.json`",
-    "failing test command before implementation for behavior changes",
-    "passing test command after minimal implementation",
-    "project test command from TEST_PLAN.md",
-    "python3 scripts/pfo_contract_gate.py <project> when running from PFO root"
+    "python3 hooks/skill-completeness.py --skill seo",
+    "python3 scripts/validate_structure.py",
+    "python3 scripts/run_fixtures.py",
+    "python3 scripts/verify_triggers.py",
+    "python3 scripts/verify_fixture_contracts.py",
+    "python3 scripts/run_headless_fixtures.py --mode mock",
+    "python3 scripts/validate_control_harness.py",
+    "python3 scripts/verify_skill_profiles.py",
+    "python3 scripts/verify_manifest_drift.py",
+    "python3 scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os",
+    "python3 scripts/production_readiness.py"
   ],
   "contextPolicy": {
     "mode": "progressive-disclosure",
@@ -69,6 +89,45 @@
       "do not use connectors outside .pfo/TOOL_CAPABILITY_REGISTRY.json without explicit approval",
       "treat tool descriptions and MCP metadata as trusted prompt input",
       "record a fallback or blocker when a required tool is unavailable"
+    ]
+  },
+  "harnessPolicy": {
+    "sourcePattern": "Martin Fowler coding-agent user harness",
+    "guideSensorPairing": "Blocking guides should name the feedback sensors that prove or repair them.",
+    "regulationCategories": [
+      "maintainability",
+      "architecture_fitness",
+      "behaviour"
+    ],
+    "qualityLeft": {
+      "localFastSensors": [
+        "targeted tests",
+        "validators",
+        "lint or schema checks",
+        "contract gates relevant to touched files"
+      ],
+      "pipelineSensors": [
+        "full fixture suite",
+        "production readiness",
+        "security/dependency review when risk warrants it"
+      ],
+      "continuousSensors": [
+        "state freshness",
+        "dependency drift",
+        "benchmark or runtime health signals when available"
+      ]
+    },
+    "harnessabilityChecks": [
+      "clear module boundaries",
+      "available verification commands",
+      "golden flows or fixtures for behaviour changes",
+      "observable logs or health checks for runtime work"
+    ],
+    "humanSteering": [
+      "unclear intent",
+      "accepted risk",
+      "load-bearing convention",
+      "conflicting or missing sensor evidence"
     ]
   },
   "gates": [
@@ -101,8 +160,8 @@
   ],
   "pivLoop": {
     "sourcePattern": "harness-engineering-demo PIV loop",
-    "planPath": "plans/harness-engineering-addy-piv-plan.md",
-    "implementationReportPath": "reports/harness-engineering-addy-implementation-report.md",
+    "planPath": "plans/seo-plugin-skill-piv-plan.md",
+    "implementationReportPath": "reports/seo-plugin-skill-implementation-report.md",
     "sequence": [
       "plan",
       "implement",

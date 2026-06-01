@@ -15,6 +15,7 @@
 - `pfo learning-gate` blocks unreviewed learning promotions before runtime changes.
 - Added machine-readable `.pfo/PERMISSION_MATRIX.json`, `.pfo/TOOL_CAPABILITY_REGISTRY.json`, `pfo permission-check`, `pfo event`, and `pfo tool-registry`.
 - PFO Default Stack v1 policy: FastAPI/Pydantic/PostgreSQL/Vue/TypeScript/Vite as the golden path, with documented ADR-style deviations allowed.
+- `/seo` skill for technical SEO, search intent, metadata, structured data, content backlog, and organic acquisition measurement work.
 
 ---
 

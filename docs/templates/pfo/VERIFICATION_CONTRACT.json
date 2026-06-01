@@ -3,6 +3,30 @@
   "purpose": "Executable verification contract for the active unit.",
   "unitId": "",
   "createdAt": "",
+  "sensorPolicy": {
+    "qualityLeft": "Run fast computational sensors locally before broader or inferential gates.",
+    "regulates": [
+      "maintainability",
+      "architecture_fitness",
+      "behaviour"
+    ],
+    "localFastSensors": [
+      "targeted tests",
+      "validators",
+      "lint or schema checks",
+      "contract gates"
+    ],
+    "pipelineSensors": [
+      "full fixture suite",
+      "production readiness",
+      "security/dependency gates when applicable"
+    ],
+    "continuousSensors": [
+      "state freshness",
+      "dependency drift",
+      "benchmarks or runtime health when available"
+    ]
+  },
   "commandSchema": {
     "requiredFields": [
       "id",
