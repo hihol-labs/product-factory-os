@@ -12,6 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
 MANAGED_START = "<!-- PFO_WORKSPACE_RUNTIME_START -->"
 MANAGED_END = "<!-- PFO_WORKSPACE_RUNTIME_END -->"
+GLOBAL_MANAGED_START = "<!-- PFO_GLOBAL_RUNTIME_START -->"
+GLOBAL_MANAGED_END = "<!-- PFO_GLOBAL_RUNTIME_END -->"
 
 
 def fail(message: str) -> None:
@@ -148,15 +150,94 @@ def write_global_policy(workspace: Path, codex_home: Path) -> None:
         target.write_text(json.dumps(policy, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def install_hooks(codex_home: Path) -> Path:
+def global_runtime_block(methodology: str, workspace: str) -> str:
+    return f"""{GLOBAL_MANAGED_START}
+## Product Factory OS Global Runtime
+
+Product Factory OS is the default methodology for Codex work on this computer.
+
+- Methodology: `{methodology}`
+- Default workspace: `{workspace}`
+- New projects route: `/project -> /kickstart`
+- Existing projects route: `/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save`
+
+For any local project, including projects outside the default workspace, Codex must auto-connect Product Factory OS from `PFO_GLOBAL.json` and ensure adoption before implementation. The user should not need to run setup commands manually.
+{GLOBAL_MANAGED_END}
+"""
+
+
+def write_global_agents_rule(codex_home: Path, methodology: str, workspace: str) -> None:
+    upsert_managed_block(
+        codex_home / "AGENTS.md",
+        "Global Codex Rules",
+        global_runtime_block(methodology, workspace),
+    )
+
+
+def install_hooks(codex_home: Path, use_wsl_commands: bool = False) -> Path:
     target = codex_home / "hooks" / "product-factory-os"
     target.mkdir(parents=True, exist_ok=True)
     for source in sorted((ROOT / "hooks").glob("*.py")):
         shutil.copyfile(source, target / source.name)
         mode = (target / source.name).stat().st_mode
         (target / source.name).chmod(mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
-    shutil.copyfile(ROOT / "hooks" / "hooks.json", target / "hooks.json")
+    if use_wsl_commands:
+        hooks = json.loads((ROOT / "hooks" / "hooks.json").read_text(encoding="utf-8"))
+        for hook in hooks.get("hooks", []):
+            script_name = Path(str(hook.get("command", "")).split()[-1]).name
+            hook["command"] = f"wsl python3 {(target / script_name).as_posix()}"
+        (target / "hooks.json").write_text(
+            json.dumps(hooks, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+    else:
+        shutil.copyfile(ROOT / "hooks" / "hooks.json", target / "hooks.json")
     return target
+
+
+def wsl_distro_name() -> str:
+    return os.environ.get("WSL_DISTRO_NAME") or "Ubuntu-24.04"
+
+
+def wsl_unc(path: Path) -> str:
+    rel = str(path.resolve()).lstrip("/").replace("/", "\\")
+    return f"\\\\wsl.localhost\\{wsl_distro_name()}\\{rel}"
+
+
+def windows_path_from_mnt(path: Path) -> str:
+    resolved = path.resolve()
+    parts = resolved.parts
+    if len(parts) >= 4 and parts[1] == "mnt" and len(parts[2]) == 1:
+        drive = parts[2].upper()
+        return drive + ":\\" + "\\".join(parts[3:])
+    return str(resolved)
+
+
+def write_windows_global_policy(workspace: Path, codex_home: Path) -> None:
+    policy = {
+        "methodology": "product-factory-os",
+        "methodologyPath": wsl_unc(ROOT),
+        "defaultWorkspace": wsl_unc(workspace),
+        "codexHome": windows_path_from_mnt(codex_home),
+        "enforcement": "global",
+        "autoAdoptAnyProject": True,
+        "autoAnalyzeExistingProjects": True,
+        "autoReportProjects": True,
+        "defaultNewProjectRoute": "/project -> /kickstart",
+        "existingProjectRoute": "/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save",
+        "nonBypassRule": "Any local project opened in Codex should auto-connect to Product Factory OS, even outside the default workspace.",
+    }
+    for target in [codex_home / "PFO_GLOBAL.json", codex_home.parent / ".pfo" / "PFO_GLOBAL.json"]:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(policy, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    write_global_agents_rule(codex_home, policy["methodologyPath"], policy["defaultWorkspace"])
+
+
+def detect_windows_codex_homes() -> list[Path]:
+    users = Path("/mnt/c/Users")
+    if not users.is_dir():
+        return []
+    return sorted(path for path in users.glob("*/.codex") if path.is_dir())
 
 
 def install_bin() -> Path | None:
@@ -217,8 +298,16 @@ def main() -> None:
         write_workspace_policy(workspace, codex_home)
     if not args.no_global_policy:
         write_global_policy(workspace, codex_home)
+        write_global_agents_rule(codex_home, str(ROOT), str(workspace))
     hook_target = None if args.no_hooks else install_hooks(codex_home)
     bin_target = None if args.no_bin else install_bin()
+    windows_hook_targets: list[Path] = []
+    if not args.no_hooks or not args.no_global_policy:
+        for windows_codex_home in detect_windows_codex_homes():
+            if not args.no_global_policy:
+                write_windows_global_policy(workspace, windows_codex_home)
+            if not args.no_hooks:
+                windows_hook_targets.append(install_hooks(windows_codex_home, use_wsl_commands=True))
     if not args.no_adopt:
         adopt_workspace(workspace)
 
@@ -229,6 +318,8 @@ def main() -> None:
         print(f"Command: {bin_target}")
     if hook_target:
         print(f"Hooks: {hook_target}")
+    for target in windows_hook_targets:
+        print(f"Windows hooks: {target}")
     print("Daily use: open any project in the workspace; PFO instructions and state are already present.")
     print("Global use: open any local project; the preflight hook will auto-connect PFO from PFO_GLOBAL.json.")
 
