@@ -176,6 +176,7 @@ Product Factory OS adopts the strongest GSD execution ideas without copying its 
 
 - Phase discussion: capture implementation decisions and assumptions before detailed planning.
 - Unit context manifest: each execution unit declares inputs, write scope, dependencies, gates, and verification.
+- PIV unit handoff: `pfo manifest` writes `plans/<unit>-piv-plan.md`; `pfo verify-work --pass-gate` writes `reports/<unit>-implementation-report.md`.
 - Fresh-context dispatch: agents should execute units from the manifest, not from accumulated chat context.
 - Atomic progress: every meaningful unit records dispatch, verification, and next action in state.
 - Fail-closed verification: missing or ambiguous evidence creates a repair path, not a pass.

@@ -126,7 +126,7 @@ Before any work in an existing project, full PFO adoption must already be presen
 
 Existing-project alias indexes must link only to files that exist. Missing Product Compiler docs such as `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, or `QUALITY_GATES.md` are not linked until intentionally created.
 
-Hooks are installed by default. They provide global/workspace auto-adoption, route reminders, preflight context, skill completeness checks, commit completeness checks, and review-before-commit validation. Install or refresh them from the methodology repo with:
+Hooks are installed by default. They provide global/workspace auto-adoption, route reminders, preflight context, pre-tool security guardrails, skill completeness checks, commit completeness checks, and review-before-commit validation. Install or refresh them from the methodology repo with:
 
 ```bash
 bash install.sh

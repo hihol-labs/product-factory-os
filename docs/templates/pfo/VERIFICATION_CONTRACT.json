@@ -26,6 +26,7 @@
     ".pfo/PERMISSION_MATRIX.json",
     ".pfo/PERMISSION_MATRIX.md",
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+    "plans/unit-piv-plan.md",
     "PFO_REPORT.md"
   ],
   "passCriteria": [

@@ -8,6 +8,7 @@ Hooks are installed by default by `bash install.sh`. They keep Codex on the Prod
 |---|---|---|---|
 | Routing | `route-reminder.py` | Maps natural language to `/project`, `/task`, and specialized PFO skills. | No |
 | Context | `preflight-context.py` | Auto-enforces full PFO runtime for workspace projects and any local project discovered through `PFO_GLOBAL.json`, then prints discovered PFO docs, state, memory, event log, and `.pfo/` contracts. | No |
+| Security | `security-guard.py` | Blocks real `.env` reads/writes and recursive directory deletion before tool execution. | Yes |
 | Diagnostics | `session-diagnostics.py` | Prints stale state, recovery, handoff, and telemetry warnings from `.codex-memory/STATE.json`. | No |
 | Skill completeness | `skill-completeness.py` | Verifies that skills have contracts, trigger entries, fixtures, and route snapshots. | Yes when used as a gate |
 | Commit completeness | `commit-completeness.py` | Checks staged methodology diffs for supporting docs, snapshots, and changelog updates. | Yes |
@@ -18,6 +19,7 @@ Hooks are installed by default by `bash install.sh`. They keep Codex on the Prod
 ```bash
 python3 hooks/route-reminder.py "plan only, architecture first"
 python3 hooks/preflight-context.py
+python3 hooks/security-guard.py --self-test
 python3 hooks/session-diagnostics.py
 python3 hooks/skill-completeness.py
 python3 hooks/review-before-commit.py

@@ -18,6 +18,8 @@
     "PRODUCT_BLUEPRINT.md",
     "BUILD_PLAN.md",
     "EXECUTION_GRAPH.md",
+    "plans/unit-piv-plan.md before implementation",
+    "reports/unit-implementation-report.md before review",
     "NEXT_STEP.md with approved or changed user-facing next step",
     ".pfo/EXPERIMENT_PROGRAM.md when autonomous measurement-driven iteration is in scope",
     ".pfo/EXPERIMENTS.tsv when autonomous measurement-driven iteration is in scope",
@@ -25,7 +27,16 @@
     "HANDOFF.md when switching sessions, roles, delegated agents, AFK execution, compaction, or recovery",
     "ROOT_CAUSE.md for bugfix units"
   ],
-  "allowedWriteAreas": [],
+  "allowedWriteAreas": [
+    "files listed by the active execution graph node",
+    "tests for changed behavior",
+    "plans/",
+    "reports/",
+    "PFO_REPORT.md",
+    ".codex-memory/STATE.json",
+    ".codex-memory/MEMORY.md",
+    ".codex-memory/events.jsonl"
+  ],
   "forbiddenChanges": [
     "scope outside .pfo/SCOPE_LOCK.md",
     "silent production data substitution",
@@ -65,6 +76,23 @@
     "learningPromotion",
     "toolCapabilityRegistry"
   ],
+  "pivLoop": {
+    "sourcePattern": "harness-engineering-demo PIV loop",
+    "planPath": "plans/unit-piv-plan.md",
+    "implementationReportPath": "reports/unit-implementation-report.md",
+    "sequence": [
+      "plan",
+      "implement",
+      "validate",
+      "review"
+    ],
+    "rules": [
+      "write the PIV plan before implementation",
+      "run task-level validation before moving to the next task",
+      "run the full verification contract before completion",
+      "write the implementation report before review"
+    ]
+  },
   "engineeringDiscipline": {
     "behaviorChange": false,
     "bugfix": false,
