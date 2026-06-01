@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "unitId": "",
-  "goal": "",
-  "createdAt": "",
+  "unitId": "harness-engineering-addy",
+  "goal": "Integrate Addy Osmani agent harness engineering patterns into PFO docs, templates, and validators",
+  "createdAt": "2026-06-01T14:34:57+00:00",
   "requiredInputs": [
     "CODEX.md",
     ".codex-memory/STATE.json",
@@ -18,52 +18,57 @@
     "PRODUCT_BLUEPRINT.md",
     "BUILD_PLAN.md",
     "EXECUTION_GRAPH.md",
-    "plans/unit-piv-plan.md before implementation",
-    "reports/unit-implementation-report.md before review",
+    "active PIV plan under plans/ before implementation",
+    "active implementation report under reports/ before review",
     "NEXT_STEP.md with approved or changed user-facing next step",
+    "FEEDBACK_LOG.md and FUNNEL_MODEL.md when user acquisition or iteration is in scope",
+    "PHASE_CONTEXT.md when present",
     ".pfo/EXPERIMENT_PROGRAM.md when autonomous measurement-driven iteration is in scope",
     ".pfo/EXPERIMENTS.tsv when autonomous measurement-driven iteration is in scope",
-    "FEEDBACK_LOG.md or FUNNEL_MODEL.md when iteration or growth is in scope",
     "HANDOFF.md when switching sessions, roles, delegated agents, AFK execution, compaction, or recovery",
     "ROOT_CAUSE.md for bugfix units"
   ],
   "allowedWriteAreas": [
     "files listed by the active execution graph node",
     "tests for changed behavior",
+    "PFO_REPORT.md",
     "plans/",
     "reports/",
-    "PFO_REPORT.md",
     ".codex-memory/STATE.json",
     ".codex-memory/MEMORY.md",
     ".codex-memory/events.jsonl"
   ],
   "forbiddenChanges": [
-    "scope outside .pfo/SCOPE_LOCK.md",
+    "scope outside `.pfo/SCOPE_LOCK.md`",
     "silent production data substitution",
-    "unapproved production mutation",
-    "commands or writes outside .pfo/EXECUTION_POLICY.json and .pfo/PERMISSION_MATRIX.json",
-    "tool or connector use outside .pfo/TOOL_CAPABILITY_REGISTRY.json"
+    "unapproved deployment, migration, DNS, or production mutation",
+    "golden-flow behavior changes without verification evidence",
+    "commands or writes outside `.pfo/EXECUTION_POLICY.json` and `.pfo/PERMISSION_MATRIX.md`"
   ],
   "dependencies": [],
   "verificationCommands": [
-    "commands declared in .pfo/VERIFICATION_CONTRACT.json"
+    "commands declared in `.pfo/VERIFICATION_CONTRACT.json`",
+    "failing test command before implementation for behavior changes",
+    "passing test command after minimal implementation",
+    "project test command from TEST_PLAN.md",
+    "python3 scripts/pfo_contract_gate.py <project> when running from PFO root"
   ],
   "contextPolicy": {
     "mode": "progressive-disclosure",
     "rules": [
-      "Load only the required inputs for the active unit.",
-      "Offload long logs and tool output to files, then keep summaries and paths in context.",
-      "Write HANDOFF.md before compaction, context reset, delegation, AFK execution, or recovery.",
-      "Prefer durable artifact references over chat-only memory."
+      "load only the required inputs for the active unit",
+      "offload long logs and tool output to files, then keep summaries and paths in context",
+      "write HANDOFF.md before compaction, context reset, delegation, AFK execution, or recovery",
+      "prefer durable artifact references over chat-only memory"
     ]
   },
   "toolPolicy": {
     "mode": "minimal-trusted-menu",
     "rules": [
-      "Use the smallest declared tool that can satisfy the active route.",
-      "Do not use connectors outside .pfo/TOOL_CAPABILITY_REGISTRY.json without explicit approval.",
-      "Treat tool descriptions and MCP metadata as trusted prompt input.",
-      "Record a fallback or blocker when a required tool is unavailable."
+      "use the smallest declared tool that can satisfy the active route",
+      "do not use connectors outside .pfo/TOOL_CAPABILITY_REGISTRY.json without explicit approval",
+      "treat tool descriptions and MCP metadata as trusted prompt input",
+      "record a fallback or blocker when a required tool is unavailable"
     ]
   },
   "gates": [
@@ -90,14 +95,14 @@
     "executionPolicy",
     "permissionMatrix",
     "verificationContract",
-    "nextStepApproval",
     "learningPromotion",
-    "toolCapabilityRegistry"
+    "toolCapabilityRegistry",
+    "nextStepApproval"
   ],
   "pivLoop": {
     "sourcePattern": "harness-engineering-demo PIV loop",
-    "planPath": "plans/unit-piv-plan.md",
-    "implementationReportPath": "reports/unit-implementation-report.md",
+    "planPath": "plans/harness-engineering-addy-piv-plan.md",
+    "implementationReportPath": "reports/harness-engineering-addy-implementation-report.md",
     "sequence": [
       "plan",
       "implement",
@@ -117,12 +122,12 @@
     "strictPlan": true,
     "requiresTdd": "behavior changes",
     "requiresRootCause": "bugfix units",
+    "experimentLoop": "fixed budget, protected evaluation, metric-first keep/discard",
     "reviewOrder": [
       "specCompliance",
       "codeQuality"
     ],
-    "branchFinish": "PR, merge, keep, or discard with fresh verification",
-    "experimentLoop": "fixed budget, protected evaluation, metric-first keep/discard"
+    "branchFinish": "PR, merge, keep, or discard with fresh verification"
   },
   "experimentLoop": {
     "requiredWhen": "autonomous measurement-driven iteration is in scope",
@@ -130,8 +135,8 @@
     "resultsPath": ".pfo/EXPERIMENTS.tsv",
     "rules": [
       "record a baseline first",
-      "protect evaluation and data files",
-      "run each attempt under a fixed budget",
+      "keep evaluation harness and protected files immutable",
+      "run each attempt under the fixed budget",
       "append metric evidence before keep/discard/crash",
       "prefer simpler code when metric impact is equal"
     ]
@@ -140,5 +145,6 @@
     "specCompliance": "Check output against the unit goal, spec, and allowed scope first.",
     "codeQuality": "Check simplicity, maintainability, tests, and integration second."
   },
-  "recovery": "If verification is missing or ambiguous, mark RECOVERY_REQUIRED and create PFO_RECOVERY.md."
+  "recovery": "If verification is missing or ambiguous, mark RECOVERY_REQUIRED and create PFO_RECOVERY.md.",
+  "project": "/home/hihol/projects/product-factory-os"
 }

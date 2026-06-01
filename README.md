@@ -186,6 +186,8 @@ Codex: builds node by node, runs tests and browser/API checks where relevant,
 
 Reference fixtures live in [`tests/fixtures/`](tests/fixtures/). Route snapshots live in [`tests/snapshots/`](tests/snapshots/).
 
+Harness engineering reference: [`docs/AGENT_HARNESS_ENGINEERING.md`](docs/AGENT_HARNESS_ENGINEERING.md).
+
 ## Skills
 
 ### Entry Points

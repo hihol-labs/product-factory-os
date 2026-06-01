@@ -1051,6 +1051,24 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "project test command from TEST_PLAN.md",
             "python3 scripts/pfo_contract_gate.py <project> when running from PFO root",
         ],
+        "contextPolicy": {
+            "mode": "progressive-disclosure",
+            "rules": [
+                "load only the required inputs for the active unit",
+                "offload long logs and tool output to files, then keep summaries and paths in context",
+                "write HANDOFF.md before compaction, context reset, delegation, AFK execution, or recovery",
+                "prefer durable artifact references over chat-only memory",
+            ],
+        },
+        "toolPolicy": {
+            "mode": "minimal-trusted-menu",
+            "rules": [
+                "use the smallest declared tool that can satisfy the active route",
+                "do not use connectors outside .pfo/TOOL_CAPABILITY_REGISTRY.json without explicit approval",
+                "treat tool descriptions and MCP metadata as trusted prompt input",
+                "record a fallback or blocker when a required tool is unavailable",
+            ],
+        },
         "gates": [
             "tddRed",
             "tddGreen",

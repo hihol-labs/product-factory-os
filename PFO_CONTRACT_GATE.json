@@ -1,0 +1,55 @@
+{
+  "status": "PASS_WITH_WARNINGS",
+  "changedFiles": [
+    "NEXT_STEP.md"
+  ],
+  "runtimeChangedFiles": [
+    ".pfo/DATA_POLICY.md",
+    ".pfo/EXECUTION_POLICY.json",
+    ".pfo/FALLBACK_POLICY.md",
+    ".pfo/FORBIDDEN_CHANGES.md",
+    ".pfo/GOLDEN_FLOWS.md",
+    ".pfo/LEARNING_PROMOTION_GATE.md",
+    ".pfo/PERMISSION_MATRIX.json",
+    ".pfo/PERMISSION_MATRIX.md",
+    ".pfo/PROJECT_CONTRACT.md",
+    ".pfo/SCOPE_LOCK.md",
+    ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
+    "AGENTS.md",
+    "CODEX.md"
+  ],
+  "riskClasses": [
+    "documentation_change"
+  ],
+  "missingContracts": [],
+  "placeholderContracts": [
+    ".pfo/PROJECT_CONTRACT.md",
+    ".pfo/FORBIDDEN_CHANGES.md",
+    ".pfo/FALLBACK_POLICY.md",
+    ".pfo/SCOPE_LOCK.md"
+  ],
+  "aliasTargetErrors": [],
+  "blockers": [],
+  "warnings": [
+    "placeholder contract content: .pfo/PROJECT_CONTRACT.md",
+    "placeholder contract content: .pfo/FORBIDDEN_CHANGES.md",
+    "placeholder contract content: .pfo/FALLBACK_POLICY.md",
+    "placeholder contract content: .pfo/SCOPE_LOCK.md"
+  ],
+  "gates": {
+    "aliasTargets": "PASS",
+    "scopeLock": "PASS_WITH_WARNINGS",
+    "dataAuthenticity": "PASS",
+    "goldenFlows": "PASS",
+    "regressionContract": "PASS_WITH_WARNINGS",
+    "fallbackPolicy": "PASS",
+    "diffRisk": "PASS_WITH_WARNINGS",
+    "noSilentSubstitution": "PASS",
+    "executionPolicy": "PASS",
+    "permissionMatrix": "PASS",
+    "verificationContract": "PASS",
+    "learningPromotion": "PASS",
+    "toolCapabilityRegistry": "PASS"
+  }
+}

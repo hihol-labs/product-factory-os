@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "purpose": "Project-local execution policy for agent work.",
+  "commandPolicy": {
+    "default": "deny-unless-declared",
+    "allowedCommands": [
+      {
+        "id": "pfo-validate",
+        "commandPrefix": "python3",
+        "allowedArgs": ["scripts/validate_project.py"],
+        "risk": "low",
+        "approval": "not-required"
+      }
+    ],
+    "dangerousCommands": [
+      "deploy",
+      "migrate",
+      "terraform apply",
+      "kubectl apply",
+      "git push",
+      "rm -rf"
+    ]
+  },
+  "writePolicy": {
+    "default": "deny-unless-in-unit-manifest",
+    "allowedWriteAreas": [
+      ".codex-memory/",
+      ".pfo/",
+      "plans/",
+      "reports/",
+      "PFO_REPORT.md"
+    ],
+    "protectedPaths": [
+      ".env",
+      ".env.*",
+      "production-data/",
+      "secrets/",
+      ".pfo/PROJECT_CONTRACT.md",
+      ".pfo/DATA_POLICY.md",
+      ".pfo/GOLDEN_FLOWS.md"
+    ]
+  },
+  "networkPolicy": {
+    "default": "deny",
+    "allowedHosts": [],
+    "externalResearchRequiresApproval": true
+  },
+  "approvalPolicy": {
+    "productionMutation": "explicit-user-confirmation",
+    "externalWrite": "explicit-user-confirmation",
+    "secretRead": "explicit-user-confirmation",
+    "dependencyInstall": "explicit-user-confirmation"
+  },
+  "linkedPolicies": {
+    "permissionMatrix": ".pfo/PERMISSION_MATRIX.json",
+    "toolCapabilityRegistry": ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+    "eventLog": ".codex-memory/events.jsonl"
+  }
+}

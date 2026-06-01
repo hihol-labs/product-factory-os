@@ -15,6 +15,7 @@ This project is governed by Product Factory OS.
 - Execution policy lives in `.pfo/EXECUTION_POLICY.json`.
 - Permissions live in `.pfo/PERMISSION_MATRIX.json` and `.pfo/PERMISSION_MATRIX.md`.
 - Tool capabilities live in `.pfo/TOOL_CAPABILITY_REGISTRY.json`.
+- Keep project rules short and earned: add rules only for observed failures or hard external constraints.
 - Autonomous or delegated work requires `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 - Active units require `.pfo/VERIFICATION_CONTRACT.json`.
 - Major implementation requires `NEXT_STEP.md` and `gateResults.nextStepApproval=PASSED`.

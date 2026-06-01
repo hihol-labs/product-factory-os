@@ -31,6 +31,8 @@ Reason:
 
 ## Goal
 
+## Done Condition
+
 ## Decisions
 
 ## Scope
@@ -46,6 +48,12 @@ Reason:
 - [[UNIT_CONTEXT_MANIFEST|.pfo/UNIT_CONTEXT_MANIFEST.json]] when present
 - [[BUILD_PLAN]]
 - [[EXECUTION_GRAPH]]
+
+## Context Budget
+
+- Read first:
+- Do not reload:
+- Large output files:
 
 ## Verification
 

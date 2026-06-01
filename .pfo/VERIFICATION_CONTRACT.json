@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "purpose": "Executable verification contract for the active PFO unit.",
+  "unitId": "harness-engineering-addy",
+  "createdAt": "2026-06-01T14:34:57+00:00",
+  "commands": [
+    {
+      "id": "pfo-contract-gate",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os",
+      "timeoutSeconds": 90,
+      "expectedOutput": "PFO contract gate reports PASS or PASS_WITH_WARNINGS; BLOCKED requires recovery.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    }
+  ],
+  "requiredArtifacts": [
+    ".codex-memory/STATE.json",
+    ".pfo/UNIT_CONTEXT_MANIFEST.json",
+    ".pfo/EXECUTION_POLICY.json",
+    ".pfo/PERMISSION_MATRIX.md",
+    ".pfo/PERMISSION_MATRIX.json",
+    ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+    "plans/harness-engineering-addy-piv-plan.md"
+  ],
+  "passCriteria": [
+    "All required commands exit 0.",
+    "Expected output rules match.",
+    "Required artifacts exist.",
+    "Failures are recorded as recovery, not success."
+  ],
+  "failureMode": "RECOVERY_REQUIRED"
+}

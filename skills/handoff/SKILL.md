@@ -39,8 +39,10 @@ HANDOFF.md
 - From role and target role
 - Reason for transfer
 - Current state, node, unit, and next action
+- Done condition for the receiving agent
 - Final decisions only
 - Required inputs
+- Context budget: read-first files, do-not-reload material, and large output paths
 - Allowed write areas and forbidden changes
 - Verification commands
 - Blockers and risks
@@ -70,5 +72,6 @@ Before final output, verify:
 - Do not store secrets.
 - Keep it concise enough for a fresh session to read first.
 - Prefer durable artifact references over chat history.
+- Offload long logs or traces to files and include only path plus decision-relevant summary.
 - Use `.pfo/UNIT_CONTEXT_MANIFEST.json` as the execution scope when present.
 - Use `/session-save` after the milestone is complete; `/handoff` is for transfer before the next actor starts.

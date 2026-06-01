@@ -1,6 +1,6 @@
 # Control Harness
 
-Product Factory OS uses a four-quadrant control harness to keep agent work bounded, testable, and reviewable.
+Product Factory OS uses a four-quadrant control harness to keep agent work bounded, testable, and reviewable. This implements the agent harness engineering stance described by Addy Osmani: improve the model-plus-harness system by turning observed failures into durable controls.
 
 The model separates controls by timing and evaluator:
 
@@ -33,6 +33,8 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | unit-context | Task-scoped execution inputs and write scope | Feedforward | Computational | `docs/templates/pfo/EXECUTION_POLICY.json`, `docs/templates/pfo/PERMISSION_MATRIX.json`, `docs/templates/UNIT_CONTEXT_MANIFEST.json` |
 | verification-contract | Expected checks before execution starts | Feedforward | Computational | `docs/templates/pfo/VERIFICATION_CONTRACT.json`, `docs/templates/TEST_PLAN.md`, `docs/templates/QUALITY_GATES.md` |
 | session-security-guard | Pre-tool safety boundary for secrets and destructive operations | Feedforward | Computational | `hooks/security-guard.py`, `hooks/hooks.json`, `docs/templates/pfo/EXECUTION_POLICY.json` |
+| context-economy | Progressive context loading, output offloading, and reset handoff policy | Feedforward | Computational | `docs/AGENT_HARNESS_ENGINEERING.md`, `skills/handoff/SKILL.md`, `docs/templates/HANDOFF.md` |
+| tool-surface-discipline | Minimal trusted tool and connector menu with side effects and explicit degraded modes | Feedforward | Computational | `docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json`, `integrations/tool-capability-registry.json`, `docs/AGENT_HARNESS_ENGINEERING.md` |
 | market-validation | Evidence before broad product scope, including evidence quality, customer discovery discipline, adversarial discovery, and MVP measurement | Feedforward | Inferential | `skills/discover/SKILL.md`, `skills/market-scan/SKILL.md`, `docs/templates/IDEA_SCORECARD.md`, `docs/templates/VALIDATION_PLAN.md`, `docs/templates/MARKET_BRIEF.md`, `docs/templates/FUNNEL_MODEL.md`, `docs/templates/GO_TO_MARKET.md` |
 | maturity-stage-gates | Optional launch and scale maturity checks | Feedforward | Inferential | `skills/strategy/SKILL.md`, `docs/templates/LAUNCH_MATURITY_GATE.md`, `docs/templates/SCALE_MOAT_REGISTER.md` |
 | route-regression | Route, fixture, trigger, and skill drift checks | Feedback | Computational | `scripts/run_fixtures.py`, `scripts/verify_triggers.py`, `scripts/verify_fixture_contracts.py` |
@@ -61,6 +63,8 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 - Use inferential controls for ambiguity, threat reasoning, architecture tradeoffs, product judgment, and UX quality.
 - Do not ship a high-risk workflow with only inferential controls when a deterministic check can be added.
 - Do not add a new skill, hook, gate, or CI command without assigning it to a quadrant.
+- Do not add a new rule unless it traces to observed failure evidence or a hard external constraint.
+- Keep project `AGENTS.md`, skill prompts, and tool registries concise; remove controls that no longer encode a real model or workflow limitation.
 - Every blocking feedback control must return evidence and one of `BLOCKED`, `PASSED_WITH_WARNINGS`, or `PASSED`, or a script exit code.
 - Feedforward controls must name the expected feedback controls before implementation starts.
 - Repeated inferential findings should be promoted into scripts, tests, schemas, templates, or hooks through the learning promotion gate.
@@ -83,8 +87,9 @@ When adding or changing a PFO control:
 
 1. Classify it by timing: feedforward or feedback.
 2. Classify it by evaluator: computational or inferential.
-3. Name the artifact that stores the rule.
-4. Name the command, reviewer, or evidence that proves it ran.
-5. Define whether it blocks, warns, or only advises.
-6. Add or update CI/validator coverage when the control is deterministic.
-7. Update `docs/CONTROL_HARNESS.md` and run `python3 scripts/validate_control_harness.py`.
+3. Name the behaviour it exists to produce or the failure it prevents.
+4. Name the artifact that stores the rule.
+5. Name the command, reviewer, or evidence that proves it ran.
+6. Define whether it blocks, warns, or only advises.
+7. Add or update CI/validator coverage when the control is deterministic.
+8. Update `docs/CONTROL_HARNESS.md` and run `python3 scripts/validate_control_harness.py`.
