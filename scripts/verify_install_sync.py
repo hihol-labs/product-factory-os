@@ -52,6 +52,7 @@ def main() -> None:
         "python3 scripts/run_headless_fixtures.py --mode mock",
         "python3 scripts/verify_skill_profiles.py",
         "python3 scripts/validate_control_harness.py",
+        "python3 scripts/validate_context_runtime.py",
         "python3 scripts/validate_tool_registry.py docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json integrations/tool-capability-registry.json",
         "python3 scripts/verify_manifest_drift.py",
         "python3 scripts/verify_install_sync.py",

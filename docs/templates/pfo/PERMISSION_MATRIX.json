@@ -54,12 +54,64 @@
       "default": "block",
       "approvalRequired": true,
       "evidence": ["approval", "reason", ".codex-memory/events.jsonl"]
+    },
+    "context_budget": {
+      "default": "allow_when_declared",
+      "approvalRequired": false,
+      "scopeSource": [".pfo/PERMISSION_MATRIX.json", ".pfo/EXECUTION_POLICY.json"],
+      "evidence": [".codex-memory/events.jsonl", ".codex-memory/context-index.json", ".codex-memory/resume-snapshot.md"]
     }
+  },
+  "contextRuntimePolicy": {
+    "version": 1,
+    "mode": "budgeted-summary",
+    "limits": {
+      "toolOutputWarnBytes": 12000,
+      "toolOutputBlockBytes": 48000,
+      "toolOutputWarnLines": 240,
+      "toolOutputBlockLines": 960,
+      "readOutputWarnBytes": 16000,
+      "readOutputBlockBytes": 64000,
+      "readOutputWarnLines": 300,
+      "readOutputBlockLines": 1200,
+      "logOutputWarnBytes": 24000,
+      "logOutputBlockBytes": 96000,
+      "logOutputWarnLines": 500,
+      "logOutputBlockLines": 2000,
+      "webOutputWarnBytes": 12000,
+      "webOutputBlockBytes": 40000,
+      "webOutputWarnLines": 200,
+      "webOutputBlockLines": 800,
+      "httpOutputWarnBytes": 8000,
+      "httpOutputBlockBytes": 24000,
+      "httpOutputWarnLines": 160,
+      "httpOutputBlockLines": 600
+    },
+    "routing": {
+      "rawHttp": "block-unless-approved-or-summarized",
+      "largeOutputWorkflow": "sandbox-summary",
+      "summaryRequired": true,
+      "summaryArtifact": ".codex-memory/context-summary.md"
+    },
+    "index": {
+      "path": ".codex-memory/context-index.json",
+      "source": ".codex-memory/events.jsonl"
+    },
+    "snapshot": {
+      "path": ".codex-memory/resume-snapshot.md",
+      "maxItems": 8
+    },
+    "evidence": [
+      ".codex-memory/events.jsonl",
+      ".codex-memory/context-index.json",
+      ".codex-memory/resume-snapshot.md"
+    ]
   },
   "rules": [
     "A blocked capability requires explicit user approval before action.",
     "A scoped capability must stay inside its declared scope source.",
     "Every approval, denial, command, gate, external tool call, and secret access attempt must be logged to .codex-memory/events.jsonl.",
+    "Large tool, read, log, web, and raw HTTP outputs must pass context_budget or be routed through sandbox-summary before entering active chat context.",
     "Production deploy, migration, DNS, billing, external writes, and secret reads are never implicit."
   ]
 }

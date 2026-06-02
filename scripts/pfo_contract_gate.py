@@ -222,9 +222,11 @@ def json_contract_errors(project: Path) -> list[str]:
             if field not in data:
                 errors.append(f"{rel}: missing {field}")
         if rel.endswith("PERMISSION_MATRIX.json"):
-            for capability in ["read", "write", "test", "commit", "push", "deploy", "external_api", "secrets"]:
+            for capability in ["read", "write", "test", "commit", "push", "deploy", "external_api", "secrets", "context_budget"]:
                 if capability not in data.get("capabilities", {}):
                     errors.append(f"{rel}: missing capability {capability}")
+            if "contextRuntimePolicy" not in data:
+                errors.append(f"{rel}: missing contextRuntimePolicy")
         if rel.endswith("TOOL_CAPABILITY_REGISTRY.json"):
             selection_policy = data.get("selectionPolicy")
             if not isinstance(selection_policy, dict):

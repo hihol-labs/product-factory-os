@@ -340,6 +340,7 @@ See [docs/CALL_GRAPH.md](docs/CALL_GRAPH.md).
 | `route-reminder.py` | Suggests `/project`, `/task`, or a specialized PFO skill. |
 | `preflight-context.py` | Loads discovered docs, state, memory, and `.pfo/` contracts before work. |
 | `security-guard.py` | Blocks real `.env` access and recursive directory deletion before tool execution. |
+| `context-budget.py` | Routes raw HTTP and large tool/read/log/web output through numeric context budgets. |
 | `session-diagnostics.py` | Reports stale state, recovery, handoff, and telemetry warnings. |
 | `skill-completeness.py` | Checks skill changes against contracts, triggers, fixtures, and snapshots. |
 | `commit-completeness.py` | Blocks incomplete methodology commits. |
@@ -436,6 +437,10 @@ pfo review ../my-product
 pfo validate ../my-product
 pfo status ../my-product
 pfo resume ../my-product
+pfo context-budget ../my-product --kind read --bytes 16000
+pfo context-index ../my-product
+pfo context-search ../my-product "failed verification"
+pfo context-snapshot ../my-product --reason compaction
 pfo report ../my-product
 pfo finish-branch ../my-product --mode pr --verification "checks passed" --pr-url "https://github.com/..."
 pfo brief ../my-product --mode recap

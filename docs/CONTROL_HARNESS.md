@@ -36,6 +36,8 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | verification-contract | Expected checks before execution starts | Feedforward | Computational | `docs/templates/pfo/VERIFICATION_CONTRACT.json`, `docs/templates/TEST_PLAN.md`, `docs/templates/QUALITY_GATES.md` |
 | session-security-guard | Pre-tool safety boundary for secrets and destructive operations | Feedforward | Computational | `hooks/security-guard.py`, `hooks/hooks.json`, `docs/templates/pfo/EXECUTION_POLICY.json` |
 | context-economy | Progressive context loading, output offloading, and reset handoff policy | Feedforward | Computational | `docs/AGENT_HARNESS_ENGINEERING.md`, `skills/handoff/SKILL.md`, `docs/templates/HANDOFF.md` |
+| context-budget-runtime | Numeric context budget checks for tool/read/log/web output and raw HTTP routing | Feedback | Computational | `hooks/context-budget.py`, `scripts/pfo_context_runtime.py`, `scripts/validate_context_runtime.py` |
+| session-memory-search | Searchable event memory and compact resume snapshots for session continuity | Feedback | Computational | `scripts/pfo_context_runtime.py`, `memory/events.schema.json`, `hooks/session-diagnostics.py` |
 | token-efficiency | Caveman-style terse communication that preserves exact technical evidence and gate status | Feedforward | Computational | `skills/caveman/SKILL.md`, `docs/CAVEMAN_INTEGRATION.md`, `hooks/route-reminder.py` |
 | tool-surface-discipline | Minimal trusted tool and connector menu with side effects and explicit degraded modes | Feedforward | Computational | `docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json`, `integrations/tool-capability-registry.json`, `docs/AGENT_HARNESS_ENGINEERING.md` |
 | harness-templates | Product topology templates that bundle structure, guides, sensors, and regulation targets | Feedforward | Computational | `templates/product-templates.json`, `starters/README.md`, `golden-paths/README.md` |
@@ -89,10 +91,11 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | Route request | `intent-routing`, `product-classification` | `route-regression` |
 | Plan product | `planning-documents`, `market-validation`, `adversarial-planning`, `harnessability-assessment` | `review-agent` |
 | Dispatch unit | `unit-context`, `verification-contract`, `harness-templates` when topology is selected | `engineering-discipline` |
-| Build behavior | `verification-contract`, `docs/templates/TEST_PLAN.md` | tests, `engineering-discipline`, `project-ci`, `alias-integrity`, `quality-left-scheduling` |
+| Build behavior | `verification-contract`, `docs/templates/TEST_PLAN.md` | tests, `engineering-discipline`, `project-ci`, `alias-integrity`, `quality-left-scheduling`, `context-budget-runtime` |
 | Review work | rubrics and quality gate expectations | `review-agent`, `security-review-agent`, `ux-review-agent` when applicable |
 | Deploy readiness | permission matrix, deployment target, rollback expectations | `methodology-ci`, `project-ci`, security/deps/hardening/browser gates |
 | Learn and improve | learning promotion policy | `learning-promotion`, `continuous-health-sensors`, fixture and validator updates |
+| Resume or compact | `context-economy`, `unit-context` | `session-memory-search`, `handoff` |
 
 ## Addition Checklist
 

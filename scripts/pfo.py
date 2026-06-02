@@ -199,6 +199,7 @@ def ensure_autonomy_state(state: dict) -> None:
     state.setdefault("eventLog", {"path": ".codex-memory/events.jsonl", "lastEventId": "", "lastEventAt": ""})
     state.setdefault("executionPolicy", {"path": ".pfo/EXECUTION_POLICY.json", "status": ""})
     state.setdefault("permissionMatrix", {"path": ".pfo/PERMISSION_MATRIX.json", "humanPath": ".pfo/PERMISSION_MATRIX.md", "status": ""})
+    state.setdefault("contextBudget", {"gate": "pfo context-budget", "indexPath": ".codex-memory/context-index.json", "snapshotPath": ".codex-memory/resume-snapshot.md", "status": ""})
     state.setdefault("verificationContract", {"path": ".pfo/VERIFICATION_CONTRACT.json", "status": ""})
     state.setdefault("toolCapabilityRegistry", {"path": ".pfo/TOOL_CAPABILITY_REGISTRY.json", "status": ""})
     state.setdefault("learningPromotionGate", {"path": ".pfo/LEARNING_PROMOTION_GATE.md", "status": ""})
@@ -262,6 +263,7 @@ def ensure_autonomy_state(state: dict) -> None:
         "experimentDecision",
         "executionPolicy",
         "permissionMatrix",
+        "contextBudget",
         "verificationContract",
         "learningPromotion",
         "toolCapabilityRegistry",
@@ -957,6 +959,7 @@ def generated_quality_gates() -> str:
 | Unit Context Manifest | PENDING | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
 | Execution Policy | PENDING | `.pfo/EXECUTION_POLICY.json` |  |
 | Permission Matrix | PENDING | `.pfo/PERMISSION_MATRIX.json`, `.pfo/PERMISSION_MATRIX.md` |  |
+| Context Budget | PENDING | `pfo context-budget`, `.pfo/PERMISSION_MATRIX.json`, `.codex-memory/context-index.json`, `.codex-memory/resume-snapshot.md` |  |
 | Verification Contract | PENDING | `.pfo/VERIFICATION_CONTRACT.json` |  |
 | Tool Capability Registry | PENDING | `.pfo/TOOL_CAPABILITY_REGISTRY.json` |  |
 | Next Step Approval | PENDING | `NEXT_STEP.md` user decision before the next major implementation step |  |
@@ -1075,6 +1078,9 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             ".codex-memory/STATE.json",
             ".codex-memory/MEMORY.md",
             ".codex-memory/events.jsonl",
+            ".codex-memory/context-index.json",
+            ".codex-memory/resume-snapshot.md",
+            ".codex-memory/context-summary.md",
         ],
         "forbiddenChanges": [
             "scope outside `.pfo/SCOPE_LOCK.md`",
@@ -1096,6 +1102,9 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "rules": [
                 "load only the required inputs for the active unit",
                 "offload long logs and tool output to files, then keep summaries and paths in context",
+                "run pfo context-budget before adding large tool/read/log/web/raw HTTP output to active chat context",
+                "use sandbox-summary: analyze large output with scripts, then keep only summary, key evidence, and artifact path in context",
+                "use pfo context-search instead of reloading full event logs",
                 "write HANDOFF.md before compaction, context reset, delegation, AFK execution, or recovery",
                 "prefer durable artifact references over chat-only memory",
             ],
@@ -1168,6 +1177,7 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "experimentDecision",
             "executionPolicy",
             "permissionMatrix",
+            "contextBudget",
             "verificationContract",
             "learningPromotion",
             "toolCapabilityRegistry",
@@ -1238,6 +1248,14 @@ def generated_verification_contract(project: Path, manifest: dict) -> dict:
                 "expectedOutput": "PFO contract gate reports PASS or PASS_WITH_WARNINGS; BLOCKED requires recovery.",
                 "passFailParser": "exit_code_zero",
                 "required": True,
+            },
+            {
+                "id": "context-runtime",
+                "command": f"{sys.executable} {ROOT / 'scripts' / 'validate_context_runtime.py'}",
+                "timeoutSeconds": 90,
+                "expectedOutput": "Context runtime budget, search index, snapshot, and hook routing validate successfully.",
+                "passFailParser": "exit_code_zero",
+                "required": True,
             }
         ],
         "requiredArtifacts": [
@@ -1246,6 +1264,8 @@ def generated_verification_contract(project: Path, manifest: dict) -> dict:
             ".pfo/EXECUTION_POLICY.json",
             ".pfo/PERMISSION_MATRIX.md",
             ".pfo/PERMISSION_MATRIX.json",
+            ".codex-memory/context-index.json",
+            ".codex-memory/resume-snapshot.md",
             ".pfo/TOOL_CAPABILITY_REGISTRY.json",
             piv_paths(unit_id)[0],
         ],
@@ -2042,10 +2062,12 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     state["unitContextManifest"] = manifest
     state["executionPolicy"] = {"path": ".pfo/EXECUTION_POLICY.json", "status": "READY"}
     state["permissionMatrix"] = {"path": ".pfo/PERMISSION_MATRIX.json", "humanPath": ".pfo/PERMISSION_MATRIX.md", "status": "READY"}
+    state["contextBudget"] = {"gate": "pfo context-budget", "indexPath": ".codex-memory/context-index.json", "snapshotPath": ".codex-memory/resume-snapshot.md", "status": "READY"}
     state["toolCapabilityRegistry"] = {"path": ".pfo/TOOL_CAPABILITY_REGISTRY.json", "status": "READY"}
     state["verificationContract"] = {"path": ".pfo/VERIFICATION_CONTRACT.json", "status": "READY"}
     state["gateResults"]["executionPolicy"] = "PASSED"
     state["gateResults"]["permissionMatrix"] = "PASSED"
+    state["gateResults"]["contextBudget"] = "PASSED"
     state["gateResults"]["toolCapabilityRegistry"] = "PASSED"
     state["gateResults"]["verificationContract"] = "PASSED"
     add_artifact(state, ".pfo/UNIT_CONTEXT_MANIFEST.json")
@@ -2070,6 +2092,7 @@ def cmd_manifest(args: argparse.Namespace) -> int:
 
 def cmd_handoff(args: argparse.Namespace) -> int:
     project = args.project.resolve()
+    run_script("pfo_context_runtime.py", ["snapshot", str(project), "--reason", args.reason or "handoff", "--quiet"])
     state = load_state(project)
     ensure_autonomy_state(state)
     path = project / "HANDOFF.md"
@@ -2418,6 +2441,39 @@ def cmd_event(args: argparse.Namespace) -> int:
     return run_script("pfo_event_log.py", argv)
 
 
+def cmd_context_budget(args: argparse.Namespace) -> int:
+    argv = ["budget", str(args.project), "--kind", args.kind, "--bytes", str(args.bytes), "--lines", str(args.lines)]
+    if args.command_text:
+        argv.extend(["--command-text", args.command_text])
+    if args.raw_http:
+        argv.append("--raw-http")
+    if args.approved:
+        argv.append("--approved")
+    if args.json:
+        argv.append("--json")
+    return run_script("pfo_context_runtime.py", argv)
+
+
+def cmd_context_index(args: argparse.Namespace) -> int:
+    return run_script("pfo_context_runtime.py", ["index", str(args.project)])
+
+
+def cmd_context_search(args: argparse.Namespace) -> int:
+    argv = ["search", str(args.project), *args.query, "--limit", str(args.limit)]
+    if args.reindex:
+        argv.append("--reindex")
+    if args.json:
+        argv.append("--json")
+    return run_script("pfo_context_runtime.py", argv)
+
+
+def cmd_context_snapshot(args: argparse.Namespace) -> int:
+    argv = ["snapshot", str(args.project), "--reason", args.reason]
+    if args.quiet:
+        argv.append("--quiet")
+    return run_script("pfo_context_runtime.py", argv)
+
+
 def cmd_tool_registry(args: argparse.Namespace) -> int:
     return run_script("validate_tool_registry.py", [str(args.project / ".pfo" / "TOOL_CAPABILITY_REGISTRY.json")])
 
@@ -2643,10 +2699,14 @@ def cmd_contracts(args: argparse.Namespace) -> int:
 
 def cmd_resume(args: argparse.Namespace) -> int:
     project = args.project.resolve()
+    run_script("pfo_context_runtime.py", ["snapshot", str(project), "--reason", "resume", "--quiet"])
     state = load_state(project)
     print("CURRENT STATE:", state.get("currentStage", ""))
     print("CURRENT NODE:", state.get("currentNode", ""))
     print("NEXT ACTION:", state.get("nextAction", ""))
+    snapshot = state.get("resumeSnapshot", {}) if isinstance(state.get("resumeSnapshot"), dict) else {}
+    if snapshot.get("path"):
+        print("RESUME SNAPSHOT:", snapshot["path"])
     if (project / "HANDOFF.md").is_file():
         print("HANDOFF:", "HANDOFF.md")
     return 0
@@ -2815,7 +2875,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     permission_check = sub.add_parser("permission-check", help="Validate permission matrix or check one capability.")
     permission_check.add_argument("project", type=Path)
-    permission_check.add_argument("--capability", choices=["read", "write", "test", "commit", "push", "deploy", "external_api", "secrets"])
+    permission_check.add_argument("--capability", choices=["read", "write", "test", "commit", "push", "deploy", "external_api", "secrets", "context_budget"])
     permission_check.add_argument("--path", default="")
     permission_check.add_argument("--command-text", default="")
     permission_check.add_argument("--approved", action="store_true")
@@ -2836,6 +2896,35 @@ def build_parser() -> argparse.ArgumentParser:
     event.add_argument("--token-notes", default="")
     event.add_argument("--reason", default="")
     event.set_defaults(func=cmd_event)
+
+    context_budget = sub.add_parser("context-budget", help="Check tool/read/log/web output against the context budget gate.")
+    context_budget.add_argument("project", type=Path)
+    context_budget.add_argument("--kind", choices=["tool", "read", "log", "web", "http", "grep", "rg"], default="tool")
+    context_budget.add_argument("--bytes", type=int, default=0)
+    context_budget.add_argument("--lines", type=int, default=0)
+    context_budget.add_argument("--command-text", default="")
+    context_budget.add_argument("--raw-http", action="store_true")
+    context_budget.add_argument("--approved", action="store_true")
+    context_budget.add_argument("--json", action="store_true")
+    context_budget.set_defaults(func=cmd_context_budget)
+
+    context_index = sub.add_parser("context-index", help="Build a searchable index for .codex-memory/events.jsonl.")
+    context_index.add_argument("project", type=Path)
+    context_index.set_defaults(func=cmd_context_index)
+
+    context_search = sub.add_parser("context-search", help="Search PFO session memory with BM25-style scoring.")
+    context_search.add_argument("project", type=Path)
+    context_search.add_argument("query", nargs="+")
+    context_search.add_argument("--limit", type=int, default=5)
+    context_search.add_argument("--reindex", action="store_true")
+    context_search.add_argument("--json", action="store_true")
+    context_search.set_defaults(func=cmd_context_search)
+
+    context_snapshot = sub.add_parser("context-snapshot", help="Write a compact resume snapshot from state and recent events.")
+    context_snapshot.add_argument("project", type=Path)
+    context_snapshot.add_argument("--reason", default="manual")
+    context_snapshot.add_argument("--quiet", action="store_true")
+    context_snapshot.set_defaults(func=cmd_context_snapshot)
 
     tool_registry = sub.add_parser("tool-registry", help="Validate project tool capability registry.")
     tool_registry.add_argument("project", type=Path)

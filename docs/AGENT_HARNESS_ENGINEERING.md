@@ -93,6 +93,10 @@ Context is scarce. PFO keeps long work coherent by moving durable state out of c
 - Offload long logs and tool output to files under `reports/`, `plans/`, or `.codex-memory/`; keep the active context to the decision, head/tail signal, and file path.
 - Write `HANDOFF.md` before compaction, role transfer, AFK execution, delegation, or recovery; the receiving session reads artifacts, not chat history.
 - Use `session-diagnostics.py` and `.codex-memory/STATE.json` as the current truth for stage, blockers, and next action.
+- Enforce numeric context budgets through `pfo context-budget`: tool/read/log/web/raw HTTP output must warn or block at the limits in `.pfo/PERMISSION_MATRIX.json`.
+- Use the sandbox-summary workflow for large outputs: analyze with scripts or structured tooling, then put only the bounded summary, key evidence, and artifact path into chat context.
+- Build searchable session memory with `pfo context-index` and query it with `pfo context-search <project> <query>` instead of reloading raw event history.
+- Write compact resume packets with `pfo context-snapshot`; `pfo resume` and `pfo handoff` create `.codex-memory/resume-snapshot.md` automatically.
 
 ## Tool Surface Discipline
 

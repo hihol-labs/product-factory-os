@@ -143,7 +143,7 @@ New projects are local-first. The mandatory bootstrap target is a project direct
 - `.pfo/SCOPE_LOCK.md`: current task boundaries and forbidden change areas
 - `.pfo/UNIT_CONTEXT_MANIFEST.json`: execution-unit input, write-scope, gate, and recovery contract
 - `.pfo/EXECUTION_POLICY.json`: command, write, network, and approval policy
-- `.pfo/PERMISSION_MATRIX.json`: machine-readable permission table for local, git, external API, secret, deploy, and migration actions
+- `.pfo/PERMISSION_MATRIX.json`: machine-readable permission table for local, git, external API, secret, deploy, migration, and context budget actions
 - `.pfo/PERMISSION_MATRIX.md`: human-readable permission table
 - `.pfo/VERIFICATION_CONTRACT.json`: required verification commands, expected output, timeout, pass/fail parser, artifacts, and sensor timing policy
 - `.pfo/TOOL_CAPABILITY_REGISTRY.json`: tool and connector read/write/execute capability registry with side effects, auth, external data risk, fallback mode, and approvals
@@ -193,6 +193,9 @@ Product Factory OS adopts the strongest GSD execution ideas without copying its 
 - Unit context manifest: each execution unit declares inputs, write scope, dependencies, gates, and verification.
 - PIV unit handoff: `pfo manifest` writes `plans/<unit>-piv-plan.md`; `pfo verify-work --pass-gate` writes `reports/<unit>-implementation-report.md`.
 - Fresh-context dispatch: agents should execute units from the manifest, not from accumulated chat context.
+- Context budget runtime: large tool, read, log, web, and raw HTTP outputs pass `pfo context-budget`; over-budget material is analyzed through sandbox-summary and represented in context only as summary plus artifact path.
+- Searchable memory: `.codex-memory/events.jsonl` can be indexed with `pfo context-index` and searched with `pfo context-search` to avoid reloading full histories.
+- Resume snapshot: `pfo resume`, `pfo handoff`, and `pfo context-snapshot` maintain `.codex-memory/resume-snapshot.md` with last request, files, tasks, decisions, errors, and blockers.
 - Atomic progress: every meaningful unit records dispatch, verification, and next action in state.
 - Fail-closed verification: missing or ambiguous evidence creates a repair path, not a pass.
 - Drift and recovery: stale state, missing artifacts, broken alias targets, unexpected worktree changes, and blocked verification are first-class recovery cases.

@@ -42,6 +42,9 @@ Run `pfo contracts . --write` during review.
 - For Autoresearch-style improvement, initialize `.pfo/EXPERIMENT_PROGRAM.md`, keep one metric and fixed budget, and record `.pfo/EXPERIMENTS.tsv`.
 - Write `HANDOFF.md` before switching sessions, roles, delegated agents, AFK execution, compaction, or recovery.
 - Execute one unit at a time from the manifest, not from accumulated chat context.
+- Run `pfo context-budget .` for large tool/read/log/web/raw HTTP output; over-budget output must use sandbox-summary and enter context only as summary plus artifact path.
+- Use `pfo context-index .` and `pfo context-search . <query>` instead of reloading full event history.
+- Use `pfo context-snapshot .` before compaction/recovery; `pfo resume .` and `pfo handoff .` create `.codex-memory/resume-snapshot.md` automatically.
 - Record TDD red/green/refactor evidence for behavior changes.
 - Write `ROOT_CAUSE.md` before bugfix implementation.
 - Run spec compliance review before code quality review.

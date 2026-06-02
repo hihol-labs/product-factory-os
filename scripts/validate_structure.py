@@ -138,6 +138,7 @@ REQUIRED_FILES = [
     "hooks/route-reminder.py",
     "hooks/preflight-context.py",
     "hooks/security-guard.py",
+    "hooks/context-budget.py",
     "hooks/session-diagnostics.py",
     "hooks/skill-completeness.py",
     "hooks/commit-completeness.py",
@@ -202,6 +203,8 @@ REQUIRED_FILES = [
     "scripts/pfo_contract_gate.py",
     "scripts/pfo_permission_gate.py",
     "scripts/pfo_event_log.py",
+    "scripts/pfo_context_runtime.py",
+    "scripts/validate_context_runtime.py",
     "scripts/validate_tool_registry.py",
     "scripts/validate_seo_growth_gate.py",
     "scripts/validate_starter_compliance.py",
@@ -475,7 +478,7 @@ def main() -> None:
 
     hooks = json.loads((ROOT / "hooks/hooks.json").read_text())
     hook_names = {hook.get("name") for hook in hooks.get("hooks", [])}
-    for expected_hook in ["route-reminder", "preflight-context", "security-guard", "session-diagnostics", "skill-completeness", "commit-completeness", "review-before-commit"]:
+    for expected_hook in ["route-reminder", "preflight-context", "security-guard", "context-budget-pre", "context-budget-post", "session-diagnostics", "skill-completeness", "commit-completeness", "review-before-commit"]:
         if expected_hook not in hook_names:
             fail(f"hooks/hooks.json is missing hook {expected_hook}")
 

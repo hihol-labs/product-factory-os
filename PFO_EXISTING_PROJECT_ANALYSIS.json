@@ -17,10 +17,11 @@
     ],
     "runtimeChangedFiles": [],
     "riskClasses": [
-      "data_source_change",
+      "business_logic_change",
+      "dependency_change",
       "deployment_change",
       "documentation_change",
-      "user_facing_output_change"
+      "security_change"
     ],
     "missingContracts": [],
     "placeholderContracts": [

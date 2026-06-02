@@ -35,7 +35,10 @@
     "PFO_REPORT.md",
     ".codex-memory/STATE.json",
     ".codex-memory/MEMORY.md",
-    ".codex-memory/events.jsonl"
+    ".codex-memory/events.jsonl",
+    ".codex-memory/context-index.json",
+    ".codex-memory/resume-snapshot.md",
+    ".codex-memory/context-summary.md"
   ],
   "forbiddenChanges": [
     "scope outside .pfo/SCOPE_LOCK.md",
@@ -53,6 +56,9 @@
     "rules": [
       "Load only the required inputs for the active unit.",
       "Offload long logs and tool output to files, then keep summaries and paths in context.",
+      "Run pfo context-budget before adding large tool/read/log/web/raw HTTP output to active chat context.",
+      "Use sandbox-summary: analyze large output with scripts, then keep only summary, key evidence, and artifact path in context.",
+      "Use pfo context-search instead of reloading full event logs.",
       "Write HANDOFF.md before compaction, context reset, delegation, AFK execution, or recovery.",
       "Prefer durable artifact references over chat-only memory."
     ]

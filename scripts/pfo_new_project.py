@@ -132,6 +132,7 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
                 "experimentDecision": "",
                 "executionPolicy": "",
                 "permissionMatrix": "",
+                "contextBudget": "",
                 "verificationContract": "",
                 "learningPromotion": "",
                 "toolCapabilityRegistry": "",
@@ -245,6 +246,12 @@ def state_json(project_name: str, idea: str, methodology: Path) -> str:
             "permissionMatrix": {
                 "path": ".pfo/PERMISSION_MATRIX.json",
                 "humanPath": ".pfo/PERMISSION_MATRIX.md",
+                "status": "",
+            },
+            "contextBudget": {
+                "gate": "pfo context-budget",
+                "indexPath": ".codex-memory/context-index.json",
+                "snapshotPath": ".codex-memory/resume-snapshot.md",
                 "status": "",
             },
             "verificationContract": {
