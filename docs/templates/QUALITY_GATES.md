@@ -37,7 +37,8 @@
 | Work Verification |  | verification log / command output |  |
 | Experiment Loop |  | `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric and keep/discard/crash decision |  |
 | Browser Smoke |  | `/browser-check` target, engine, flow, screenshot/log evidence for browser-facing products |  |
-| Security |  |  |  |
+| Security |  | `/security-audit` result or accepted not-applicable note |  |
+| Security Evidence |  | Codex Security diff-scan or PFO-equivalent report plus `deep_review_input.csv`, `work_ledger.jsonl`, `repository_coverage_ledger.md`, and `candidate_ledger.jsonl` for `security_change` diffs |  |
 | Dependencies |  |  |  |
 | Hardening |  |  |  |
 | Scope Lock |  | `.pfo/SCOPE_LOCK.md`, diff review |  |

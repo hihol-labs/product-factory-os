@@ -1,8 +1,8 @@
 {
   "version": 1,
   "purpose": "Executable verification contract for the active PFO unit.",
-  "unitId": "context-mode-pfo-runtime",
-  "createdAt": "2026-06-02T11:56:55+00:00",
+  "unitId": "security-audit-v2",
+  "createdAt": "2026-06-02T16:35:51+00:00",
   "sensorPolicy": {
     "qualityLeft": "Run fast computational sensors locally before broader or inferential gates.",
     "regulates": [
@@ -54,7 +54,7 @@
     ".codex-memory/context-index.json",
     ".codex-memory/resume-snapshot.md",
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-    "plans/context-mode-pfo-runtime-piv-plan.md"
+    "plans/security-audit-v2-piv-plan.md"
   ],
   "passCriteria": [
     "All required commands exit 0.",

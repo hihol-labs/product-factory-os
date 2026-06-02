@@ -18,6 +18,7 @@ This gate runs:
 - skill risk profile validation
 - execution graph validation
 - runtime asset validation
+- security report contract validation
 - hook validation
 - manifest drift verification
 - install/hook sync verification

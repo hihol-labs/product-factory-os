@@ -1,0 +1,5 @@
+{"row":"security-audit-v2-001","path":"skills/security-audit/SKILL.md","status":"completed","disposition":"suppressed","evidence":"Workflow is source-read-only and requires report/artifact validation before completion."}
+{"row":"security-audit-v2-002","path":"scripts/pfo_contract_gate.py","status":"completed","disposition":"suppressed","evidence":"security_change now requires validated report evidence and coverage artifacts."}
+{"row":"security-audit-v2-003","path":"scripts/validate_security_report.py","status":"completed","disposition":"suppressed","evidence":"Validator enforces required sections, finding metadata, remediation, and optional artifacts."}
+{"row":"security-audit-v2-004","path":"skills/bugfix/SKILL.md","status":"completed","disposition":"suppressed","evidence":"Security fixes now require reproduction, minimal fix, and proof that original path is closed."}
+{"row":"security-audit-v2-005","path":"docs/rubrics/security.md","status":"completed","disposition":"suppressed","evidence":"Rubric requires v2 phases, artifacts, and blocker semantics."}

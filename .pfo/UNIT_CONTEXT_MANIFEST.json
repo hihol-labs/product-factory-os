@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "unitId": "context-mode-pfo-runtime",
-  "goal": "Implement Context Mode-inspired context budget, search, snapshot, hook routing, large-output workflow, and permission parity in PFO",
-  "createdAt": "2026-06-02T11:56:55+00:00",
+  "unitId": "security-audit-v2",
+  "goal": "Implement security-audit v2 phase contract, coverage artifacts, diff security evidence gate, report validator, fix-finding workflow, and deep scan mode in Product Factory OS",
+  "createdAt": "2026-06-02T16:35:51+00:00",
   "requiredInputs": [
     "CODEX.md",
     ".codex-memory/STATE.json",
@@ -129,6 +129,7 @@
     "regressionContract",
     "fallbackPolicy",
     "diffRisk",
+    "securityEvidence",
     "noSilentSubstitution",
     "ideaGate",
     "marketValidation",
@@ -140,6 +141,7 @@
     "experimentDecision",
     "executionPolicy",
     "permissionMatrix",
+    "contextBudget",
     "verificationContract",
     "learningPromotion",
     "toolCapabilityRegistry",
@@ -147,8 +149,8 @@
   ],
   "pivLoop": {
     "sourcePattern": "harness-engineering-demo PIV loop",
-    "planPath": "plans/context-mode-pfo-runtime-piv-plan.md",
-    "implementationReportPath": "reports/context-mode-pfo-runtime-implementation-report.md",
+    "planPath": "plans/security-audit-v2-piv-plan.md",
+    "implementationReportPath": "reports/security-audit-v2-implementation-report.md",
     "sequence": [
       "plan",
       "implement",

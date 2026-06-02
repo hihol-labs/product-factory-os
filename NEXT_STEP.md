@@ -5,8 +5,8 @@ This is the user-facing project steering checkpoint. It intentionally avoids int
 ## Where We Are
 
 - Product: Existing project `product-factory-os` analyzed by Product Factory OS.
-- Current outcome: Unit context-mode-pfo-runtime is scoped and ready for user approval.
-- Recommended next step: Execute PIV plan plans/context-mode-pfo-runtime-piv-plan.md: Implement Context Mode-inspired context budget, search, snapshot, hook routing, large-output workflow, and permission parity in PFO
+- Current outcome: Unit security-audit-v2 is scoped and ready for user approval.
+- Recommended next step: Execute PIV plan plans/security-audit-v2-piv-plan.md: Implement security-audit v2 phase contract, coverage artifacts, diff security evidence gate, report validator, fix-finding workflow, and deep scan mode in Product Factory OS
 - Approval status: APPROVED
 
 ## Visible Roadmap
@@ -17,14 +17,14 @@ This is the user-facing project steering checkpoint. It intentionally avoids int
 
 ## Recommended Next Step
 
-- Step: Execute PIV plan plans/context-mode-pfo-runtime-piv-plan.md: Implement Context Mode-inspired context budget, search, snapshot, hook routing, large-output workflow, and permission parity in PFO
+- Step: Execute PIV plan plans/security-audit-v2-piv-plan.md: Implement security-audit v2 phase contract, coverage artifacts, diff security evidence gate, report validator, fix-finding workflow, and deep scan mode in Product Factory OS
 - Why now: It is the smallest coherent step that moves the product forward.
 - Files likely touched: use `BUILD_PLAN.md` and `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 - Verification: use `TEST_PLAN.md` and `.pfo/VERIFICATION_CONTRACT.json`.
 
 ## Alternatives
 
-- Approve unit context-mode-pfo-runtime and start implementation.
+- Approve unit security-audit-v2 and start implementation.
 - Change the unit goal or scope.
 - Pause and review BUILD_PLAN.md / EXECUTION_GRAPH.md.
 

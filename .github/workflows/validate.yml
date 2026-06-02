@@ -62,6 +62,9 @@ jobs:
       - name: Validate tool capability registry
         run: python3 scripts/validate_tool_registry.py docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json integrations/tool-capability-registry.json
 
+      - name: Validate security report contract
+        run: python3 scripts/validate_security_report.py --self-check
+
       - name: Validate hook contracts
         run: python3 scripts/validate_hooks.py
 

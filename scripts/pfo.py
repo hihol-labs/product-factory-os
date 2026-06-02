@@ -265,6 +265,7 @@ def ensure_autonomy_state(state: dict) -> None:
         "permissionMatrix",
         "contextBudget",
         "verificationContract",
+        "securityEvidence",
         "learningPromotion",
         "toolCapabilityRegistry",
     ]:
@@ -968,6 +969,7 @@ def generated_quality_gates() -> str:
 | Experiment Loop | PENDING | `.pfo/EXPERIMENT_PROGRAM.md`, `.pfo/EXPERIMENTS.tsv`, fixed metric and keep/discard/crash decision |  |
 | Browser Smoke | PENDING | `/browser-check` target, engine, flow, screenshot/log evidence for browser-facing products |  |
 | Security | PENDING | `/security-audit` or accepted not-applicable note |  |
+| Security Evidence | PENDING | Codex Security diff-scan or PFO-equivalent report plus coverage artifacts for `security_change` diffs |  |
 | Dependencies | PENDING | `/deps-audit` or accepted not-applicable note |  |
 | Hardening | PENDING | `/harden` or accepted non-production note |  |
 | Scope Lock | PENDING | `.pfo/SCOPE_LOCK.md`, diff review |  |
@@ -1166,6 +1168,7 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "regressionContract",
             "fallbackPolicy",
             "diffRisk",
+            "securityEvidence",
             "noSilentSubstitution",
             "ideaGate",
             "marketValidation",

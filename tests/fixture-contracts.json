@@ -325,11 +325,13 @@
       "skill": "/security-audit",
       "status": "active",
       "contract_files": {
-        "expected-files.txt": {"must_contain": ["security report", "critical findings", "status enum"]},
-        "notes.md": {"must_contain": ["read-only", "docs/rubrics/security.md"]}
+        "expected-files.txt": {"must_contain": ["security report", "critical findings", "status enum", "SECURITY_AUDIT_REPORT.md", "deep_review_input.csv", "work_ledger.jsonl", "repository_coverage_ledger.md", "candidate_ledger.jsonl"]},
+        "notes.md": {"must_contain": ["source-read-only", "docs/rubrics/security.md", "threat model", "discovery", "validation", "attack path"]}
       },
       "output_contract": {
-        "stdout_must_contain": ["security", "Critical", "status"]
+        "required_files": ["SECURITY_AUDIT_REPORT.md", "artifacts/02_discovery/deep_review_input.csv", "artifacts/02_discovery/work_ledger.jsonl", "artifacts/03_coverage/repository_coverage_ledger.md", "artifacts/05_findings/no-findings/candidate_ledger.jsonl"],
+        "stdout_must_contain": ["security", "Critical", "status"],
+        "any_file_must_contain": ["Severity", "Confidence", "CWE", "Affected lines", "Remediation"]
       }
     },
     "seo-optimization": {

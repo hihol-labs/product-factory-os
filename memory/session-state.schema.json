@@ -112,6 +112,7 @@
       "regressionContract": "",
       "fallbackPolicy": "",
       "diffRisk": "",
+      "securityEvidence": "",
       "noSilentSubstitution": "",
       "assetExtraction": "",
       "contentPipeline": "",

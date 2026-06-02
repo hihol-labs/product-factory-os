@@ -15,13 +15,18 @@
     "changedFiles": [
       "NEXT_STEP.md"
     ],
-    "runtimeChangedFiles": [],
+    "runtimeChangedFiles": [
+      "PFO_CONTRACT_GATE.json",
+      "PFO_EXISTING_PROJECT_ANALYSIS.json",
+      "PFO_REPORT.md"
+    ],
     "riskClasses": [
       "business_logic_change",
       "dependency_change",
       "deployment_change",
       "documentation_change",
-      "security_change"
+      "security_change",
+      "user_facing_output_change"
     ],
     "missingContracts": [],
     "placeholderContracts": [
@@ -34,7 +39,8 @@
     "warnings": [
       "placeholder contract content: .pfo/PROJECT_CONTRACT.md",
       "placeholder contract content: .pfo/FORBIDDEN_CHANGES.md",
-      "placeholder contract content: .pfo/FALLBACK_POLICY.md"
+      "placeholder contract content: .pfo/FALLBACK_POLICY.md",
+      "dependency diff also touches data sources or user-facing output; verify Scope Lock explicitly."
     ],
     "gates": {
       "aliasTargets": "PASS",

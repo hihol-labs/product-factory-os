@@ -1,0 +1,3 @@
+{"candidate_id":"no-findings","phase":"discovery","status":"no_reportable_candidate","evidence":"Reviewed methodology surfaces for security workflow regression."}
+{"candidate_id":"no-findings","phase":"validation","status":"suppressed","evidence":"No deployed application source/sink path exists in this methodology diff."}
+{"candidate_id":"no-findings","phase":"attack_path","status":"not_reportable","evidence":"Potential process-integrity risk is mitigated by the new security evidence gate and validator."}

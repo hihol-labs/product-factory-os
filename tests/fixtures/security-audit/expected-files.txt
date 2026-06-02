@@ -2,3 +2,8 @@ security report
 critical findings
 important findings
 status enum
+SECURITY_AUDIT_REPORT.md
+deep_review_input.csv
+work_ledger.jsonl
+repository_coverage_ledger.md
+candidate_ledger.jsonl
