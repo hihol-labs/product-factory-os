@@ -13,7 +13,7 @@ bash install.sh
 Then open any workspace project with Codex and describe what you want to build or fix. Product Factory OS routes the work automatically. [Full install guide](docs/INSTALL.md) | [Golden path](docs/examples/golden-path-booking-app) | [Skill contracts](docs/SKILL_CONTRACTS.md) | [Harness integration](docs/HARNESS_ENGINEERING_DEMO_INTEGRATION.md).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills: 33](https://img.shields.io/badge/Skills-33-green.svg)](#skills)
+[![Skills: 34](https://img.shields.io/badge/Skills-34-green.svg)](#skills)
 [![Agents: 15](https://img.shields.io/badge/Agents-15-orange.svg)](#agents)
 [![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-purple.svg)](.codex-plugin/plugin.json)
 [![validate](https://github.com/hihol-labs/product-factory-os/actions/workflows/validate.yml/badge.svg)](https://github.com/hihol-labs/product-factory-os/actions/workflows/validate.yml)
@@ -45,7 +45,7 @@ Codex can write code, but product work drifts without a runtime:
 
 ## The Solution
 
-**Product Factory OS** turns Codex into a gated product factory: 33 skills, 15 specialist roles, runtime contracts, hooks, fixtures, validators, and CLI workflows that move work through a deterministic pipeline:
+**Product Factory OS** turns Codex into a gated product factory: 34 skills, 15 specialist roles, runtime contracts, hooks, fixtures, validators, and CLI workflows that move work through a deterministic pipeline:
 
 ```text
 IDEA -> DISCOVERY -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH
@@ -246,6 +246,7 @@ Harness engineering reference: [`docs/AGENT_HARNESS_ENGINEERING.md`](docs/AGENT_
 | `/handoff` | Writes compact handoff artifacts for session, role, delegation, AFK, compaction, or recovery transfer. |
 | `/session-save` | Saves PFO work context, state, decisions, blockers, and next steps. |
 | `/mcp-docs` | Looks up fresh library, SDK, framework, and API documentation through MCP providers. |
+| `/caveman` | Activates token-efficient Caveman-style replies while preserving PFO gates, warnings, and exact technical evidence. |
 | `/github-workflow` | Handles GitHub issues, PRs, CI, releases, review comments, changelogs, and publish state. |
 | `/tool-sync` | Synchronizes PFO artifacts with Linear, Notion, Google Drive, GitHub payloads, or local exports. |
 | `/obsidian-export` | Exports planning docs, memory, handoff, decisions, gates, and state to an Obsidian knowledge graph. |
@@ -317,7 +318,7 @@ PFO keeps workflow chains shallow and bounded:
 /task
   -> /bugfix, /refactor, /doc, /test, /perf, /seo, /review
   -> /security-audit, /deps-audit, /migrate, /harden, /infra, /deploy
-  -> /mcp-docs, /browser-check, /github-workflow, /tool-sync
+  -> /mcp-docs, /caveman, /browser-check, /github-workflow, /tool-sync
   -> /handoff, /obsidian-export, /session-save, /strategy, /advisor, /grill-me
 ```
 

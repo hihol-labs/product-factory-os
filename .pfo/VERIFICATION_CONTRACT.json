@@ -1,8 +1,8 @@
 {
   "version": 1,
   "purpose": "Executable verification contract for the active PFO unit.",
-  "unitId": "seo-growth-guarantee-gate",
-  "createdAt": "2026-06-02T08:56:39+00:00",
+  "unitId": "caveman-plugin-integration",
+  "createdAt": "2026-06-02T11:07:03+00:00",
   "sensorPolicy": {
     "qualityLeft": "Run fast computational sensors locally before broader or inferential gates.",
     "regulates": [
@@ -29,10 +29,10 @@
   },
   "commands": [
     {
-      "id": "seo-growth-gate-template",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_seo_growth_gate.py --self-check",
+      "id": "caveman-skill-completeness",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/hooks/skill-completeness.py --skill caveman",
       "timeoutSeconds": 90,
-      "expectedOutput": "SEO growth guarantee gate template contains required fields and statuses.",
+      "expectedOutput": "Caveman skill has docs, triggers, fixture, and route snapshot coverage.",
       "passFailParser": "exit_code_zero",
       "required": true
     },
@@ -45,10 +45,66 @@
       "required": true
     },
     {
+      "id": "route-fixtures",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/run_fixtures.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Fixture routes and hook reminder match expectations.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "trigger-drift",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_triggers.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Trigger phrases route to the expected skill.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "fixture-contracts",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_fixture_contracts.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Behavioural fixture contracts validate.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
       "id": "control-harness",
       "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_control_harness.py",
       "timeoutSeconds": 90,
       "expectedOutput": "Control harness entries validate.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "skill-profiles",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_skill_profiles.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Skill side-effect profiles are complete.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "manifest-drift",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_manifest_drift.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Manifest, marketplace, and public counts match.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "hooks",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_hooks.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Hook contracts validate.",
+      "passFailParser": "exit_code_zero",
+      "required": true
+    },
+    {
+      "id": "meta-review",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/meta_review.py",
+      "timeoutSeconds": 120,
+      "expectedOutput": "Meta-review passes.",
       "passFailParser": "exit_code_zero",
       "required": true
     },
@@ -76,7 +132,12 @@
     ".pfo/PERMISSION_MATRIX.md",
     ".pfo/PERMISSION_MATRIX.json",
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-    "plans/seo-growth-guarantee-gate-piv-plan.md"
+    "skills/caveman/SKILL.md",
+    "docs/CAVEMAN_INTEGRATION.md",
+    "tests/fixtures/caveman-mode/idea.md",
+    "plans/caveman-plugin-integration-piv-plan.md",
+    "reports/caveman-plugin-integration-implementation-report.md",
+    "PFO_REPORT.md"
   ],
   "passCriteria": [
     "All required commands exit 0.",

@@ -11,16 +11,16 @@
   "gateRuns": [],
   "securityFindings": [],
   "contractGate": {
-    "status": "BLOCKED",
+    "status": "PASS_WITH_WARNINGS",
     "changedFiles": [
       "NEXT_STEP.md"
     ],
     "runtimeChangedFiles": [],
     "riskClasses": [
-      "business_logic_change",
-      "dependency_change",
+      "data_source_change",
       "deployment_change",
-      "documentation_change"
+      "documentation_change",
+      "user_facing_output_change"
     ],
     "missingContracts": [],
     "placeholderContracts": [
@@ -29,9 +29,7 @@
       ".pfo/FALLBACK_POLICY.md"
     ],
     "aliasTargetErrors": [],
-    "blockers": [
-      "NEXT_STEP.md: added possible silent substitution: - Current outcome: Fowler harness engineering, harness efficiency metrics, and SEO workflow skill are integrated and verified; gates passed with only known plac"
-    ],
+    "blockers": [],
     "warnings": [
       "placeholder contract content: .pfo/PROJECT_CONTRACT.md",
       "placeholder contract content: .pfo/FORBIDDEN_CHANGES.md",
@@ -39,13 +37,13 @@
     ],
     "gates": {
       "aliasTargets": "PASS",
-      "scopeLock": "BLOCKED",
-      "dataAuthenticity": "BLOCKED",
+      "scopeLock": "PASS_WITH_WARNINGS",
+      "dataAuthenticity": "PASS",
       "goldenFlows": "PASS",
       "regressionContract": "PASS_WITH_WARNINGS",
-      "fallbackPolicy": "BLOCKED",
+      "fallbackPolicy": "PASS",
       "diffRisk": "PASS_WITH_WARNINGS",
-      "noSilentSubstitution": "BLOCKED",
+      "noSilentSubstitution": "PASS",
       "executionPolicy": "PASS",
       "permissionMatrix": "PASS",
       "verificationContract": "PASS",

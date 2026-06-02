@@ -42,6 +42,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /perf
   -> /seo
   -> /mcp-docs
+  -> /caveman
   -> /skill-create
   -> /browser-check
   -> /review
@@ -63,6 +64,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
 /strategy
   -> /market-scan
   -> /seo
+  -> /caveman
   -> pfo experiment-init / pfo experiment-record
   -> /advisor
   -> /grill-me

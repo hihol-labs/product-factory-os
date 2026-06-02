@@ -27,6 +27,7 @@ Every skill frontmatter must declare:
 | `/security-audit` | Project or path | Security report | Read-only | Safe |
 | `/deps-audit` | Manifests or lockfiles | Supply-chain report | Read-only | Safe |
 | `/mcp-docs` | Library, framework, SDK, or API question | Documentation decision and implementation impact | External MCP or official-doc lookup | Safe |
+| `/caveman` | Caveman mode, less tokens, terse technical replies, or Plugin Caveman install question | Token-efficient response mode and upstream install boundary guidance | None by default | Session-scoped |
 | `/skill-create` | Skill idea, workflow examples, or existing skill path | New or updated PFO skill plus contract, trigger, fixture, and route snapshot updates | Writes methodology files | Ask before overwrite |
 | `/perf` | Slow path or complaint | Bottleneck report and patch | Writes code optionally | Measure between runs |
 | `/browser-check` | Local URL or user flow | Browser smoke result, engine, screenshots/log evidence | Opens local browser target or runs local Playwright harness | Safe |
