@@ -24,7 +24,7 @@ Every skill frontmatter must declare:
 | `/refactor` | Area to improve | Behavior-preserving patch | Writes code | Requires tests |
 | `/doc` | Module or docs target | Updated docs | Writes docs/comments | Safe |
 | `/explain` | File or concept | Explanation | None | Safe |
-| `/security-audit` | Project or path | Security report | Read-only | Safe |
+| `/security-audit` | Project, path, PR, branch, working-tree diff, threat model, or release security gate | `SECURITY_AUDIT_REPORT.md` plus coverage artifacts: `deep_review_input.csv`, `work_ledger.jsonl`, `repository_coverage_ledger.md`, `candidate_ledger.jsonl` | Writes report/artifacts only; source read-only | Safe |
 | `/deps-audit` | Manifests or lockfiles | Supply-chain report | Read-only | Safe |
 | `/mcp-docs` | Library, framework, SDK, or API question | Documentation decision and implementation impact | External MCP or official-doc lookup | Safe |
 | `/caveman` | Caveman mode, less tokens, terse technical replies, or Plugin Caveman install question | Token-efficient response mode and upstream install boundary guidance | None by default | Session-scoped |

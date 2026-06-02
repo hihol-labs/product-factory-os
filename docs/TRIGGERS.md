@@ -39,7 +39,7 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | Skill | English | Russian |
 |---|---|---|
 | `/review` | code review, validate, quality gate | ревью, проверь качество, валидация |
-| `/security-audit` | security audit, OWASP, secrets | аудит безопасности, OWASP, секреты |
+| `/security-audit` | security audit, OWASP, secrets, threat model, attack path, Codex Security diff scan | аудит безопасности, OWASP, секреты, модель угроз, путь атаки |
 | `/deps-audit` | dependency audit, CVE, licenses | аудит зависимостей, CVE, лицензии |
 | `/harden` | production readiness, harden service | production-ready, подготовь к продакшену |
 | `/infra` | infrastructure, Terraform, Docker, Kubernetes | инфраструктура, Terraform, Docker, Kubernetes |

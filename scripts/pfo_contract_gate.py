@@ -58,6 +58,22 @@ RISK_RULES: list[tuple[str, tuple[str, ...]]] = [
     ("deployment_change", ("docker", "deploy", "compose", "k8s", "terraform", "vercel", "netlify", "ci", "workflow")),
 ]
 
+SECURITY_REPORT_FILENAMES = {
+    "security_audit_report.md",
+    "security-audit-report.md",
+    "security_review.md",
+    "security-review.md",
+    "pfo_security_review.md",
+    "pfo-security-review.md",
+}
+
+SECURITY_COVERAGE_ARTIFACTS = [
+    "deep_review_input.csv",
+    "work_ledger.jsonl",
+    "repository_coverage_ledger.md",
+    "candidate_ledger.jsonl",
+]
+
 SUBSTITUTION_TERMS = (
     "fake",
     "mock",
@@ -158,6 +174,16 @@ def addition_lines(diff: str) -> list[tuple[str, str]]:
     return result
 
 
+def contains_substitution_term(text: str) -> bool:
+    for term in SUBSTITUTION_TERMS:
+        if term.isascii() and term.replace("_", "").replace("-", "").isalnum():
+            if re.search(rf"(?<![A-Za-z0-9_]){re.escape(term)}(?![A-Za-z0-9_])", text):
+                return True
+        elif term in text:
+            return True
+    return False
+
+
 def classify_risks(files: list[str], diff: str) -> list[str]:
     corpus = "\n".join(files) + "\n" + diff
     lowered = corpus.lower()
@@ -253,13 +279,77 @@ def detect_substitution_violations(project: Path, diff: str) -> list[str]:
         lowered = line.lower()
         if is_test_path(path):
             continue
-        if any(term in lowered for term in SUBSTITUTION_TERMS):
+        if contains_substitution_term(lowered):
             if not any(term in lowered for term in TRANSPARENT_TERMS):
                 violations.append(f"{path}: added possible silent substitution: {line[:160]}")
         for term in forbidden_terms:
             if len(term) > 12 and term in lowered:
                 violations.append(f"{path}: added project-forbidden behavior: {term[:120]}")
     return violations
+
+
+def candidate_security_reports(project: Path, files: list[str]) -> list[Path]:
+    candidates: set[Path] = set()
+    for rel in files:
+        normalized = rel.replace("\\", "/")
+        lowered = normalized.lower()
+        path = project / normalized
+        name = Path(lowered).name
+        if name in SECURITY_REPORT_FILENAMES:
+            candidates.add(path)
+        elif lowered.startswith("reports/") and "security" in lowered and lowered.endswith(".md"):
+            candidates.add(path)
+    for pattern in [
+        "SECURITY_AUDIT_REPORT.md",
+        "PFO_SECURITY_REVIEW.md",
+        "reports/**/*security*.md",
+    ]:
+        for path in project.glob(pattern):
+            if "docs/templates" not in path.as_posix() and path.is_file():
+                candidates.add(path)
+    return sorted(candidates)
+
+
+def validate_security_report(project: Path, report: Path) -> tuple[bool, str]:
+    validator = project / "scripts" / "validate_security_report.py"
+    if not validator.is_file():
+        return False, "scripts/validate_security_report.py is missing"
+    completed = subprocess.run(
+        [sys.executable, str(validator), str(report)],
+        cwd=project,
+        text=True,
+        capture_output=True,
+    )
+    if completed.returncode == 0:
+        return True, str(report.relative_to(project))
+    detail = (completed.stdout + completed.stderr).strip().replace("\n", "; ")
+    return False, f"{report.relative_to(project)} failed security report validation: {detail}"
+
+
+def security_coverage_artifact_errors(files: list[str]) -> list[str]:
+    errors: list[str] = []
+    changed_names = {Path(path.replace("\\", "/")).name for path in files}
+    for name in SECURITY_COVERAGE_ARTIFACTS:
+        if name not in changed_names:
+            errors.append(f"missing changed security coverage artifact: {name}")
+    return errors
+
+
+def security_evidence_errors(project: Path, files: list[str], risks: list[str]) -> list[str]:
+    if "security_change" not in risks:
+        return []
+    errors = security_coverage_artifact_errors(files)
+    reports = candidate_security_reports(project, files)
+    if not reports:
+        errors.append(
+            "security_change requires Codex Security diff-scan evidence or a PFO-equivalent report validated by scripts/validate_security_report.py"
+        )
+        return errors
+
+    validation_notes = [validate_security_report(project, report) for report in reports]
+    if not any(ok for ok, _note in validation_notes):
+        errors.extend(note for _ok, note in validation_notes)
+    return errors
 
 
 def evaluate(project: Path) -> dict[str, Any]:
@@ -273,6 +363,7 @@ def evaluate(project: Path) -> dict[str, Any]:
     alias_target_errors = missing_alias_targets(project)
     risks = classify_risks(files, diff)
     substitution_violations = detect_substitution_violations(project, diff)
+    security_errors = security_evidence_errors(project, files, risks)
     execution_json_errors = [item for item in json_errors if item.startswith(".pfo/EXECUTION_POLICY.json")]
     permission_json_errors = [item for item in json_errors if item.startswith(".pfo/PERMISSION_MATRIX.json")]
     verification_json_errors = [item for item in json_errors if item.startswith(".pfo/VERIFICATION_CONTRACT.json")]
@@ -287,6 +378,7 @@ def evaluate(project: Path) -> dict[str, Any]:
     blockers.extend(json_errors)
     blockers.extend(alias_target_errors)
     blockers.extend(substitution_violations)
+    blockers.extend(security_errors)
 
     if "dependency_change" in risks and (
         "data_source_change" in risks or "user_facing_output_change" in risks
@@ -319,6 +411,7 @@ def evaluate(project: Path) -> dict[str, Any]:
             "regressionContract": "BLOCKED" if ".pfo/PROJECT_CONTRACT.md" in missing else ("PASS_WITH_WARNINGS" if ".pfo/PROJECT_CONTRACT.md" in placeholders else "PASS"),
             "fallbackPolicy": "BLOCKED" if ".pfo/FALLBACK_POLICY.md" in missing or substitution_violations else "PASS",
             "diffRisk": "PASS_WITH_WARNINGS" if warnings else "PASS",
+            "securityEvidence": "BLOCKED" if security_errors else "PASS",
             "noSilentSubstitution": "BLOCKED" if substitution_violations else "PASS",
             "executionPolicy": "BLOCKED" if ".pfo/EXECUTION_POLICY.json" in missing or execution_json_errors else "PASS",
             "permissionMatrix": "BLOCKED" if ".pfo/PERMISSION_MATRIX.md" in missing or ".pfo/PERMISSION_MATRIX.json" in missing or permission_json_errors else "PASS",

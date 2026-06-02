@@ -30,7 +30,7 @@ ROUTES = [
     (r"\b(obsidian|vault|wikilinks?|knowledge graph|linked notes?)\b|obsidian|граф знаний|связанн(ые|ых) заметк|вики.?ссылк", "/task -> /obsidian-export"),
     (r"\b(linear|notion|google drive|sync|export project state)\b|синхронизи|экспорт состояния|google drive", "/task -> /tool-sync"),
     (r"\b(code review|quality gate|validate changes|review)\b|ревью|проверь качество|валидаци", "/task -> /review"),
-    (r"\b(security audit|owasp|secrets?)\b|аудит безопасности|секрет", "/task -> /security-audit"),
+    (r"\b(security audit|owasp|secrets?|threat model|attack path|codex security diff scan|security diff scan)\b|аудит безопасности|секрет|модель угроз|путь атаки", "/task -> /security-audit"),
     (r"\b(dependency audit|deps audit|cve|licenses?)\b|аудит зависимост|cve|лицензи", "/task -> /deps-audit"),
     (r"\b(harden|production readiness|runbook|observability)\b|подготовь к продакшену|production-ready|наблюдаемост|ранбук", "/task -> /harden"),
     (r"\b(infrastructure|terraform|docker|kubernetes|helm|iac)\b|инфраструктур|terraform|docker|kubernetes|helm", "/task -> /infra"),

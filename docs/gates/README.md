@@ -10,6 +10,7 @@ Required universal gates:
 - Regression Contract
 - Fallback Policy
 - Diff Risk Classifier
+- Security Review Evidence
 - No Silent Substitution
 - Execution Policy
 - Permission Matrix
