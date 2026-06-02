@@ -2,29 +2,60 @@
   "status": "PASS_WITH_WARNINGS",
   "changedFiles": [
     "NEXT_STEP.md",
-    "reports/seo-plugin-skill-implementation-report.md"
+    "README.md",
+    "docs/AGENT_HARNESS_ENGINEERING.md",
+    "docs/CONTROL_HARNESS.md",
+    "docs/DESIGN_SPACE.md",
+    "docs/HARNESS_ENGINEERING_DEMO_INTEGRATION.md",
+    "docs/INSTALL.md",
+    "docs/METHODOLOGY.md",
+    "docs/PFO_ARCHITECTURE.md",
+    "docs/templates/UNIT_CONTEXT_MANIFEST.json",
+    "docs/templates/pfo/VERIFICATION_CONTRACT.json",
+    "golden-paths/README.md",
+    "plans/harness-efficiency-metric-publish-piv-plan.md",
+    "plans/harness-engineering-fowler-piv-plan.md",
+    "reports/harness-efficiency-metric-publish-implementation-report.md",
+    "reports/harness-engineering-fowler-implementation-report.md",
+    "scripts/pfo.py",
+    "scripts/pfo_metrics.py",
+    "scripts/validate_control_harness.py",
+    "scripts/validate_runtime.py",
+    "starters/README.md",
+    "templates/product-templates.json"
   ],
   "runtimeChangedFiles": [
+    ".pfo/UNIT_CONTEXT_MANIFEST.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
+    "CODEX.md",
+    "PFO_CONTRACT_GATE.json",
+    "PFO_EXISTING_PROJECT_ANALYSIS.json",
     "PFO_REPORT.md"
   ],
   "riskClasses": [
     "business_logic_change",
+    "data_source_change",
+    "dependency_change",
     "deployment_change",
-    "documentation_change",
+    "provider_integration_change",
+    "security_change",
     "user_facing_output_change"
   ],
   "missingContracts": [],
   "placeholderContracts": [
     ".pfo/PROJECT_CONTRACT.md",
     ".pfo/FORBIDDEN_CHANGES.md",
-    ".pfo/FALLBACK_POLICY.md"
+    ".pfo/FALLBACK_POLICY.md",
+    ".pfo/SCOPE_LOCK.md"
   ],
   "aliasTargetErrors": [],
   "blockers": [],
   "warnings": [
     "placeholder contract content: .pfo/PROJECT_CONTRACT.md",
     "placeholder contract content: .pfo/FORBIDDEN_CHANGES.md",
-    "placeholder contract content: .pfo/FALLBACK_POLICY.md"
+    "placeholder contract content: .pfo/FALLBACK_POLICY.md",
+    "placeholder contract content: .pfo/SCOPE_LOCK.md",
+    "dependency diff also touches data sources or user-facing output; verify Scope Lock explicitly."
   ],
   "gates": {
     "aliasTargets": "PASS",
