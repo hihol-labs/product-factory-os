@@ -7,11 +7,11 @@ Architecture: `modular monolith`
 
 ## State
 
-- Current stage: `TWO_STAGE_REVIEW`
+- Current stage: `BRANCH_FINISH`
 - Current node: `caveman-plugin-integration`
 - Current unit: `caveman-plugin-integration`
 - Last successful state: `VERIFYING_WORK`
-- Next action: Publish the verified Caveman integration through git commit, push, and pull request.
+- Next action: Review draft PR https://github.com/hihol-labs/product-factory-os/pull/33 and merge when ready.
 - Recovery: `` 
 - Root cause: `` 
 - Handoff: `` 
@@ -20,8 +20,8 @@ Architecture: `modular monolith`
 
 - Approval required: `False`
 - Approval status: `APPROVED`
-- Recommended next step: Commit the Caveman integration, push the branch, open a pull request, then record branch finish state.
-- Last iteration summary: Caveman token-efficiency workflow is implemented and verified inside Product Factory OS.
+- Recommended next step: Review draft PR https://github.com/hihol-labs/product-factory-os/pull/33 and merge when ready.
+- Last iteration summary: Caveman token-efficiency workflow is implemented, verified, committed, pushed, opened as PR #33, and recorded in branch finish state.
 - Steering artifact: `NEXT_STEP.md`
 
 ## Experiment Loop
@@ -140,8 +140,8 @@ Architecture: `modular monolith`
 
 - Mode: `pr`
 - Status: `PASSED`
-- Verification: validate_state, validate_structure, validate_control_harness, validate_runtime, pfo_contract_gate PASS_WITH_WARNINGS with known placeholder warnings, and production_readiness passed
-- PR: https://github.com/hihol-labs/product-factory-os/pull/31
+- Verification: Commit 134e774 pushed to origin/codex/caveman-plugin-integration; draft PR https://github.com/hihol-labs/product-factory-os/pull/33 created; production_readiness passed after implementation.
+- PR: https://github.com/hihol-labs/product-factory-os/pull/33
 
 ## Dispatch Journal
 
@@ -153,6 +153,6 @@ Architecture: `modular monolith`
 - Verifications: `10`
 - Token notes: none
 - Cost notes: none
-- Event log: `.codex-memory/events.jsonl` last `event-20260602T111932Z-1`
+- Event log: `.codex-memory/events.jsonl` last `event-20260602T113127Z-1`
 - Permission matrix: `.pfo/PERMISSION_MATRIX.json` `READY`
 - Tool registry: `.pfo/TOOL_CAPABILITY_REGISTRY.json` `READY`

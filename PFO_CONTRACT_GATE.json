@@ -1,41 +1,16 @@
 {
   "status": "PASS_WITH_WARNINGS",
   "changedFiles": [
-    ".codex-plugin/plugin.json",
-    "NEXT_STEP.md",
-    "README.md",
-    "README.ru.md",
-    "docs/CALL_GRAPH.md",
-    "docs/CAVEMAN_INTEGRATION.md",
-    "docs/CONTROL_HARNESS.md",
-    "docs/SKILL_CONTRACTS.md",
-    "docs/TRIGGERS.md",
-    "hooks/route-reminder.py",
-    "marketplace/marketplace-entry.json",
-    "plans/caveman-plugin-integration-piv-plan.md",
-    "reports/caveman-plugin-integration-implementation-report.md",
-    "scripts/validate_control_harness.py",
-    "scripts/validate_structure.py",
-    "skills/caveman/SKILL.md",
-    "tests/fixture-contracts.json",
-    "tests/fixtures/caveman-mode/expected-files.txt",
-    "tests/fixtures/caveman-mode/idea.md",
-    "tests/fixtures/caveman-mode/notes.md",
-    "tests/snapshots/route-snapshots.json"
+    "BRANCH_FINISH.md",
+    "NEXT_STEP.md"
   ],
   "runtimeChangedFiles": [
-    ".pfo/UNIT_CONTEXT_MANIFEST.json",
-    ".pfo/VERIFICATION_CONTRACT.json",
-    "PFO_CONTRACT_GATE.json",
-    "PFO_EXISTING_PROJECT_ANALYSIS.json",
     "PFO_REPORT.md"
   ],
   "riskClasses": [
     "business_logic_change",
-    "data_source_change",
-    "dependency_change",
     "deployment_change",
-    "provider_integration_change",
+    "documentation_change",
     "security_change",
     "user_facing_output_change"
   ],
@@ -50,8 +25,7 @@
   "warnings": [
     "placeholder contract content: .pfo/PROJECT_CONTRACT.md",
     "placeholder contract content: .pfo/FORBIDDEN_CHANGES.md",
-    "placeholder contract content: .pfo/FALLBACK_POLICY.md",
-    "dependency diff also touches data sources or user-facing output; verify Scope Lock explicitly."
+    "placeholder contract content: .pfo/FALLBACK_POLICY.md"
   ],
   "gates": {
     "aliasTargets": "PASS",

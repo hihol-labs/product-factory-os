@@ -5,8 +5,8 @@ This is the user-facing project steering checkpoint. It intentionally avoids int
 ## Where We Are
 
 - Product: Existing project `product-factory-os` analyzed by Product Factory OS.
-- Current outcome: Caveman token-efficiency workflow is implemented and verified inside Product Factory OS.
-- Recommended next step: Commit the Caveman integration, push the branch, open a pull request, then record branch finish state.
+- Current outcome: Caveman token-efficiency workflow is implemented, verified, committed, pushed, and opened as PR #33.
+- Recommended next step: Review draft PR https://github.com/hihol-labs/product-factory-os/pull/33 and merge when ready.
 - Approval status: APPROVED_BY_REQUEST
 
 ## Visible Roadmap
@@ -16,21 +16,22 @@ This is the user-facing project steering checkpoint. It intentionally avoids int
 | 1 | Analyze existing project | done |
 | 2 | Implement `/caveman` PFO integration | done |
 | 3 | Run PFO gates and production readiness | done |
-| 4 | Commit, push, and open PR | pending |
+| 4 | Commit, push, and open PR | done |
+| 5 | Review and merge PR | pending |
 
 ## Recommended Next Step
 
-- Step: Publish verified Caveman integration through git commit, push, and PR.
-- Why now: Implementation and PFO gates are complete; user explicitly requested publication.
-- Files likely touched: git metadata only until branch finish state is recorded.
-- Verification: production readiness passed; PR URL and branch finish evidence will be recorded after PR creation.
+- Step: Review draft PR #33 and merge when ready.
+- Why now: Implementation, verification, commit, push, PR creation, and PFO branch finish are complete.
+- Files likely touched: none unless review requests changes.
+- Verification: production readiness passed; branch finish records PR URL and pushed branch.
 
 ## Alternatives
 
-- Open PR as requested.
-- Pause before publishing.
-- Change branch, commit message, or PR mode.
+- Review PR #33.
+- Request changes on the PR.
+- Merge when ready.
 
 ## Decision Needed
 
-- Publish the verified Caveman integration through commit, push, and PR.
+- Review draft PR #33 and merge when ready.
