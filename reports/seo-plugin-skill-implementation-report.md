@@ -10,7 +10,7 @@ Integrate SEO optimization workflow into PFO plugin runtime
 
 ## Evidence
 
-Completed SEO skill contract integration: skill file, route reminder, trigger registry, route snapshot, fixture contract, structure expectations; targeted SEO skill-completeness, run_fixtures, verify_triggers, verify_fixture_contracts, run_headless_fixtures mock, validate_structure, verify_skill_profiles, verify_manifest_drift, validate_control_harness, and production_readiness passed
+Completed SEO skill contract integration: skill file, route reminder, trigger registry, route snapshot, fixture contract, structure expectations, public plugin docs, and marketplace metadata. Targeted SEO skill-completeness, run_fixtures, verify_triggers, verify_fixture_contracts, run_headless_fixtures mock, validate_structure, verify_skill_profiles, verify_manifest_drift, validate_control_harness, pfo_contract_gate PASS_WITH_WARNINGS only placeholder contracts, and production_readiness passed.
 
 ## Validation History
 
@@ -21,6 +21,9 @@ Completed SEO skill contract integration: skill file, route reminder, trigger re
 | review-stage |  | py_compile, pfo_metrics JSON run, validate_structure, validate_state, validate_runtime, validate_control_harness, pfo_contract_gate PASS_WITH_WARNINGS, and production_readiness passed |
 | existing-project-analyze |  |  |
 | verify-work | seo-plugin-skill | Completed SEO skill contract integration: skill file, route reminder, trigger registry, route snapshot, fixture contract, structure expectations; targeted SEO skill-completeness, run_fixtures, verify_triggers, verify_fixture_contracts, run_headless_fixtures mock, validate_structure, verify_skill_profiles, verify_manifest_drift, validate_control_harness, and production_readiness passed |
+| review-stage |  | SEO workflow skill has route snapshot, trigger coverage, fixture contract, and documented output contract |
+| review-stage |  | skill-completeness, run_fixtures, verify_triggers, verify_fixture_contracts, run_headless_fixtures mock, validate_structure, verify_skill_profiles, verify_manifest_drift, validate_control_harness, and production_readiness passed |
+| verify-work | seo-plugin-skill | Integrated /seo skill with contracts, triggers, route reminder, fixtures, control harness, public plugin docs, and marketplace metadata; skill-completeness, validate_structure, run_fixtures, verify_triggers, verify_fixture_contracts, run_headless_fixtures --mode mock, validate_control_harness, verify_skill_profiles, verify_manifest_drift, pfo_contract_gate PASS_WITH_WARNINGS only placeholder contracts, and production_readiness passed. |
 
 ## Gate Results
 

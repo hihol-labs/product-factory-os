@@ -78,6 +78,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 - Sensor output should be optimized for self-correction: exact failure, expected condition, relevant file or command, and recovery hint.
 - Feedforward controls must name the expected feedback controls before implementation starts.
 - Repeated inferential findings should be promoted into scripts, tests, schemas, templates, or hooks through the learning promotion gate.
+- Runtime-only memory artifacts, such as `.codex-memory/STATE.json`, may be required during local PFO execution but are not required to exist in CI checkout.
 
 ## Lifecycle Mapping
 
