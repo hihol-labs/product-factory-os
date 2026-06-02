@@ -14,6 +14,7 @@
     "status": "PASS_WITH_WARNINGS",
     "changedFiles": [
       ".codex-plugin/plugin.json",
+      "BRANCH_FINISH.md",
       "NEXT_STEP.md",
       "CHANGELOG.md",
       "README.md",
