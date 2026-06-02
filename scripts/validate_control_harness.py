@@ -10,6 +10,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 CONTROL_DOC = ROOT / "docs" / "CONTROL_HARNESS.md"
 
+RUNTIME_ONLY_ARTIFACTS = {
+    ".codex-memory/STATE.json",
+}
+
 CONTROL_REGISTRY = [
     {
         "id": "intent-routing",
@@ -349,7 +353,7 @@ def validate_inventory(text: str) -> None:
         assert_contains(text, f"| {control_id} |", "docs/CONTROL_HARNESS.md")
         seen_quadrants.add((item["timing"], item["evaluator"]))
         for artifact in item["artifacts"]:
-            if not (ROOT / artifact).is_file():
+            if artifact not in RUNTIME_ONLY_ARTIFACTS and not (ROOT / artifact).is_file():
                 fail(f"{control_id} references missing artifact: {artifact}")
             assert_contains(text, f"`{artifact}`", "docs/CONTROL_HARNESS.md")
 
