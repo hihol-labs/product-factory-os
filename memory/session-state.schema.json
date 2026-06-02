@@ -120,6 +120,7 @@
       "experimentDecision": "",
       "executionPolicy": "",
       "permissionMatrix": "",
+      "contextBudget": "",
       "verificationContract": "",
       "learningPromotion": "",
       "toolCapabilityRegistry": "",
@@ -210,6 +211,12 @@
     "permissionMatrix": {
       "path": ".pfo/PERMISSION_MATRIX.json",
       "humanPath": ".pfo/PERMISSION_MATRIX.md",
+      "status": ""
+    },
+    "contextBudget": {
+      "gate": "pfo context-budget",
+      "indexPath": ".codex-memory/context-index.json",
+      "snapshotPath": ".codex-memory/resume-snapshot.md",
       "status": ""
     },
     "verificationContract": {

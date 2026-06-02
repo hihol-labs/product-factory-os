@@ -1,8 +1,8 @@
 {
   "version": 1,
   "purpose": "Executable verification contract for the active PFO unit.",
-  "unitId": "caveman-plugin-integration",
-  "createdAt": "2026-06-02T11:07:03+00:00",
+  "unitId": "context-mode-pfo-runtime",
+  "createdAt": "2026-06-02T11:56:55+00:00",
   "sensorPolicy": {
     "qualityLeft": "Run fast computational sensors locally before broader or inferential gates.",
     "regulates": [
@@ -29,86 +29,6 @@
   },
   "commands": [
     {
-      "id": "caveman-skill-completeness",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/hooks/skill-completeness.py --skill caveman",
-      "timeoutSeconds": 90,
-      "expectedOutput": "Caveman skill has docs, triggers, fixture, and route snapshot coverage.",
-      "passFailParser": "exit_code_zero",
-      "required": true
-    },
-    {
-      "id": "structure",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_structure.py",
-      "timeoutSeconds": 90,
-      "expectedOutput": "PFO runtime contracts and core methodology files are present.",
-      "passFailParser": "exit_code_zero",
-      "required": true
-    },
-    {
-      "id": "route-fixtures",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/run_fixtures.py",
-      "timeoutSeconds": 90,
-      "expectedOutput": "Fixture routes and hook reminder match expectations.",
-      "passFailParser": "exit_code_zero",
-      "required": true
-    },
-    {
-      "id": "trigger-drift",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_triggers.py",
-      "timeoutSeconds": 90,
-      "expectedOutput": "Trigger phrases route to the expected skill.",
-      "passFailParser": "exit_code_zero",
-      "required": true
-    },
-    {
-      "id": "fixture-contracts",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_fixture_contracts.py",
-      "timeoutSeconds": 90,
-      "expectedOutput": "Behavioural fixture contracts validate.",
-      "passFailParser": "exit_code_zero",
-      "required": true
-    },
-    {
-      "id": "control-harness",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_control_harness.py",
-      "timeoutSeconds": 90,
-      "expectedOutput": "Control harness entries validate.",
-      "passFailParser": "exit_code_zero",
-      "required": true
-    },
-    {
-      "id": "skill-profiles",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_skill_profiles.py",
-      "timeoutSeconds": 90,
-      "expectedOutput": "Skill side-effect profiles are complete.",
-      "passFailParser": "exit_code_zero",
-      "required": true
-    },
-    {
-      "id": "manifest-drift",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/verify_manifest_drift.py",
-      "timeoutSeconds": 90,
-      "expectedOutput": "Manifest, marketplace, and public counts match.",
-      "passFailParser": "exit_code_zero",
-      "required": true
-    },
-    {
-      "id": "hooks",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_hooks.py",
-      "timeoutSeconds": 90,
-      "expectedOutput": "Hook contracts validate.",
-      "passFailParser": "exit_code_zero",
-      "required": true
-    },
-    {
-      "id": "meta-review",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/meta_review.py",
-      "timeoutSeconds": 120,
-      "expectedOutput": "Meta-review passes.",
-      "passFailParser": "exit_code_zero",
-      "required": true
-    },
-    {
       "id": "pfo-contract-gate",
       "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os",
       "timeoutSeconds": 90,
@@ -117,10 +37,10 @@
       "required": true
     },
     {
-      "id": "production-readiness",
-      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/production_readiness.py",
-      "timeoutSeconds": 180,
-      "expectedOutput": "Production readiness suite passes.",
+      "id": "context-runtime",
+      "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_context_runtime.py",
+      "timeoutSeconds": 90,
+      "expectedOutput": "Context runtime budget, search index, snapshot, and hook routing validate successfully.",
       "passFailParser": "exit_code_zero",
       "required": true
     }
@@ -131,13 +51,10 @@
     ".pfo/EXECUTION_POLICY.json",
     ".pfo/PERMISSION_MATRIX.md",
     ".pfo/PERMISSION_MATRIX.json",
+    ".codex-memory/context-index.json",
+    ".codex-memory/resume-snapshot.md",
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-    "skills/caveman/SKILL.md",
-    "docs/CAVEMAN_INTEGRATION.md",
-    "tests/fixtures/caveman-mode/idea.md",
-    "plans/caveman-plugin-integration-piv-plan.md",
-    "reports/caveman-plugin-integration-implementation-report.md",
-    "PFO_REPORT.md"
+    "plans/context-mode-pfo-runtime-piv-plan.md"
   ],
   "passCriteria": [
     "All required commands exit 0.",

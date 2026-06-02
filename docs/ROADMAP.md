@@ -68,7 +68,7 @@
 - Add connector-backed export smoke tests where local connector access exists.
 - Add browser-facing generated-project smoke checks for UI starters.
 - Expand behavioural fixture contracts from the first 7 high-risk skills to all core PFO skills.
-- Add numeric context budget thresholds and checkpoint restore smoke tests.
+- Add numeric context budget thresholds and checkpoint restore smoke tests. (Implemented: global thresholds, `pfo context-budget`, `pfo context-index`, `pfo context-search`, `pfo context-snapshot`, context-budget hooks, and context runtime validator.)
 
 ## 0.9.0
 

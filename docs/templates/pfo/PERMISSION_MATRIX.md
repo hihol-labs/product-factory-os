@@ -15,6 +15,7 @@ Machine-readable source: `.pfo/PERMISSION_MATRIX.json`.
 | External API write | Block | Codex | Yes | Approval plus event |
 | Git commit | Scoped | Codex | When requested or approved | Commit hash/event |
 | Git push | Block | Codex | Yes | Remote branch/event |
+| Context budget | Allow when declared | Codex | No | `.codex-memory/context-index.json`, `.codex-memory/resume-snapshot.md`, event |
 | Deploy or migrate production | Block | Codex | Yes | Rollback, checks, approval, event |
 
 Rules:
@@ -22,3 +23,4 @@ Rules:
 - Project-local rules may tighten this matrix, but must not make production or external writes implicit.
 - Any permission exception must be recorded in `.codex-memory/events.jsonl`.
 - Dangerous routes must use the smallest approved command surface.
+- Large tool/read/log/web/raw HTTP output must pass `pfo context-budget` or be routed through sandbox-summary before it enters active chat context.

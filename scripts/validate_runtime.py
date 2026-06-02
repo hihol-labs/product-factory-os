@@ -85,6 +85,8 @@ def main() -> None:
         "pfo_contract_gate.py",
         "pfo_permission_gate.py",
         "pfo_event_log.py",
+        "pfo_context_runtime.py",
+        "validate_context_runtime.py",
         "validate_tool_registry.py",
         "voice_intent.py",
         "voice_transcribe.py",

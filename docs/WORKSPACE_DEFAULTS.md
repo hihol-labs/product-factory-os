@@ -132,7 +132,7 @@ Before any work in an existing project, full PFO adoption must already be presen
 
 Existing-project alias indexes must link only to files that exist. Missing Product Compiler docs such as `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, or `QUALITY_GATES.md` are not linked until intentionally created.
 
-Hooks are installed by default. They provide global/workspace auto-adoption, route reminders, preflight context, pre-tool security guardrails, skill completeness checks, commit completeness checks, and review-before-commit validation. Install or refresh them from the methodology repo with:
+Hooks are installed by default. They provide global/workspace auto-adoption, route reminders, preflight context, pre-tool security guardrails, pre/post context-budget routing for large outputs and raw HTTP, skill completeness checks, commit completeness checks, and review-before-commit validation. Install or refresh them from the methodology repo with:
 
 ```bash
 bash install.sh
@@ -152,6 +152,8 @@ EXISTING_PROJECT_DETECTED
 For non-trivial existing-project changes, create or update the relevant `EXECUTION_GRAPH.md` node. Tiny direct fixes may use the daily-work skill directly only after PFO adoption status and memory state are checked.
 
 Before session transfer, role switch, delegated execution, AFK work, compaction, or recovery, write `HANDOFF.md` with `/handoff`.
+
+For long sessions, build searchable memory with `pfo context-index <project>`, query it with `pfo context-search <project> <query>`, and keep `.codex-memory/resume-snapshot.md` current through `pfo context-snapshot`, `pfo resume`, or `/handoff`.
 
 Connector-aware work routes through explicit skills:
 

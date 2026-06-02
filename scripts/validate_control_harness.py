@@ -97,6 +97,26 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "context-budget-runtime",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "hooks/context-budget.py",
+            "scripts/pfo_context_runtime.py",
+            "scripts/validate_context_runtime.py",
+        ],
+    },
+    {
+        "id": "session-memory-search",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo_context_runtime.py",
+            "memory/events.schema.json",
+            "hooks/session-diagnostics.py",
+        ],
+    },
+    {
         "id": "token-efficiency",
         "timing": "Feedforward",
         "evaluator": "Computational",

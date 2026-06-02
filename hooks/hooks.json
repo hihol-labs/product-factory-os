@@ -21,6 +21,18 @@
       "description": "Denies real .env access and recursive directory deletion before tool execution."
     },
     {
+      "name": "context-budget-pre",
+      "type": "pre-tool-context-routing",
+      "command": "python3 hooks/context-budget.py --phase pre",
+      "description": "Routes raw HTTP and risky large-output commands through the PFO context budget before tool execution."
+    },
+    {
+      "name": "context-budget-post",
+      "type": "post-tool-context-routing",
+      "command": "python3 hooks/context-budget.py --phase post",
+      "description": "Checks tool/read/log/web output sizes after execution and requires sandbox-summary when numeric limits are exceeded."
+    },
+    {
       "name": "session-diagnostics",
       "type": "context-diagnostic",
       "command": "python3 hooks/session-diagnostics.py",

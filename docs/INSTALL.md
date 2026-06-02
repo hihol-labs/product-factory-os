@@ -44,6 +44,7 @@ python3 scripts/verify_skill_profiles.py
 python3 scripts/validate_execution_graph.py
 python3 scripts/validate_state.py /path/to/project/.codex-memory/STATE.json
 python3 scripts/validate_runtime.py
+python3 scripts/validate_context_runtime.py
 python3 scripts/validate_tool_registry.py docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json integrations/tool-capability-registry.json
 python3 scripts/validate_seo_growth_gate.py --self-check
 python3 scripts/validate_hooks.py
@@ -166,6 +167,7 @@ Before tagging a version:
 6. Check that PFO runtime JSON contracts are valid.
 7. Validate example execution graphs with `python3 scripts/validate_execution_graph.py`.
 8. Validate the control harness with `python3 scripts/validate_control_harness.py`.
+9. Validate context budget/search/snapshot wiring with `python3 scripts/validate_context_runtime.py`.
 
 ## Workspace Adoption Check
 

@@ -113,6 +113,28 @@ def efficiency_metrics(project_states: list[tuple[Path, dict]]) -> dict:
     }
 
 
+def context_runtime_metrics(project_states: list[tuple[Path, dict]]) -> dict:
+    indexed_projects = 0
+    snapshot_projects = 0
+    indexed_documents = 0
+    for project, _ in project_states:
+        index_path = project / ".codex-memory" / "context-index.json"
+        snapshot_path = project / ".codex-memory" / "resume-snapshot.md"
+        if index_path.is_file():
+            indexed_projects += 1
+            try:
+                indexed_documents += int(json.loads(index_path.read_text(encoding="utf-8")).get("documentCount") or 0)
+            except (json.JSONDecodeError, ValueError):
+                pass
+        if snapshot_path.is_file():
+            snapshot_projects += 1
+    return {
+        "indexedProjectCount": indexed_projects,
+        "snapshotProjectCount": snapshot_projects,
+        "indexedEventDocuments": indexed_documents,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Collect Product Factory OS workspace metrics.")
     parser.add_argument("workspace", type=Path)
@@ -135,6 +157,7 @@ def main() -> None:
         "failedGateCount": sum(len(item.get("failedValidations", [])) for item in projects),
         "verificationEvents": sum(len(item.get("verificationHistory", [])) for item in projects),
         "harnessEfficiency": efficiency_metrics(project_states),
+        "contextRuntime": context_runtime_metrics(project_states),
     }
     print(json.dumps(metrics, indent=2, ensure_ascii=False))
 

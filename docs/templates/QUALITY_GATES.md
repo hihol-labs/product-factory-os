@@ -26,6 +26,7 @@
 | Unit Context Manifest |  | `.pfo/UNIT_CONTEXT_MANIFEST.json` |  |
 | Execution Policy |  | `.pfo/EXECUTION_POLICY.json` |  |
 | Permission Matrix |  | `.pfo/PERMISSION_MATRIX.json`, `.pfo/PERMISSION_MATRIX.md`, `pfo permission-check` |  |
+| Context Budget |  | `pfo context-budget`, `.pfo/PERMISSION_MATRIX.json`, `.codex-memory/context-index.json`, `.codex-memory/resume-snapshot.md` |  |
 | Verification Contract |  | `.pfo/VERIFICATION_CONTRACT.json` |  |
 | Tool Capability Registry |  | `.pfo/TOOL_CAPABILITY_REGISTRY.json`, `pfo tool-registry` |  |
 | Next Step Approval |  | `NEXT_STEP.md` user decision before the next major implementation step |  |

@@ -8,7 +8,7 @@ import sys
 from typing import Any
 
 
-CAPABILITIES = {"read", "write", "test", "commit", "push", "deploy", "external_api", "secrets"}
+CAPABILITIES = {"read", "write", "test", "commit", "push", "deploy", "external_api", "secrets", "context_budget"}
 
 
 def fail(message: str) -> None:
@@ -114,6 +114,10 @@ def decision(project: Path, capability: str, path: str, command: str, approved: 
     if default == "allow_when_declared":
         if capability == "test" and (project / ".pfo" / "VERIFICATION_CONTRACT.json").is_file():
             return "PASSED", "verification contract declares test capability"
+        if capability == "context_budget":
+            matrix = read_json(project / ".pfo" / "PERMISSION_MATRIX.json")
+            if matrix.get("contextRuntimePolicy"):
+                return "PASSED", "context runtime policy declares context budget capability"
         return "BLOCKED", "capability must be declared first"
     if default == "scoped":
         if capability == "write" and path:

@@ -9,8 +9,8 @@ This map tracks which external agent-engineering principles are covered by Produ
 | Think before coding | Full | `/blueprint`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, strict plan validator | Keep behavioural fixture contracts active |
 | Surgical changes | Full | `.pfo/FORBIDDEN_CHANGES.md`, scope lock, diff risk gate | Add more starter-specific negative contracts |
 | Goal-driven execution | Full | execution graph nodes, unit manifests, done criteria | Strengthen generated-project validators |
-| Context budgeting | Partial | `/handoff`, `/session-save`, `session-diagnostics.py` | Add context budget thresholds per project type |
-| Context economy | Full | `docs/AGENT_HARNESS_ENGINEERING.md`, `HANDOFF.md`, unit context policy | Add numeric thresholds after more real traces |
+| Context budgeting | Full | `pfo context-budget`, `hooks/context-budget.py`, `session-diagnostics.py`, `.pfo/PERMISSION_MATRIX.json` | Tune thresholds per project type after more traces |
+| Context economy | Full | `docs/AGENT_HARNESS_ENGINEERING.md`, `HANDOFF.md`, unit context policy, sandbox-summary workflow | Add per-tool empirical thresholds after more real traces |
 | Durable checkpoints beyond git | Partial | `.codex-memory/STATE.json`, `HANDOFF.md`, `PFO_RECOVERY.md` | Add checkpoint restore smoke tests |
 | Tool trust boundary | Full | hook layer, explicit side-effect metadata, explicit invocation gates | Keep dangerous route list synced with metadata |
 | Tool surface discipline | Full | tool selection policy, capability registry, approval metadata | Prune overlapping tools from real usage traces |
@@ -46,7 +46,7 @@ This map tracks which external agent-engineering principles are covered by Produ
 
 ## Open Gaps
 
-1. Context budget thresholds are not yet numeric.
+1. Context budget thresholds are numeric, but still global defaults.
 2. Behavioural contracts cover the highest-risk skills first, not all 32.
 3. Marketplace screenshots are represented by a generated hero image, not a real product screenshot.
 4. Live deployment and migration dry-runs are still contract-level, not environment-level.

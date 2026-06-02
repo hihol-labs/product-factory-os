@@ -224,7 +224,7 @@ The canonical artifact is `.pfo/UNIT_CONTEXT_MANIFEST.json`.
 The manifest is paired with:
 
 - `.pfo/EXECUTION_POLICY.json`: command, write, network, and approval policy.
-- `.pfo/PERMISSION_MATRIX.json` and `.pfo/PERMISSION_MATRIX.md`: read/write/test/commit/push/deploy/external API permissions.
+- `.pfo/PERMISSION_MATRIX.json` and `.pfo/PERMISSION_MATRIX.md`: read/write/test/commit/push/deploy/external API/context budget permissions.
 - `.pfo/VERIFICATION_CONTRACT.json`: required commands, expected output, timeout, pass/fail parser, and artifacts.
 - `.pfo/TOOL_CAPABILITY_REGISTRY.json`: tool/connector read-write-execute capabilities, side effects, auth needs, external data risk, fallback mode, and approval requirements.
 
@@ -246,6 +246,14 @@ The canonical artifact is `HANDOFF.md`.
 Uses `execution/state-machine.json` and `pipelines/execution-pipeline.json` to move through controlled states. Failed gates block forward movement and create a repair path.
 
 Execution should use fresh, task-scoped context per unit. Long chat history is not the execution source of truth.
+
+PFO also includes a context runtime for long sessions:
+
+- `pfo context-budget` evaluates numeric output limits from `.pfo/PERMISSION_MATRIX.json`.
+- `hooks/context-budget.py` routes raw HTTP and large outputs before or after tool calls.
+- `pfo context-index` builds `.codex-memory/context-index.json` from `.codex-memory/events.jsonl`.
+- `pfo context-search` performs BM25-style lookup over indexed event memory.
+- `pfo context-snapshot`, `pfo resume`, and `pfo handoff` maintain `.codex-memory/resume-snapshot.md`.
 
 ### 11. Verification, Drift, And Recovery
 

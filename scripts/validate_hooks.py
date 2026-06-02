@@ -36,6 +36,8 @@ def main() -> None:
         "route-reminder",
         "preflight-context",
         "security-guard",
+        "context-budget-pre",
+        "context-budget-post",
         "session-diagnostics",
         "skill-completeness",
         "commit-completeness",
@@ -57,6 +59,7 @@ def main() -> None:
     run([sys.executable, "hooks/route-reminder.py", "plan only, architecture first"], "/blueprint")
     run([sys.executable, "hooks/route-reminder.py", "latest SDK docs"], "/mcp-docs")
     run([sys.executable, "hooks/security-guard.py", "--self-test"], "OK:")
+    run([sys.executable, "hooks/context-budget.py", "--self-test"], "OK:")
     run([sys.executable, "hooks/skill-completeness.py", "--skill", "project"], "OK:")
     print(f"OK: {len(hooks)} hook contracts validated")
 

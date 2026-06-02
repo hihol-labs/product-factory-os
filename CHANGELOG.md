@@ -17,6 +17,7 @@
 - PFO Default Stack v1 policy: FastAPI/Pydantic/PostgreSQL/Vue/TypeScript/Vite as the golden path, with documented ADR-style deviations allowed.
 - `/seo` skill for technical SEO, search intent, metadata, structured data, content backlog, and organic acquisition measurement work.
 - `SEO_GROWTH_GUARANTEE_GATE.md` and `validate_seo_growth_gate.py` for measured SEO growth claims with baseline, target, source, attribution window, implemented changes, exclusions, result decision, and next iteration.
+- Context runtime: numeric `pfo context-budget` gate, `pfo context-index`, BM25-style `pfo context-search`, compact `pfo context-snapshot`, pre/post `context-budget.py` hooks, and permission-matrix parity for large output and raw HTTP routing.
 
 ---
 

@@ -45,6 +45,14 @@
     "allowedHosts": [],
     "externalResearchRequiresApproval": true
   },
+  "contextPolicy": {
+    "defaultWorkflow": "sandbox-summary",
+    "largeOutputRule": "Analyze large tool, read, log, web, and HTTP outputs with code or scripts, then place only a bounded summary, key evidence, and artifact path into active chat context.",
+    "rawHttpRule": "Raw HTTP response bodies are blocked unless explicitly approved or summarized before entering context.",
+    "budgetGate": "pfo context-budget",
+    "searchIndex": ".codex-memory/context-index.json",
+    "resumeSnapshot": ".codex-memory/resume-snapshot.md"
+  },
   "approvalPolicy": {
     "productionMutation": "explicit-user-confirmation",
     "externalWrite": "explicit-user-confirmation",
@@ -54,6 +62,8 @@
   "linkedPolicies": {
     "permissionMatrix": ".pfo/PERMISSION_MATRIX.json",
     "toolCapabilityRegistry": ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-    "eventLog": ".codex-memory/events.jsonl"
+    "eventLog": ".codex-memory/events.jsonl",
+    "contextIndex": ".codex-memory/context-index.json",
+    "resumeSnapshot": ".codex-memory/resume-snapshot.md"
   }
 }

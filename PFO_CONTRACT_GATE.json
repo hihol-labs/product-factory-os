@@ -1,18 +1,15 @@
 {
   "status": "PASS_WITH_WARNINGS",
   "changedFiles": [
-    "BRANCH_FINISH.md",
     "NEXT_STEP.md"
   ],
-  "runtimeChangedFiles": [
-    "PFO_REPORT.md"
-  ],
+  "runtimeChangedFiles": [],
   "riskClasses": [
     "business_logic_change",
+    "dependency_change",
     "deployment_change",
     "documentation_change",
-    "security_change",
-    "user_facing_output_change"
+    "security_change"
   ],
   "missingContracts": [],
   "placeholderContracts": [

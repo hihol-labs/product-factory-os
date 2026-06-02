@@ -56,6 +56,9 @@ jobs:
       - name: Validate runtime assets
         run: python3 scripts/validate_runtime.py
 
+      - name: Validate context runtime
+        run: python3 scripts/validate_context_runtime.py
+
       - name: Validate tool capability registry
         run: python3 scripts/validate_tool_registry.py docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json integrations/tool-capability-registry.json
 

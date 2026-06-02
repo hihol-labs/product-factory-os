@@ -27,6 +27,8 @@ This project is governed by Product Factory OS.
 - Engineering Discipline v2 is enforced by `scripts/validate_plan_quality.py` when PFO validation runs.
 - Verification fails closed when evidence is missing or ambiguous.
 - Commands, gates, approvals, verification, errors, and learning events go to `.codex-memory/events.jsonl`.
+- Large tool/read/log/web/raw HTTP output must pass `pfo context-budget .` or be routed through sandbox-summary.
+- Search session memory with `pfo context-search . <query>` and keep `.codex-memory/resume-snapshot.md` current before resume/compaction.
 - Validate permissions with `pfo permission-check .`; validate tools with `pfo tool-registry .`; validate events with `pfo event validate .`.
 - Iteration must reference feedback, metric, validation, or strategy evidence.
 - Repeated errors promote only through `.pfo/LEARNING_PROMOTION_GATE.md`.

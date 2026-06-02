@@ -93,7 +93,7 @@ def main() -> None:
         ["tools"],
     )
     permission_text = (project / ".pfo/PERMISSION_MATRIX.md").read_text(encoding="utf-8")
-    for token in ["Run local verification", "External API write", "Deploy or migrate production"]:
+    for token in ["Run local verification", "External API write", "Context budget", "Deploy or migrate production"]:
         if token not in permission_text:
             fail(f"{project} .pfo/PERMISSION_MATRIX.md is missing {token!r}")
     run([sys.executable, "scripts/pfo_permission_gate.py", str(project)])
