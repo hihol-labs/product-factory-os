@@ -45,6 +45,7 @@ python3 scripts/validate_execution_graph.py
 python3 scripts/validate_state.py /path/to/project/.codex-memory/STATE.json
 python3 scripts/validate_runtime.py
 python3 scripts/validate_tool_registry.py docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json integrations/tool-capability-registry.json
+python3 scripts/validate_seo_growth_gate.py --self-check
 python3 scripts/validate_hooks.py
 python3 scripts/verify_manifest_drift.py
 python3 scripts/verify_install_sync.py
@@ -219,7 +220,7 @@ pfo plan ../my-product
 pfo validate ../my-product
 ```
 
-`pfo plan` creates missing `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `FUNNEL_MODEL.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, and `QUALITY_GATES.md` while preserving files that already exist.
+`pfo plan` creates missing `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `FUNNEL_MODEL.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md`, `SEO_GROWTH_GUARANTEE_GATE.md`, `PRODUCT_BLUEPRINT.md`, `PROJECT_ARCHITECTURE.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, and `QUALITY_GATES.md` while preserving files that already exist.
 
 ## Runtime CLI
 

@@ -40,6 +40,7 @@ Use this skill when PFO needs to improve organic search effectiveness for a prod
    - measurement tasks for Search Console, analytics, sitemap submission, and experiment tracking.
 7. Update docs as needed:
    - `SEO_AUDIT.md`: current state, findings, priority, evidence, and verification.
+   - `SEO_GROWTH_GUARANTEE_GATE.md`: baseline metric, target metric, measurement source, attribution window, implemented changes, exclusion factors, result decision, and next iteration when SEO growth is claimed or targeted.
    - `CONTENT_BACKLOG.md`: search-intent content candidates and briefs.
    - `GO_TO_MARKET.md`: organic acquisition channel assumptions.
    - `VALIDATION_PLAN.md`: SEO experiments, target metric, baseline, and decision rule.
@@ -57,6 +58,7 @@ CONTENT AND INTENT GAPS:
 STRUCTURED DATA:
 INTERNAL LINKS:
 MEASUREMENT:
+SEO GROWTH GUARANTEE GATE:
 PRIORITIZED BACKLOG:
 PFO ARTIFACT IMPACT:
 NEXT VALIDATION STEP:
@@ -79,4 +81,5 @@ Before final output, verify:
 - Treat ranking and traffic claims as hypotheses unless backed by supplied analytics or verified public evidence.
 - Do not optimize for vanity traffic when ICP, conversion goal, or funnel metric contradicts it.
 - Prefer small, measurable SEO changes with a baseline and decision rule over broad content churn.
+- Do not claim SEO growth as verified until `SEO_GROWTH_GUARANTEE_GATE.md` has a concrete baseline metric, target metric, measurement source, attribution window, implemented changes, exclusion factors, result decision, and next iteration.
 - Do not write production `robots.txt`, sitemap, canonical, or schema changes unless the user asked for implementation; default output is an audit/backlog.

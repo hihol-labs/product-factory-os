@@ -324,12 +324,12 @@
       "skill": "/seo",
       "status": "active",
       "contract_files": {
-        "expected-files.txt": {"must_contain": ["SEO_AUDIT.md", "CONTENT_BACKLOG.md", "VALIDATION_PLAN.md"]},
-        "notes.md": {"must_contain": ["SEO effectiveness", "no fabricated rankings"]}
+        "expected-files.txt": {"must_contain": ["SEO_AUDIT.md", "SEO_GROWTH_GUARANTEE_GATE.md", "CONTENT_BACKLOG.md", "VALIDATION_PLAN.md"]},
+        "notes.md": {"must_contain": ["SEO effectiveness", "no fabricated rankings", "baseline metric", "target metric", "measurement source", "attribution window", "implemented changes", "exclusion factors", "result decision", "next iteration"]}
       },
       "output_contract": {
-        "required_files": ["SEO_AUDIT.md"],
-        "any_file_must_contain": ["indexing", "metadata", "search intent", "priority"]
+        "required_files": ["SEO_AUDIT.md", "SEO_GROWTH_GUARANTEE_GATE.md"],
+        "any_file_must_contain": ["indexing", "metadata", "search intent", "priority", "baseline metric", "target metric", "measurement source", "attribution window", "implemented changes", "exclusion factors", "result decision", "next iteration"]
       }
     },
     "session-save": {

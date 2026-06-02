@@ -41,6 +41,21 @@
 | Experiment | Method | Expected Signal | Actual Signal | Decision |
 |---|---|---|---|---|
 
+## SEO Growth Guarantee
+
+Use `SEO_GROWTH_GUARANTEE_GATE.md` when organic traffic, ranking, indexing, CTR, or SEO conversion growth is claimed or targeted.
+
+Required fields:
+
+- baseline metric
+- target metric
+- measurement source
+- attribution window
+- implemented changes
+- exclusion factors
+- result decision
+- next iteration
+
 ## Market Signals
 
 - Alternatives:

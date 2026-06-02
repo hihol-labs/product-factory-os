@@ -136,6 +136,7 @@ CONTROL_REGISTRY = [
         "evaluator": "Inferential",
         "artifacts": [
             "skills/seo/SKILL.md",
+            "docs/templates/SEO_GROWTH_GUARANTEE_GATE.md",
             "docs/templates/CONTENT_BACKLOG.md",
             "docs/templates/GO_TO_MARKET.md",
             "docs/templates/VALIDATION_PLAN.md",
@@ -169,6 +170,16 @@ CONTROL_REGISTRY = [
             "scripts/run_fixtures.py",
             "scripts/verify_triggers.py",
             "scripts/verify_fixture_contracts.py",
+        ],
+    },
+    {
+        "id": "seo-growth-guarantee",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/validate_seo_growth_gate.py",
+            "docs/templates/SEO_GROWTH_GUARANTEE_GATE.md",
+            "docs/templates/VALIDATION_PLAN.md",
         ],
     },
     {

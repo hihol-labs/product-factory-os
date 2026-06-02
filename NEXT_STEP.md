@@ -1,37 +1,34 @@
 # Next Step
 
-This is the user-facing project steering checkpoint. It intentionally avoids intenal state-machine terminology.
+This is the user-facing project steering checkpoint. It intentionally avoids internal state-machine terminology.
 
 ## Where We Are
 
 - Product: Existing project `product-factory-os` analyzed by Product Factory OS.
-- Current outcome: Fowler harness engineering, harness efficiency metrics, and SEO workflow skill are integrated and verified on `codex/default-goal-mode-runtime`.
-- Recommended next step: Review PR #31, then merge after approval.
+- Current outcome: Unit seo-growth-guarantee-gate is scoped and ready for user approval.
+- Recommended next step: Execute PIV plan plans/seo-growth-guarantee-gate-piv-plan.md: Add SEO growth guarantee gate with baseline, target, source, attribution window, changes, exclusions, decision, and next iteration
 - Approval status: PENDING
 
 ## Visible Roadmap
 
 | Step | Outcome | Status |
 |---|---|---|
-| 1 | Integrate Fowler harness engineering into PFO | done |
-| 2 | Publish harness efficiency metrics | done |
-| 3 | Integrate SEO workflow skill | done |
-| 4 | Review PR #31 and merge after approval | pending |
+| 1 | Define the first product milestone | pending |
 
 ## Recommended Next Step
 
-- Step: Review PR #31, then merge after approval.
-- Why now: The implementation and verification gates have passed; the PR is open and ready for review.
-- Files likely touched: none unless review finds a blocker.
-- Verification: `production_readiness`, `validate_structure`, `validate_control_harness`, `validate_runtime`, fixture, trigger, skill-profile, manifest-drift, and contract gates have passed with only known placeholder-contract warnings.
+- Step: Execute PIV plan plans/seo-growth-guarantee-gate-piv-plan.md: Add SEO growth guarantee gate with baseline, target, source, attribution window, changes, exclusions, decision, and next iteration
+- Why now: It is the smallest coherent step that moves the product forward.
+- Files likely touched: use `BUILD_PLAN.md` and `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+- Verification: use `TEST_PLAN.md` and `.pfo/VERIFICATION_CONTRACT.json`.
 
-## Altenatives
+## Alternatives
 
-- Merge after review.
-- Request a focused rollback or follow-up fix before merge.
-- Hold the branch for additional testing.
+- Approve unit seo-growth-guarantee-gate and start implementation.
+- Change the unit goal or scope.
+- Pause and review BUILD_PLAN.md / EXECUTION_GRAPH.md.
 
 ## Decision Needed
 
-- Do you approve reviewing PR #31 and merging after review?
-- Should any part of the branch be changed before merge?
+- Do you approve the recommended next step?
+- Should scope or priority change before implementation?

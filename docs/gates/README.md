@@ -16,3 +16,7 @@ Required universal gates:
 - Verification Contract
 - Tool Capability Registry
 - Learning Promotion
+
+Optional product-specific gates:
+
+- SEO Growth Guarantee

@@ -16,6 +16,7 @@
 - Added machine-readable `.pfo/PERMISSION_MATRIX.json`, `.pfo/TOOL_CAPABILITY_REGISTRY.json`, `pfo permission-check`, `pfo event`, and `pfo tool-registry`.
 - PFO Default Stack v1 policy: FastAPI/Pydantic/PostgreSQL/Vue/TypeScript/Vite as the golden path, with documented ADR-style deviations allowed.
 - `/seo` skill for technical SEO, search intent, metadata, structured data, content backlog, and organic acquisition measurement work.
+- `SEO_GROWTH_GUARANTEE_GATE.md` and `validate_seo_growth_gate.py` for measured SEO growth claims with baseline, target, source, attribution window, implemented changes, exclusions, result decision, and next iteration.
 
 ---
 
