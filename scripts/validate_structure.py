@@ -54,6 +54,7 @@ REQUIRED_FILES = [
     "docs/gates/regression-contract-gate.md",
     "docs/gates/fallback-policy-gate.md",
     "docs/gates/diff-risk-classifier.md",
+    "docs/gates/security-review-evidence.md",
     "docs/gates/no-silent-substitution-rule.md",
     "docs/gates/seo-growth-guarantee-gate.md",
     "docs/rubrics/review.md",
@@ -84,6 +85,7 @@ REQUIRED_FILES = [
     "docs/templates/BUILD_PLAN.md",
     "docs/templates/EXECUTION_GRAPH.md",
     "docs/templates/THREAT_MODEL.md",
+    "docs/templates/SECURITY_AUDIT_REPORT.md",
     "docs/templates/DATA_CLASSIFICATION.md",
     "docs/templates/TEST_PLAN.md",
     "docs/templates/QUALITY_GATES.md",
@@ -207,6 +209,7 @@ REQUIRED_FILES = [
     "scripts/validate_context_runtime.py",
     "scripts/validate_tool_registry.py",
     "scripts/validate_seo_growth_gate.py",
+    "scripts/validate_security_report.py",
     "scripts/validate_starter_compliance.py",
     "scripts/pfo.py",
     "scripts/pfo_learn.py",
@@ -510,7 +513,7 @@ def main() -> None:
         "strategy": ["docs/rubrics/strategy.md", "MARKET_BRIEF.md", "ICP.md"],
         "test": ["docs/rubrics/testing.md", "TEST_PLAN.md"],
         "seo": ["SEO_GROWTH_GUARANTEE_GATE.md", "VALIDATION_PLAN.md"],
-        "security-audit": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"],
+        "security-audit": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "SECURITY_AUDIT_REPORT.md", "deep_review_input.csv"],
         "review": ["docs/rubrics/pfo.md", "scripts/validate_execution_graph.py"],
     }.items():
         text = (ROOT / "skills" / skill / "SKILL.md").read_text()

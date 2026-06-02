@@ -56,6 +56,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | browser-smoke | Browser-facing critical-flow verification | Feedback | Computational | `skills/browser-check/SKILL.md`, `skills/browser-check/playwright/run.js`, `docs/templates/TEST_PLAN.md` |
 | review-agent | Spec and code quality review | Feedback | Inferential | `skills/review/SKILL.md`, `agents/reviewer.md`, `docs/rubrics/review.md` |
 | security-review-agent | Security reasoning and audit findings | Feedback | Inferential | `skills/security-audit/SKILL.md`, `agents/security-reviewer.md`, `docs/rubrics/security.md` |
+| security-evidence-gate | Security report shape, coverage artifacts, and `security_change` evidence validation | Feedback | Computational | `scripts/validate_security_report.py`, `docs/templates/SECURITY_AUDIT_REPORT.md`, `docs/gates/security-review-evidence.md` |
 | ux-review-agent | UX, visual, accessibility, and interaction judgment | Feedback | Inferential | `agents/ux-reviewer.md`, `skills/browser-check/SKILL.md`, `docs/templates/QUALITY_GATES.md` |
 | human-approval | Irreversible or production-impacting boundary approval | Feedback | Inferential | `docs/METHODOLOGY.md`, `docs/templates/pfo/PERMISSION_MATRIX.md`, `skills/deploy/SKILL.md` |
 | human-steering | Human attention routed to unclear intent, accepted risk, load-bearing convention, and harness gaps | Feedback | Inferential | `docs/METHODOLOGY.md`, `.codex-memory/STATE.json`, `NEXT_STEP.md` |

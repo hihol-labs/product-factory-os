@@ -1,0 +1,6 @@
+id,path,reason
+security-audit-v2-001,skills/security-audit/SKILL.md,security workflow phase contract
+security-audit-v2-002,scripts/pfo_contract_gate.py,diff security evidence gate
+security-audit-v2-003,scripts/validate_security_report.py,deterministic report validator
+security-audit-v2-004,skills/bugfix/SKILL.md,fix-finding workflow order
+security-audit-v2-005,docs/rubrics/security.md,security audit acceptance criteria

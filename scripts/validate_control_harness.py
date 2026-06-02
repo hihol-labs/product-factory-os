@@ -304,6 +304,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "security-evidence-gate",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/validate_security_report.py",
+            "docs/templates/SECURITY_AUDIT_REPORT.md",
+            "docs/gates/security-review-evidence.md",
+        ],
+    },
+    {
         "id": "ux-review-agent",
         "timing": "Feedback",
         "evaluator": "Inferential",
