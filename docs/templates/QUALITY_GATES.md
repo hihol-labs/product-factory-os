@@ -8,6 +8,7 @@
 | Evidence Quality |  | real user conversations, past behavior evidence, contradicting evidence, BUILD truth conditions |  |
 | Adversarial Discovery |  | `MARKET_BRIEF.md` adversarial discovery answers |  |
 | Market Validation |  | `VALIDATION_PLAN.md` experiments and signals |  |
+| SEO Growth Guarantee |  | `SEO_GROWTH_GUARANTEE_GATE.md` baseline, target, source, attribution window, changes, exclusions, decision, next iteration |  |
 | Strategy |  |  |  |
 | Feedback Loop |  | `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md` |  |
 | Funnel |  | `FUNNEL_MODEL.md` metrics, MVP measurement contract, or not-applicable note |  |

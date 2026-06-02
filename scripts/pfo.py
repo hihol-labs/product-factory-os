@@ -243,6 +243,7 @@ def ensure_autonomy_state(state: dict) -> None:
     for gate in [
         "ideaGate",
         "marketValidation",
+        "seoGrowthGuarantee",
         "feedbackLoop",
         "funnel",
         "tddRed",
@@ -690,6 +691,12 @@ TBD
 | Offer test | landing page, message, or direct pitch | lead, reply, or qualified demo request | TBD | TBD |
 | Manual concierge test | deliver outcome manually | user completes target workflow | TBD | TBD |
 
+## SEO Growth Guarantee
+
+Use `SEO_GROWTH_GUARANTEE_GATE.md` when organic traffic, ranking, indexing, CTR, or SEO conversion growth is claimed or targeted.
+
+Required fields: baseline metric, target metric, measurement source, attribution window, implemented changes, exclusion factors, result decision, next iteration.
+
 ## Market Signals
 
 - Alternatives: TBD
@@ -889,6 +896,38 @@ def generated_content_backlog() -> str:
 """
 
 
+def generated_seo_growth_guarantee_gate() -> str:
+    return """# SEO Growth Guarantee Gate
+
+Use this gate when SEO work claims or targets measurable growth for a concrete product, page set, market, or content surface.
+
+## Gate Status
+
+```text
+PENDING
+```
+
+## Gate Fields
+
+| Field | Value | Evidence |
+|---|---|---|
+| Baseline Metric |  | Search Console, Analytics, rank tracker, crawl, or approved export before changes |
+| Target Metric |  | numeric target and direction |
+| Measurement Source |  | Search Console, Analytics, logs, crawl report, rank tracker, or approved dataset |
+| Attribution Window |  | start date, end date, and reason the window fits crawl/indexing lag |
+| Implemented Changes |  | shipped SEO changes, commit/PR/deploy links, sitemap submission, or content updates |
+| Exclusion Factors |  | algorithm updates, seasonality, campaigns, tracking changes, outages, competitor shocks, or none |
+| Result Decision | PENDING | PENDING, KEEP, DISCARD, ITERATE, BLOCKED, or STOP |
+| Next Iteration |  | smallest next SEO experiment or explicit stop reason |
+
+## Rules
+
+- This gate guarantees measurement discipline, not search-engine outcomes.
+- Do not claim traffic, ranking, CTR, indexing, conversion, or revenue growth without a baseline and measurement source.
+- Use `python3 scripts/validate_seo_growth_gate.py <project> --allow-pending` while measurement is in flight.
+"""
+
+
 def generated_quality_gates() -> str:
     return """# Quality Gates
 
@@ -900,6 +939,7 @@ def generated_quality_gates() -> str:
 | Evidence Quality | PENDING | real user conversations, past behavior evidence, contradicting evidence, BUILD truth conditions |  |
 | Adversarial Discovery | PENDING | MARKET_BRIEF.md adversarial discovery answers |  |
 | Market Validation | PENDING | VALIDATION_PLAN.md signals and exit decision |  |
+| SEO Growth Guarantee | PENDING | SEO_GROWTH_GUARANTEE_GATE.md baseline, target, source, attribution window, changes, exclusions, decision, next iteration |  |
 | Strategy | PENDING | DISCOVERY.md / MARKET_BRIEF.md when applicable |  |
 | Feedback Loop | PENDING | FEEDBACK_LOG.md and ITERATION_REVIEW.md when users exist |  |
 | Funnel | PENDING | FUNNEL_MODEL.md metrics, MVP measurement contract, or not-applicable note |  |
@@ -1120,6 +1160,7 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "noSilentSubstitution",
             "ideaGate",
             "marketValidation",
+            "seoGrowthGuarantee",
             "feedbackLoop",
             "funnel",
             "experimentSetup",
@@ -1878,6 +1919,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
         (project / "FUNNEL_MODEL.md", generated_funnel_model()),
         (project / "ASSET_REGISTER.md", generated_asset_register()),
         (project / "CONTENT_BACKLOG.md", generated_content_backlog()),
+        (project / "SEO_GROWTH_GUARANTEE_GATE.md", generated_seo_growth_guarantee_gate()),
         (project / "PRODUCT_BLUEPRINT.md", generated_blueprint(project, state, starter)),
         (project / "PROJECT_ARCHITECTURE.md", generated_architecture(starter)),
         (project / "BUILD_PLAN.md", generated_build_plan(starter)),
@@ -1905,6 +1947,7 @@ def cmd_plan(args: argparse.Namespace) -> int:
         "FUNNEL_MODEL.md",
         "ASSET_REGISTER.md",
         "CONTENT_BACKLOG.md",
+        "SEO_GROWTH_GUARANTEE_GATE.md",
         "PRODUCT_BLUEPRINT.md",
         "PROJECT_ARCHITECTURE.md",
         "BUILD_PLAN.md",

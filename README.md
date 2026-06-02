@@ -365,8 +365,9 @@ Every major project step should pass:
 9. Spec compliance review runs before code quality review.
 10. Security, dependency, browser, hardening, and deploy gates are present when relevant.
 11. `.pfo/` contracts do not report scope, data, fallback, golden-flow, or silent-substitution violations.
-12. Control harness coverage is explicit: feedforward controls set the boundary and feedback controls verify the result.
-13. Session state is saved before stopping.
+12. SEO growth claims use `SEO_GROWTH_GUARANTEE_GATE.md` with baseline metric, target metric, measurement source, attribution window, implemented changes, exclusion factors, result decision, and next iteration.
+13. Control harness coverage is explicit: feedforward controls set the boundary and feedback controls verify the result.
+14. Session state is saved before stopping.
 
 ## What Gets Generated
 

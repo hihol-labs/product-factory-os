@@ -83,6 +83,7 @@ PFO добавляет:
 - `docs/templates/IDEA_SCORECARD.md` и `VALIDATION_PLAN.md` — gate для слабых идей, evidence quality, customer discovery, гипотез и рыночных сигналов до расширения scope.
 - `docs/templates/MARKET_BRIEF.md` — рыночный и adversarial discovery слой: конкуренты, альтернативы, неприятные сигналы и дифференциация.
 - `docs/templates/FUNNEL_MODEL.md`, `GO_TO_MARKET.md`, `FEEDBACK_LOG.md`, `ITERATION_REVIEW.md`, `ASSET_REGISTER.md`, `CONTENT_BACKLOG.md` — слой воронки, MVP measurement, обратной связи, итераций, активов и контента.
+- `docs/templates/SEO_GROWTH_GUARANTEE_GATE.md` — gate для SEO growth claims: baseline metric, target metric, measurement source, attribution window, implemented changes, exclusion factors, result decision и next iteration.
 - `docs/templates/LAUNCH_MATURITY_GATE.md` и `SCALE_MOAT_REGISTER.md` — опциональные Launch/Scale maturity artifacts, не обязательные для каждого MVP.
 - `execution/state-machine.json` — контролируемые переходы workflow.
 - `memory/session-state.schema.json` — формат восстановления состояния.

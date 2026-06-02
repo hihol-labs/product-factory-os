@@ -55,6 +55,7 @@ REQUIRED_FILES = [
     "docs/gates/fallback-policy-gate.md",
     "docs/gates/diff-risk-classifier.md",
     "docs/gates/no-silent-substitution-rule.md",
+    "docs/gates/seo-growth-guarantee-gate.md",
     "docs/rubrics/review.md",
     "docs/rubrics/pfo.md",
     "docs/rubrics/strategy.md",
@@ -72,6 +73,7 @@ REQUIRED_FILES = [
     "docs/templates/SCALE_MOAT_REGISTER.md",
     "docs/templates/ASSET_REGISTER.md",
     "docs/templates/CONTENT_BACKLOG.md",
+    "docs/templates/SEO_GROWTH_GUARANTEE_GATE.md",
     "docs/templates/MARKET_BRIEF.md",
     "docs/templates/ICP.md",
     "docs/templates/GO_TO_MARKET.md",
@@ -201,6 +203,7 @@ REQUIRED_FILES = [
     "scripts/pfo_permission_gate.py",
     "scripts/pfo_event_log.py",
     "scripts/validate_tool_registry.py",
+    "scripts/validate_seo_growth_gate.py",
     "scripts/validate_starter_compliance.py",
     "scripts/pfo.py",
     "scripts/pfo_learn.py",
@@ -501,6 +504,7 @@ def main() -> None:
     for skill, tokens in {
         "strategy": ["docs/rubrics/strategy.md", "MARKET_BRIEF.md", "ICP.md"],
         "test": ["docs/rubrics/testing.md", "TEST_PLAN.md"],
+        "seo": ["SEO_GROWTH_GUARANTEE_GATE.md", "VALIDATION_PLAN.md"],
         "security-audit": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md"],
         "review": ["docs/rubrics/pfo.md", "scripts/validate_execution_graph.py"],
     }.items():

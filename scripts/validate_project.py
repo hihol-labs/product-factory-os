@@ -147,6 +147,7 @@ def main() -> None:
             "FUNNEL_MODEL.md",
             "ASSET_REGISTER.md",
             "CONTENT_BACKLOG.md",
+            "SEO_GROWTH_GUARANTEE_GATE.md",
             "PRODUCT_BLUEPRINT.md",
             "PROJECT_ARCHITECTURE.md",
             "BUILD_PLAN.md",
