@@ -8,7 +8,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 ## Что Внутри
 
-- 33 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research, SEO, расширения методологии, connector workflows и Obsidian knowledge export
+- 34 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research, SEO, token-efficiency, расширения методологии, connector workflows и Obsidian knowledge export
 - 15 agent-role описаний для архитектуры, ревью, тестов, аналитики, безопасности, релизов, UX, данных и интеграций
 - Контракты skills: входы, выходы, side effects и idempotency
 - Call graph, чтобы цепочки не становились хаотичными
@@ -207,6 +207,7 @@ python3 scripts/production_readiness.py
 - [OpenAI And MCP Integrations](docs/OPENAI_MCP_INTEGRATIONS.md)
 - [Agent Harness Engineering](docs/AGENT_HARNESS_ENGINEERING.md)
 - [Harness Engineering Demo Integration](docs/HARNESS_ENGINEERING_DEMO_INTEGRATION.md)
+- [Caveman Integration](docs/CAVEMAN_INTEGRATION.md)
 
 ## Проверка
 

@@ -37,6 +37,18 @@
         "stdout_must_contain": ["browser smoke", "engine", "evidence"]
       }
     },
+    "caveman-mode": {
+      "skill": "/caveman",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["NONE"]},
+        "notes.md": {"must_contain": ["token-efficiency", "technical accuracy", "normal mode"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["caveman", "technical accuracy", "normal mode"],
+        "forbidden_files": ["*"]
+      }
+    },
     "deploy-production": {
       "skill": "/deploy",
       "status": "active",

@@ -30,6 +30,7 @@ Trigger phrases help route natural language requests to the right skill. They ar
 | `/perf` | slow, optimize, bottleneck | медленно, оптимизируй, узкое место |
 | `/seo` | SEO audit, search engine optimization, organic traffic, technical SEO, meta tags, sitemap, robots.txt, schema markup, Search Console | SEO аудит, поисковая оптимизация, органический трафик, мета-теги, sitemap, robots.txt, schema markup, индексация |
 | `/mcp-docs` | latest docs, current API, SDK docs, framework version | свежая документация, актуальный API, документация SDK |
+| `/caveman` | Plugin Caveman, caveman mode, less tokens, token compression, terse replies | плагин Caveman, режим caveman, меньше токенов, сжимай ответы, короткие ответы |
 | `/skill-create` | create skill, new PFO skill, add workflow, skill creator | создай skill, новый PFO skill, добавь workflow, расширь PFO |
 | `/browser-check` | open localhost, browser smoke, Playwright smoke, visual QA, check UI | открой localhost, проверь UI, browser smoke, Playwright проверка, визуальная проверка |
 

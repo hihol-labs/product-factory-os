@@ -97,6 +97,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "token-efficiency",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "skills/caveman/SKILL.md",
+            "docs/CAVEMAN_INTEGRATION.md",
+            "hooks/route-reminder.py",
+        ],
+    },
+    {
         "id": "tool-surface-discipline",
         "timing": "Feedforward",
         "evaluator": "Computational",

@@ -5,30 +5,32 @@ This is the user-facing project steering checkpoint. It intentionally avoids int
 ## Where We Are
 
 - Product: Existing project `product-factory-os` analyzed by Product Factory OS.
-- Current outcome: Unit seo-growth-guarantee-gate is scoped and ready for user approval.
-- Recommended next step: Execute PIV plan plans/seo-growth-guarantee-gate-piv-plan.md: Add SEO growth guarantee gate with baseline, target, source, attribution window, changes, exclusions, decision, and next iteration
-- Approval status: PENDING
+- Current outcome: Caveman token-efficiency workflow is implemented and verified inside Product Factory OS.
+- Recommended next step: Commit the Caveman integration, push the branch, open a pull request, then record branch finish state.
+- Approval status: APPROVED_BY_REQUEST
 
 ## Visible Roadmap
 
 | Step | Outcome | Status |
 |---|---|---|
-| 1 | Define the first product milestone | pending |
+| 1 | Analyze existing project | done |
+| 2 | Implement `/caveman` PFO integration | done |
+| 3 | Run PFO gates and production readiness | done |
+| 4 | Commit, push, and open PR | pending |
 
 ## Recommended Next Step
 
-- Step: Execute PIV plan plans/seo-growth-guarantee-gate-piv-plan.md: Add SEO growth guarantee gate with baseline, target, source, attribution window, changes, exclusions, decision, and next iteration
-- Why now: It is the smallest coherent step that moves the product forward.
-- Files likely touched: use `BUILD_PLAN.md` and `.pfo/UNIT_CONTEXT_MANIFEST.json`.
-- Verification: use `TEST_PLAN.md` and `.pfo/VERIFICATION_CONTRACT.json`.
+- Step: Publish verified Caveman integration through git commit, push, and PR.
+- Why now: Implementation and PFO gates are complete; user explicitly requested publication.
+- Files likely touched: git metadata only until branch finish state is recorded.
+- Verification: production readiness passed; PR URL and branch finish evidence will be recorded after PR creation.
 
 ## Alternatives
 
-- Approve unit seo-growth-guarantee-gate and start implementation.
-- Change the unit goal or scope.
-- Pause and review BUILD_PLAN.md / EXECUTION_GRAPH.md.
+- Open PR as requested.
+- Pause before publishing.
+- Change branch, commit message, or PR mode.
 
 ## Decision Needed
 
-- Do you approve the recommended next step?
-- Should scope or priority change before implementation?
+- Publish the verified Caveman integration through commit, push, and PR.
