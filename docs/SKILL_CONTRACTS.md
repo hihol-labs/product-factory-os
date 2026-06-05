@@ -11,6 +11,7 @@ Every skill frontmatter must declare:
 | Skill | Input | Output | Side Effects | Idempotency |
 |---|---|---|---|---|
 | `/project` | Product idea | Route decision | None | Safe |
+| `/brainstorm` | Rough idea, opportunity, feature, naming, or option space | Decision-ready option set plus next PFO route and artifact | None | Safe |
 | `/task` | Existing-project task | Route decision | None | Safe |
 | `/discover` | Idea or problem | `DISCOVERY.md`, `IDEA_SCORECARD.md`, `VALIDATION_PLAN.md` | Writes docs | Ask before overwrite |
 | `/market-scan` | Idea, problem, segment, competitor, or launch question | Fresh public market/community signals normalized into `MARKET_BRIEF.md`, `VALIDATION_PLAN.md`, `FEEDBACK_LOG.md`, or `CONTENT_BACKLOG.md` | External public research, writes docs when approved | Append dated evidence |

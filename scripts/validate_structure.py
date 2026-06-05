@@ -232,6 +232,7 @@ REQUIRED_FILES = [
 REQUIRED_SKILLS = [
     "project",
     "task",
+    "brainstorm",
     "discover",
     "market-scan",
     "seo",
@@ -287,6 +288,7 @@ REQUIRED_AGENTS = [
 REQUIRED_FIXTURES = [
     "new-project",
     "existing-bug",
+    "brainstorm-product",
     "planning-only",
     "discover",
     "market-scan",
@@ -514,6 +516,7 @@ def main() -> None:
 
     for skill, tokens in {
         "strategy": ["docs/rubrics/strategy.md", "MARKET_BRIEF.md", "ICP.md"],
+        "brainstorm": ["/discover", "/advisor", "/grill-me", "/blueprint"],
         "test": ["docs/rubrics/testing.md", "TEST_PLAN.md"],
         "seo": ["SEO_GROWTH_GUARANTEE_GATE.md", "VALIDATION_PLAN.md"],
         "security-audit": ["THREAT_MODEL.md", "DATA_CLASSIFICATION.md", "SECURITY_AUDIT_REPORT.md", "deep_review_input.csv"],
@@ -536,6 +539,7 @@ def main() -> None:
 
     for routed in [
         "project",
+        "brainstorm",
         "task",
         "kickstart",
         "blueprint",
@@ -556,6 +560,7 @@ def main() -> None:
         "obsidian-export",
         "handoff",
         "session-save",
+        "brainstorm",
     ]:
         if f"/{routed}" not in call_graph:
             fail(f"/{routed} is missing from docs/CALL_GRAPH.md")

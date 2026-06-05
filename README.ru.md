@@ -8,7 +8,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 ## Что Внутри
 
-- 34 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research, SEO, token-efficiency, расширения методологии, connector workflows и Obsidian knowledge export
+- 35 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research, SEO, token-efficiency, расширения методологии, connector workflows и Obsidian knowledge export
 - 15 agent-role описаний для архитектуры, ревью, тестов, аналитики, безопасности, релизов, UX, данных и интеграций
 - Контракты skills: входы, выходы, side effects и idempotency
 - Call graph, чтобы цепочки не становились хаотичными

@@ -7,6 +7,12 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> Product Factory OS intent capture
   -> product classification
   -> template selection
+  -> /brainstorm
+       -> /discover
+       -> /advisor
+       -> /grill-me
+       -> /strategy
+       -> /blueprint
   -> /kickstart
        -> /discover
        -> /market-scan
@@ -35,6 +41,7 @@ The workflow is intentionally shallow. Skills can call other skills conceptually
   -> /guide
 
 /task
+  -> /brainstorm
   -> /bugfix
   -> /refactor
   -> /doc
