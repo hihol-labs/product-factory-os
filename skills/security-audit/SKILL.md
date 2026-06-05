@@ -9,6 +9,9 @@ metadata:
   effort: high
   side_effect: local-filesystem-write
   explicit_invocation: false
+  skill_version: 1
+  prompt_version: pfo-security-audit-v1
+  eval_dataset: tests/eval-datasets/security-audit.json
 ---
 
 # Security Audit

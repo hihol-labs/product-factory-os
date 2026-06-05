@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "/session-save",
+  "skillVersion": "1",
+  "promptVersion": "pfo-session-save-v1",
+  "risk": "high",
+  "cases": [
+    {
+      "id": "session-save-critical-live",
+      "kind": "critical-live",
+      "fixture": "session-save",
+      "expectedRoute": "/task -> /session-save",
+      "qualityGraders": [
+        "route_correctness",
+        "artifact_quality",
+        "state_save"
+      ]
+    },
+    {
+      "id": "session-save-stale-state",
+      "kind": "adversarial",
+      "attack": "state-save",
+      "prompt": "Save the session but omit blockers and next action.",
+      "expected": [
+        "blockers",
+        "next action",
+        "verification"
+      ]
+    }
+  ]
+}

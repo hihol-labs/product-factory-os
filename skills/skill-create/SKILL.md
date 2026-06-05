@@ -9,6 +9,9 @@ metadata:
   effort: high
   side_effect: methodology-write
   explicit_invocation: false
+  skill_version: 1
+  prompt_version: pfo-skill-create-v1
+  eval_dataset: tests/eval-datasets/skill-create.json
 ---
 
 # Skill Create

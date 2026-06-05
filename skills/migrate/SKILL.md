@@ -9,6 +9,9 @@ metadata:
   effort: high
   side_effect: data-migration
   explicit_invocation: true
+  skill_version: 1
+  prompt_version: pfo-migrate-v1
+  eval_dataset: tests/eval-datasets/migrate.json
 ---
 
 # Migrate

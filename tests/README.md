@@ -10,6 +10,7 @@ python3 scripts/validate_control_harness.py
 python3 scripts/run_fixtures.py
 python3 scripts/verify_fixture_contracts.py
 python3 scripts/run_headless_fixtures.py --mode mock
+python3 scripts/validate_eval_layer.py
 python3 scripts/validate_hooks.py
 python3 scripts/production_readiness.py
 ```
@@ -36,4 +37,8 @@ Validation has three levels:
 - `python3 scripts/run_headless_fixtures.py --mode mock`: exercises the output validator against generated mock artifacts for all fixtures.
 - `python3 scripts/run_headless_fixtures.py --mode command --command-template "<command>"`: runs a real headless generator. The command receives `PFO_FIXTURE_DIR`, `PFO_PROMPT_FILE`, and `PFO_OUTPUT_DIR` and must write artifacts into `PFO_OUTPUT_DIR`.
 
-CI runs the mock headless mode. Real LLM-backed execution is intentionally opt-in because it needs credentials, budget, and rate-limit control.
+CI runs the mock headless mode. Real LLM-backed execution is mandatory for release through `python3 scripts/validate_release_live_headless.py` and remains opt-in for normal CI because it needs credentials, budget, and rate-limit control.
+
+## Eval Datasets
+
+High-risk skills declare `skill_version`, `prompt_version`, and `eval_dataset` in `SKILL.md` frontmatter. The datasets live under `tests/eval-datasets/` and must include critical-live or adversarial cases. `scripts/validate_eval_layer.py` checks those links plus adversarial fixtures for prompt injection, MCP/tool misuse, and fake data substitution.

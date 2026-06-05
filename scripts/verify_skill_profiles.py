@@ -10,6 +10,17 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ROOT / "skills"
 DANGEROUS_EFFECTS = {"production-impact", "data-migration", "infrastructure-write", "external-write"}
 EFFORTS = {"low", "medium", "high"}
+HIGH_RISK_SKILLS = {
+    "deploy",
+    "migrate",
+    "infra",
+    "github-workflow",
+    "tool-sync",
+    "security-audit",
+    "skill-create",
+    "session-save",
+    "seo",
+}
 
 
 def fail(message: str) -> None:
@@ -42,6 +53,9 @@ def main() -> None:
         effort = data.get("effort")
         side_effect = data.get("side_effect")
         explicit = data.get("explicit_invocation")
+        skill_version = data.get("skill_version")
+        prompt_version = data.get("prompt_version")
+        eval_dataset = data.get("eval_dataset")
         if effort not in EFFORTS:
             errors.append(f"{skill}: effort must be one of {sorted(EFFORTS)}")
         if not side_effect:
@@ -50,6 +64,15 @@ def main() -> None:
             errors.append(f"{skill}: explicit_invocation must be true or false")
         if side_effect in DANGEROUS_EFFECTS and explicit != "true":
             errors.append(f"{skill}: dangerous side_effect {side_effect!r} requires explicit_invocation: true")
+        if path.parent.name in HIGH_RISK_SKILLS:
+            if not skill_version:
+                errors.append(f"{skill}: high-risk skill must declare skill_version")
+            if not prompt_version:
+                errors.append(f"{skill}: high-risk skill must declare prompt_version")
+            if not eval_dataset:
+                errors.append(f"{skill}: high-risk skill must declare eval_dataset")
+            elif not (ROOT / eval_dataset).is_file():
+                errors.append(f"{skill}: eval_dataset path does not exist: {eval_dataset}")
         if "## Self-validation" not in text:
             errors.append(f"{skill}: missing ## Self-validation")
         if "## Rules" not in text:
@@ -73,7 +96,7 @@ def main() -> None:
         for error in errors:
             print(f"- {error}")
         raise SystemExit(1)
-    print("OK: skill effort, side-effect, explicit-invocation, and self-validation profiles are complete")
+    print("OK: skill effort, side-effect, versioning, eval datasets, explicit-invocation, and self-validation profiles are complete")
 
 
 if __name__ == "__main__":

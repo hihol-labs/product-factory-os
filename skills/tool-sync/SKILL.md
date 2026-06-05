@@ -9,6 +9,9 @@ metadata:
   effort: medium
   side_effect: external-write
   explicit_invocation: true
+  skill_version: 1
+  prompt_version: pfo-tool-sync-v1
+  eval_dataset: tests/eval-datasets/tool-sync.json
 ---
 
 # Tool Sync

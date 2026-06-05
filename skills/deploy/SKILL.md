@@ -9,6 +9,9 @@ metadata:
   effort: high
   side_effect: production-impact
   explicit_invocation: true
+  skill_version: 1
+  prompt_version: pfo-deploy-v1
+  eval_dataset: tests/eval-datasets/deploy.json
 ---
 
 # Deploy

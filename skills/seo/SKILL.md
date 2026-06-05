@@ -9,6 +9,9 @@ metadata:
   effort: high
   side_effect: external-read-docs-write
   explicit_invocation: false
+  skill_version: 1
+  prompt_version: pfo-seo-v1
+  eval_dataset: tests/eval-datasets/seo.json
 ---
 
 # SEO

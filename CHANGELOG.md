@@ -28,6 +28,7 @@
 - Security-audit v2 workflow with explicit phase contracts, coverage artifacts, `validate_security_report.py`, diff security evidence gates, and strengthened fix-finding/deep-scan guidance.
 - PFO-aware skill scaffolding with `pfo skill-scaffold`, generating `SKILL.md`, skill contracts, triggers, fixtures, route snapshots, route reminders, and fixture contracts together.
 - Headless fixture expected/actual comparison reports for mock and live command runs, including aggregate `PFO_HEADLESS_COMPARISON.md/json` and per-fixture `logs/comparison.md/json` artifacts.
+- Release-critical eval layer: mandatory live headless proof for 7 critical fixtures, quality graders for route correctness, artifact quality, tool safety, and state-save evidence, high-risk skill prompt/version datasets, and adversarial prompt-injection/MCP misuse/fake-data fixtures.
 - Five-layer defensive diagnostics with `docs/DEFENSIVE_LAYERS.md` and `validate_defensive_layers.py`, wired into CI, release checks, production readiness, structure/runtime validation, and the control harness.
 - Self-runtime contract hardening with concrete `.pfo` self-contracts, `validate_self_contracts.py`, WSL direct `pfo` wrapper support, and contract-gate runtime report classification.
 

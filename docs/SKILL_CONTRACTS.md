@@ -5,6 +5,7 @@ Every skill frontmatter must declare:
 - `effort`: `low`, `medium`, or `high`.
 - `side_effect`: the highest expected mutation or external interaction class.
 - `explicit_invocation`: `true` for production, migration, infrastructure, external-write, or other high-impact routes.
+- High-risk skills also declare `skill_version`, `prompt_version`, and `eval_dataset`.
 
 `scripts/verify_skill_profiles.py` enforces these fields and checks that every skill has a `## Self-validation` section.
 
