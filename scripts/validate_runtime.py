@@ -92,6 +92,7 @@ def main() -> None:
         "pfo_skill_scaffold.py",
         "validate_context_runtime.py",
         "validate_tool_registry.py",
+        "validate_route_profiles.py",
         "voice_intent.py",
         "voice_transcribe.py",
         "pfo_metrics.py",

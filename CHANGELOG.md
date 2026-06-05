@@ -31,10 +31,15 @@
 - Release-critical eval layer: mandatory live headless proof for 7 critical fixtures, quality graders for route correctness, artifact quality, tool safety, and state-save evidence, high-risk skill prompt/version datasets, and adversarial prompt-injection/MCP misuse/fake-data fixtures.
 - Five-layer defensive diagnostics with `docs/DEFENSIVE_LAYERS.md` and `validate_defensive_layers.py`, wired into CI, release checks, production readiness, structure/runtime validation, and the control harness.
 - Self-runtime contract hardening with concrete `.pfo` self-contracts, `validate_self_contracts.py`, WSL direct `pfo` wrapper support, and contract-gate runtime report classification.
+- Route profiles for PFO overhead control: `minimal`, `standard`, and `full` profiles now define route-specific steps, gates, artifacts, and verification policy.
+- Minimal existing-project routes now stay limited to adoption, scope, targeted verification, review, and state-save without requiring Product Compiler planning artifacts.
+- `artifactDebt` metrics in `pfo metrics`, reporting the documents required by the active route, missing required artifacts, and tracked artifacts outside the current route.
+- `validate_route_profiles.py` plus production-readiness/runtime/structure wiring to keep route profile contracts deterministic.
 
 ### Changed
 
 - `pfo_contract_gate.py` now treats generated PFO status/report artifacts as runtime diffs and requires security coverage only for real non-doc, non-test security-sensitive product files.
+- `pfo manifest`, generated verification contracts, `pfo verify-work`, and `pfo next-best-action` now honor the active route profile.
 
 ---
 

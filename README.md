@@ -87,7 +87,7 @@ python3 scripts/production_readiness.py
 pfo metrics
 ```
 
-`pfo metrics` includes `harnessEfficiency`: verified-unit count, repair loops per verified unit, verification/gate pass rates, and time from unit manifest to first successful verification.
+`pfo metrics` includes `harnessEfficiency`: verified-unit count, repair loops per verified unit, verification/gate pass rates, and time from unit manifest to first successful verification. It also reports `artifactDebt`: the documents required by the current route profile, missing required artifacts, and tracked artifacts outside the active route.
 
 See [docs/INSTALL.md](docs/INSTALL.md) for local development, hook policy, smoke prompts, and release checks.
 
@@ -165,6 +165,16 @@ For existing repositories:
 /task -> adoption-check -> repository-analysis -> task-classification
       -> daily-work skill -> gates -> state-save
 ```
+
+Existing-project work uses route profiles to keep overhead proportional:
+
+| Profile | Use When | Required Route |
+|---|---|---|
+| `minimal` | Small tasks with no behavior, data, deploy, security, migration, or architecture risk | adoption -> scope -> targeted verification -> review -> state-save |
+| `standard` | Default non-trivial existing-code work | adoption -> analysis -> classification -> unit manifest -> targeted verification -> review -> state-save |
+| `full` | New products, broad changes, production, deploy, migration, security, hardening, or high-risk methodology work | planning, full verification, branch finish, and release-grade gates |
+
+`pfo manifest --profile minimal` writes only the small-task manifest and verification contract. It does not require Product Compiler planning docs such as `PRODUCT_BLUEPRINT.md`, `BUILD_PLAN.md`, `EXECUTION_GRAPH.md`, `TEST_PLAN.md`, or `QUALITY_GATES.md`.
 
 Codex `/goal` mode wraps both routes by default: start or continue the goal before implementation, then complete it only after the PFO exit gates pass.
 
@@ -439,6 +449,7 @@ pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product
 pfo next-best-action ../my-product --write
 pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
+pfo manifest ../my-product --unit docs-typo --goal "Fix README typo" --profile minimal
 pfo handoff ../my-product --from-role planner --to-role implementer --reason role-switch
 pfo build ../my-product
 pfo test ../my-product

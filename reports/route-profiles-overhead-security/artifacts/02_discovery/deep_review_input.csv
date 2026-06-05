@@ -1,0 +1,7 @@
+id,path,reason
+route-profiles-overhead-001,routing/route-profiles.json,route profile policy and required gate/artifact scope
+route-profiles-overhead-002,scripts/pfo.py,route profile selection plus manifest/verification/next-best-action changes
+route-profiles-overhead-003,scripts/pfo_metrics.py,artifactDebt metric over project state artifacts
+route-profiles-overhead-004,scripts/validate_route_profiles.py,deterministic route profile validation
+route-profiles-overhead-005,README.md,user-facing route profile and metric documentation
+route-profiles-overhead-006,docs/WORKSPACE_DEFAULTS.md,workspace default route profile rules

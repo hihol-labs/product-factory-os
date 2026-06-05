@@ -25,6 +25,7 @@ CHECKS = [
     [sys.executable, "scripts/validate_runtime.py"],
     [sys.executable, "scripts/validate_context_runtime.py"],
     [sys.executable, "scripts/validate_tool_registry.py", "docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json", "integrations/tool-capability-registry.json"],
+    [sys.executable, "scripts/validate_route_profiles.py"],
     [sys.executable, "scripts/validate_seo_growth_gate.py", "--self-check"],
     [sys.executable, "scripts/validate_security_report.py", "--self-check"],
     [sys.executable, "scripts/validate_hooks.py"],
