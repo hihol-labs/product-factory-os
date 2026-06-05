@@ -1,0 +1,6 @@
+path,review_focus,risk_class,notes
+scripts/pfo_metrics.py,workspace health metrics and blocker classification,security_change,"Checked false-positive suppression boundaries and dashboard data shape."
+scripts/existing_project_analyzer.py,stack and command detection plus contract upgrade,security_change,"Checked JSON merge preserves project values and does not execute detected commands."
+scripts/adoption_check.py,workspace adoption contract upgrade,security_change,"Checked stale contract repair uses template merge only."
+scripts/pfo_contract_gate.py,contract requirement expansion,security_change,"Checked UNIT_CONTEXT_MANIFEST contract validation is structural."
+dashboard/index.html,local dashboard rendering,user_facing_output_change,"Checked HTML escaping and local metrics loading."

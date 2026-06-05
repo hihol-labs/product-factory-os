@@ -1,8 +1,8 @@
 {
   "version": 1,
   "purpose": "Executable verification contract for the active PFO unit.",
-  "unitId": "route-profiles-overhead",
-  "createdAt": "2026-06-05T22:09:43+00:00",
+  "unitId": "workspace-health",
+  "createdAt": "2026-06-05T23:06:36+00:00",
   "routeProfile": {
     "id": "standard",
     "label": "Standard route profile",
@@ -123,5 +123,20 @@
     "Required artifacts exist.",
     "Failures are recorded as recovery, not success."
   ],
-  "failureMode": "RECOVERY_REQUIRED"
+  "failureMode": "RECOVERY_REQUIRED",
+  "commandSchema": {
+    "requiredFields": [
+      "id",
+      "command",
+      "timeoutSeconds",
+      "expectedOutput",
+      "passFailParser"
+    ],
+    "allowedPassFailParsers": [
+      "exit_code_zero",
+      "stdout_contains",
+      "json_field_equals",
+      "manual_evidence"
+    ]
+  }
 }

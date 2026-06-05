@@ -108,6 +108,7 @@ REQUIRED_FILES = [
     "docs/templates/pfo/EXECUTION_POLICY.json",
     "docs/templates/pfo/PERMISSION_MATRIX.md",
     "docs/templates/pfo/PERMISSION_MATRIX.json",
+    "docs/templates/pfo/UNIT_CONTEXT_MANIFEST.json",
     "docs/templates/pfo/VERIFICATION_CONTRACT.json",
     "docs/templates/pfo/LEARNING_PROMOTION_GATE.md",
     "docs/templates/pfo/TOOL_CAPABILITY_REGISTRY.json",

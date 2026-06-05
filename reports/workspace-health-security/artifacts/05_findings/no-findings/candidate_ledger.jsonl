@@ -1,0 +1,3 @@
+{"phase":"discovery","candidate":"dashboard-metrics-injection","status":"rejected","reason":"Rendered values are escaped before insertion into dashboard tables and metric cards."}
+{"phase":"validation","candidate":"contract-upgrade-overwrite","status":"rejected","reason":"JSON contract upgrade deep-merges missing keys only and preserves existing project-local values."}
+{"phase":"attack_path","candidate":"false-healthy-workspace","status":"rejected","reason":"Live eval remains BLOCKED when coverage or live blocked ratio misses target; remaining blockers are still shown by project and type."}

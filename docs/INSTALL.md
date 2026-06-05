@@ -292,6 +292,14 @@ The metrics payload includes `harnessEfficiency`, a comparable signal for recent
 - `repairLoopsPerVerifiedUnit`: lower is better; repeated blockers or failed validations increase it.
 - `verificationPassRate` and `gatePassRate`: higher means the harness is catching and guiding work before late review.
 
+It also includes workspace health:
+
+- `contextRuntime`: index/snapshot coverage across adopted projects.
+- `blockers`: live blocked project ratio plus blockers by type and project.
+- `staleState`: projects whose state has not been refreshed within the stale threshold.
+- `missingGates`: required route gates and artifacts that are absent or pending.
+- `liveEvalStatus`: combined health status from coverage, blockers, stale state, and pass rates.
+
 ## Release Check
 
 ```bash

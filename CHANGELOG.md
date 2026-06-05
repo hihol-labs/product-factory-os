@@ -35,11 +35,16 @@
 - Minimal existing-project routes now stay limited to adoption, scope, targeted verification, review, and state-save without requiring Product Compiler planning artifacts.
 - `artifactDebt` metrics in `pfo metrics`, reporting the documents required by the active route, missing required artifacts, and tracked artifacts outside the current route.
 - `validate_route_profiles.py` plus production-readiness/runtime/structure wiring to keep route profile contracts deterministic.
+- Workspace health metrics in `pfo metrics`: context index/snapshot coverage, live blocked project ratio, blockers by type, stale state, missing gates, and live eval status.
+- Static workspace health dashboard sections for blockers by type, blocked projects, stale state, missing gates, and live eval status.
+- `.pfo/UNIT_CONTEXT_MANIFEST.json` template in project-local PFO contracts so adopted existing projects satisfy route-profile context coverage.
 
 ### Changed
 
 - `pfo_contract_gate.py` now treats generated PFO status/report artifacts as runtime diffs and requires security coverage only for real non-doc, non-test security-sensitive product files.
 - `pfo manifest`, generated verification contracts, `pfo verify-work`, and `pfo next-best-action` now honor the active route profile.
+- Existing-project adoption and analysis now deep-merge missing JSON contract keys from templates, repairing stale permission matrix, context runtime, tool registry, and unit manifest contracts without overwriting project-local settings.
+- Existing-project stack and command detection now covers nested package scripts, Vite/Vue/Svelte/Nuxt/Express/NestJS, Python/pytest/FastAPI/Django/Flask, Make/Just, Go, Rust, Docker Compose, and PFO runtime projects.
 
 ---
 
