@@ -1,0 +1,3 @@
+{"candidate_id":"no-findings","phase":"discovery","status":"closed","summary":"No candidate security finding identified in defensive layer diagnostics diff."}
+{"candidate_id":"no-findings","phase":"validation","status":"closed","summary":"Validator reads bounded repository files only and does not execute commands, access secrets, or open network connections."}
+{"candidate_id":"no-findings","phase":"attack_path","status":"closed","summary":"No attack_path is reachable from the new deterministic consistency check."}

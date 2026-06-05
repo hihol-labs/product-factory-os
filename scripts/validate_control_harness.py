@@ -77,6 +77,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "defensive-layer-diagnostics",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "docs/DEFENSIVE_LAYERS.md",
+            "scripts/validate_defensive_layers.py",
+            "scripts/production_readiness.py",
+        ],
+    },
+    {
         "id": "session-security-guard",
         "timing": "Feedforward",
         "evaluator": "Computational",

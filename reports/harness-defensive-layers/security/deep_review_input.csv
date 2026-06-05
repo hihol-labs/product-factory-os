@@ -1,0 +1,6 @@
+path,review_focus,risk_reason
+docs/DEFENSIVE_LAYERS.md,defensive layer contract,documents task/context/environment/verification/state triage
+scripts/validate_defensive_layers.py,validator behavior,reads repository files and fails closed on missing wiring
+docs/CONTROL_HARNESS.md,control inventory,adds durable feedback control
+.github/workflows/validate.yml,ci wiring,ensures validator runs in CI
+scripts/production_readiness.py,release gate,ensures validator runs before production-ready status

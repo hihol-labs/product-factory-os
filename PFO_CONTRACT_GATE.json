@@ -1,16 +1,38 @@
 {
-  "status": "BLOCKED",
+  "status": "PASS_WITH_WARNINGS",
   "changedFiles": [
+    ".github/workflows/validate.yml",
+    "CHANGELOG.md",
     "NEXT_STEP.md",
-    "README.md",
-    "reports/security-audit-v2-implementation-report.md",
-    "scripts/pfo.py",
-    "scripts/pfo_skill_scaffold.py",
+    "docs/AGENT_HARNESS_ENGINEERING.md",
+    "docs/CONTROL_HARNESS.md",
+    "docs/DEFENSIVE_LAYERS.md",
+    "docs/DESIGN_SPACE.md",
+    "docs/INSTALL.md",
+    "docs/METHODOLOGY.md",
+    "docs/PFO_ARCHITECTURE.md",
+    "docs/PRODUCTION_READINESS.md",
+    "docs/rubrics/pfo.md",
+    "plans/harness-defensive-layers-piv-plan.md",
+    "reports/harness-defensive-layers-implementation-report.md",
+    "reports/harness-defensive-layers-security-review.md",
+    "reports/harness-defensive-layers/security/candidate_ledger.jsonl",
+    "reports/harness-defensive-layers/security/deep_review_input.csv",
+    "reports/harness-defensive-layers/security/repository_coverage_ledger.md",
+    "reports/harness-defensive-layers/security/work_ledger.jsonl",
+    "scripts/meta_review.py",
+    "scripts/production_readiness.py",
+    "scripts/release_check.py",
+    "scripts/validate_control_harness.py",
+    "scripts/validate_defensive_layers.py",
     "scripts/validate_runtime.py",
     "scripts/validate_structure.py",
-    "skills/skill-create/SKILL.md"
+    "scripts/verify_install_sync.py"
   ],
   "runtimeChangedFiles": [
+    ".pfo/SCOPE_LOCK.md",
+    ".pfo/UNIT_CONTEXT_MANIFEST.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
     "PFO_CONTRACT_GATE.json",
     "PFO_EXISTING_PROJECT_ANALYSIS.json",
     "PFO_REPORT.md"
@@ -20,7 +42,6 @@
     "data_source_change",
     "dependency_change",
     "deployment_change",
-    "provider_integration_change",
     "security_change",
     "user_facing_output_change"
   ],
@@ -31,12 +52,7 @@
     ".pfo/FALLBACK_POLICY.md"
   ],
   "aliasTargetErrors": [],
-  "blockers": [
-    "missing changed security coverage artifact: deep_review_input.csv",
-    "missing changed security coverage artifact: work_ledger.jsonl",
-    "missing changed security coverage artifact: repository_coverage_ledger.md",
-    "missing changed security coverage artifact: candidate_ledger.jsonl"
-  ],
+  "blockers": [],
   "warnings": [
     "placeholder contract content: .pfo/PROJECT_CONTRACT.md",
     "placeholder contract content: .pfo/FORBIDDEN_CHANGES.md",
@@ -51,7 +67,7 @@
     "regressionContract": "PASS_WITH_WARNINGS",
     "fallbackPolicy": "PASS",
     "diffRisk": "PASS_WITH_WARNINGS",
-    "securityEvidence": "BLOCKED",
+    "securityEvidence": "PASS",
     "noSilentSubstitution": "PASS",
     "executionPolicy": "PASS",
     "permissionMatrix": "PASS",
