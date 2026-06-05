@@ -1,0 +1,5 @@
+surface,path,risk,review_status
+cli orchestration,scripts/pfo.py,state writeback and gate bypass risk,reviewed
+root check command,scripts/check.py,local command execution risk,reviewed
+existing project analyzer,scripts/existing_project_analyzer.py,gate detection trust boundary,reviewed
+route metadata,skills/brainstorm/SKILL.md,route confusion risk,reviewed

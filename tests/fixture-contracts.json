@@ -37,6 +37,18 @@
         "stdout_must_contain": ["browser smoke", "engine", "evidence"]
       }
     },
+    "brainstorm-product": {
+      "skill": "/brainstorm",
+      "status": "active",
+      "contract_files": {
+        "expected-files.txt": {"must_contain": ["NONE"]},
+        "notes.md": {"must_contain": ["Structured ideation", "read-only", "route"]}
+      },
+      "output_contract": {
+        "stdout_must_contain": ["Options", "Recommendation", "Next PFO route", "Artifact"],
+        "forbidden_files": ["*"]
+      }
+    },
     "caveman-mode": {
       "skill": "/caveman",
       "status": "active",

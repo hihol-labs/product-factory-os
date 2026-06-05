@@ -47,6 +47,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "ideation-routing",
+        "timing": "Feedforward",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "skills/brainstorm/SKILL.md",
+            "docs/TRIGGERS.md",
+            "tests/fixtures/brainstorm-product/idea.md",
+        ],
+    },
+    {
         "id": "adversarial-planning",
         "timing": "Feedforward",
         "evaluator": "Inferential",

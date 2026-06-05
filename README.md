@@ -13,7 +13,7 @@ bash install.sh
 Then open any workspace project with Codex and describe what you want to build or fix. Product Factory OS routes the work automatically. [Full install guide](docs/INSTALL.md) | [Golden path](docs/examples/golden-path-booking-app) | [Skill contracts](docs/SKILL_CONTRACTS.md) | [Harness integration](docs/HARNESS_ENGINEERING_DEMO_INTEGRATION.md).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills: 34](https://img.shields.io/badge/Skills-34-green.svg)](#skills)
+[![Skills: 35](https://img.shields.io/badge/Skills-35-green.svg)](#skills)
 [![Agents: 15](https://img.shields.io/badge/Agents-15-orange.svg)](#agents)
 [![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-purple.svg)](.codex-plugin/plugin.json)
 [![validate](https://github.com/hihol-labs/product-factory-os/actions/workflows/validate.yml/badge.svg)](https://github.com/hihol-labs/product-factory-os/actions/workflows/validate.yml)
@@ -45,7 +45,7 @@ Codex can write code, but product work drifts without a runtime:
 
 ## The Solution
 
-**Product Factory OS** turns Codex into a gated product factory: 34 skills, 15 specialist roles, runtime contracts, hooks, fixtures, validators, and CLI workflows that move work through a deterministic pipeline:
+**Product Factory OS** turns Codex into a gated product factory: 35 skills, 15 specialist roles, runtime contracts, hooks, fixtures, validators, and CLI workflows that move work through a deterministic pipeline:
 
 ```text
 IDEA -> DISCOVERY -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH
@@ -206,6 +206,7 @@ Harness engineering reference: [`docs/AGENT_HARNESS_ENGINEERING.md`](docs/AGENT_
 | Skill | Description |
 |---|---|
 | `/discover` | Turns an idea into market, user, scope, hypothesis, and validation notes. |
+| `/brainstorm` | Turns rough ideas into decision-ready options and the next PFO route. |
 | `/market-scan` | Fresh public market and community signal scan for validation, ICP, competitors, launch, and roadmap decisions. |
 | `/seo` | Audits technical SEO, search intent, metadata, structured data, content gaps, and organic acquisition measurement. |
 | `/blueprint` | Planning-only workflow that compiles an idea into PFO product documents without implementation. |
@@ -304,6 +305,7 @@ PFO keeps workflow chains shallow and bounded:
 
 ```text
 /project
+  -> /brainstorm
   -> /kickstart
        -> /discover
        -> /market-scan
@@ -329,7 +331,7 @@ PFO keeps workflow chains shallow and bounded:
   -> /bugfix, /refactor, /doc, /test, /perf, /seo, /review
   -> /security-audit, /deps-audit, /migrate, /harden, /infra, /deploy
   -> /mcp-docs, /caveman, /browser-check, /github-workflow, /tool-sync
-  -> /handoff, /obsidian-export, /session-save, /strategy, /advisor, /grill-me
+  -> /handoff, /obsidian-export, /session-save, /brainstorm, /strategy, /advisor, /grill-me
 ```
 
 Rules:
@@ -431,13 +433,16 @@ Product Factory OS includes an executable runtime:
 ```bash
 pfo new my-product --idea "voice transcript or product idea"
 pfo adopt ../existing-product
+pfo check
 pfo analyze ../existing-product --run-gates --report
 pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product
+pfo next-best-action ../my-product --write
 pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
 pfo handoff ../my-product --from-role planner --to-role implementer --reason role-switch
 pfo build ../my-product
 pfo test ../my-product
+pfo full-cycle ../my-product --note "run the standard PFO loop"
 pfo tdd-evidence ../my-product --red "pytest failed as expected" --green "pytest passed"
 pfo root-cause ../my-product --summary "bad value enters parser" --evidence "trace shows parser input"
 pfo verify-work ../my-product --evidence "tests and smoke passed" --pass-gate

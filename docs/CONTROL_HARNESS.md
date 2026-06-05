@@ -31,6 +31,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | intent-routing | Natural-language route shaping | Feedforward | Computational | `hooks/route-reminder.py`, `docs/TRIGGERS.md`, `tests/snapshots/route-snapshots.json` |
 | product-classification | Product type, risk, stack, and module selection | Feedforward | Computational | `routing/product-classifier.json`, `templates/product-templates.json`, `core/product-compiler.md` |
 | planning-documents | Product, PRD, architecture, build, and execution docs | Feedforward | Inferential | `docs/templates/PRODUCT_BLUEPRINT.md`, `docs/templates/PROJECT_ARCHITECTURE.md`, `docs/templates/BUILD_PLAN.md`, `skills/blueprint/SKILL.md` |
+| ideation-routing | Structured option generation before discovery or planning | Feedforward | Inferential | `skills/brainstorm/SKILL.md`, `docs/TRIGGERS.md`, `tests/fixtures/brainstorm-product/idea.md` |
 | adversarial-planning | Plan, architecture, and decision stress testing | Feedforward | Inferential | `skills/grill-me/SKILL.md`, `skills/advisor/SKILL.md`, `agents/architect.md` |
 | unit-context | Task-scoped execution inputs and write scope | Feedforward | Computational | `docs/templates/pfo/EXECUTION_POLICY.json`, `docs/templates/pfo/PERMISSION_MATRIX.json`, `docs/templates/UNIT_CONTEXT_MANIFEST.json` |
 | verification-contract | Expected checks before execution starts | Feedforward | Computational | `docs/templates/pfo/VERIFICATION_CONTRACT.json`, `docs/templates/TEST_PLAN.md`, `docs/templates/QUALITY_GATES.md` |
@@ -91,7 +92,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | PFO Stage | Required Feedforward Controls | Required Feedback Controls |
 |---|---|---|
 | Route request | `intent-routing`, `product-classification` | `route-regression` |
-| Plan product | `planning-documents`, `market-validation`, `adversarial-planning`, `harnessability-assessment` | `review-agent` |
+| Plan product | `ideation-routing`, `planning-documents`, `market-validation`, `adversarial-planning`, `harnessability-assessment` | `review-agent` |
 | Dispatch unit | `unit-context`, `verification-contract`, `harness-templates` when topology is selected | `engineering-discipline` |
 | Build behavior | `verification-contract`, `docs/templates/TEST_PLAN.md` | tests, `engineering-discipline`, `project-ci`, `alias-integrity`, `quality-left-scheduling`, `context-budget-runtime` |
 | Review work | rubrics and quality gate expectations | `review-agent`, `security-review-agent`, `ux-review-agent` when applicable |

@@ -8,7 +8,7 @@ IDEA -> PRODUCT_BLUEPRINT -> BUILD_PLAN -> EXECUTION_GRAPH -> BUILD -> TEST -> V
 
 ## Что Внутри
 
-- 34 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research, SEO, token-efficiency, расширения методологии, connector workflows и Obsidian knowledge export
+- 35 skills для создания проектов, ежедневной разработки, качества, операций, стратегии, памяти, research, SEO, token-efficiency, расширения методологии, connector workflows и Obsidian knowledge export
 - 15 agent-role описаний для архитектуры, ревью, тестов, аналитики, безопасности, релизов, UX, данных и интеграций
 - Контракты skills: входы, выходы, side effects и idempotency
 - Call graph, чтобы цепочки не становились хаотичными
@@ -100,13 +100,16 @@ PFO теперь имеет исполняемый CLI:
 pfo new my-product --idea "SaaS для учета подписок"
 pfo adopt
 pfo adopt ../existing-product
+pfo check
 pfo analyze ../existing-product --run-gates --report
 pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product
+pfo next-best-action ../my-product --write
 pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
 pfo handoff ../my-product --from-role planner --to-role implementer --reason role-switch
 pfo build ../my-product
 pfo test ../my-product
+pfo full-cycle ../my-product --note "run the standard PFO loop"
 pfo tdd-evidence ../my-product --red "pytest ... failed as expected" --green "pytest ... passed"
 pfo root-cause ../my-product --summary "bad value enters parser" --evidence "trace shows parser input" --hypothesis "validate before parse"
 pfo verify-work ../my-product --evidence "tests and smoke passed" --pass-gate

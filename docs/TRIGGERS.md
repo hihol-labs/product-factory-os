@@ -10,6 +10,7 @@ Trigger phrases help route natural language requests to the right skill. They ar
 |---|---|---|
 | `/project` | new project, build an app, start a service, create MVP | новый проект, создай приложение, хочу MVP, стартуем проект |
 | `/project` | product factory, generate product, build SaaS, build bot, build scraper, build CLI | фабрика продуктов, сделай SaaS, сделай бота, сделай парсер, CLI инструмент |
+| `/brainstorm` | brainstorm, ideate, product ideas, feature ideas, explore options | брейншторм, мозговой штурм, накидай идеи, варианты идей |
 | `/discover` | validate idea, product discovery, target users, market | проверь идею, discovery, аудит рынка, целевая аудитория |
 | `/discover` | score idea, test hypothesis, kill weak ideas, validation plan | оцени идею, проверь гипотезу, отсеять слабые идеи |
 | `/market-scan` | last 30 days, market scan, recent community signals, competitor buzz | последние 30 дней, свежие сигналы рынка, что говорят пользователи, жалобы пользователей |

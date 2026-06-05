@@ -19,6 +19,15 @@ ALIAS_DOCUMENT_NAMES = [
     "PROGRESS.md",
     "TESTING.md",
 ]
+PLAN_ARTIFACTS = [
+    "PRODUCT_BLUEPRINT.md",
+    "PROJECT_ARCHITECTURE.md",
+    "BUILD_PLAN.md",
+    "EXECUTION_GRAPH.md",
+    "TEST_PLAN.md",
+    "QUALITY_GATES.md",
+    "NEXT_STEP.md",
+]
 
 
 def load_alias_documents() -> dict[str, str]:
@@ -307,6 +316,141 @@ def write_alias_documents(project: Path) -> list[str]:
         if write_if_missing(project / name, text):
             written.append(name)
     return written
+
+
+def gate_passed(state: dict, gate: str) -> bool:
+    return state.get("gateResults", {}).get(gate) in {"PASSED", "PASSED_WITH_WARNINGS"}
+
+
+def missing_files(project: Path, files: list[str]) -> list[str]:
+    return [rel for rel in files if not (project / rel).is_file()]
+
+
+def infer_next_best_action(project: Path, state: dict) -> dict:
+    ensure_autonomy_state(state)
+    gates = state.get("gateResults", {}) if isinstance(state.get("gateResults"), dict) else {}
+    manifest = state.get("unitContextManifest", {}) if isinstance(state.get("unitContextManifest"), dict) else {}
+    discipline = manifest.get("engineeringDiscipline", {}) if isinstance(manifest.get("engineeringDiscipline"), dict) else {}
+    tdd = state.get("tddEvidence", {}) if isinstance(state.get("tddEvidence"), dict) else {}
+
+    adoption_missing = missing_files(project, ["AGENTS.md", "CODEX.md", ".codex-memory/STATE.json", ".pfo/PROJECT_CONTRACT.md"])
+    if adoption_missing:
+        return {
+            "gate": "adoption",
+            "route": "/task -> /adopt",
+            "command": f"pfo adopt {project}",
+            "reason": "PFO runtime adoption artifacts are missing: " + ", ".join(adoption_missing),
+            "blocks": "planning and implementation",
+        }
+
+    plan_missing = missing_files(project, PLAN_ARTIFACTS)
+    if plan_missing:
+        return {
+            "gate": "planning",
+            "route": "/project -> /blueprint",
+            "command": f"pfo plan {project}",
+            "reason": "Planning artifacts are missing: " + ", ".join(plan_missing),
+            "blocks": "unit dispatch",
+        }
+
+    if not gate_passed(state, "nextStepApproval"):
+        return {
+            "gate": "nextStepApproval",
+            "route": "/task -> approval gate",
+            "command": f"pfo approve-next {project} --by user",
+            "reason": "The next implementation step has not been approved.",
+            "blocks": "implementation dispatch",
+        }
+
+    if missing_files(project, [".pfo/UNIT_CONTEXT_MANIFEST.json", ".pfo/VERIFICATION_CONTRACT.json"]):
+        unit = state.get("currentNode") or "N1"
+        return {
+            "gate": "unitContextManifest",
+            "route": "/task -> manifest",
+            "command": f"pfo manifest {project} --unit {unit} --goal \"Implement {unit}\"",
+            "reason": "Unit scope and verification contract must exist before implementation.",
+            "blocks": "implementation dispatch",
+        }
+
+    if discipline.get("bugfix") and not gate_passed(state, "rootCause"):
+        return {
+            "gate": "rootCause",
+            "route": "/task -> /bugfix",
+            "command": f"pfo root-cause {project} --summary \"...\" --evidence \"...\" --hypothesis \"...\"",
+            "reason": "Bugfix units require reproduction evidence and a fix hypothesis before implementation.",
+            "blocks": "bugfix implementation",
+        }
+
+    if discipline.get("behaviorChange") and not tdd.get("red"):
+        return {
+            "gate": "tddRed",
+            "route": "/task -> /test",
+            "command": f"pfo tdd-evidence {project} --red \"failing test command and expected failure\"",
+            "reason": "Behavior changes require failing-test evidence before implementation.",
+            "blocks": "behavior implementation",
+        }
+
+    if discipline.get("behaviorChange") and not tdd.get("green"):
+        return {
+            "gate": "tddGreen",
+            "route": "/task -> /test",
+            "command": f"pfo tdd-evidence {project} --green \"passing test command after minimal implementation\"",
+            "reason": "Behavior changes require passing-test evidence after implementation.",
+            "blocks": "review",
+        }
+
+    if not gate_passed(state, "verificationContract"):
+        return {
+            "gate": "verificationContract",
+            "route": "/task -> contract gate",
+            "command": f"pfo contracts {project}",
+            "reason": "The verification contract has not passed.",
+            "blocks": "review and deploy readiness",
+        }
+
+    if gates.get("tests") in {"", "PENDING", "BLOCKED", None}:
+        return {
+            "gate": "tests",
+            "route": "/task -> /test",
+            "command": f"pfo test {project}",
+            "reason": "Tests are not recorded as passed or accepted.",
+            "blocks": "quality review",
+        }
+
+    if not gate_passed(state, "specComplianceReview"):
+        return {
+            "gate": "specComplianceReview",
+            "route": "/task -> /review",
+            "command": f"pfo review-stage {project} --stage spec --status PASSED --evidence \"...\"",
+            "reason": "Spec compliance review must run before code quality review.",
+            "blocks": "code quality review",
+        }
+
+    if not gate_passed(state, "codeQualityReview"):
+        return {
+            "gate": "codeQualityReview",
+            "route": "/task -> /review",
+            "command": f"pfo review-stage {project} --stage quality --status PASSED --evidence \"...\"",
+            "reason": "Code quality review is not recorded.",
+            "blocks": "branch finish and deploy readiness",
+        }
+
+    if gates.get("branchFinish") in {"", "PENDING", "BLOCKED", None}:
+        return {
+            "gate": "branchFinish",
+            "route": "/task -> /github-workflow",
+            "command": f"pfo finish-branch {project} --mode pr --verification \"...\"",
+            "reason": "Completed branch work needs an explicit PR, merge, keep, or discard decision.",
+            "blocks": "release cleanup",
+        }
+
+    return {
+        "gate": "sessionSave",
+        "route": "/task -> /session-save",
+        "command": f"pfo full-cycle {project} --skip-plan --skip-test --skip-build --skip-review --note \"state save\"",
+        "reason": "Core gates are satisfied; save resumable state and continue to the next approved unit or deploy-readiness gate.",
+        "blocks": "",
+    }
 
 
 def generated_blueprint(project: Path, state: dict, starter: dict) -> str:
@@ -1928,6 +2072,42 @@ def cmd_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_next_best_action(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    action = infer_next_best_action(project, state)
+    if args.write:
+        state["nextBestAction"] = action
+        set_next_step_pending(
+            project,
+            state,
+            f"Next best action selected from state gate `{action['gate']}`.",
+            action["command"],
+            [
+                "Run the recommended command.",
+                "Change the route or scope before continuing.",
+                "Pause and inspect PFO status manually.",
+            ],
+            [
+                "Do you approve the recommended next gate action?",
+                "Should PFO choose a different route before implementation continues?",
+            ],
+        )
+        append_event(project, state, "state-change", "RECORDED", {"command": "next-best-action", "action": action})
+        save_state(project, state)
+    if args.json:
+        print(json.dumps(action, indent=2, ensure_ascii=False))
+    else:
+        print(f"Gate: {action['gate']}")
+        print(f"Route: {action['route']}")
+        print(f"Command: {action['command']}")
+        print(f"Reason: {action['reason']}")
+        if action.get("blocks"):
+            print(f"Blocks: {action['blocks']}")
+    return 0
+
+
 def cmd_plan(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
@@ -2166,6 +2346,109 @@ def cmd_test(args: argparse.Namespace) -> int:
 
 def cmd_review(args: argparse.Namespace) -> int:
     return run_script("pfo_runner.py", [str(args.project), "--mode", "review"])
+
+
+def write_full_cycle_session(project: Path, state: dict, steps: list[dict], note: str) -> str:
+    memory_dir = project / ".codex-memory"
+    memory_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H%M%S")
+    session_name = f"session_{stamp}_full-cycle.md"
+    session_path = memory_dir / session_name
+    rows = "\n".join(
+        f"| {step['name']} | {step['status']} | {step.get('exitCode', '')} | {step.get('note', '')} |"
+        for step in steps
+    )
+    session_path.write_text(
+        "# Full-Cycle Session\n\n"
+        f"- Project: `{project}`\n"
+        f"- Recorded at: `{now_iso()}`\n"
+        f"- Note: {note or 'none'}\n\n"
+        "## Steps\n\n"
+        "| Step | Status | Exit Code | Note |\n"
+        "|---|---|---:|---|\n"
+        f"{rows}\n\n"
+        "## Next Action\n\n"
+        f"{state.get('nextAction', '')}\n",
+        encoding="utf-8",
+    )
+    memory_path = memory_dir / "MEMORY.md"
+    existing = memory_path.read_text(encoding="utf-8") if memory_path.is_file() else "# Memory\n\n"
+    entry = f"- {stamp}: full-cycle orchestration -> {session_name}\n"
+    if entry not in existing:
+        memory_path.write_text(existing.rstrip() + "\n" + entry, encoding="utf-8")
+    add_artifact(state, f".codex-memory/{session_name}")
+    add_artifact(state, ".codex-memory/MEMORY.md")
+    return f".codex-memory/{session_name}"
+
+
+def cmd_full_cycle(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    steps: list[dict] = []
+
+    def record(name: str, code: int, note: str = "") -> None:
+        steps.append(
+            {
+                "name": name,
+                "status": "PASSED" if code == 0 else "BLOCKED",
+                "exitCode": code,
+                "note": note,
+            }
+        )
+
+    def should_continue(code: int) -> bool:
+        return code == 0 or not args.stop_on_blocked
+
+    if not args.skip_plan:
+        code = cmd_plan(argparse.Namespace(project=project, note=args.note or "full-cycle orchestration"))
+        record("plan", code, "pfo plan")
+        if not should_continue(code):
+            return code
+
+    if not args.skip_test:
+        code = run_script("pfo_runner.py", [str(project), "--mode", "test"])
+        record("test", code, "pfo test")
+        if not should_continue(code):
+            return code
+
+    if not args.skip_build:
+        code = run_script("pfo_runner.py", [str(project), "--mode", "build"])
+        record("implementation", code, "pfo build dispatch")
+        if not should_continue(code):
+            return code
+
+    if not args.skip_review:
+        code = run_script("pfo_runner.py", [str(project), "--mode", "review"])
+        record("review", code, "pfo review")
+        if not should_continue(code):
+            return code
+
+    run_script("pfo_context_runtime.py", ["snapshot", str(project), "--reason", "full-cycle", "--quiet"])
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    blocked = [step for step in steps if step["status"] == "BLOCKED"]
+    status = "BLOCKED" if blocked else "PASSED"
+    session_rel = write_full_cycle_session(project, state, steps, args.note)
+    state["fullCycle"] = {
+        "status": status,
+        "recordedAt": now_iso(),
+        "sessionPath": session_rel,
+        "steps": steps,
+    }
+    state["sessionState"] = "ACTIVE"
+    if status == "PASSED":
+        state["currentStage"] = "SESSION_SAVED"
+        state["lastSuccessfulState"] = "SESSION_SAVED"
+        state["nextAction"] = "Review full-cycle session notes, then continue with the next approved PFO unit or deploy-readiness gate."
+    else:
+        failed = ", ".join(step["name"] for step in blocked)
+        state["nextAction"] = f"Resolve blocked full-cycle step(s): {failed}."
+    append_event(project, state, "state-change", status, {"command": "full-cycle", "steps": steps})
+    save_state(project, state)
+    print(f"OK: full-cycle recorded as {status}")
+    print(f"Session: {session_rel}")
+    for step in steps:
+        print(f"{step['name']}: {step['status']} ({step['exitCode']})")
+    return 0 if status == "PASSED" else 1
 
 
 def cmd_verify_work(args: argparse.Namespace) -> int:
@@ -2738,6 +3021,13 @@ def cmd_contracts(args: argparse.Namespace) -> int:
     return run_script("pfo_contract_gate.py", argv)
 
 
+def cmd_check(args: argparse.Namespace) -> int:
+    argv = []
+    if args.no_smoke:
+        argv.append("--no-smoke")
+    return run_script("check.py", argv)
+
+
 def cmd_resume(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     run_script("pfo_context_runtime.py", ["snapshot", str(project), "--reason", "resume", "--quiet"])
@@ -2828,6 +3118,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     for name, func in [
         ("status", cmd_status),
+        ("next-best-action", cmd_next_best_action),
         ("plan", cmd_plan),
         ("build", cmd_build),
         ("test", cmd_test),
@@ -2839,6 +3130,9 @@ def build_parser() -> argparse.ArgumentParser:
     ]:
         item = sub.add_parser(name)
         item.add_argument("project", type=Path)
+        if name == "next-best-action":
+            item.add_argument("--json", action="store_true")
+            item.add_argument("--write", action="store_true", help="Write the recommendation into STATE.json and NEXT_STEP.md.")
         if name == "plan":
             item.add_argument("--note", default="")
         if name == "contracts":
@@ -2846,6 +3140,20 @@ def build_parser() -> argparse.ArgumentParser:
             item.add_argument("--write", action="store_true")
             item.add_argument("--strict", action="store_true")
         item.set_defaults(func=func)
+
+    full_cycle = sub.add_parser("full-cycle", help="Run plan, test, implementation dispatch, review, and session-save orchestration.")
+    full_cycle.add_argument("project", type=Path)
+    full_cycle.add_argument("--note", default="")
+    full_cycle.add_argument("--skip-plan", action="store_true")
+    full_cycle.add_argument("--skip-test", action="store_true")
+    full_cycle.add_argument("--skip-build", action="store_true")
+    full_cycle.add_argument("--skip-review", action="store_true")
+    full_cycle.add_argument("--stop-on-blocked", action="store_true", help="Stop immediately when a lifecycle step is blocked.")
+    full_cycle.set_defaults(func=cmd_full_cycle)
+
+    check = sub.add_parser("check", help="Run the root Product Factory OS check command.")
+    check.add_argument("--no-smoke", action="store_true", help="Skip temporary generated-project smoke checks.")
+    check.set_defaults(func=cmd_check)
 
     verify_work = sub.add_parser("verify-work", help="Record post-unit verification; fail closed by default.")
     verify_work.add_argument("project", type=Path)

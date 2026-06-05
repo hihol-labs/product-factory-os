@@ -4,6 +4,7 @@ import sys
 
 
 ROUTES = [
+    (r"\b(brainstorm|ideate|idea generation|generate ideas|product ideas|feature ideas|name ideas|explore options)\b|брейншторм|мозгов(ой|ого) штурм|накидай иде(и|й)|варианты идей|сгенерируй идеи", "/project -> /brainstorm"),
     (r"\b(last 30 days|market scan|recent community signals|fresh market signals|social signals|competitor buzz|user complaints|reddit|hacker news|polymarket|youtube sentiment)\b|последние 30 дней|свеж(ие|ий) сигнал|сигнал(ы)? рынка|что говорят пользователи|жалоб(ы|ах) пользовател|обсужда(ют|ния) пользовател", "/project -> /discover -> /market-scan"),
     (r"\b(validate idea|score idea|test hypothesis|kill weak ideas|product discovery|target users|market research|validation plan|competitor|icp)\b|проверь идею|оцени идею|проверь гипотез|отсе(й|ять) слаб|discovery|аудит рынка|целевая аудитория|конкурент", "/project -> /discover"),
     (r"\b(plan only|architecture first|docs first|planning only|write docs)\b|только план|сначала архитектур|код пока не пишем|подготовь документаци", "/project -> /blueprint"),

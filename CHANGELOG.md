@@ -4,6 +4,10 @@
 
 ### Added
 
+- `/brainstorm` skill with trigger coverage, fixture contract, route snapshot, control-harness entry, and Superpowers mapping for structured ideation before discovery, advisor, grill-me, strategy, or blueprint routes.
+- `pfo full-cycle` fail-closed lifecycle orchestration for plan, test, implementation dispatch, review, and session-save summaries.
+- `pfo next-best-action` state-driven gate recommendation with JSON output and optional `STATE.json` / `NEXT_STEP.md` writeback.
+- Root verification entrypoint via `pfo check` / `python3 scripts/check.py`, plus analyzer support for `check` as a root test gate.
 - Full workspace runtime enforcement: installer/preflight now complete adoption with analysis, contract gate output, and `PFO_REPORT.md`.
 - Default-on Codex `/goal` mode is now part of workspace/global PFO policy, project adoption, `pfo new`, and preflight context.
 - Existing-project-safe alias templates and alias target validation gates prevent adopted repositories from being marked fully adopted while index files point to missing canonical docs.

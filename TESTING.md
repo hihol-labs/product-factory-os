@@ -6,6 +6,7 @@ This is a navigation alias for Product Factory OS verification.
 
 - Test docs: `tests/README.md`
 - CI workflow: `.github/workflows/validate.yml`
+- Root check command: `python3 scripts/check.py` or `pfo check`
 - Production readiness gate: `scripts/production_readiness.py`
 - Structure/runtime validators: `scripts/validate_structure.py`, `scripts/validate_runtime.py`
 - Fixture validators: `scripts/run_fixtures.py`, `scripts/verify_fixture_contracts.py`, `scripts/run_headless_fixtures.py`

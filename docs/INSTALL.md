@@ -220,6 +220,7 @@ QUALITY_GATES.md
 Manual refresh remains available:
 
 ```bash
+pfo check
 pfo plan ../my-product
 pfo validate ../my-product
 ```
