@@ -7,6 +7,7 @@ Reviewed the defensive layer diagnostics diff:
 - `docs/DEFENSIVE_LAYERS.md`
 - `scripts/validate_defensive_layers.py`
 - control harness, CI, release, production-readiness, and install-sync wiring
+- state-save updates in `BRANCH_FINISH.md` and `NEXT_STEP.md`
 
 No application runtime, authentication flow, secret handling, network client, deployment target, or data persistence path is changed.
 
@@ -71,3 +72,5 @@ No exploitable attack path was found. The change is a local deterministic docume
 ## Final Decision
 
 PASSED: no security finding was identified for this defensive-layer diagnostics change. The generic `security_change` classifier is satisfied with explicit coverage artifacts and this validated report.
+
+State-save update after PR creation did not add new security-relevant behavior; it only recorded the draft PR URL and branch-finish decision.

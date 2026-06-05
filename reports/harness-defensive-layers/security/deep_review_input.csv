@@ -4,3 +4,5 @@ scripts/validate_defensive_layers.py,validator behavior,reads repository files a
 docs/CONTROL_HARNESS.md,control inventory,adds durable feedback control
 .github/workflows/validate.yml,ci wiring,ensures validator runs in CI
 scripts/production_readiness.py,release gate,ensures validator runs before production-ready status
+BRANCH_FINISH.md,state-save receipt,records PR URL and branch-finish decision only
+NEXT_STEP.md,state-save receipt,records PR review as next human action only
