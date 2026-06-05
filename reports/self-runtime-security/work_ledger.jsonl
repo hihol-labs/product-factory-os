@@ -1,0 +1,4 @@
+{"id":"1","path":"scripts/pfo_contract_gate.py","phase":"discovery","status":"reviewed","notes":"runtime files excluded before risk classification; security evidence subject files exclude docs and tests"}
+{"id":"2","path":"scripts/validate_self_contracts.py","phase":"validation","status":"reviewed","notes":"self-adopted repo fails on required contract template tokens"}
+{"id":"3","path":"scripts/install_workspace.py","phase":"validation","status":"reviewed","notes":"managed wrapper remains user-local and syncs system target when writable"}
+{"id":"4","path":".pfo/*.md","phase":"attack_path","status":"reviewed","notes":"self contracts now state concrete invariants and blocked changes"}

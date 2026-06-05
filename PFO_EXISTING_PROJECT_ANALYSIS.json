@@ -6,34 +6,69 @@
     "skills/browser-check/playwright/package.json"
   ],
   "detectedStack": [],
-  "availableCommands": [],
+  "availableCommands": [
+    {
+      "name": "check",
+      "command": "python3 scripts/check.py"
+    }
+  ],
   "selectedGates": [],
   "gateRuns": [],
   "securityFindings": [],
   "contractGate": {
     "status": "PASS_WITH_WARNINGS",
-    "changedFiles": [],
-    "runtimeChangedFiles": [],
-    "riskClasses": [],
-    "missingContracts": [],
-    "placeholderContracts": [
-      ".pfo/PROJECT_CONTRACT.md",
-      ".pfo/FORBIDDEN_CHANGES.md",
-      ".pfo/FALLBACK_POLICY.md"
+    "changedFiles": [
+      ".github/workflows/validate.yml",
+      "CHANGELOG.md",
+      "docs/DEFENSIVE_LAYERS.md",
+      "docs/INSTALL.md",
+      "docs/PRODUCTION_READINESS.md",
+      "reports/self-runtime-security-review.md",
+      "reports/self-runtime-security/candidate_ledger.jsonl",
+      "reports/self-runtime-security/deep_review_input.csv",
+      "reports/self-runtime-security/repository_coverage_ledger.md",
+      "reports/self-runtime-security/work_ledger.jsonl",
+      "scripts/install_workspace.py",
+      "scripts/meta_review.py",
+      "scripts/pfo_contract_gate.py",
+      "scripts/production_readiness.py",
+      "scripts/release_check.py",
+      "scripts/validate_defensive_layers.py",
+      "scripts/validate_runtime.py",
+      "scripts/validate_self_contracts.py",
+      "scripts/validate_structure.py",
+      "scripts/verify_install_sync.py"
     ],
+    "runtimeChangedFiles": [
+      ".pfo/FALLBACK_POLICY.md",
+      ".pfo/FORBIDDEN_CHANGES.md",
+      ".pfo/PROJECT_CONTRACT.md",
+      "NEXT_STEP.md",
+      "PFO_CONTRACT_GATE.json",
+      "PFO_EXISTING_PROJECT_ANALYSIS.json",
+      "PFO_REPORT.md"
+    ],
+    "riskClasses": [
+      "business_logic_change",
+      "data_source_change",
+      "dependency_change",
+      "deployment_change",
+      "security_change",
+      "user_facing_output_change"
+    ],
+    "missingContracts": [],
+    "placeholderContracts": [],
     "aliasTargetErrors": [],
     "blockers": [],
     "warnings": [
-      "placeholder contract content: .pfo/PROJECT_CONTRACT.md",
-      "placeholder contract content: .pfo/FORBIDDEN_CHANGES.md",
-      "placeholder contract content: .pfo/FALLBACK_POLICY.md"
+      "dependency diff also touches data sources or user-facing output; verify Scope Lock explicitly."
     ],
     "gates": {
       "aliasTargets": "PASS",
       "scopeLock": "PASS_WITH_WARNINGS",
       "dataAuthenticity": "PASS",
       "goldenFlows": "PASS",
-      "regressionContract": "PASS_WITH_WARNINGS",
+      "regressionContract": "PASS",
       "fallbackPolicy": "PASS",
       "diffRisk": "PASS_WITH_WARNINGS",
       "securityEvidence": "PASS",

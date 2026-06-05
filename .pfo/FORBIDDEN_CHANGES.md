@@ -12,5 +12,8 @@ These changes are blocked unless explicitly approved in the task scope.
 
 ## Project-Specific Forbidden Changes
 
-- Replace this line with project-owned forbidden changes.
-
+- Do not weaken adoption, contract gates, self-contract validation, state-save, or production readiness to make a report pass.
+- Do not classify generated PFO status/report files as product implementation changes.
+- Do not require users to run setup commands manually when the PFO runtime can install, adopt, analyze, or report automatically.
+- Do not remove security evidence requirements for real security-sensitive source, config, provider, permission, or deployment changes.
+- Do not overwrite project-owned instructions outside managed PFO runtime blocks.

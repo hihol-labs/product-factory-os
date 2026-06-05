@@ -259,22 +259,48 @@ def detect_windows_codex_homes() -> list[Path]:
     return sorted(path for path in users.glob("*/.codex") if path.is_dir())
 
 
-def install_bin() -> Path | None:
-    bin_dir = Path.home() / ".local" / "bin"
-    bin_dir.mkdir(parents=True, exist_ok=True)
-    target = bin_dir / "pfo"
-    wrapper = f"""#!/usr/bin/env bash
+def managed_wrapper() -> str:
+    return f"""#!/usr/bin/env bash
 # Product Factory OS managed wrapper
 exec python3 "{ROOT / 'scripts' / 'pfo.py'}" "$@"
 """
+
+
+def write_managed_wrapper(target: Path) -> bool:
+    wrapper = managed_wrapper()
     if target.exists():
         current = target.read_text(encoding="utf-8", errors="ignore")
         if "Product Factory OS managed wrapper" not in current:
             print(f"WARNING: {target} already exists and is not managed by PFO; leaving it unchanged.")
-            return None
+            return False
+    target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(wrapper, encoding="utf-8")
     target.chmod(target.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
-    return target
+    return True
+
+
+def install_bin() -> list[Path]:
+    bin_dir = Path.home() / ".local" / "bin"
+    target = bin_dir / "pfo"
+    installed: list[Path] = []
+    if write_managed_wrapper(target):
+        installed.append(target)
+
+    system_target = Path("/usr/local/bin/pfo")
+    can_write_system = os.access(system_target.parent, os.W_OK) or (
+        system_target.exists() and os.access(system_target, os.W_OK)
+    )
+    if can_write_system and write_managed_wrapper(system_target):
+        installed.append(system_target)
+    elif system_target.exists():
+        current = system_target.read_text(encoding="utf-8", errors="ignore")
+        if "Product Factory OS managed wrapper" in current:
+            installed.append(system_target)
+        else:
+            print(f"WARNING: {system_target} exists and is not managed by PFO; leaving it unchanged.")
+    else:
+        print(f"WARNING: {system_target} is not writable; direct 'wsl pfo ...' may need a system wrapper.")
+    return installed
 
 
 def adopt_workspace(workspace: Path) -> None:
@@ -319,7 +345,7 @@ def main() -> None:
         write_global_policy(workspace, codex_home)
         write_global_agents_rule(codex_home, str(ROOT), str(workspace))
     hook_target = None if args.no_hooks else install_hooks(codex_home)
-    bin_target = None if args.no_bin else install_bin()
+    bin_targets = [] if args.no_bin else install_bin()
     windows_hook_targets: list[Path] = []
     if not args.no_hooks or not args.no_global_policy:
         for windows_codex_home in detect_windows_codex_homes():
@@ -333,7 +359,7 @@ def main() -> None:
     print("\nProduct Factory OS installed.")
     print(f"Workspace: {workspace}")
     print(f"Methodology: {ROOT}")
-    if bin_target:
+    for bin_target in bin_targets:
         print(f"Command: {bin_target}")
     if hook_target:
         print(f"Hooks: {hook_target}")

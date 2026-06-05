@@ -14,7 +14,7 @@ If the repository is not cloned inside your projects workspace:
 bash install.sh --workspace ~/Projects
 ```
 
-The installer validates the repository, installs the `pfo` command, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, `PFO_WORKSPACE.json`, and global `PFO_GLOBAL.json` policy files with default-on Codex `/goal` mode, then fully adopts existing first-level projects by creating missing project-level `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/`, analysis, contract gate output, `NEXT_STEP.md`, and `PFO_REPORT.md`.
+The installer validates the repository, installs the `pfo` command in `~/.local/bin` and `/usr/local/bin` when writable, installs hooks, writes workspace `AGENTS.md`, `CODEX.md`, `PFO_WORKSPACE.json`, and global `PFO_GLOBAL.json` policy files with default-on Codex `/goal` mode, then fully adopts existing first-level projects by creating missing project-level `AGENTS.md`, `CODEX.md`, `.codex-memory/`, `.pfo/`, analysis, contract gate output, `NEXT_STEP.md`, and `PFO_REPORT.md`.
 
 The repository can be used in two modes:
 
@@ -37,6 +37,7 @@ python3 scripts/validate_structure.py
 python3 scripts/validate_plan_quality.py /path/to/project
 python3 scripts/validate_control_harness.py
 python3 scripts/validate_defensive_layers.py
+python3 scripts/validate_self_contracts.py
 python3 scripts/run_fixtures.py
 python3 scripts/verify_triggers.py
 python3 scripts/verify_fixture_contracts.py

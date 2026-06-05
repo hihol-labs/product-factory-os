@@ -29,6 +29,11 @@
 - PFO-aware skill scaffolding with `pfo skill-scaffold`, generating `SKILL.md`, skill contracts, triggers, fixtures, route snapshots, route reminders, and fixture contracts together.
 - Headless fixture expected/actual comparison reports for mock and live command runs, including aggregate `PFO_HEADLESS_COMPARISON.md/json` and per-fixture `logs/comparison.md/json` artifacts.
 - Five-layer defensive diagnostics with `docs/DEFENSIVE_LAYERS.md` and `validate_defensive_layers.py`, wired into CI, release checks, production readiness, structure/runtime validation, and the control harness.
+- Self-runtime contract hardening with concrete `.pfo` self-contracts, `validate_self_contracts.py`, WSL direct `pfo` wrapper support, and contract-gate runtime report classification.
+
+### Changed
+
+- `pfo_contract_gate.py` now treats generated PFO status/report artifacts as runtime diffs and requires security coverage only for real non-doc, non-test security-sensitive product files.
 
 ---
 

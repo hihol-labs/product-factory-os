@@ -1,0 +1,7 @@
+id,path,reason
+1,scripts/pfo_contract_gate.py,security evidence and runtime report classification gate
+2,scripts/validate_self_contracts.py,self-adopted contract validation
+3,scripts/install_workspace.py,WSL command wrapper installation path
+4,.pfo/PROJECT_CONTRACT.md,self contract content
+5,.pfo/FORBIDDEN_CHANGES.md,self contract content
+6,.pfo/FALLBACK_POLICY.md,self contract content

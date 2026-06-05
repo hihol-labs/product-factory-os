@@ -17,5 +17,7 @@
 
 ## Project-Specific Fallbacks
 
-- Replace this line with approved fallback behavior.
-
+- If `/usr/local/bin/pfo` cannot be updated because of permissions, keep the managed `~/.local/bin/pfo` wrapper and emit a visible warning naming the skipped target.
+- If a contract gate sees only generated PFO runtime/status artifacts, record them under `runtimeChangedFiles` and avoid product security evidence blockers.
+- If external connectors or credentials are unavailable, continue with local validators and record the unavailable evidence explicitly.
+- If repository analysis cannot infer stack commands, keep adoption artifacts current and report the analyzer limitation without inventing commands.

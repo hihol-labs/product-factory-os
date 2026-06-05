@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "unitId": "harness-defensive-layers",
-  "goal": "Add explicit five-layer defensive diagnostics and validator coverage for PFO harness efficiency",
-  "createdAt": "2026-06-05T07:41:52+00:00",
+  "unitId": "self-runtime",
+  "goal": "Fix Product Factory OS self-runtime wrapper, self-contracts, contract gate security scope, and self-contract validation",
+  "createdAt": "2026-06-05T16:40:04+00:00",
   "requiredInputs": [
     "CODEX.md",
     ".codex-memory/STATE.json",
@@ -149,8 +149,8 @@
   ],
   "pivLoop": {
     "sourcePattern": "harness-engineering-demo PIV loop",
-    "planPath": "plans/harness-defensive-layers-piv-plan.md",
-    "implementationReportPath": "reports/harness-defensive-layers-implementation-report.md",
+    "planPath": "plans/self-runtime-piv-plan.md",
+    "implementationReportPath": "reports/self-runtime-implementation-report.md",
     "sequence": [
       "plan",
       "implement",
@@ -165,7 +165,7 @@
     ]
   },
   "engineeringDiscipline": {
-    "behaviorChange": true,
+    "behaviorChange": false,
     "bugfix": false,
     "strictPlan": true,
     "requiresTdd": "behavior changes",

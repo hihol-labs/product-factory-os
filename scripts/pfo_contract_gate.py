@@ -9,6 +9,8 @@ from typing import Any
 
 from pfo_alias_targets import missing_alias_targets
 
+ROOT = Path(__file__).resolve().parents[1]
+
 REQUIRED_CONTRACTS = [
     ".pfo/PROJECT_CONTRACT.md",
     ".pfo/DATA_POLICY.md",
@@ -26,7 +28,10 @@ REQUIRED_CONTRACTS = [
 
 PFO_RUNTIME_DIFF_EXACT_PATHS = {
     "AGENTS.md",
+    "BRANCH_FINISH.md",
     "CODEX.md",
+    "HANDOFF.md",
+    "NEXT_STEP.md",
     "PFO_CONTRACT_GATE.json",
     "PFO_EXISTING_PROJECT_ANALYSIS.json",
     "PFO_REPORT.md",
@@ -46,6 +51,12 @@ TEST_PATH_MARKERS = (
     "/fixtures/",
     "/mocks/",
     "/examples/",
+)
+
+DOCUMENTATION_SUFFIXES = (
+    ".md",
+    ".txt",
+    ".rst",
 )
 
 RISK_RULES: list[tuple[str, tuple[str, ...]]] = [
@@ -144,6 +155,19 @@ def is_pfo_runtime_diff_path(path: str) -> bool:
     return normalized in PFO_RUNTIME_DIFF_EXACT_PATHS or normalized.startswith(PFO_RUNTIME_DIFF_PREFIXES)
 
 
+def is_self_adopted_pfo_repo(project: Path) -> bool:
+    try:
+        if project.resolve() == ROOT.resolve():
+            return True
+    except OSError:
+        pass
+    return (
+        (project / "scripts" / "pfo.py").is_file()
+        and (project / "scripts" / "pfo_contract_gate.py").is_file()
+        and (project / ".pfo" / "PROJECT_CONTRACT.md").is_file()
+    )
+
+
 def product_changed_files(files: list[str]) -> list[str]:
     return [path for path in files if not is_pfo_runtime_diff_path(path)]
 
@@ -160,6 +184,10 @@ def diff_text(project: Path, files: list[str] | None = None) -> str:
 def is_test_path(path: str) -> bool:
     normalized = "/" + path.lower().replace("\\", "/")
     return any(marker in normalized for marker in TEST_PATH_MARKERS)
+
+
+def is_documentation_path(path: str) -> bool:
+    return path.lower().replace("\\", "/").endswith(DOCUMENTATION_SUFFIXES)
 
 
 def addition_lines(diff: str) -> list[tuple[str, str]]:
@@ -193,7 +221,7 @@ def classify_risks(files: list[str], diff: str) -> list[str]:
             risks.add(risk)
     if files and all(is_test_path(path) for path in files):
         risks.add("test_only_change")
-    if files and all(path.lower().endswith((".md", ".txt", ".rst")) for path in files):
+    if files and all(is_documentation_path(path) for path in files):
         risks.add("documentation_change")
     return sorted(risks)
 
@@ -335,8 +363,20 @@ def security_coverage_artifact_errors(files: list[str]) -> list[str]:
     return errors
 
 
+def security_evidence_subject_files(files: list[str]) -> list[str]:
+    return [
+        path
+        for path in files
+        if not is_pfo_runtime_diff_path(path)
+        and not is_test_path(path)
+        and not is_documentation_path(path)
+    ]
+
+
 def security_evidence_errors(project: Path, files: list[str], risks: list[str]) -> list[str]:
     if "security_change" not in risks:
+        return []
+    if not security_evidence_subject_files(files):
         return []
     errors = security_coverage_artifact_errors(files)
     reports = candidate_security_reports(project, files)
@@ -361,6 +401,7 @@ def evaluate(project: Path) -> dict[str, Any]:
     placeholders = has_placeholder_contracts(project)
     json_errors = json_contract_errors(project)
     alias_target_errors = missing_alias_targets(project)
+    self_adopted = is_self_adopted_pfo_repo(project)
     risks = classify_risks(files, diff)
     substitution_violations = detect_substitution_violations(project, diff)
     security_errors = security_evidence_errors(project, files, risks)
@@ -374,7 +415,10 @@ def evaluate(project: Path) -> dict[str, Any]:
     if missing:
         blockers.extend([f"missing contract: {item}" for item in missing])
     if placeholders:
-        warnings.extend([f"placeholder contract content: {item}" for item in placeholders])
+        if self_adopted:
+            blockers.extend([f"self-adopted PFO repo cannot use template contract content: {item}" for item in placeholders])
+        else:
+            warnings.extend([f"template contract content: {item}" for item in placeholders])
     blockers.extend(json_errors)
     blockers.extend(alias_target_errors)
     blockers.extend(substitution_violations)
@@ -405,11 +449,11 @@ def evaluate(project: Path) -> dict[str, Any]:
         "warnings": warnings,
         "gates": {
             "aliasTargets": "BLOCKED" if alias_target_errors else "PASS",
-            "scopeLock": "BLOCKED" if missing or substitution_violations else ("PASS_WITH_WARNINGS" if warnings else "PASS"),
+            "scopeLock": "BLOCKED" if missing or substitution_violations or (self_adopted and placeholders) else ("PASS_WITH_WARNINGS" if warnings else "PASS"),
             "dataAuthenticity": "BLOCKED" if substitution_violations else "PASS",
-            "goldenFlows": "BLOCKED" if ".pfo/GOLDEN_FLOWS.md" in missing else ("PASS_WITH_WARNINGS" if ".pfo/GOLDEN_FLOWS.md" in placeholders else "PASS"),
-            "regressionContract": "BLOCKED" if ".pfo/PROJECT_CONTRACT.md" in missing else ("PASS_WITH_WARNINGS" if ".pfo/PROJECT_CONTRACT.md" in placeholders else "PASS"),
-            "fallbackPolicy": "BLOCKED" if ".pfo/FALLBACK_POLICY.md" in missing or substitution_violations else "PASS",
+            "goldenFlows": "BLOCKED" if ".pfo/GOLDEN_FLOWS.md" in missing or (self_adopted and ".pfo/GOLDEN_FLOWS.md" in placeholders) else ("PASS_WITH_WARNINGS" if ".pfo/GOLDEN_FLOWS.md" in placeholders else "PASS"),
+            "regressionContract": "BLOCKED" if ".pfo/PROJECT_CONTRACT.md" in missing or (self_adopted and ".pfo/PROJECT_CONTRACT.md" in placeholders) else ("PASS_WITH_WARNINGS" if ".pfo/PROJECT_CONTRACT.md" in placeholders else "PASS"),
+            "fallbackPolicy": "BLOCKED" if ".pfo/FALLBACK_POLICY.md" in missing or substitution_violations or (self_adopted and ".pfo/FALLBACK_POLICY.md" in placeholders) else "PASS",
             "diffRisk": "PASS_WITH_WARNINGS" if warnings else "PASS",
             "securityEvidence": "BLOCKED" if security_errors else "PASS",
             "noSilentSubstitution": "BLOCKED" if substitution_violations else "PASS",

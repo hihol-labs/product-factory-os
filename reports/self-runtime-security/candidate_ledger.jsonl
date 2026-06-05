@@ -1,0 +1,3 @@
+{"candidate":"runtime-report-security-block","phase":"discovery","status":"candidate","evidence":"NEXT_STEP.md generated report text previously triggered security_change"}
+{"candidate":"runtime-report-security-block","phase":"validation","status":"not_reportable","evidence":"runtimeChangedFiles excludes NEXT_STEP.md and security evidence subject files ignore docs/test-only changes"}
+{"candidate":"runtime-report-security-block","phase":"attack_path","status":"closed","evidence":"no attacker-controlled data crosses into product security evidence decision without a real source/config subject file"}

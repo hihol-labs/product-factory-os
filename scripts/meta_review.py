@@ -86,6 +86,7 @@ def main() -> None:
         "python3 scripts/validate_runtime.py",
         "python3 scripts/validate_control_harness.py",
         "python3 scripts/validate_defensive_layers.py",
+        "python3 scripts/validate_self_contracts.py",
         "python3 scripts/validate_hooks.py",
         "python3 scripts/verify_manifest_drift.py",
         "python3 scripts/verify_install_sync.py",
