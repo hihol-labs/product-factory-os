@@ -48,6 +48,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | maturity-stage-gates | Optional launch and scale maturity checks | Feedforward | Inferential | `skills/strategy/SKILL.md`, `docs/templates/LAUNCH_MATURITY_GATE.md`, `docs/templates/SCALE_MOAT_REGISTER.md` |
 | harnessability-assessment | Project structure and topology judgment that determines how cheaply PFO can guide and sensor work | Feedforward | Inferential | `docs/DESIGN_SPACE.md`, `docs/PFO_ARCHITECTURE.md`, `docs/AGENT_HARNESS_ENGINEERING.md` |
 | route-regression | Route, fixture, trigger, and skill drift checks | Feedback | Computational | `scripts/run_fixtures.py`, `scripts/verify_triggers.py`, `scripts/verify_fixture_contracts.py` |
+| release-live-eval | Release-critical live headless proof, quality graders, high-risk skill datasets, and adversarial fixtures | Feedback | Computational | `scripts/validate_release_live_headless.py`, `scripts/validate_eval_layer.py`, `tests/eval-datasets/deploy.json` |
 | seo-growth-guarantee | Measured SEO growth claim validation with baseline, target, source, attribution window, changes, exclusions, decision, and next iteration | Feedback | Computational | `scripts/validate_seo_growth_gate.py`, `docs/templates/SEO_GROWTH_GUARANTEE_GATE.md`, `docs/templates/VALIDATION_PLAN.md` |
 | alias-integrity | Navigation alias target existence | Feedback | Computational | `scripts/pfo_alias_targets.py`, `scripts/pfo_contract_gate.py`, `docs/templates/existing/MASTER_CONTEXT.md` |
 | methodology-ci | Repository-level deterministic validation | Feedback | Computational | `.github/workflows/validate.yml`, `scripts/validate_structure.py`, `scripts/validate_runtime.py`, `scripts/meta_review.py` |
@@ -77,6 +78,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 - Prefer computational controls for invariants, schemas, commands, permissions, and known failure modes.
 - Use inferential controls for ambiguity, threat reasoning, architecture tradeoffs, product judgment, and UX quality.
 - Do not ship a high-risk workflow with only inferential controls when a deterministic check can be added.
+- Do not cut a release without command-mode live headless proof for the critical fixture set defined by `scripts/validate_release_live_headless.py`.
 - Do not add a new skill, hook, gate, or CI command without assigning it to a quadrant.
 - Do not add a guide without naming the sensor that will prove it worked, unless the guide is explicitly advisory.
 - Do not add a new rule unless it traces to observed failure evidence or a hard external constraint.

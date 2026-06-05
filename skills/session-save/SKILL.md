@@ -9,6 +9,9 @@ metadata:
   effort: low
   side_effect: memory-write
   explicit_invocation: false
+  skill_version: 1
+  prompt_version: pfo-session-save-v1
+  eval_dataset: tests/eval-datasets/session-save.json
 ---
 
 # Session Save

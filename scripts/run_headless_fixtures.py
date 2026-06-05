@@ -33,29 +33,64 @@ def selected_fixtures(names: list[str] | None) -> list[str]:
     return names
 
 
-def write_mock_output(output_dir: Path, contract: dict) -> str:
+def route_evidence_text(fixture: str, contract: dict) -> str:
+    snapshot = contracts.route_snapshot(fixture, contract.get("skill"))
+    expected_route = snapshot.get("expectedRoute", contract.get("skill", ""))
+    return (
+        f"Expected route: {expected_route}\n"
+        f"Skill: {contract.get('skill', '')}\n"
+        "Quality evidence: route correctness, artifact quality, tool safety, and state save are recorded when required.\n"
+        "Approval mode: read-only or explicit confirmation before live external, migration, infrastructure, or production writes.\n"
+        "Session save: verification, blockers, and next action are documented.\n"
+    )
+
+
+def mock_file_body(fixture: str, contract: dict, rel: str, tokens: list[str]) -> str:
+    route_text = route_evidence_text(fixture, contract)
+    if rel.endswith(".json"):
+        return json.dumps(
+            {
+                "fixture": fixture,
+                "status": "ADOPTED",
+                "route": contracts.route_snapshot(fixture, contract.get("skill")).get("expectedRoute", contract.get("skill")),
+                "state": "saved",
+                "verification": "mock headless quality proof",
+                "blockers": [],
+                "nextAction": "inspect live proof before release",
+                "tokens": tokens + ["Product Factory OS"],
+            },
+            indent=2,
+        ) + "\n"
+    return (
+        "# PFO headless mock artifact\n\n"
+        + route_text
+        + "\n"
+        + "\n".join(tokens)
+        + "\n\nVerification: mock output satisfies the behavioural contract and quality graders.\n"
+        + "Blockers: none for mock validation.\n"
+        + "Next action: run live command-mode proof before release when this fixture is critical.\n"
+    )
+
+
+def write_mock_output(output_dir: Path, fixture: str, contract: dict) -> str:
     output = contract.get("output_contract", {})
-    stdout_parts = output.get("stdout_must_contain", [])
+    stdout_parts = [route_evidence_text(fixture, contract), *output.get("stdout_must_contain", [])]
+    base_tokens = output.get("any_file_must_contain", [])
     for item in output.get("required_files", []):
         target = output_dir / item
         if item.endswith("/"):
             target.mkdir(parents=True, exist_ok=True)
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(
-            "# PFO headless mock artifact\n\n"
-            + "\n".join(output.get("any_file_must_contain", []))
-            + "\n",
-            encoding="utf-8",
-        )
+        target.write_text(mock_file_body(fixture, contract, item, base_tokens), encoding="utf-8")
     for rel, tokens in output.get("files_must_contain", {}).items():
         target = output_dir / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         existing = target.read_text(encoding="utf-8") if target.exists() else ""
-        target.write_text(existing + "\n" + "\n".join(tokens) + "\n", encoding="utf-8")
+        target.write_text(existing + "\n" + mock_file_body(fixture, contract, rel, tokens), encoding="utf-8")
     if output.get("any_file_must_contain") and not output.get("required_files"):
         target = output_dir / "PFO_HEADLESS_REPORT.md"
-        target.write_text("\n".join(output["any_file_must_contain"]) + "\n", encoding="utf-8")
+        target.write_text(mock_file_body(fixture, contract, "PFO_HEADLESS_REPORT.md", output["any_file_must_contain"]), encoding="utf-8")
     return "\n".join(stdout_parts)
 
 
@@ -171,6 +206,17 @@ def build_comparison(
     for token in output.get("any_file_must_contain", []):
         add_check(checks, "any_file_contains", token, "present" if token.lower() in combined_text else "missing", token.lower() in combined_text)
 
+    quality_errors = contracts.validate_quality_graders(fixture, contract, output_dir, stdout_text)
+    for grader in contract.get("quality_graders", []):
+        grader_errors = [item for item in quality_errors if f"{grader} grader" in item or f"unknown quality grader {grader!r}" in item]
+        add_check(
+            checks,
+            "quality_grader",
+            grader,
+            "; ".join(grader_errors) if grader_errors else "passed",
+            not grader_errors,
+        )
+
     return {
         "fixture": fixture,
         "mode": mode,
@@ -248,8 +294,9 @@ def run_one(fixture: str, contract: dict, mode: str, command_template: str | Non
     if mode == "contract-only":
         errors = contracts.check_output_contract(FIXTURES / fixture, contract)
     elif mode == "mock":
-        stdout = write_mock_output(output_dir, contract)
+        stdout = write_mock_output(output_dir, fixture, contract)
         errors = contracts.validate_output(fixture, contract, output_dir, stdout)
+        errors.extend(contracts.validate_quality_graders(fixture, contract, output_dir, stdout))
     elif mode == "command":
         if not command_template:
             fail("--command-template or PFO_HEADLESS_COMMAND is required for command mode")
@@ -260,6 +307,7 @@ def run_one(fixture: str, contract: dict, mode: str, command_template: str | Non
         if code != 0:
             errors.append(f"{fixture}: command exited with {code}")
         errors.extend(contracts.validate_output(fixture, contract, output_dir, stdout))
+        errors.extend(contracts.validate_quality_graders(fixture, contract, output_dir, stdout))
     else:
         fail(f"unknown mode: {mode}")
 

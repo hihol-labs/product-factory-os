@@ -18,6 +18,8 @@ CHECKS = [
     [sys.executable, "scripts/verify_triggers.py"],
     [sys.executable, "scripts/verify_fixture_contracts.py"],
     [sys.executable, "scripts/run_headless_fixtures.py", "--mode", "mock"],
+    [sys.executable, "scripts/validate_release_live_headless.py", "--check-config"],
+    [sys.executable, "scripts/validate_eval_layer.py"],
     [sys.executable, "scripts/verify_skill_profiles.py"],
     [sys.executable, "scripts/validate_execution_graph.py"],
     [sys.executable, "scripts/validate_runtime.py"],

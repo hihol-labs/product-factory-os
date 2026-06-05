@@ -223,6 +223,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "release-live-eval",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/validate_release_live_headless.py",
+            "scripts/validate_eval_layer.py",
+            "tests/eval-datasets/deploy.json",
+        ],
+    },
+    {
         "id": "seo-growth-guarantee",
         "timing": "Feedback",
         "evaluator": "Computational",

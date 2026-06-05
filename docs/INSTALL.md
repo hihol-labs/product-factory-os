@@ -42,6 +42,8 @@ python3 scripts/run_fixtures.py
 python3 scripts/verify_triggers.py
 python3 scripts/verify_fixture_contracts.py
 python3 scripts/run_headless_fixtures.py --mode mock
+python3 scripts/validate_release_live_headless.py --check-config
+python3 scripts/validate_eval_layer.py
 python3 scripts/verify_skill_profiles.py
 python3 scripts/validate_execution_graph.py
 python3 scripts/validate_state.py /path/to/project/.codex-memory/STATE.json
@@ -57,13 +59,19 @@ python3 scripts/meta_review.py
 python3 scripts/production_readiness.py
 ```
 
-Real Codex-backed behavioural execution is optional and budgeted:
+Real Codex-backed behavioural execution is optional and budgeted during local development, and mandatory before release:
 
 ```bash
 python3 scripts/run_headless_fixtures.py --mode command \
   --fixture planning-only \
   --output-root .pfo-headless-runs/live \
   --command-template 'python3 {root}/scripts/pfo_headless_adapter.py'
+```
+
+Release proof:
+
+```bash
+python3 scripts/validate_release_live_headless.py
 ```
 
 The validator also checks the Product Factory OS runtime layer:

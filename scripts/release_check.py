@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import json
+import os
 import subprocess
 import sys
 
@@ -33,6 +34,12 @@ def main() -> None:
     run([sys.executable, "scripts/verify_triggers.py"])
     run([sys.executable, "scripts/verify_fixture_contracts.py"])
     run([sys.executable, "scripts/run_headless_fixtures.py", "--mode", "mock"])
+    live_proof = os.environ.get("PFO_RELEASE_LIVE_PROOF")
+    live_command = [sys.executable, "scripts/validate_release_live_headless.py"]
+    if live_proof:
+        live_command.extend(["--proof-root", live_proof])
+    run(live_command)
+    run([sys.executable, "scripts/validate_eval_layer.py"])
     run([sys.executable, "scripts/verify_skill_profiles.py"])
     run([sys.executable, "scripts/validate_execution_graph.py"])
     run([sys.executable, "scripts/validate_runtime.py"])

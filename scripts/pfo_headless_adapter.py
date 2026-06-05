@@ -6,6 +6,7 @@ import argparse
 import json
 import os
 import shlex
+import shutil
 import subprocess
 import sys
 
@@ -40,11 +41,20 @@ Rules:
 - Do not ask follow-up questions; use conservative assumptions and record them.
 - If the contract expects stdout-only output, do not create files.
 - If blocked, explain the blocker and exit without claiming success.
+- Do not write TODO, TBD, placeholder, or "replace this line" into artifacts.
+- For unknown security taxonomy values, write `N/A` or a precise deferred reason; never write `CWE-TBD`.
 
 Behavioural output contract:
 ```json
 {json.dumps(contract.get("output_contract", {}), indent=2, ensure_ascii=False)}
 ```
+
+Quality graders:
+```json
+{json.dumps(contract.get("quality_graders", []), indent=2, ensure_ascii=False)}
+```
+
+Release-critical live proof must explicitly show the expected route or skill, substantive artifacts, safe tool/connector handling, and state-save evidence when those graders are listed.
 
 User request:
 ```markdown
@@ -70,10 +80,25 @@ def subprocess_env(args: argparse.Namespace) -> dict[str, str]:
     return env
 
 
+def codex_binary(args: argparse.Namespace) -> str:
+    candidates = [
+        args.codex_bin,
+        os.environ.get("PFO_CODEX_BIN"),
+        str(Path.home() / ".npm-global" / "bin" / "codex"),
+        shutil.which("codex"),
+    ]
+    for candidate in candidates:
+        if candidate and Path(candidate).exists():
+            return candidate
+    if shutil.which("codex"):
+        return "codex"
+    fail("codex CLI is required for live headless execution")
+
+
 def run_codex(prompt: str, output_dir: Path, args: argparse.Namespace) -> int:
     last_message = output_dir / ".pfo-headless-last-message.txt"
     command = [
-        "codex",
+        codex_binary(args),
         "exec",
         "-C",
         str(output_dir),
@@ -111,6 +136,7 @@ def run_codex(prompt: str, output_dir: Path, args: argparse.Namespace) -> int:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Codex adapter for real PFO headless fixture execution.")
     parser.add_argument("--model", default=os.environ.get("PFO_HEADLESS_MODEL"))
+    parser.add_argument("--codex-bin", default=os.environ.get("PFO_CODEX_BIN"))
     parser.add_argument("--clear-proxy-env", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()

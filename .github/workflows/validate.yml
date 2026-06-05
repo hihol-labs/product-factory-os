@@ -12,7 +12,7 @@ on:
       live_fixtures:
         description: "Space-separated fixture names"
         required: false
-        default: "planning-only pfo-bot adopt-existing market-scan review-quality"
+        default: "deploy-production migration infra-generate github-workflow tool-sync security-audit session-save"
 
 jobs:
   validate:
@@ -52,6 +52,9 @@ jobs:
 
       - name: Run headless behavioural fixture validator
         run: python3 scripts/run_headless_fixtures.py --mode mock
+
+      - name: Validate eval layer
+        run: python3 scripts/validate_eval_layer.py
 
       - name: Verify skill risk profiles
         run: python3 scripts/verify_skill_profiles.py
@@ -118,6 +121,6 @@ jobs:
           for fixture in $LIVE_FIXTURES; do
             args="$args --fixture $fixture"
           done
-          python3 scripts/run_headless_fixtures.py --mode command $args \
+          python3 scripts/validate_release_live_headless.py $args \
             --output-root .pfo-headless-runs/live \
             --command-template "$PFO_HEADLESS_COMMAND"

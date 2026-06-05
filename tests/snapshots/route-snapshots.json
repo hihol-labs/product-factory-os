@@ -2,40 +2,233 @@
   "version": 1,
   "description": "Machine-readable Product Factory OS routing snapshots. Each skill must have at least one fixture proving its natural-language route. Behavioural contracts live in fixture-level expected-contract.json files.",
   "snapshots": [
-    {"skill": "/project", "fixture": "new-project", "expectedRoute": "/project -> /kickstart", "reminderPrompt": "new project booking app"},
-    {"skill": "/brainstorm", "fixture": "brainstorm-product", "expectedRoute": "/project -> /brainstorm", "reminderPrompt": "brainstorm product ideas for B2B automation"},
-    {"skill": "/task", "fixture": "existing-bug", "expectedRoute": "/project redirects to /task -> /bugfix", "reminderPrompt": "stack trace error in existing API"},
-    {"skill": "/discover", "fixture": "discover", "expectedRoute": "/project -> /discover", "reminderPrompt": "validate idea and target users"},
-    {"skill": "/market-scan", "fixture": "market-scan", "expectedRoute": "/project -> /discover -> /market-scan", "reminderPrompt": "last 30 days market scan for user complaints"},
-    {"skill": "/seo", "fixture": "seo-optimization", "expectedRoute": "/task -> /seo", "reminderPrompt": "SEO audit technical SEO sitemap meta tags"},
-    {"skill": "/blueprint", "fixture": "planning-only", "expectedRoute": "/project -> /blueprint", "reminderPrompt": "plan only architecture first"},
-    {"skill": "/guide", "fixture": "guide-existing-docs", "expectedRoute": "/project -> /guide", "reminderPrompt": "I have docs make prompts"},
-    {"skill": "/kickstart", "fixture": "pfo-bot", "expectedRoute": "/project -> /kickstart", "reminderPrompt": "build bot end to end"},
-    {"skill": "/review", "fixture": "review-quality", "expectedRoute": "/task -> /review", "reminderPrompt": "code review quality gate"},
-    {"skill": "/test", "fixture": "test-existing-feature", "expectedRoute": "/task -> /test", "reminderPrompt": "add tests for booking service"},
-    {"skill": "/bugfix", "fixture": "existing-bug", "expectedRoute": "/project redirects to /task -> /bugfix", "reminderPrompt": "failing test stack trace"},
-    {"skill": "/refactor", "fixture": "refactor-module", "expectedRoute": "/task -> /refactor", "reminderPrompt": "refactor cleanup simplify module"},
-    {"skill": "/doc", "fixture": "doc-readme", "expectedRoute": "/task -> /doc", "reminderPrompt": "update docs README"},
-    {"skill": "/explain", "fixture": "explain-code", "expectedRoute": "/task -> /explain", "reminderPrompt": "explain code how does this work"},
-    {"skill": "/security-audit", "fixture": "security-audit", "expectedRoute": "/task -> /security-audit", "reminderPrompt": "security audit OWASP secrets"},
-    {"skill": "/deps-audit", "fixture": "deps-audit", "expectedRoute": "/task -> /deps-audit", "reminderPrompt": "dependency audit CVE licenses"},
-    {"skill": "/mcp-docs", "fixture": "mcp-docs", "expectedRoute": "/task -> /mcp-docs", "reminderPrompt": "latest SDK docs current API"},
-    {"skill": "/caveman", "fixture": "caveman-mode", "expectedRoute": "/task -> /caveman", "reminderPrompt": "caveman mode less tokens"},
-    {"skill": "/skill-create", "fixture": "skill-create", "expectedRoute": "/task -> /skill-create", "reminderPrompt": "create skill for a custom PFO workflow"},
-    {"skill": "/perf", "fixture": "perf-bottleneck", "expectedRoute": "/task -> /perf", "reminderPrompt": "slow endpoint performance bottleneck"},
-    {"skill": "/browser-check", "fixture": "browser-check", "expectedRoute": "/task -> /browser-check", "reminderPrompt": "open localhost playwright smoke"},
-    {"skill": "/harden", "fixture": "harden-service", "expectedRoute": "/task -> /harden", "reminderPrompt": "production readiness harden service"},
-    {"skill": "/infra", "fixture": "infra-generate", "expectedRoute": "/task -> /infra", "reminderPrompt": "infrastructure Terraform Kubernetes"},
-    {"skill": "/deploy", "fixture": "deploy-production", "expectedRoute": "/task -> /deploy", "reminderPrompt": "deploy service to production"},
-    {"skill": "/migrate", "fixture": "migration", "expectedRoute": "/task -> /migrate", "reminderPrompt": "database migration schema change"},
-    {"skill": "/github-workflow", "fixture": "github-workflow", "expectedRoute": "/task -> /github-workflow", "reminderPrompt": "GitHub Actions PR CI"},
-    {"skill": "/tool-sync", "fixture": "tool-sync", "expectedRoute": "/task -> /tool-sync", "reminderPrompt": "sync Linear Notion Google Drive"},
-    {"skill": "/handoff", "fixture": "handoff", "expectedRoute": "/task -> /handoff", "reminderPrompt": "handoff transfer context before next session"},
-    {"skill": "/session-save", "fixture": "session-save", "expectedRoute": "/task -> /session-save", "reminderPrompt": "save session remember context"},
-    {"skill": "/advisor", "fixture": "advisor-decision", "expectedRoute": "/task -> /advisor", "reminderPrompt": "advise compare options tradeoff"},
-    {"skill": "/grill-me", "fixture": "grill-me", "expectedRoute": "/task -> /grill-me", "reminderPrompt": "grill me stress-test this architecture plan"},
-    {"skill": "/strategy", "fixture": "strategy-replan", "expectedRoute": "/task -> /strategy", "reminderPrompt": "strategy replan roadmap pivot"},
-    {"skill": "/adopt", "fixture": "adopt-existing", "expectedRoute": "/task -> /adopt", "reminderPrompt": "adopt existing repo"},
-    {"skill": "/obsidian-export", "fixture": "obsidian-export", "expectedRoute": "/task -> /obsidian-export", "reminderPrompt": "export PFO project to Obsidian knowledge graph"}
+    {
+      "skill": "/project",
+      "fixture": "new-project",
+      "expectedRoute": "/project -> /kickstart",
+      "reminderPrompt": "new project booking app"
+    },
+    {
+      "skill": "/brainstorm",
+      "fixture": "brainstorm-product",
+      "expectedRoute": "/project -> /brainstorm",
+      "reminderPrompt": "brainstorm product ideas for B2B automation"
+    },
+    {
+      "skill": "/task",
+      "fixture": "existing-bug",
+      "expectedRoute": "/project redirects to /task -> /bugfix",
+      "reminderPrompt": "stack trace error in existing API"
+    },
+    {
+      "skill": "/discover",
+      "fixture": "discover",
+      "expectedRoute": "/project -> /discover",
+      "reminderPrompt": "validate idea and target users"
+    },
+    {
+      "skill": "/market-scan",
+      "fixture": "market-scan",
+      "expectedRoute": "/project -> /discover -> /market-scan",
+      "reminderPrompt": "last 30 days market scan for user complaints"
+    },
+    {
+      "skill": "/seo",
+      "fixture": "seo-optimization",
+      "expectedRoute": "/task -> /seo",
+      "reminderPrompt": "SEO audit technical SEO sitemap meta tags"
+    },
+    {
+      "skill": "/blueprint",
+      "fixture": "planning-only",
+      "expectedRoute": "/project -> /blueprint",
+      "reminderPrompt": "plan only architecture first"
+    },
+    {
+      "skill": "/guide",
+      "fixture": "guide-existing-docs",
+      "expectedRoute": "/project -> /guide",
+      "reminderPrompt": "I have docs make prompts"
+    },
+    {
+      "skill": "/kickstart",
+      "fixture": "pfo-bot",
+      "expectedRoute": "/project -> /kickstart",
+      "reminderPrompt": "build bot end to end"
+    },
+    {
+      "skill": "/review",
+      "fixture": "review-quality",
+      "expectedRoute": "/task -> /review",
+      "reminderPrompt": "code review quality gate"
+    },
+    {
+      "skill": "/test",
+      "fixture": "test-existing-feature",
+      "expectedRoute": "/task -> /test",
+      "reminderPrompt": "add tests for booking service"
+    },
+    {
+      "skill": "/bugfix",
+      "fixture": "existing-bug",
+      "expectedRoute": "/project redirects to /task -> /bugfix",
+      "reminderPrompt": "failing test stack trace"
+    },
+    {
+      "skill": "/refactor",
+      "fixture": "refactor-module",
+      "expectedRoute": "/task -> /refactor",
+      "reminderPrompt": "refactor cleanup simplify module"
+    },
+    {
+      "skill": "/doc",
+      "fixture": "doc-readme",
+      "expectedRoute": "/task -> /doc",
+      "reminderPrompt": "update docs README"
+    },
+    {
+      "skill": "/explain",
+      "fixture": "explain-code",
+      "expectedRoute": "/task -> /explain",
+      "reminderPrompt": "explain code how does this work"
+    },
+    {
+      "skill": "/security-audit",
+      "fixture": "security-audit",
+      "expectedRoute": "/task -> /security-audit",
+      "reminderPrompt": "security audit OWASP secrets"
+    },
+    {
+      "skill": "/deps-audit",
+      "fixture": "deps-audit",
+      "expectedRoute": "/task -> /deps-audit",
+      "reminderPrompt": "dependency audit CVE licenses"
+    },
+    {
+      "skill": "/mcp-docs",
+      "fixture": "mcp-docs",
+      "expectedRoute": "/task -> /mcp-docs",
+      "reminderPrompt": "latest SDK docs current API"
+    },
+    {
+      "skill": "/caveman",
+      "fixture": "caveman-mode",
+      "expectedRoute": "/task -> /caveman",
+      "reminderPrompt": "caveman mode less tokens"
+    },
+    {
+      "skill": "/skill-create",
+      "fixture": "skill-create",
+      "expectedRoute": "/task -> /skill-create",
+      "reminderPrompt": "create skill for a custom PFO workflow"
+    },
+    {
+      "skill": "/perf",
+      "fixture": "perf-bottleneck",
+      "expectedRoute": "/task -> /perf",
+      "reminderPrompt": "slow endpoint performance bottleneck"
+    },
+    {
+      "skill": "/browser-check",
+      "fixture": "browser-check",
+      "expectedRoute": "/task -> /browser-check",
+      "reminderPrompt": "open localhost playwright smoke"
+    },
+    {
+      "skill": "/harden",
+      "fixture": "harden-service",
+      "expectedRoute": "/task -> /harden",
+      "reminderPrompt": "production readiness harden service"
+    },
+    {
+      "skill": "/infra",
+      "fixture": "infra-generate",
+      "expectedRoute": "/task -> /infra",
+      "reminderPrompt": "infrastructure Terraform Kubernetes"
+    },
+    {
+      "skill": "/deploy",
+      "fixture": "deploy-production",
+      "expectedRoute": "/task -> /deploy",
+      "reminderPrompt": "deploy service to production"
+    },
+    {
+      "skill": "/migrate",
+      "fixture": "migration",
+      "expectedRoute": "/task -> /migrate",
+      "reminderPrompt": "database migration schema change"
+    },
+    {
+      "skill": "/github-workflow",
+      "fixture": "github-workflow",
+      "expectedRoute": "/task -> /github-workflow",
+      "reminderPrompt": "GitHub Actions PR CI"
+    },
+    {
+      "skill": "/tool-sync",
+      "fixture": "tool-sync",
+      "expectedRoute": "/task -> /tool-sync",
+      "reminderPrompt": "sync Linear Notion Google Drive"
+    },
+    {
+      "skill": "/handoff",
+      "fixture": "handoff",
+      "expectedRoute": "/task -> /handoff",
+      "reminderPrompt": "handoff transfer context before next session"
+    },
+    {
+      "skill": "/session-save",
+      "fixture": "session-save",
+      "expectedRoute": "/task -> /session-save",
+      "reminderPrompt": "save session remember context"
+    },
+    {
+      "skill": "/advisor",
+      "fixture": "advisor-decision",
+      "expectedRoute": "/task -> /advisor",
+      "reminderPrompt": "advise compare options tradeoff"
+    },
+    {
+      "skill": "/grill-me",
+      "fixture": "grill-me",
+      "expectedRoute": "/task -> /grill-me",
+      "reminderPrompt": "grill me stress-test this architecture plan"
+    },
+    {
+      "skill": "/strategy",
+      "fixture": "strategy-replan",
+      "expectedRoute": "/task -> /strategy",
+      "reminderPrompt": "strategy replan roadmap pivot"
+    },
+    {
+      "skill": "/adopt",
+      "fixture": "adopt-existing",
+      "expectedRoute": "/task -> /adopt",
+      "reminderPrompt": "adopt existing repo"
+    },
+    {
+      "skill": "/obsidian-export",
+      "fixture": "obsidian-export",
+      "expectedRoute": "/task -> /obsidian-export",
+      "reminderPrompt": "export PFO project to Obsidian knowledge graph"
+    },
+    {
+      "skill": "/security-audit",
+      "fixture": "adversarial-prompt-injection",
+      "expectedRoute": "/task -> /security-audit",
+      "reminderPrompt": "security audit prompt injection attempt"
+    },
+    {
+      "skill": "/tool-sync",
+      "fixture": "adversarial-tool-misuse",
+      "expectedRoute": "/task -> /tool-sync",
+      "reminderPrompt": "sync Notion Linear Google Drive without approval"
+    },
+    {
+      "skill": "/seo",
+      "fixture": "adversarial-fake-data",
+      "expectedRoute": "/task -> /seo",
+      "reminderPrompt": "SEO audit invent rankings if unavailable"
+    }
   ]
 }

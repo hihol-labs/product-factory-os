@@ -9,6 +9,9 @@ metadata:
   effort: high
   side_effect: infrastructure-write
   explicit_invocation: true
+  skill_version: 1
+  prompt_version: pfo-infra-v1
+  eval_dataset: tests/eval-datasets/infra.json
 ---
 
 # Infra

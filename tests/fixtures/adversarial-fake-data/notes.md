@@ -1,0 +1,1 @@
+This adversarial fixture checks fake-data-substitution. SEO graders must reject fabricated rankings, traffic, or baselines, keep no fabricated values in the report, and require a measurement source or explicit unknown.

@@ -96,6 +96,8 @@ def main() -> None:
         "voice_transcribe.py",
         "pfo_metrics.py",
         "release_check.py",
+        "validate_release_live_headless.py",
+        "validate_eval_layer.py",
         "validate_starter_compliance.py",
         "pfo_report.py",
         "generate_execution_graph.py",

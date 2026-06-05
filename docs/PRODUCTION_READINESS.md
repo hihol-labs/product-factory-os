@@ -17,6 +17,8 @@ This gate runs:
 - trigger drift verification
 - behavioural fixture contracts
 - headless fixture mock validation
+- release live-headless config validation
+- eval layer validation
 - skill risk profile validation
 - execution graph validation
 - runtime asset validation
@@ -48,4 +50,12 @@ The command also receives:
 
 The runner validates generated output against the same behavioural contracts used in CI and writes expected/actual comparison reports under the output root.
 
-See `docs/HEADLESS_EXECUTION.md` for provider options and the recommended release proof set.
+Before release, run:
+
+```bash
+python3 scripts/release_check.py
+```
+
+`release_check.py` requires command-mode live proof for the 7 critical fixtures through `scripts/validate_release_live_headless.py`.
+
+See `docs/HEADLESS_EXECUTION.md` for provider options and the release proof set.
