@@ -1,0 +1,3 @@
+{"phase":"discovery","surface":"scripts/pfo.py","status":"reviewed","notes":"full-cycle and next-best-action preserve fail-closed gates"}
+{"phase":"validation","surface":"scripts/check.py","status":"reviewed","notes":"fixed argv commands only; no user shell interpolation"}
+{"phase":"attack_path","surface":"scripts/existing_project_analyzer.py","status":"reviewed","notes":"check gate runs local script via argv list"}

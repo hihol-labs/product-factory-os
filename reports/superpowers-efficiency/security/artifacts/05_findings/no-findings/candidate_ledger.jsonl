@@ -1,0 +1,3 @@
+{"phase":"discovery","candidate":"no-findings","status":"closed","notes":"No candidate security finding identified in scoped diff"}
+{"phase":"validation","candidate":"no-findings","status":"closed","notes":"No exploitable dataflow or command injection path found"}
+{"phase":"attack_path","candidate":"no-findings","status":"closed","notes":"No reachable attack_path remains"}
