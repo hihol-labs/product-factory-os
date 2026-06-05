@@ -206,6 +206,7 @@ REQUIRED_FILES = [
     "scripts/pfo_permission_gate.py",
     "scripts/pfo_event_log.py",
     "scripts/pfo_context_runtime.py",
+    "scripts/pfo_skill_scaffold.py",
     "scripts/validate_context_runtime.py",
     "scripts/validate_tool_registry.py",
     "scripts/validate_seo_growth_gate.py",

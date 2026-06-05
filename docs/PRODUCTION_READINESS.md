@@ -44,6 +44,6 @@ The command also receives:
 - `PFO_OUTPUT_DIR`
 - `PFO_ROOT`
 
-The runner validates generated output against the same behavioural contracts used in CI.
+The runner validates generated output against the same behavioural contracts used in CI and writes expected/actual comparison reports under the output root.
 
 See `docs/HEADLESS_EXECUTION.md` for provider options and the recommended release proof set.

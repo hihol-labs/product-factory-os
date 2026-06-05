@@ -9,7 +9,12 @@ python3 scripts/run_headless_fixtures.py --mode command \
   --command-template 'python3 {root}/scripts/pfo_headless_adapter.py'
 ```
 
-The runner creates one isolated output directory per fixture and validates generated files/stdout against `tests/fixture-contracts.json`.
+The runner creates one isolated output directory per fixture, validates generated files/stdout against `tests/fixture-contracts.json`, and writes expected/actual comparison artifacts:
+
+- `PFO_HEADLESS_COMPARISON.md`
+- `PFO_HEADLESS_COMPARISON.json`
+- `<fixture>/logs/comparison.md`
+- `<fixture>/logs/comparison.json`
 
 ## Provider
 
@@ -35,5 +40,7 @@ python3 scripts/run_headless_fixtures.py --mode command \
 ```
 
 Run this manually before public releases or through `workflow_dispatch` when Codex auth and budget are available.
+
+For a single high-risk skill, choose 2 or 3 representative fixtures and inspect `PFO_HEADLESS_COMPARISON.md` before accepting the skill as validated.
 
 CI keeps using `--mode mock` because real Codex execution depends on account auth, budget, and rate limits.
