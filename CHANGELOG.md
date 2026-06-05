@@ -18,6 +18,8 @@
 - `/seo` skill for technical SEO, search intent, metadata, structured data, content backlog, and organic acquisition measurement work.
 - `SEO_GROWTH_GUARANTEE_GATE.md` and `validate_seo_growth_gate.py` for measured SEO growth claims with baseline, target, source, attribution window, implemented changes, exclusions, result decision, and next iteration.
 - Context runtime: numeric `pfo context-budget` gate, `pfo context-index`, BM25-style `pfo context-search`, compact `pfo context-snapshot`, pre/post `context-budget.py` hooks, and permission-matrix parity for large output and raw HTTP routing.
+- PFO-aware skill scaffolding with `pfo skill-scaffold`, generating `SKILL.md`, skill contracts, triggers, fixtures, route snapshots, route reminders, and fixture contracts together.
+- Headless fixture expected/actual comparison reports for mock and live command runs, including aggregate `PFO_HEADLESS_COMPARISON.md/json` and per-fixture `logs/comparison.md/json` artifacts.
 
 ---
 

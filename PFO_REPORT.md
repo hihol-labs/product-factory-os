@@ -7,21 +7,21 @@ Architecture: `modular monolith`
 
 ## State
 
-- Current stage: `BRANCH_FINISH`
+- Current stage: `EXISTING_PROJECT_ANALYZED`
 - Current node: `security-audit-v2`
 - Current unit: `security-audit-v2`
 - Last successful state: `VERIFYING_WORK`
-- Next action: Finish branch using the recorded PR/merge/keep/discard decision.
+- Next action: Review NEXT_STEP.md and approve or change the next task before implementation.
 - Recovery: `` 
 - Root cause: `` 
 - Handoff: `` 
 
 ## Human Steering
 
-- Approval required: `False`
-- Approval status: `APPROVED`
-- Recommended next step: Execute PIV plan plans/security-audit-v2-piv-plan.md: Implement security-audit v2 phase contract, coverage artifacts, diff security evidence gate, report validator, fix-finding workflow, and deep scan mode in Product Factory OS
-- Last iteration summary: Unit security-audit-v2 is scoped and ready for user approval.
+- Approval required: `True`
+- Approval status: `PENDING`
+- Recommended next step: Resolve analyzer blockers before any implementation work.
+- Last iteration summary: Detected Existing Software Project with unknown stack. Ran 0 gate command(s).
 - Steering artifact: `NEXT_STEP.md`
 
 ## Experiment Loop
@@ -50,7 +50,7 @@ Architecture: `modular monolith`
 | funnel |  |
 | architecture | PASS_WITH_WARNINGS |
 | tests | NOT_CONFIGURED |
-| review | PASSED |
+| review | NOT_RUN |
 | tddRed |  |
 | tddGreen |  |
 | tddRefactor |  |
@@ -58,7 +58,7 @@ Architecture: `modular monolith`
 | specComplianceReview | PASSED |
 | codeQualityReview | PASSED |
 | branchFinish | PASSED |
-| nextStepApproval | PASSED |
+| nextStepApproval | PENDING |
 | handoff |  |
 | security | PASS |
 | dependencies | NOT_RUN |
@@ -68,12 +68,12 @@ Architecture: `modular monolith`
 | experimentSetup |  |
 | experimentMetric |  |
 | experimentDecision |  |
-| executionPolicy | PASSED |
-| permissionMatrix | PASSED |
-| verificationContract | PASSED |
+| executionPolicy | PASS |
+| permissionMatrix | PASS |
+| verificationContract | PASS |
 | learningPromotion | PASS |
-| toolCapabilityRegistry | PASSED |
-| deploymentReadiness | PASS |
+| toolCapabilityRegistry | PASS |
+| deploymentReadiness | BLOCKED |
 | aliasTargets | PASS |
 | scopeLock | PASS_WITH_WARNINGS |
 | dataAuthenticity | PASS |
@@ -84,10 +84,14 @@ Architecture: `modular monolith`
 | noSilentSubstitution | PASS |
 | seoGrowthGuarantee |  |
 | contextBudget | PASSED |
-| securityEvidence |  |
+| securityEvidence | BLOCKED |
 
 ## Blockers
 
+- missing changed security coverage artifact: deep_review_input.csv
+- missing changed security coverage artifact: work_ledger.jsonl
+- missing changed security coverage artifact: repository_coverage_ledger.md
+- missing changed security coverage artifact: candidate_ledger.jsonl
 - No root test/typecheck script was detected.
 
 ## Verification History
@@ -140,6 +144,9 @@ Architecture: `modular monolith`
 - {'mode': 'review-stage', 'stage': 'quality', 'status': 'PASSED', 'evidence': 'Quality passed: validator/report artifacts, contract gate, control harness, fixture contracts, triggers, structure, state validation, py_compile, and production_readiness passed.'}
 - {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'security-audit-v2', 'evidence': 'Final security-audit v2 implementation verified after tightening stale-artifact prevention: validate_security_report self-check and report+artifacts passed; pfo_contract_gate PASS_WITH_WARNINGS with securityEvidence PASS; validate_structure, validate_control_harness, verify_fixture_contracts, verify_triggers, validate_state, py_compile, and production_readiness passed.', 'recordedAt': '2026-06-02T16:38:41+00:00'}
 - {'mode': 'review-stage', 'stage': 'quality', 'status': 'PASSED', 'evidence': 'Final quality passed after stale-artifact guard: securityEvidence requires changed report and changed coverage artifacts; production_readiness passed.'}
+- {'mode': 'existing-project-analyze', 'stage': 'EXISTING_PROJECT_ANALYZED', 'status': 'BLOCKED', 'summary': 'Detected Existing Software Project with unknown stack. Ran 0 gate command(s).'}
+- {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'security-audit-v2', 'evidence': 'Implemented pfo_skill_scaffold.py, wired pfo skill-scaffold, updated /skill-create forward-test guidance, and passed validate_structure, validate_runtime, run_fixtures, verify_fixture_contracts, run_headless_fixtures --mode mock, verify_skill_profiles, validate_hooks, meta_review, validate_control_harness, verify_install_sync, production_readiness.', 'recordedAt': '2026-06-05T06:34:18+00:00'}
+- {'mode': 'existing-project-analyze', 'stage': 'EXISTING_PROJECT_ANALYZED', 'status': 'BLOCKED', 'summary': 'Detected Existing Software Project with unknown stack. Ran 0 gate command(s).'}
 
 ## TDD Evidence
 
@@ -166,9 +173,9 @@ Architecture: `modular monolith`
 ## Telemetry
 
 - Units: `0`
-- Verifications: `14`
+- Verifications: `15`
 - Token notes: none
 - Cost notes: none
-- Event log: `.codex-memory/events.jsonl` last `event-20260602T164544Z-1`
+- Event log: `.codex-memory/events.jsonl` last `event-20260605T063629Z-snapshot`
 - Permission matrix: `.pfo/PERMISSION_MATRIX.json` `READY`
 - Tool registry: `.pfo/TOOL_CAPABILITY_REGISTRY.json` `READY`

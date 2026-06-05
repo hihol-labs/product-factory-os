@@ -38,7 +38,17 @@ If examples are obvious from the request, proceed with conservative assumptions 
 3. Keep `SKILL.md` lean. Put long schemas, policies, examples, or provider-specific details in `references/`.
 4. Use `scripts/` only for repeated or fragile operations that benefit from deterministic execution.
 5. Use `assets/` only for templates or files copied into outputs.
-6. Create or update:
+6. For a new routable PFO skill, prefer the scaffold command, then edit the result:
+
+   ```bash
+   python3 scripts/pfo.py skill-scaffold <skill-name> \
+     --description "<what it does and when to use it>" \
+     --trigger "<natural language trigger>" \
+     --output "<expected output>" \
+     --expected-file "<expected artifact or NONE>"
+   ```
+
+7. Create or update:
    - `skills/<skill>/SKILL.md`
    - `docs/SKILL_CONTRACTS.md`
    - `docs/TRIGGERS.md`
@@ -49,8 +59,8 @@ If examples are obvious from the request, proceed with conservative assumptions 
    - `tests/fixtures/<fixture>/notes.md`
    - `tests/fixtures/<fixture>/expected-files.txt`
    - `scripts/validate_structure.py` required skill and fixture lists when the skill is core PFO
-7. Update README or marketplace metadata when the public capability set changes.
-8. Run validation.
+8. Update README or marketplace metadata when the public capability set changes.
+9. Run validation.
 
 ## PFO Skill Shape
 
@@ -108,9 +118,23 @@ Then run repository gates:
 ```bash
 python3 scripts/validate_structure.py
 python3 scripts/run_fixtures.py
+python3 scripts/verify_fixture_contracts.py
+python3 scripts/run_headless_fixtures.py --mode mock --fixture <fixture>
 python3 scripts/validate_hooks.py
 python3 scripts/meta_review.py
 ```
+
+For high-risk, complex, or public-release skills, run a live forward-test on 2 or 3 representative fixtures when Codex auth and budget are available:
+
+```bash
+python3 scripts/run_headless_fixtures.py --mode command \
+  --fixture <fixture-a> \
+  --fixture <fixture-b> \
+  --output-root .pfo-headless-runs/live \
+  --command-template 'python3 {root}/scripts/pfo_headless_adapter.py'
+```
+
+Treat live output as a comparator surface: inspect `.pfo-headless-runs/live/PFO_HEADLESS_COMPARISON.md` and each `logs/comparison.md`, then tighten `SKILL.md`, bundled resources, or the output contract if the skill only works with leaked context.
 
 ## Self-validation
 
@@ -118,6 +142,8 @@ Before final output, verify:
 
 - Route, side-effect, and confirmation requirements match metadata.
 - Required artifacts or read-only result are explicit.
+- Mock headless fixture validation passes for changed routable skills.
+- Live forward-test expected/actual comparison is recorded for high-risk skills, or the auth/budget blocker is stated.
 - Verification, blockers, and next route are stated.
 
 ## Rules

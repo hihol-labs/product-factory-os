@@ -92,6 +92,149 @@ def run_command(template: str, fixture: str, output_dir: Path, timeout: int) -> 
     return result.returncode, result.stdout, result.stderr
 
 
+def output_file_names(output_dir: Path) -> list[str]:
+    if not output_dir.exists():
+        return []
+    return sorted(str(path.relative_to(output_dir)) for path in output_dir.rglob("*") if path.is_file())
+
+
+def read_output_file(output_dir: Path, rel: str) -> str:
+    target = output_dir / rel
+    if not target.is_file():
+        return ""
+    try:
+        return target.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return ""
+
+
+def all_output_text(output_dir: Path) -> str:
+    return "\n".join(read_output_file(output_dir, rel) for rel in output_file_names(output_dir))
+
+
+def add_check(checks: list[dict], kind: str, expected: str, actual: str, passed: bool) -> None:
+    checks.append(
+        {
+            "kind": kind,
+            "expected": expected,
+            "actual": actual,
+            "status": "PASSED" if passed else "FAILED",
+        }
+    )
+
+
+def build_comparison(
+    fixture: str,
+    contract: dict,
+    output_dir: Path,
+    stdout_text: str,
+    exit_code: int,
+    mode: str,
+    errors: list[str],
+) -> dict:
+    output = contract.get("output_contract", {})
+    files = output_file_names(output_dir)
+    checks: list[dict] = []
+
+    if mode == "command":
+        add_check(checks, "command_exit", "exit code 0", str(exit_code), exit_code == 0)
+
+    for item in output.get("required_files", []):
+        target = output_dir / item
+        if item.endswith("/"):
+            passed = target.is_dir()
+            actual = "directory present" if passed else "directory missing"
+        else:
+            passed = target.is_file()
+            actual = "file present" if passed else "file missing"
+        add_check(checks, "required_file", item, actual, passed)
+
+    for pattern in output.get("forbidden_files", []):
+        matches = sorted(str(path.relative_to(output_dir)) for path in output_dir.glob(pattern))
+        add_check(checks, "forbidden_file", pattern, ", ".join(matches) if matches else "no matches", not matches)
+
+    stdout_lower = stdout_text.lower()
+    for token in output.get("stdout_must_contain", []):
+        add_check(checks, "stdout_contains", token, "present" if token.lower() in stdout_lower else "missing", token.lower() in stdout_lower)
+
+    for rel, tokens in output.get("files_must_contain", {}).items():
+        text = read_output_file(output_dir, rel).lower()
+        for token in tokens:
+            add_check(checks, "file_contains", f"{rel}: {token}", "present" if token.lower() in text else "missing", token.lower() in text)
+
+    for rel, tokens in output.get("files_must_not_contain", {}).items():
+        text = read_output_file(output_dir, rel).lower()
+        for token in tokens:
+            add_check(checks, "file_not_contains", f"{rel}: {token}", "absent" if token.lower() not in text else "present", token.lower() not in text)
+
+    combined_text = all_output_text(output_dir).lower()
+    for token in output.get("any_file_must_contain", []):
+        add_check(checks, "any_file_contains", token, "present" if token.lower() in combined_text else "missing", token.lower() in combined_text)
+
+    return {
+        "fixture": fixture,
+        "mode": mode,
+        "status": "PASSED" if not errors else "FAILED",
+        "expected": output,
+        "actual": {
+            "exitCode": exit_code,
+            "stdoutPreview": stdout_text[:4000],
+            "files": files,
+        },
+        "checks": checks,
+        "errors": errors,
+    }
+
+
+def comparison_markdown(comparison: dict) -> str:
+    lines = [
+        f"# Headless Comparison: {comparison['fixture']}",
+        "",
+        f"- Mode: `{comparison['mode']}`",
+        f"- Status: `{comparison['status']}`",
+        f"- Exit code: `{comparison['actual']['exitCode']}`",
+        "",
+        "## Expected",
+        "",
+        "```json",
+        json.dumps(comparison["expected"], indent=2, ensure_ascii=False),
+        "```",
+        "",
+        "## Actual",
+        "",
+        "Files:",
+    ]
+    files = comparison["actual"].get("files", [])
+    lines.extend(f"- `{item}`" for item in files)
+    if not files:
+        lines.append("- none")
+    lines.extend(
+        [
+            "",
+            "## Checks",
+            "",
+            "| Kind | Expected | Actual | Status |",
+            "|---|---|---|---|",
+        ]
+    )
+    for check in comparison["checks"]:
+        lines.append(
+            f"| {check['kind']} | {check['expected']} | {check['actual']} | {check['status']} |"
+        )
+    if comparison["errors"]:
+        lines.extend(["", "## Errors", ""])
+        lines.extend(f"- {item}" for item in comparison["errors"])
+    return "\n".join(lines) + "\n"
+
+
+def write_comparison(log_dir: Path, comparison: dict) -> tuple[str, str]:
+    json_path = log_dir / "comparison.json"
+    md_path = log_dir / "comparison.md"
+    json_path.write_text(json.dumps(comparison, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    md_path.write_text(comparison_markdown(comparison), encoding="utf-8")
+    return str(json_path), str(md_path)
+
+
 def run_one(fixture: str, contract: dict, mode: str, command_template: str | None, run_root: Path, timeout: int) -> dict:
     output_dir = run_root / fixture / "output"
     log_dir = run_root / fixture / "logs"
@@ -120,6 +263,8 @@ def run_one(fixture: str, contract: dict, mode: str, command_template: str | Non
     else:
         fail(f"unknown mode: {mode}")
 
+    comparison = build_comparison(fixture, contract, output_dir, stdout, code, mode, errors)
+    comparison_json, comparison_md = write_comparison(log_dir, comparison)
     return {
         "fixture": fixture,
         "mode": mode,
@@ -127,7 +272,40 @@ def run_one(fixture: str, contract: dict, mode: str, command_template: str | Non
         "errors": errors,
         "durationSeconds": round(time.time() - started, 3),
         "outputDir": str(output_dir),
+        "comparisonJson": comparison_json,
+        "comparisonMarkdown": comparison_md,
+        "_comparison": comparison,
     }
+
+
+def write_aggregate_comparison(run_root: Path, payload: dict, comparisons: list[dict]) -> tuple[str, str]:
+    report = {
+        "mode": payload["mode"],
+        "status": "PASSED" if payload["failed"] == 0 else "FAILED",
+        "total": payload["total"],
+        "passed": payload["passed"],
+        "failed": payload["failed"],
+        "comparisons": comparisons,
+    }
+    json_path = run_root / "PFO_HEADLESS_COMPARISON.json"
+    md_path = run_root / "PFO_HEADLESS_COMPARISON.md"
+    json_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    lines = [
+        "# PFO Headless Expected/Actual Comparison",
+        "",
+        f"- Mode: `{report['mode']}`",
+        f"- Status: `{report['status']}`",
+        f"- Fixtures: `{report['passed']}/{report['total']} passed`",
+        "",
+        "| Fixture | Status | Failed Checks | Comparison |",
+        "|---|---|---:|---|",
+    ]
+    for comparison in comparisons:
+        failed_checks = sum(1 for check in comparison["checks"] if check["status"] != "PASSED")
+        fixture = comparison["fixture"]
+        lines.append(f"| {fixture} | {comparison['status']} | {failed_checks} | `{fixture}/logs/comparison.md` |")
+    md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return str(json_path), str(md_path)
 
 
 def main() -> None:
@@ -156,6 +334,7 @@ def main() -> None:
         for name in names
     ]
     failed = [item for item in results if item["status"] != "PASSED"]
+    comparisons = [item.pop("_comparison") for item in results]
     payload = {
         "mode": args.mode,
         "total": len(results),
@@ -164,11 +343,18 @@ def main() -> None:
         "runRoot": str(run_root),
         "results": results,
     }
+    comparison_json, comparison_md = write_aggregate_comparison(run_root, payload, comparisons)
+    payload["comparisonJson"] = comparison_json
+    payload["comparisonMarkdown"] = comparison_md
 
     if args.json:
         print(json.dumps(payload, indent=2))
     else:
         print(f"PFO headless fixtures: {payload['passed']}/{payload['total']} passed ({args.mode})")
+        if args.output_root or args.keep_output or failed:
+            print(f"Comparison report: {comparison_md}")
+        else:
+            print("Comparison report: pass --output-root or --keep-output to preserve expected/actual artifacts")
         for item in failed:
             print(f"- {item['fixture']}: " + "; ".join(item["errors"]))
 

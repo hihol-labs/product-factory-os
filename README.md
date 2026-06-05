@@ -250,7 +250,17 @@ Harness engineering reference: [`docs/AGENT_HARNESS_ENGINEERING.md`](docs/AGENT_
 | `/github-workflow` | Handles GitHub issues, PRs, CI, releases, review comments, changelogs, and publish state. |
 | `/tool-sync` | Synchronizes PFO artifacts with Linear, Notion, Google Drive, GitHub payloads, or local exports. |
 | `/obsidian-export` | Exports planning docs, memory, handoff, decisions, gates, and state to an Obsidian knowledge graph. |
-| `/skill-create` | Creates or updates PFO skills with contracts, triggers, fixtures, snapshots, and validation gates. |
+| `/skill-create` | Creates or updates PFO skills with contracts, triggers, fixtures, snapshots, headless validation, and optional `pfo skill-scaffold` scaffolding. |
+
+New routable skills can start from the synchronized scaffold:
+
+```bash
+python3 scripts/pfo.py skill-scaffold customer-interviews \
+  --description "Synthesize customer interview notes into PFO evidence artifacts." \
+  --trigger "customer interview synthesis" \
+  --output "Interview synthesis report" \
+  --expected-file "INTERVIEW_SYNTHESIS.md"
+```
 
 ## Agents
 

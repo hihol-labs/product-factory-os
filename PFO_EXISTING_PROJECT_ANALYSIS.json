@@ -11,9 +11,16 @@
   "gateRuns": [],
   "securityFindings": [],
   "contractGate": {
-    "status": "PASS_WITH_WARNINGS",
+    "status": "BLOCKED",
     "changedFiles": [
-      "NEXT_STEP.md"
+      "NEXT_STEP.md",
+      "README.md",
+      "reports/security-audit-v2-implementation-report.md",
+      "scripts/pfo.py",
+      "scripts/pfo_skill_scaffold.py",
+      "scripts/validate_runtime.py",
+      "scripts/validate_structure.py",
+      "skills/skill-create/SKILL.md"
     ],
     "runtimeChangedFiles": [
       "PFO_CONTRACT_GATE.json",
@@ -22,9 +29,10 @@
     ],
     "riskClasses": [
       "business_logic_change",
+      "data_source_change",
       "dependency_change",
       "deployment_change",
-      "documentation_change",
+      "provider_integration_change",
       "security_change",
       "user_facing_output_change"
     ],
@@ -35,7 +43,12 @@
       ".pfo/FALLBACK_POLICY.md"
     ],
     "aliasTargetErrors": [],
-    "blockers": [],
+    "blockers": [
+      "missing changed security coverage artifact: deep_review_input.csv",
+      "missing changed security coverage artifact: work_ledger.jsonl",
+      "missing changed security coverage artifact: repository_coverage_ledger.md",
+      "missing changed security coverage artifact: candidate_ledger.jsonl"
+    ],
     "warnings": [
       "placeholder contract content: .pfo/PROJECT_CONTRACT.md",
       "placeholder contract content: .pfo/FORBIDDEN_CHANGES.md",
@@ -50,6 +63,7 @@
       "regressionContract": "PASS_WITH_WARNINGS",
       "fallbackPolicy": "PASS",
       "diffRisk": "PASS_WITH_WARNINGS",
+      "securityEvidence": "BLOCKED",
       "noSilentSubstitution": "PASS",
       "executionPolicy": "PASS",
       "permissionMatrix": "PASS",

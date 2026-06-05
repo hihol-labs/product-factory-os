@@ -2481,6 +2481,44 @@ def cmd_tool_registry(args: argparse.Namespace) -> int:
     return run_script("validate_tool_registry.py", [str(args.project / ".pfo" / "TOOL_CAPABILITY_REGISTRY.json")])
 
 
+def cmd_skill_scaffold(args: argparse.Namespace) -> int:
+    argv = [args.skill_name, "--description", args.description]
+    scalar_options = [
+        ("--russian-triggers", args.russian_triggers),
+        ("--prompt", args.prompt),
+        ("--input", args.input),
+        ("--notes", args.notes),
+        ("--notes-token", args.notes_token),
+        ("--argument-hint", args.argument_hint),
+        ("--category", args.category),
+        ("--effort", args.effort),
+        ("--side-effect", args.side_effect),
+        ("--fixture", args.fixture),
+    ]
+    for flag, value in scalar_options:
+        if value:
+            argv.extend([flag, value])
+    repeat_options = [
+        ("--trigger", args.trigger),
+        ("--output", args.output),
+        ("--expected-file", args.expected_file),
+        ("--required-file", args.required_file),
+        ("--stdout-token", args.stdout_token),
+        ("--any-file-token", args.any_file_token),
+        ("--validation-command", args.validation_command),
+        ("--tag", args.tag),
+        ("--resource", args.resource),
+    ]
+    for flag, values in repeat_options:
+        for value in values:
+            argv.extend([flag, value])
+    if args.explicit_invocation:
+        argv.append("--explicit-invocation")
+    if args.force:
+        argv.append("--force")
+    return run_script("pfo_skill_scaffold.py", argv)
+
+
 def cmd_experiment_init(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
@@ -2932,6 +2970,45 @@ def build_parser() -> argparse.ArgumentParser:
     tool_registry = sub.add_parser("tool-registry", help="Validate project tool capability registry.")
     tool_registry.add_argument("project", type=Path)
     tool_registry.set_defaults(func=cmd_tool_registry)
+
+    skill_scaffold = sub.add_parser("skill-scaffold", help="Create a PFO-aware skill scaffold with contracts, triggers, fixtures, and snapshots.")
+    skill_scaffold.add_argument("skill_name")
+    skill_scaffold.add_argument("--description", required=True)
+    skill_scaffold.add_argument("--trigger", action="append", required=True)
+    skill_scaffold.add_argument("--russian-triggers", default="")
+    skill_scaffold.add_argument("--prompt", default="")
+    skill_scaffold.add_argument("--input", default="")
+    skill_scaffold.add_argument("--output", action="append", default=[])
+    skill_scaffold.add_argument("--expected-file", action="append", default=[])
+    skill_scaffold.add_argument("--required-file", action="append", default=[])
+    skill_scaffold.add_argument("--stdout-token", action="append", default=[])
+    skill_scaffold.add_argument("--any-file-token", action="append", default=[])
+    skill_scaffold.add_argument("--notes", default="")
+    skill_scaffold.add_argument("--notes-token", default="fixture")
+    skill_scaffold.add_argument("--validation-command", action="append", default=[])
+    skill_scaffold.add_argument("--argument-hint", default="")
+    skill_scaffold.add_argument("--category", default="daily-work")
+    skill_scaffold.add_argument("--tag", action="append", default=[])
+    skill_scaffold.add_argument("--effort", choices=["low", "medium", "high"], default="medium")
+    skill_scaffold.add_argument(
+        "--side-effect",
+        choices=[
+            "read-only",
+            "docs-write",
+            "code-write",
+            "methodology-write",
+            "external-write",
+            "infrastructure-write",
+            "data-migration",
+            "production-impact",
+        ],
+        default="read-only",
+    )
+    skill_scaffold.add_argument("--explicit-invocation", action="store_true")
+    skill_scaffold.add_argument("--resource", action="append", default=[])
+    skill_scaffold.add_argument("--fixture", default="")
+    skill_scaffold.add_argument("--force", action="store_true")
+    skill_scaffold.set_defaults(func=cmd_skill_scaffold)
 
     experiment_init = sub.add_parser("experiment-init", help="Create an Autoresearch-style fixed-budget experiment loop.")
     experiment_init.add_argument("project", type=Path)
