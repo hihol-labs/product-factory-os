@@ -1,23 +1,56 @@
 {
-  "status": "PASS",
-  "changedFiles": [],
-  "runtimeChangedFiles": [
-    "BRANCH_FINISH.md"
+  "status": "PASS_WITH_WARNINGS",
+  "changedFiles": [
+    "CHANGELOG.md",
+    "README.md",
+    "docs/WORKSPACE_DEFAULTS.md",
+    "plans/route-profiles-overhead-piv-plan.md",
+    "reports/route-profiles-overhead-implementation-report.md",
+    "reports/route-profiles-overhead-security-review.md",
+    "reports/route-profiles-overhead-security/artifacts/02_discovery/deep_review_input.csv",
+    "reports/route-profiles-overhead-security/artifacts/02_discovery/work_ledger.jsonl",
+    "reports/route-profiles-overhead-security/artifacts/03_coverage/repository_coverage_ledger.md",
+    "reports/route-profiles-overhead-security/artifacts/05_findings/no-findings/candidate_ledger.jsonl",
+    "routing/route-profiles.json",
+    "scripts/pfo.py",
+    "scripts/pfo_metrics.py",
+    "scripts/production_readiness.py",
+    "scripts/validate_route_profiles.py",
+    "scripts/validate_runtime.py",
+    "scripts/validate_structure.py"
   ],
-  "riskClasses": [],
+  "runtimeChangedFiles": [
+    ".pfo/UNIT_CONTEXT_MANIFEST.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
+    "HANDOFF.md",
+    "NEXT_STEP.md",
+    "PFO_CONTRACT_GATE.json",
+    "PFO_EXISTING_PROJECT_ANALYSIS.json",
+    "PFO_REPORT.md"
+  ],
+  "riskClasses": [
+    "business_logic_change",
+    "data_source_change",
+    "dependency_change",
+    "deployment_change",
+    "security_change",
+    "user_facing_output_change"
+  ],
   "missingContracts": [],
   "placeholderContracts": [],
   "aliasTargetErrors": [],
   "blockers": [],
-  "warnings": [],
+  "warnings": [
+    "dependency diff also touches data sources or user-facing output; verify Scope Lock explicitly."
+  ],
   "gates": {
     "aliasTargets": "PASS",
-    "scopeLock": "PASS",
+    "scopeLock": "PASS_WITH_WARNINGS",
     "dataAuthenticity": "PASS",
     "goldenFlows": "PASS",
     "regressionContract": "PASS",
     "fallbackPolicy": "PASS",
-    "diffRisk": "PASS",
+    "diffRisk": "PASS_WITH_WARNINGS",
     "securityEvidence": "PASS",
     "noSilentSubstitution": "PASS",
     "executionPolicy": "PASS",

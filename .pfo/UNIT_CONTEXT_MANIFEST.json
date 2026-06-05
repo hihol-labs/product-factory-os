@@ -1,32 +1,79 @@
 {
   "version": 1,
-  "unitId": "self-runtime",
-  "goal": "Fix Product Factory OS self-runtime wrapper, self-contracts, contract gate security scope, and self-contract validation",
-  "createdAt": "2026-06-05T16:40:04+00:00",
+  "unitId": "route-profiles-overhead",
+  "goal": "Reduce PFO overhead with route profiles, minimal gates, and artifact-debt metric",
+  "createdAt": "2026-06-05T22:09:43+00:00",
+  "routeProfile": {
+    "id": "standard",
+    "label": "Standard route profile",
+    "reason": "explicit profile selection",
+    "intendedFor": "Default non-trivial existing-project implementation, bugfix, refactor, test, or documentation work.",
+    "steps": [
+      "adoption",
+      "repositoryAnalysis",
+      "taskClassification",
+      "unitManifest",
+      "targetedVerification",
+      "review",
+      "stateSave"
+    ],
+    "gates": [
+      "adoption",
+      "scopeLock",
+      "verificationContract",
+      "targetedVerification",
+      "specComplianceReview",
+      "codeQualityReview",
+      "contextBudget",
+      "toolCapabilityRegistry"
+    ],
+    "requiredArtifacts": [
+      "AGENTS.md",
+      "CODEX.md",
+      ".codex-memory/STATE.json",
+      ".pfo/PROJECT_CONTRACT.md",
+      ".pfo/SCOPE_LOCK.md",
+      ".pfo/EXECUTION_POLICY.json",
+      ".pfo/PERMISSION_MATRIX.json",
+      ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+      ".pfo/UNIT_CONTEXT_MANIFEST.json",
+      ".pfo/VERIFICATION_CONTRACT.json",
+      "active PIV plan under plans/ before implementation",
+      "active implementation report under reports/ before review",
+      "NEXT_STEP.md with approved or changed user-facing next step"
+    ],
+    "optionalArtifacts": [
+      "ROOT_CAUSE.md for bugfix units",
+      "HANDOFF.md when switching sessions, roles, delegated agents, AFK execution, compaction, or recovery",
+      "TEST_PLAN.md when behavior coverage changes"
+    ],
+    "forbiddenArtifacts": [],
+    "verificationPolicy": {
+      "mode": "targeted-plus-contracts",
+      "commands": [
+        "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os",
+        "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_context_runtime.py"
+      ],
+      "rules": [
+        "Run route-relevant validators and targeted tests before review.",
+        "Escalate to full only when product scope, release, security, migration, deploy, or broad workflow risk changes."
+      ]
+    }
+  },
   "requiredInputs": [
+    "AGENTS.md",
     "CODEX.md",
     ".codex-memory/STATE.json",
     ".pfo/PROJECT_CONTRACT.md",
     ".pfo/SCOPE_LOCK.md",
     ".pfo/EXECUTION_POLICY.json",
-    ".pfo/PERMISSION_MATRIX.md",
     ".pfo/PERMISSION_MATRIX.json",
-    ".pfo/VERIFICATION_CONTRACT.json",
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-    "IDEA_SCORECARD.md",
-    "VALIDATION_PLAN.md",
-    "PRODUCT_BLUEPRINT.md",
-    "BUILD_PLAN.md",
-    "EXECUTION_GRAPH.md",
+    ".pfo/UNIT_CONTEXT_MANIFEST.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
     "active PIV plan under plans/ before implementation",
     "active implementation report under reports/ before review",
-    "NEXT_STEP.md with approved or changed user-facing next step",
-    "FEEDBACK_LOG.md and FUNNEL_MODEL.md when user acquisition or iteration is in scope",
-    "PHASE_CONTEXT.md when present",
-    ".pfo/EXPERIMENT_PROGRAM.md when autonomous measurement-driven iteration is in scope",
-    ".pfo/EXPERIMENTS.tsv when autonomous measurement-driven iteration is in scope",
-    "HANDOFF.md when switching sessions, roles, delegated agents, AFK execution, compaction, or recovery",
-    "ROOT_CAUSE.md for bugfix units"
+    "NEXT_STEP.md with approved or changed user-facing next step"
   ],
   "allowedWriteAreas": [
     "files listed by the active execution graph node",
@@ -50,11 +97,8 @@
   ],
   "dependencies": [],
   "verificationCommands": [
-    "commands declared in `.pfo/VERIFICATION_CONTRACT.json`",
-    "failing test command before implementation for behavior changes",
-    "passing test command after minimal implementation",
-    "project test command from TEST_PLAN.md",
-    "python3 scripts/pfo_contract_gate.py <project> when running from PFO root"
+    "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os",
+    "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_context_runtime.py"
   ],
   "contextPolicy": {
     "mode": "progressive-disclosure",
@@ -117,40 +161,19 @@
     ]
   },
   "gates": [
-    "tddRed",
-    "tddGreen",
-    "rootCause",
+    "adoption",
+    "scopeLock",
+    "verificationContract",
+    "targetedVerification",
     "specComplianceReview",
     "codeQualityReview",
-    "handoff",
-    "scopeLock",
-    "dataAuthenticity",
-    "goldenFlows",
-    "regressionContract",
-    "fallbackPolicy",
-    "diffRisk",
-    "securityEvidence",
-    "noSilentSubstitution",
-    "ideaGate",
-    "marketValidation",
-    "seoGrowthGuarantee",
-    "feedbackLoop",
-    "funnel",
-    "experimentSetup",
-    "experimentMetric",
-    "experimentDecision",
-    "executionPolicy",
-    "permissionMatrix",
     "contextBudget",
-    "verificationContract",
-    "learningPromotion",
-    "toolCapabilityRegistry",
-    "nextStepApproval"
+    "toolCapabilityRegistry"
   ],
   "pivLoop": {
     "sourcePattern": "harness-engineering-demo PIV loop",
-    "planPath": "plans/self-runtime-piv-plan.md",
-    "implementationReportPath": "reports/self-runtime-implementation-report.md",
+    "planPath": "plans/route-profiles-overhead-piv-plan.md",
+    "implementationReportPath": "reports/route-profiles-overhead-implementation-report.md",
     "sequence": [
       "plan",
       "implement",

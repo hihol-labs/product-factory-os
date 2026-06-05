@@ -28,6 +28,9 @@ PLAN_ARTIFACTS = [
     "QUALITY_GATES.md",
     "NEXT_STEP.md",
 ]
+ROUTE_PROFILES_PATH = ROOT / "routing" / "route-profiles.json"
+ROUTE_PROFILE_IDS = {"minimal", "standard", "full"}
+SUCCESS_GATE_STATUSES = {"PASS", "PASSED", "PASS_WITH_WARNINGS", "PASSED_WITH_WARNINGS", "READY", "RECORDED"}
 
 
 def load_alias_documents() -> dict[str, str]:
@@ -265,6 +268,8 @@ def ensure_autonomy_state(state: dict) -> None:
         "branchFinish",
         "nextStepApproval",
         "handoff",
+        "adoption",
+        "targetedVerification",
         "assetExtraction",
         "contentPipeline",
         "experimentSetup",
@@ -319,11 +324,152 @@ def write_alias_documents(project: Path) -> list[str]:
 
 
 def gate_passed(state: dict, gate: str) -> bool:
-    return state.get("gateResults", {}).get(gate) in {"PASSED", "PASSED_WITH_WARNINGS"}
+    return str(state.get("gateResults", {}).get(gate, "")).upper() in SUCCESS_GATE_STATUSES
 
 
 def missing_files(project: Path, files: list[str]) -> list[str]:
     return [rel for rel in files if not (project / rel).is_file()]
+
+
+def load_route_profiles() -> dict:
+    return json.loads(ROUTE_PROFILES_PATH.read_text(encoding="utf-8"))
+
+
+def route_profile_config(profile_id: str) -> dict:
+    profiles = load_route_profiles().get("profiles", {})
+    profile = profiles.get(profile_id)
+    if not isinstance(profile, dict):
+        raise SystemExit(f"ERROR: unknown route profile: {profile_id}")
+    return profile
+
+
+def select_route_profile(
+    state: dict,
+    goal: str = "",
+    explicit_profile: str = "auto",
+    behavior_change: bool = False,
+    bugfix: bool = False,
+) -> tuple[str, str]:
+    if explicit_profile and explicit_profile != "auto":
+        if explicit_profile not in ROUTE_PROFILE_IDS:
+            raise SystemExit(f"ERROR: route profile must be one of: {', '.join(sorted(ROUTE_PROFILE_IDS))}")
+        return explicit_profile, "explicit profile selection"
+
+    active_profile = state.get("activeRouteProfile", {}) if isinstance(state.get("activeRouteProfile"), dict) else {}
+    active_profile_id = str(active_profile.get("id", ""))
+    if active_profile_id in ROUTE_PROFILE_IDS:
+        return active_profile_id, "active state route profile"
+
+    existing = state.get("existingProject", {}) if isinstance(state.get("existingProject"), dict) else {}
+    current_unit = state.get("currentUnit", {}) if isinstance(state.get("currentUnit"), dict) else {}
+    text = " ".join(
+        [
+            str(state.get("currentTaskRoute", "")),
+            str(existing.get("currentTaskRoute", "")),
+            str(current_unit.get("goal", "")),
+            goal,
+            str(state.get("intent", "")),
+        ]
+    ).lower()
+    full_terms = [
+        "/project",
+        "/kickstart",
+        "/blueprint",
+        "/deploy",
+        "/migrate",
+        "/security-audit",
+        "/harden",
+        "full cycle",
+        "production",
+        "release",
+        "security",
+        "migration",
+        "deploy",
+        "broad",
+        "architecture",
+    ]
+    minimal_terms = [
+        "/doc",
+        "/explain",
+        "/review",
+        "small task",
+        "tiny change",
+        "typo",
+        "copy edit",
+        "readme",
+        "docs-only",
+        "documentation only",
+        "no behavior change",
+        "small enough",
+        "маленьк",
+        "мелк",
+        "опечат",
+    ]
+    if any(term in text for term in full_terms):
+        return "full", "high-risk or broad route hint"
+    if bugfix or behavior_change:
+        return "standard", "behavior-change or bugfix route"
+    if any(term in text for term in minimal_terms):
+        return "minimal", "small-task route hint"
+    return load_route_profiles().get("defaultProfile", "standard"), "default route profile"
+
+
+def expand_profile_command(command: str, project: Path) -> str:
+    command = str(command).replace("<project>", str(project))
+    parts = command.split()
+    if len(parts) >= 2 and parts[0] == "python3" and parts[1].startswith("scripts/"):
+        script = ROOT / parts[1]
+        return " ".join([sys.executable, str(script), *parts[2:]])
+    return command
+
+
+def profile_commands(profile_id: str, project: Path) -> list[str]:
+    policy = route_profile_config(profile_id).get("verificationPolicy", {})
+    commands = policy.get("defaultCommands", []) if isinstance(policy, dict) else []
+    return [expand_profile_command(command, project) for command in commands]
+
+
+def route_profile_payload(profile_id: str, reason: str, project: Path) -> dict:
+    config = route_profile_config(profile_id)
+    policy = config.get("verificationPolicy", {}) if isinstance(config.get("verificationPolicy"), dict) else {}
+    return {
+        "id": profile_id,
+        "label": config.get("label", profile_id),
+        "reason": reason,
+        "intendedFor": config.get("intendedFor", ""),
+        "steps": config.get("steps", []),
+        "gates": config.get("gates", []),
+        "requiredArtifacts": config.get("requiredArtifacts", []),
+        "optionalArtifacts": config.get("optionalArtifacts", []),
+        "forbiddenArtifacts": config.get("forbiddenArtifacts", []),
+        "verificationPolicy": {
+            "mode": policy.get("mode", ""),
+            "commands": profile_commands(profile_id, project),
+            "rules": policy.get("rules", []),
+        },
+    }
+
+
+def required_inputs_for_profile(profile_id: str, behavior_change: bool, bugfix: bool) -> list[str]:
+    config = route_profile_config(profile_id)
+    required = list(config.get("requiredArtifacts", []))
+    if behavior_change and "failing test command before implementation for behavior changes" not in required:
+        required.append("failing test command before implementation for behavior changes")
+        required.append("passing test command after minimal implementation")
+    if bugfix and "ROOT_CAUSE.md for bugfix units" not in required:
+        required.append("ROOT_CAUSE.md for bugfix units")
+    return required
+
+
+def gates_for_profile(profile_id: str, behavior_change: bool, bugfix: bool) -> list[str]:
+    gates = list(route_profile_config(profile_id).get("gates", []))
+    if behavior_change:
+        for gate in ["tddRed", "tddGreen"]:
+            if gate not in gates:
+                gates.append(gate)
+    if bugfix and "rootCause" not in gates:
+        gates.append("rootCause")
+    return gates
 
 
 def infer_next_best_action(project: Path, state: dict) -> dict:
@@ -343,20 +489,25 @@ def infer_next_best_action(project: Path, state: dict) -> dict:
             "blocks": "planning and implementation",
         }
 
-    plan_missing = missing_files(project, PLAN_ARTIFACTS)
-    if plan_missing:
-        return {
-            "gate": "planning",
-            "route": "/project -> /blueprint",
-            "command": f"pfo plan {project}",
-            "reason": "Planning artifacts are missing: " + ", ".join(plan_missing),
-            "blocks": "unit dispatch",
-        }
+    profile_id, profile_reason = select_route_profile(state)
+    profile = route_profile_config(profile_id)
+    if profile_id == "full":
+        plan_missing = missing_files(project, PLAN_ARTIFACTS)
+        if plan_missing:
+            return {
+                "gate": "planning",
+                "route": "/project -> /blueprint",
+                "profile": profile_id,
+                "command": f"pfo plan {project}",
+                "reason": "Planning artifacts are missing: " + ", ".join(plan_missing),
+                "blocks": "unit dispatch",
+            }
 
-    if not gate_passed(state, "nextStepApproval"):
+    if profile_id != "minimal" and not gate_passed(state, "nextStepApproval"):
         return {
             "gate": "nextStepApproval",
             "route": "/task -> approval gate",
+            "profile": profile_id,
             "command": f"pfo approve-next {project} --by user",
             "reason": "The next implementation step has not been approved.",
             "blocks": "implementation dispatch",
@@ -367,15 +518,38 @@ def infer_next_best_action(project: Path, state: dict) -> dict:
         return {
             "gate": "unitContextManifest",
             "route": "/task -> manifest",
-            "command": f"pfo manifest {project} --unit {unit} --goal \"Implement {unit}\"",
-            "reason": "Unit scope and verification contract must exist before implementation.",
+            "profile": profile_id,
+            "command": f"pfo manifest {project} --unit {unit} --goal \"Implement {unit}\" --profile {profile_id}",
+            "reason": f"Unit scope and {profile_id} verification contract must exist before implementation.",
             "blocks": "implementation dispatch",
+        }
+
+    if profile_id == "minimal" and not gate_passed(state, "scopeLock"):
+        return {
+            "gate": "scopeLock",
+            "route": "/task -> scope",
+            "profile": profile_id,
+            "command": f"pfo contracts {project}",
+            "reason": "Minimal tasks must prove scope before any verification or review.",
+            "blocks": "targeted verification",
+        }
+
+    if profile_id == "minimal" and not gate_passed(state, "targetedVerification"):
+        commands = profile.get("verificationPolicy", {}).get("defaultCommands", [])
+        return {
+            "gate": "targetedVerification",
+            "route": "/task -> targeted verification",
+            "profile": profile_id,
+            "command": " && ".join(expand_profile_command(command, project) for command in commands),
+            "reason": "Minimal tasks run only adoption, scope, targeted verification, review, and state-save.",
+            "blocks": "review",
         }
 
     if discipline.get("bugfix") and not gate_passed(state, "rootCause"):
         return {
             "gate": "rootCause",
             "route": "/task -> /bugfix",
+            "profile": profile_id,
             "command": f"pfo root-cause {project} --summary \"...\" --evidence \"...\" --hypothesis \"...\"",
             "reason": "Bugfix units require reproduction evidence and a fix hypothesis before implementation.",
             "blocks": "bugfix implementation",
@@ -385,6 +559,7 @@ def infer_next_best_action(project: Path, state: dict) -> dict:
         return {
             "gate": "tddRed",
             "route": "/task -> /test",
+            "profile": profile_id,
             "command": f"pfo tdd-evidence {project} --red \"failing test command and expected failure\"",
             "reason": "Behavior changes require failing-test evidence before implementation.",
             "blocks": "behavior implementation",
@@ -394,6 +569,7 @@ def infer_next_best_action(project: Path, state: dict) -> dict:
         return {
             "gate": "tddGreen",
             "route": "/task -> /test",
+            "profile": profile_id,
             "command": f"pfo tdd-evidence {project} --green \"passing test command after minimal implementation\"",
             "reason": "Behavior changes require passing-test evidence after implementation.",
             "blocks": "review",
@@ -403,15 +579,28 @@ def infer_next_best_action(project: Path, state: dict) -> dict:
         return {
             "gate": "verificationContract",
             "route": "/task -> contract gate",
+            "profile": profile_id,
             "command": f"pfo contracts {project}",
             "reason": "The verification contract has not passed.",
             "blocks": "review and deploy readiness",
+        }
+
+    if profile_id in {"standard", "full"} and not gate_passed(state, "targetedVerification"):
+        commands = profile.get("verificationPolicy", {}).get("defaultCommands", [])
+        return {
+            "gate": "targetedVerification",
+            "route": "/task -> targeted verification",
+            "profile": profile_id,
+            "command": " && ".join(expand_profile_command(command, project) for command in commands),
+            "reason": f"{profile_id} route requires route-relevant verification before review.",
+            "blocks": "quality review",
         }
 
     if gates.get("tests") in {"", "PENDING", "BLOCKED", None}:
         return {
             "gate": "tests",
             "route": "/task -> /test",
+            "profile": profile_id,
             "command": f"pfo test {project}",
             "reason": "Tests are not recorded as passed or accepted.",
             "blocks": "quality review",
@@ -421,6 +610,7 @@ def infer_next_best_action(project: Path, state: dict) -> dict:
         return {
             "gate": "specComplianceReview",
             "route": "/task -> /review",
+            "profile": profile_id,
             "command": f"pfo review-stage {project} --stage spec --status PASSED --evidence \"...\"",
             "reason": "Spec compliance review must run before code quality review.",
             "blocks": "code quality review",
@@ -430,15 +620,27 @@ def infer_next_best_action(project: Path, state: dict) -> dict:
         return {
             "gate": "codeQualityReview",
             "route": "/task -> /review",
+            "profile": profile_id,
             "command": f"pfo review-stage {project} --stage quality --status PASSED --evidence \"...\"",
             "reason": "Code quality review is not recorded.",
             "blocks": "branch finish and deploy readiness",
+        }
+
+    if profile_id == "minimal":
+        return {
+            "gate": "stateSave",
+            "route": "/task -> state-save",
+            "profile": profile_id,
+            "command": f"pfo full-cycle {project} --skip-plan --skip-test --skip-build --skip-review --note \"minimal route state-save\"",
+            "reason": f"Minimal route complete after {', '.join(profile.get('steps', []))}.",
+            "blocks": "",
         }
 
     if gates.get("branchFinish") in {"", "PENDING", "BLOCKED", None}:
         return {
             "gate": "branchFinish",
             "route": "/task -> /github-workflow",
+            "profile": profile_id,
             "command": f"pfo finish-branch {project} --mode pr --verification \"...\"",
             "reason": "Completed branch work needs an explicit PR, merge, keep, or discard decision.",
             "blocks": "release cleanup",
@@ -447,8 +649,9 @@ def infer_next_best_action(project: Path, state: dict) -> dict:
     return {
         "gate": "sessionSave",
         "route": "/task -> /session-save",
+        "profile": profile_id,
         "command": f"pfo full-cycle {project} --skip-plan --skip-test --skip-build --skip-review --note \"state save\"",
-        "reason": "Core gates are satisfied; save resumable state and continue to the next approved unit or deploy-readiness gate.",
+        "reason": f"Core {profile_id} gates are satisfied; save resumable state and continue to the next approved unit or deploy-readiness gate.",
         "blocks": "",
     }
 
@@ -1172,7 +1375,15 @@ Captured: {now_iso()}
 """
 
 
-def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str, behavior_change: bool = False, bugfix: bool = False) -> dict:
+def generated_unit_manifest(
+    project: Path,
+    state: dict,
+    unit_id: str,
+    goal: str,
+    behavior_change: bool = False,
+    bugfix: bool = False,
+    profile: str = "auto",
+) -> dict:
     node = unit_id or state.get("currentNode") or "N1"
     existing = state.get("existingProject", {})
     existing_route = existing.get("currentTaskRoute", "") if isinstance(existing, dict) else ""
@@ -1185,36 +1396,20 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
     ).lower()
     inferred_bugfix = bugfix or "/bugfix" in route or "bugfix" in route
     inferred_behavior_change = behavior_change or inferred_bugfix or "/kickstart" in route
+    profile_id, profile_reason = select_route_profile(
+        state,
+        goal,
+        explicit_profile=profile,
+        behavior_change=inferred_behavior_change,
+        bugfix=inferred_bugfix,
+    )
     return {
         "version": 1,
         "unitId": node,
         "goal": goal or f"Execute Product Factory OS unit {node}.",
         "createdAt": now_iso(),
-        "requiredInputs": [
-            "CODEX.md",
-            ".codex-memory/STATE.json",
-            ".pfo/PROJECT_CONTRACT.md",
-            ".pfo/SCOPE_LOCK.md",
-            ".pfo/EXECUTION_POLICY.json",
-            ".pfo/PERMISSION_MATRIX.md",
-            ".pfo/PERMISSION_MATRIX.json",
-            ".pfo/VERIFICATION_CONTRACT.json",
-            ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-            "IDEA_SCORECARD.md",
-            "VALIDATION_PLAN.md",
-            "PRODUCT_BLUEPRINT.md",
-            "BUILD_PLAN.md",
-            "EXECUTION_GRAPH.md",
-            "active PIV plan under plans/ before implementation",
-            "active implementation report under reports/ before review",
-            "NEXT_STEP.md with approved or changed user-facing next step",
-            "FEEDBACK_LOG.md and FUNNEL_MODEL.md when user acquisition or iteration is in scope",
-            "PHASE_CONTEXT.md when present",
-            ".pfo/EXPERIMENT_PROGRAM.md when autonomous measurement-driven iteration is in scope",
-            ".pfo/EXPERIMENTS.tsv when autonomous measurement-driven iteration is in scope",
-            "HANDOFF.md when switching sessions, roles, delegated agents, AFK execution, compaction, or recovery",
-            "ROOT_CAUSE.md for bugfix units",
-        ],
+        "routeProfile": route_profile_payload(profile_id, profile_reason, project),
+        "requiredInputs": required_inputs_for_profile(profile_id, inferred_behavior_change, inferred_bugfix),
         "allowedWriteAreas": [
             "files listed by the active execution graph node",
             "tests for changed behavior",
@@ -1236,13 +1431,7 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
             "commands or writes outside `.pfo/EXECUTION_POLICY.json` and `.pfo/PERMISSION_MATRIX.md`",
         ],
         "dependencies": [],
-        "verificationCommands": [
-            "commands declared in `.pfo/VERIFICATION_CONTRACT.json`",
-            "failing test command before implementation for behavior changes",
-            "passing test command after minimal implementation",
-            "project test command from TEST_PLAN.md",
-            "python3 scripts/pfo_contract_gate.py <project> when running from PFO root",
-        ],
+        "verificationCommands": profile_commands(profile_id, project),
         "contextPolicy": {
             "mode": "progressive-disclosure",
             "rules": [
@@ -1299,37 +1488,7 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
                 "conflicting or missing sensor evidence",
             ],
         },
-        "gates": [
-            "tddRed",
-            "tddGreen",
-            "rootCause",
-            "specComplianceReview",
-            "codeQualityReview",
-            "handoff",
-            "scopeLock",
-            "dataAuthenticity",
-            "goldenFlows",
-            "regressionContract",
-            "fallbackPolicy",
-            "diffRisk",
-            "securityEvidence",
-            "noSilentSubstitution",
-            "ideaGate",
-            "marketValidation",
-            "seoGrowthGuarantee",
-            "feedbackLoop",
-            "funnel",
-            "experimentSetup",
-            "experimentMetric",
-            "experimentDecision",
-            "executionPolicy",
-            "permissionMatrix",
-            "contextBudget",
-            "verificationContract",
-            "learningPromotion",
-            "toolCapabilityRegistry",
-            "nextStepApproval",
-        ],
+        "gates": gates_for_profile(profile_id, inferred_behavior_change, inferred_bugfix),
         "pivLoop": {
             "sourcePattern": "harness-engineering-demo PIV loop",
             "planPath": piv_paths(node)[0],
@@ -1375,11 +1534,27 @@ def generated_unit_manifest(project: Path, state: dict, unit_id: str, goal: str,
 
 def generated_verification_contract(project: Path, manifest: dict) -> dict:
     unit_id = manifest.get("unitId", "")
+    profile = manifest.get("routeProfile", {}) if isinstance(manifest.get("routeProfile"), dict) else {}
+    profile_id = str(profile.get("id") or "standard")
+    commands = profile_commands(profile_id, project)
+    command_items = []
+    for index, command in enumerate(commands, start=1):
+        command_items.append(
+            {
+                "id": f"{profile_id}-verification-{index}",
+                "command": command,
+                "timeoutSeconds": 90 if "production_readiness.py" not in command else 180,
+                "expectedOutput": "Command exits 0 and provides route-profile-relevant verification evidence.",
+                "passFailParser": "exit_code_zero",
+                "required": True,
+            }
+        )
     return {
         "version": 1,
         "purpose": "Executable verification contract for the active PFO unit.",
         "unitId": unit_id,
         "createdAt": now_iso(),
+        "routeProfile": profile,
         "sensorPolicy": {
             "qualityLeft": "Run fast computational sensors locally before broader or inferential gates.",
             "regulates": ["maintainability", "architecture_fitness", "behaviour"],
@@ -1387,35 +1562,8 @@ def generated_verification_contract(project: Path, manifest: dict) -> dict:
             "pipelineSensors": ["full fixture suite", "production readiness", "security/dependency gates when applicable"],
             "continuousSensors": ["state freshness", "dependency drift", "benchmarks or runtime health when available"],
         },
-        "commands": [
-            {
-                "id": "pfo-contract-gate",
-                "command": f"{sys.executable} {ROOT / 'scripts' / 'pfo_contract_gate.py'} {project}",
-                "timeoutSeconds": 90,
-                "expectedOutput": "PFO contract gate reports PASS or PASS_WITH_WARNINGS; BLOCKED requires recovery.",
-                "passFailParser": "exit_code_zero",
-                "required": True,
-            },
-            {
-                "id": "context-runtime",
-                "command": f"{sys.executable} {ROOT / 'scripts' / 'validate_context_runtime.py'}",
-                "timeoutSeconds": 90,
-                "expectedOutput": "Context runtime budget, search index, snapshot, and hook routing validate successfully.",
-                "passFailParser": "exit_code_zero",
-                "required": True,
-            }
-        ],
-        "requiredArtifacts": [
-            ".codex-memory/STATE.json",
-            ".pfo/UNIT_CONTEXT_MANIFEST.json",
-            ".pfo/EXECUTION_POLICY.json",
-            ".pfo/PERMISSION_MATRIX.md",
-            ".pfo/PERMISSION_MATRIX.json",
-            ".codex-memory/context-index.json",
-            ".codex-memory/resume-snapshot.md",
-            ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-            piv_paths(unit_id)[0],
-        ],
+        "commands": command_items,
+        "requiredArtifacts": manifest.get("requiredInputs", []),
         "passCriteria": [
             "All required commands exit 0.",
             "Expected output rules match.",
@@ -2219,7 +2367,7 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
     ensure_autonomy_state(state)
-    manifest = generated_unit_manifest(project, state, args.unit, args.goal, args.behavior_change, args.bugfix)
+    manifest = generated_unit_manifest(project, state, args.unit, args.goal, args.behavior_change, args.bugfix, args.profile)
     pfo_dir = project / ".pfo"
     pfo_dir.mkdir(exist_ok=True)
     manifest_path = pfo_dir / "UNIT_CONTEXT_MANIFEST.json"
@@ -2243,6 +2391,7 @@ def cmd_manifest(args: argparse.Namespace) -> int:
         "planPath": plan_rel,
     }
     state["unitContextManifest"] = manifest
+    state["activeRouteProfile"] = manifest["routeProfile"]
     state["executionPolicy"] = {"path": ".pfo/EXECUTION_POLICY.json", "status": "READY"}
     state["permissionMatrix"] = {"path": ".pfo/PERMISSION_MATRIX.json", "humanPath": ".pfo/PERMISSION_MATRIX.md", "status": "READY"}
     state["contextBudget"] = {"gate": "pfo context-budget", "indexPath": ".codex-memory/context-index.json", "snapshotPath": ".codex-memory/resume-snapshot.md", "status": "READY"}
@@ -2269,7 +2418,11 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     )
     append_event(project, state, "state-change", "READY", {"command": "manifest", "unitId": manifest["unitId"]})
     save_state(project, state)
-    print(f"OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json, .pfo/VERIFICATION_CONTRACT.json, and {plan_rel}")
+    print(
+        "OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json, "
+        f".pfo/VERIFICATION_CONTRACT.json, and {plan_rel} "
+        f"with {manifest['routeProfile']['id']} profile"
+    )
     return 0
 
 
@@ -2471,6 +2624,7 @@ def cmd_verify_work(args: argparse.Namespace) -> int:
             raise SystemExit("ERROR: cannot pass verification without a ready .pfo/VERIFICATION_CONTRACT.json")
         state["gateResults"]["review"] = "PASSED"
         state["gateResults"]["verificationContract"] = "PASSED"
+        state["gateResults"]["targetedVerification"] = "PASSED"
         state["lastSuccessfulState"] = "VERIFYING_WORK"
         state["nextAction"] = "Run tests and quality gates, then proceed to review or next unit."
         manifest = state.get("unitContextManifest", {}) if isinstance(state.get("unitContextManifest"), dict) else {}
@@ -3112,6 +3266,7 @@ def build_parser() -> argparse.ArgumentParser:
     manifest.add_argument("project", type=Path)
     manifest.add_argument("--unit", default="")
     manifest.add_argument("--goal", default="")
+    manifest.add_argument("--profile", choices=["auto", "minimal", "standard", "full"], default="auto", help="Route profile for gate and artifact scope.")
     manifest.add_argument("--behavior-change", action="store_true", help="Require TDD evidence for this unit.")
     manifest.add_argument("--bugfix", action="store_true", help="Require ROOT_CAUSE.md before implementation.")
     manifest.set_defaults(func=cmd_manifest)

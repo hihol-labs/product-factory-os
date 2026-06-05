@@ -5,7 +5,9 @@
   "packageFiles": [
     "skills/browser-check/playwright/package.json"
   ],
-  "detectedStack": [],
+  "detectedStack": [
+    "Docker"
+  ],
   "availableCommands": [
     {
       "name": "check",
@@ -16,61 +18,29 @@
   "gateRuns": [],
   "securityFindings": [],
   "contractGate": {
-    "status": "PASS_WITH_WARNINGS",
-    "changedFiles": [
-      ".github/workflows/validate.yml",
-      "CHANGELOG.md",
-      "docs/DEFENSIVE_LAYERS.md",
-      "docs/INSTALL.md",
-      "docs/PRODUCTION_READINESS.md",
-      "reports/self-runtime-security-review.md",
-      "reports/self-runtime-security/candidate_ledger.jsonl",
-      "reports/self-runtime-security/deep_review_input.csv",
-      "reports/self-runtime-security/repository_coverage_ledger.md",
-      "reports/self-runtime-security/work_ledger.jsonl",
-      "scripts/install_workspace.py",
-      "scripts/meta_review.py",
-      "scripts/pfo_contract_gate.py",
-      "scripts/production_readiness.py",
-      "scripts/release_check.py",
-      "scripts/validate_defensive_layers.py",
-      "scripts/validate_runtime.py",
-      "scripts/validate_self_contracts.py",
-      "scripts/validate_structure.py",
-      "scripts/verify_install_sync.py"
-    ],
+    "status": "PASS",
+    "changedFiles": [],
     "runtimeChangedFiles": [
-      ".pfo/FALLBACK_POLICY.md",
-      ".pfo/FORBIDDEN_CHANGES.md",
-      ".pfo/PROJECT_CONTRACT.md",
+      "HANDOFF.md",
       "NEXT_STEP.md",
       "PFO_CONTRACT_GATE.json",
       "PFO_EXISTING_PROJECT_ANALYSIS.json",
       "PFO_REPORT.md"
     ],
-    "riskClasses": [
-      "business_logic_change",
-      "data_source_change",
-      "dependency_change",
-      "deployment_change",
-      "security_change",
-      "user_facing_output_change"
-    ],
+    "riskClasses": [],
     "missingContracts": [],
     "placeholderContracts": [],
     "aliasTargetErrors": [],
     "blockers": [],
-    "warnings": [
-      "dependency diff also touches data sources or user-facing output; verify Scope Lock explicitly."
-    ],
+    "warnings": [],
     "gates": {
       "aliasTargets": "PASS",
-      "scopeLock": "PASS_WITH_WARNINGS",
+      "scopeLock": "PASS",
       "dataAuthenticity": "PASS",
       "goldenFlows": "PASS",
       "regressionContract": "PASS",
       "fallbackPolicy": "PASS",
-      "diffRisk": "PASS_WITH_WARNINGS",
+      "diffRisk": "PASS",
       "securityEvidence": "PASS",
       "noSilentSubstitution": "PASS",
       "executionPolicy": "PASS",
@@ -86,7 +56,9 @@
     "domain": "existing project inferred from repository docs and stack",
     "complexity": "medium",
     "requiredModules": [],
-    "infrastructure": []
+    "infrastructure": [
+      "Docker"
+    ]
   },
   "architecture": {
     "pattern": "modular monolith",
@@ -94,7 +66,7 @@
     "frontend": "",
     "database": "",
     "auth": "project-specific auth",
-    "deployment": "project-specific deployment"
+    "deployment": "Docker"
   },
-  "summary": "Detected Existing Software Project with unknown stack. Ran 0 gate command(s)."
+  "summary": "Detected Existing Software Project with Docker. Ran 0 gate command(s)."
 }

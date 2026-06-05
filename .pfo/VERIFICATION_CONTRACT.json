@@ -1,8 +1,65 @@
 {
   "version": 1,
   "purpose": "Executable verification contract for the active PFO unit.",
-  "unitId": "self-runtime",
-  "createdAt": "2026-06-05T16:40:04+00:00",
+  "unitId": "route-profiles-overhead",
+  "createdAt": "2026-06-05T22:09:43+00:00",
+  "routeProfile": {
+    "id": "standard",
+    "label": "Standard route profile",
+    "reason": "explicit profile selection",
+    "intendedFor": "Default non-trivial existing-project implementation, bugfix, refactor, test, or documentation work.",
+    "steps": [
+      "adoption",
+      "repositoryAnalysis",
+      "taskClassification",
+      "unitManifest",
+      "targetedVerification",
+      "review",
+      "stateSave"
+    ],
+    "gates": [
+      "adoption",
+      "scopeLock",
+      "verificationContract",
+      "targetedVerification",
+      "specComplianceReview",
+      "codeQualityReview",
+      "contextBudget",
+      "toolCapabilityRegistry"
+    ],
+    "requiredArtifacts": [
+      "AGENTS.md",
+      "CODEX.md",
+      ".codex-memory/STATE.json",
+      ".pfo/PROJECT_CONTRACT.md",
+      ".pfo/SCOPE_LOCK.md",
+      ".pfo/EXECUTION_POLICY.json",
+      ".pfo/PERMISSION_MATRIX.json",
+      ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+      ".pfo/UNIT_CONTEXT_MANIFEST.json",
+      ".pfo/VERIFICATION_CONTRACT.json",
+      "active PIV plan under plans/ before implementation",
+      "active implementation report under reports/ before review",
+      "NEXT_STEP.md with approved or changed user-facing next step"
+    ],
+    "optionalArtifacts": [
+      "ROOT_CAUSE.md for bugfix units",
+      "HANDOFF.md when switching sessions, roles, delegated agents, AFK execution, compaction, or recovery",
+      "TEST_PLAN.md when behavior coverage changes"
+    ],
+    "forbiddenArtifacts": [],
+    "verificationPolicy": {
+      "mode": "targeted-plus-contracts",
+      "commands": [
+        "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os",
+        "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_context_runtime.py"
+      ],
+      "rules": [
+        "Run route-relevant validators and targeted tests before review.",
+        "Escalate to full only when product scope, release, security, migration, deploy, or broad workflow risk changes."
+      ]
+    }
+  },
   "sensorPolicy": {
     "qualityLeft": "Run fast computational sensors locally before broader or inferential gates.",
     "regulates": [
@@ -29,32 +86,36 @@
   },
   "commands": [
     {
-      "id": "pfo-contract-gate",
+      "id": "standard-verification-1",
       "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os",
       "timeoutSeconds": 90,
-      "expectedOutput": "PFO contract gate reports PASS or PASS_WITH_WARNINGS; BLOCKED requires recovery.",
+      "expectedOutput": "Command exits 0 and provides route-profile-relevant verification evidence.",
       "passFailParser": "exit_code_zero",
       "required": true
     },
     {
-      "id": "context-runtime",
+      "id": "standard-verification-2",
       "command": "/usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_context_runtime.py",
       "timeoutSeconds": 90,
-      "expectedOutput": "Context runtime budget, search index, snapshot, and hook routing validate successfully.",
+      "expectedOutput": "Command exits 0 and provides route-profile-relevant verification evidence.",
       "passFailParser": "exit_code_zero",
       "required": true
     }
   ],
   "requiredArtifacts": [
+    "AGENTS.md",
+    "CODEX.md",
     ".codex-memory/STATE.json",
-    ".pfo/UNIT_CONTEXT_MANIFEST.json",
+    ".pfo/PROJECT_CONTRACT.md",
+    ".pfo/SCOPE_LOCK.md",
     ".pfo/EXECUTION_POLICY.json",
-    ".pfo/PERMISSION_MATRIX.md",
     ".pfo/PERMISSION_MATRIX.json",
-    ".codex-memory/context-index.json",
-    ".codex-memory/resume-snapshot.md",
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-    "plans/self-runtime-piv-plan.md"
+    ".pfo/UNIT_CONTEXT_MANIFEST.json",
+    ".pfo/VERIFICATION_CONTRACT.json",
+    "active PIV plan under plans/ before implementation",
+    "active implementation report under reports/ before review",
+    "NEXT_STEP.md with approved or changed user-facing next step"
   ],
   "passCriteria": [
     "All required commands exit 0.",
