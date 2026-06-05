@@ -12,6 +12,7 @@ This gate runs:
 - Engineering Discipline v2 self-check
 - control harness validation
 - defensive layer diagnostics
+- self-adopted contract validation
 - route fixtures
 - trigger drift verification
 - behavioural fixture contracts

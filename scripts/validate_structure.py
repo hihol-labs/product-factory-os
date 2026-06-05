@@ -205,6 +205,7 @@ REQUIRED_FILES = [
     "scripts/validate_plan_quality.py",
     "scripts/validate_control_harness.py",
     "scripts/validate_defensive_layers.py",
+    "scripts/validate_self_contracts.py",
     "scripts/pfo_contract_gate.py",
     "scripts/pfo_permission_gate.py",
     "scripts/pfo_event_log.py",

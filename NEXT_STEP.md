@@ -5,30 +5,30 @@ This is the user-facing project steering checkpoint. It intentionally avoids int
 ## Where We Are
 
 - Product: Existing project `product-factory-os` analyzed by Product Factory OS.
-- Current outcome: Unit `harness-defensive-layers` is implemented and verified.
-- Recommended next step: Review draft PR https://github.com/hihol-labs/product-factory-os/pull/39.
-- Approval status: APPROVED
+- Current outcome: Next best action selected from state gate `planning`.
+- Recommended next step: pfo plan /home/hihol/projects/product-factory-os
+- Approval status: PENDING
 
 ## Visible Roadmap
 
 | Step | Outcome | Status |
 |---|---|---|
-| 1 | Add five-layer defensive diagnostics | done |
-| 2 | Review draft PR https://github.com/hihol-labs/product-factory-os/pull/39 and merge when accepted | pending |
+| 1 | Define the first product milestone | pending |
 
 ## Recommended Next Step
 
-- Step: Review draft PR https://github.com/hihol-labs/product-factory-os/pull/39 for `codex/harness-defensive-layers`.
-- Why now: Implementation, contract gates, security evidence, two-stage review, and production readiness are complete.
-- Files likely touched: none unless PR review requests changes.
-- Verification: `python3 scripts/production_readiness.py` and `python3 scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os --write --json`.
+- Step: pfo plan /home/hihol/projects/product-factory-os
+- Why now: It is the smallest coherent step that moves the product forward.
+- Files likely touched: use `BUILD_PLAN.md` and `.pfo/UNIT_CONTEXT_MANIFEST.json`.
+- Verification: use `TEST_PLAN.md` and `.pfo/VERIFICATION_CONTRACT.json`.
 
 ## Alternatives
 
-- Merge the PR after review.
-- Request targeted changes on the PR.
-- Keep the branch for follow-up validation.
+- Run the recommended command.
+- Change the route or scope before continuing.
+- Pause and inspect PFO status manually.
 
 ## Decision Needed
 
-- Review the draft PR once opened.
+- Do you approve the recommended next gate action?
+- Should PFO choose a different route before implementation continues?

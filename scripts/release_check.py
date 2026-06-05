@@ -28,6 +28,7 @@ def main() -> None:
     run([sys.executable, "scripts/validate_plan_quality.py", "--self-check"])
     run([sys.executable, "scripts/validate_control_harness.py"])
     run([sys.executable, "scripts/validate_defensive_layers.py"])
+    run([sys.executable, "scripts/validate_self_contracts.py"])
     run([sys.executable, "scripts/run_fixtures.py"])
     run([sys.executable, "scripts/verify_triggers.py"])
     run([sys.executable, "scripts/verify_fixture_contracts.py"])

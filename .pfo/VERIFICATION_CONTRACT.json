@@ -1,8 +1,8 @@
 {
   "version": 1,
   "purpose": "Executable verification contract for the active PFO unit.",
-  "unitId": "harness-defensive-layers",
-  "createdAt": "2026-06-05T07:41:52+00:00",
+  "unitId": "self-runtime",
+  "createdAt": "2026-06-05T16:40:04+00:00",
   "sensorPolicy": {
     "qualityLeft": "Run fast computational sensors locally before broader or inferential gates.",
     "regulates": [
@@ -54,7 +54,7 @@
     ".codex-memory/context-index.json",
     ".codex-memory/resume-snapshot.md",
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
-    "plans/harness-defensive-layers-piv-plan.md"
+    "plans/self-runtime-piv-plan.md"
   ],
   "passCriteria": [
     "All required commands exit 0.",

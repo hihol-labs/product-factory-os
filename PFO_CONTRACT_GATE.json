@@ -1,48 +1,23 @@
 {
-  "status": "PASS_WITH_WARNINGS",
-  "changedFiles": [
-    "BRANCH_FINISH.md",
-    "NEXT_STEP.md",
-    "reports/harness-defensive-layers-security-review.md",
-    "reports/harness-defensive-layers/security/candidate_ledger.jsonl",
-    "reports/harness-defensive-layers/security/deep_review_input.csv",
-    "reports/harness-defensive-layers/security/repository_coverage_ledger.md",
-    "reports/harness-defensive-layers/security/work_ledger.jsonl"
-  ],
+  "status": "PASS",
+  "changedFiles": [],
   "runtimeChangedFiles": [
-    "PFO_CONTRACT_GATE.json"
+    "BRANCH_FINISH.md"
   ],
-  "riskClasses": [
-    "business_logic_change",
-    "data_source_change",
-    "dependency_change",
-    "deployment_change",
-    "provider_integration_change",
-    "security_change",
-    "user_facing_output_change"
-  ],
+  "riskClasses": [],
   "missingContracts": [],
-  "placeholderContracts": [
-    ".pfo/PROJECT_CONTRACT.md",
-    ".pfo/FORBIDDEN_CHANGES.md",
-    ".pfo/FALLBACK_POLICY.md"
-  ],
+  "placeholderContracts": [],
   "aliasTargetErrors": [],
   "blockers": [],
-  "warnings": [
-    "placeholder contract content: .pfo/PROJECT_CONTRACT.md",
-    "placeholder contract content: .pfo/FORBIDDEN_CHANGES.md",
-    "placeholder contract content: .pfo/FALLBACK_POLICY.md",
-    "dependency diff also touches data sources or user-facing output; verify Scope Lock explicitly."
-  ],
+  "warnings": [],
   "gates": {
     "aliasTargets": "PASS",
-    "scopeLock": "PASS_WITH_WARNINGS",
+    "scopeLock": "PASS",
     "dataAuthenticity": "PASS",
     "goldenFlows": "PASS",
-    "regressionContract": "PASS_WITH_WARNINGS",
+    "regressionContract": "PASS",
     "fallbackPolicy": "PASS",
-    "diffRisk": "PASS_WITH_WARNINGS",
+    "diffRisk": "PASS",
     "securityEvidence": "PASS",
     "noSilentSubstitution": "PASS",
     "executionPolicy": "PASS",

@@ -7,11 +7,11 @@ Architecture: `modular monolith`
 
 ## State
 
-- Current stage: `EXISTING_PROJECT_ANALYZED`
-- Current node: `security-audit-v2`
-- Current unit: `security-audit-v2`
+- Current stage: `BRANCH_FINISH`
+- Current node: `self-runtime`
+- Current unit: `self-runtime`
 - Last successful state: `VERIFYING_WORK`
-- Next action: Review NEXT_STEP.md and approve or change the next task before implementation.
+- Next action: Finish branch using the recorded PR/merge/keep/discard decision.
 - Recovery: `` 
 - Root cause: `` 
 - Handoff: `` 
@@ -20,8 +20,8 @@ Architecture: `modular monolith`
 
 - Approval required: `True`
 - Approval status: `PENDING`
-- Recommended next step: Resolve analyzer blockers before any implementation work.
-- Last iteration summary: Detected Existing Software Project with unknown stack. Ran 0 gate command(s).
+- Recommended next step: pfo plan /home/hihol/projects/product-factory-os
+- Last iteration summary: Next best action selected from state gate `planning`.
 - Steering artifact: `NEXT_STEP.md`
 
 ## Experiment Loop
@@ -36,7 +36,7 @@ Architecture: `modular monolith`
 ## Existing Project Analysis
 
 - Detected stack: none
-- Available commands: none
+- Available commands: python3 scripts/check.py
 - Summary: Detected Existing Software Project with unknown stack. Ran 0 gate command(s).
 
 ## Gates
@@ -49,11 +49,11 @@ Architecture: `modular monolith`
 | feedbackLoop |  |
 | funnel |  |
 | architecture | PASS_WITH_WARNINGS |
-| tests | NOT_CONFIGURED |
-| review | NOT_RUN |
-| tddRed |  |
-| tddGreen |  |
-| tddRefactor |  |
+| tests | NOT_RUN |
+| review | PASSED |
+| tddRed | PASSED |
+| tddGreen | PASSED |
+| tddRefactor | PASSED |
 | rootCause |  |
 | specComplianceReview | PASSED |
 | codeQualityReview | PASSED |
@@ -68,17 +68,17 @@ Architecture: `modular monolith`
 | experimentSetup |  |
 | experimentMetric |  |
 | experimentDecision |  |
-| executionPolicy | PASS |
-| permissionMatrix | PASS |
-| verificationContract | PASS |
+| executionPolicy | PASSED |
+| permissionMatrix | PASSED |
+| verificationContract | PASSED |
 | learningPromotion | PASS |
-| toolCapabilityRegistry | PASS |
+| toolCapabilityRegistry | PASSED |
 | deploymentReadiness | PASS |
 | aliasTargets | PASS |
 | scopeLock | PASS_WITH_WARNINGS |
 | dataAuthenticity | PASS |
 | goldenFlows | PASS |
-| regressionContract | PASS_WITH_WARNINGS |
+| regressionContract | PASS |
 | fallbackPolicy | PASS |
 | diffRisk | PASS_WITH_WARNINGS |
 | noSilentSubstitution | PASS |
@@ -88,7 +88,7 @@ Architecture: `modular monolith`
 
 ## Blockers
 
-- No root test/typecheck script was detected.
+- none
 
 ## Verification History
 
@@ -145,24 +145,40 @@ Architecture: `modular monolith`
 - {'mode': 'existing-project-analyze', 'stage': 'EXISTING_PROJECT_ANALYZED', 'status': 'BLOCKED', 'summary': 'Detected Existing Software Project with unknown stack. Ran 0 gate command(s).'}
 - {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'security-audit-v2', 'evidence': 'Fully implemented Skill creator improvements: PFO skill-scaffold plus headless expected/actual comparison reports for mock/live command runs. Verified comparison artifacts with skill-create fixture and passed validate_structure, validate_runtime, run_fixtures, verify_fixture_contracts, run_headless_fixtures --mode mock, verify_skill_profiles, validate_hooks, validate_control_harness, verify_install_sync, meta_review, production_readiness.', 'recordedAt': '2026-06-05T06:45:45+00:00'}
 - {'mode': 'existing-project-analyze', 'stage': 'EXISTING_PROJECT_ANALYZED', 'status': 'BLOCKED', 'summary': 'Detected Existing Software Project with unknown stack. Ran 0 gate command(s).'}
+- {'mode': 'tdd-evidence', 'node': 'harness-defensive-layers', 'evidence': {'red': 'python3 scripts/validate_defensive_layers.py failed before implementation: script missing, so five-layer defensive diagnostics are not yet executable', 'green': '', 'refactor': '', 'lastRecordedAt': '2026-06-05T07:42:39+00:00'}}
+- {'mode': 'tdd-evidence', 'node': 'harness-defensive-layers', 'evidence': {'red': 'python3 scripts/validate_defensive_layers.py failed before implementation: script missing, so five-layer defensive diagnostics are not yet executable', 'green': 'python3 scripts/validate_defensive_layers.py, validate_control_harness.py, validate_structure.py, validate_runtime.py, verify_install_sync.py, meta_review.py, and production_readiness.py passed after implementation', 'refactor': 'Not applicable: No separate refactor phase; change is a new diagnostic validator plus wiring.', 'lastRecordedAt': '2026-06-05T07:55:27+00:00'}}
+- {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'harness-defensive-layers', 'evidence': 'Implemented five-layer defensive diagnostics: docs/DEFENSIVE_LAYERS.md, validate_defensive_layers.py, control harness entry, CI/release/production readiness wiring, install/meta/install-sync docs, scope lock, changelog. Passed: py_compile, validate_defensive_layers, validate_control_harness, validate_structure, validate_runtime, verify_install_sync, validate_plan_quality self-check, meta_review, production_readiness.', 'recordedAt': '2026-06-05T07:56:01+00:00'}
+- {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'harness-defensive-layers', 'evidence': 'Final defensive-layer diagnostics verification passed: validate_defensive_layers, validate_control_harness, validate_structure, validate_runtime, verify_install_sync, validate_plan_quality self-check, meta_review, validate_security_report with artifacts, pfo_contract_gate PASS_WITH_WARNINGS with securityEvidence PASS, and production_readiness passed.', 'recordedAt': '2026-06-05T08:00:17+00:00'}
+- {'mode': 'review-stage', 'stage': 'quality', 'status': 'PASSED', 'evidence': 'Quality review passed: deterministic validator is scoped, read-only, fail-closed, documented, and wired into CI/release/production readiness; final gates passed.'}
+- {'mode': 'review-stage', 'stage': 'spec', 'status': 'PASSED', 'evidence': 'Spec review passed: implementation directly satisfies the requested five defensive layers, systematic checks, changelog, and verification/PR workflow requirements.'}
+- {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'harness-defensive-layers', 'evidence': 'Final defensive-layer diagnostics verification and two-stage review passed: validate_defensive_layers, validate_control_harness, validate_structure, validate_runtime, verify_install_sync, validate_plan_quality self-check, meta_review, validate_security_report with artifacts, pfo_contract_gate PASS_WITH_WARNINGS with securityEvidence PASS, production_readiness, spec review, and quality review.', 'recordedAt': '2026-06-05T08:11:41+00:00'}
+- {'mode': 'existing-project-analyze', 'stage': 'EXISTING_PROJECT_ANALYZED', 'status': 'BLOCKED', 'summary': 'Detected Existing Software Project with unknown stack. Ran 0 gate command(s).'}
+- {'mode': 'existing-project-analyze', 'stage': 'REVIEWING', 'status': 'BLOCKED', 'summary': 'Detected Existing Software Project with unknown stack. Ran 1 gate command(s).'}
+- {'mode': 'existing-project-analyze', 'stage': 'REVIEWING', 'status': 'BLOCKED', 'summary': 'Detected Existing Software Project with unknown stack. Ran 1 gate command(s).'}
+- {'mode': 'existing-project-analyze', 'stage': 'EXISTING_PROJECT_ANALYZED', 'status': 'BLOCKED', 'summary': 'Detected Existing Software Project with unknown stack. Ran 0 gate command(s).'}
+- {'mode': 'existing-project-analyze', 'stage': 'EXISTING_PROJECT_ANALYZED', 'status': 'BLOCKED', 'summary': 'Detected Existing Software Project with unknown stack. Ran 0 gate command(s).'}
+- {'mode': 'existing-project-analyze', 'stage': 'EXISTING_PROJECT_ANALYZED', 'status': 'PASS', 'summary': 'Detected Existing Software Project with unknown stack. Ran 0 gate command(s).'}
+- {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'self-runtime', 'evidence': 'Self-runtime fixed: managed pfo wrapper installed and verified via wsl pfo; .pfo self-contracts contain concrete project rules; pfo_contract_gate excludes runtime-only reports from product security evidence and temporary NEXT_STEP-only proof passed; validate_self_contracts wired into CI/release/production readiness; security evidence artifacts validated; pfo_contract_gate PASS_WITH_WARNINGS with no blockers and securityEvidence PASS; production_readiness and pfo check --no-smoke passed.', 'recordedAt': '2026-06-05T16:40:16+00:00'}
+- {'mode': 'review-stage', 'stage': 'spec', 'status': 'PASSED', 'evidence': 'Spec passed: all requested self-runtime items are implemented: WSL pfo wrapper, concrete self .pfo contracts, runtime-only report security scope, self-contract validator, changelog, and verification evidence.'}
+- {'mode': 'review-stage', 'stage': 'quality', 'status': 'PASSED', 'evidence': 'Quality passed: py_compile, validate_self_contracts, validate_security_report with artifacts, runtime-only synthetic contract-gate proof, pfo_contract_gate PASS_WITH_WARNINGS with no blockers and securityEvidence PASS, production_readiness, and pfo check --no-smoke passed.'}
 
 ## TDD Evidence
 
-- Red: none
-- Green: none
-- Refactor: none
+- Red: python3 scripts/validate_defensive_layers.py failed before implementation: script missing, so five-layer defensive diagnostics are not yet executable
+- Green: python3 scripts/validate_defensive_layers.py, validate_control_harness.py, validate_structure.py, validate_runtime.py, verify_install_sync.py, meta_review.py, and production_readiness.py passed after implementation
+- Refactor: Not applicable: No separate refactor phase; change is a new diagnostic validator plus wiring.
 
 ## Review Stages
 
-- Spec compliance: `PASSED` Final spec check passed: all six requested Context Mode-inspired runtime items are implemented and contextBudget gate is PASSED.
-- Code quality: `PASSED` Final quality passed after stale-artifact guard: securityEvidence requires changed report and changed coverage artifacts; production_readiness passed.
+- Spec compliance: `PASSED` Spec passed: all requested self-runtime items are implemented: WSL pfo wrapper, concrete self .pfo contracts, runtime-only report security scope, self-contract validator, changelog, and verification evidence.
+- Code quality: `PASSED` Quality passed: py_compile, validate_self_contracts, validate_security_report with artifacts, runtime-only synthetic contract-gate proof, pfo_contract_gate PASS_WITH_WARNINGS with no blockers and securityEvidence PASS, production_readiness, and pfo check --no-smoke passed.
 
 ## Branch Finish
 
 - Mode: `pr`
 - Status: `PASSED`
-- Verification: Implemented security-audit v2, validation suite passed, draft PR created: https://github.com/hihol-labs/product-factory-os/pull/35
-- PR: https://github.com/hihol-labs/product-factory-os/pull/35
+- Verification: PR created after commit a93eb00 and push; validation passed: validate_self_contracts, validate_security_report with self-runtime artifacts, pfo_contract_gate PASS_WITH_WARNINGS with no blockers and securityEvidence PASS, production_readiness, wsl pfo check --no-smoke.
+- PR: https://github.com/hihol-labs/product-factory-os/pull/42
 
 ## Dispatch Journal
 
@@ -171,9 +187,9 @@ Architecture: `modular monolith`
 ## Telemetry
 
 - Units: `0`
-- Verifications: `16`
+- Verifications: `21`
 - Token notes: none
 - Cost notes: none
-- Event log: `.codex-memory/events.jsonl` last `event-20260605T072139Z-snapshot`
+- Event log: `.codex-memory/events.jsonl` last `event-20260605T165651Z-1`
 - Permission matrix: `.pfo/PERMISSION_MATRIX.json` `READY`
 - Tool registry: `.pfo/TOOL_CAPABILITY_REGISTRY.json` `READY`
