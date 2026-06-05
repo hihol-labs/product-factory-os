@@ -331,17 +331,19 @@ def root_command(manager: str, script: str) -> list[str]:
     return []
 
 
-def available_commands(root_package: dict[str, Any], manager: str) -> list[dict[str, str]]:
+def available_commands(project: Path, root_package: dict[str, Any], manager: str) -> list[dict[str, str]]:
     scripts = root_package.get("scripts", {})
     commands = []
     for script in sorted(scripts):
         command = root_command(manager, script)
         if command:
             commands.append({"name": script, "command": " ".join(command)})
+    if (project / "scripts" / "check.py").is_file():
+        commands.append({"name": "check", "command": "python3 scripts/check.py"})
     return commands
 
 
-def select_gates(root_package: dict[str, Any], manager: str) -> list[dict[str, Any]]:
+def select_gates(project: Path, root_package: dict[str, Any], manager: str) -> list[dict[str, Any]]:
     scripts = root_package.get("scripts", {})
     gates = []
     for script, gate in [
@@ -352,6 +354,8 @@ def select_gates(root_package: dict[str, Any], manager: str) -> list[dict[str, A
     ]:
         if script in scripts:
             gates.append({"gate": gate, "script": script, "command": root_command(manager, script)})
+    if (project / "scripts" / "check.py").is_file():
+        gates.append({"gate": "tests", "script": "check", "command": [sys.executable, "scripts/check.py", "--no-smoke"]})
     return gates
 
 
@@ -484,7 +488,7 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
         gate_results["review"] = "NOT_RUN"
     if "tests" in ran:
         gate_results["tests"] = "PASS" if ran["tests"]["status"] == "PASS" else "BLOCKED"
-    elif {"test", "typecheck"} & available_command_names:
+    elif {"test", "typecheck", "check"} & available_command_names:
         gate_results["tests"] = "NOT_RUN"
     else:
         gate_results["tests"] = "NOT_CONFIGURED"
@@ -502,7 +506,7 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
     blockers.extend(analysis["securityFindings"])
     blockers.extend(analysis.get("contractGate", {}).get("blockers", []))
     if gate_results["tests"] == "NOT_CONFIGURED":
-        blockers.append("No root test/typecheck script was detected.")
+        blockers.append("No root test/typecheck/check script was detected.")
     state["blockers"] = blockers
     steering = state.setdefault("humanSteering", default_human_steering())
     steering["approvalRequired"] = True
@@ -554,8 +558,8 @@ def analyze(project: Path, run_gates: bool, timeout: int) -> dict[str, Any]:
     root_package = read_json(project / "package.json")
     manager = package_manager(project, root_package)
     stack = detect_stack(project, packages)
-    commands = available_commands(root_package, manager)
-    gates = select_gates(root_package, manager) if run_gates else []
+    commands = available_commands(project, root_package, manager)
+    gates = select_gates(project, root_package, manager) if run_gates else []
     gate_runs = [run_gate(project, gate, timeout) for gate in gates]
     security = security_findings(project)
     contract_gate = run_contract_gate(project)

@@ -183,6 +183,7 @@ REQUIRED_FILES = [
     "tests/fixture-contracts.json",
     "tests/snapshots/route-snapshots.json",
     "scripts/run_fixtures.py",
+    "scripts/check.py",
     "scripts/run_headless_fixtures.py",
     "scripts/pfo_headless_adapter.py",
     "scripts/verify_triggers.py",

@@ -3021,6 +3021,13 @@ def cmd_contracts(args: argparse.Namespace) -> int:
     return run_script("pfo_contract_gate.py", argv)
 
 
+def cmd_check(args: argparse.Namespace) -> int:
+    argv = []
+    if args.no_smoke:
+        argv.append("--no-smoke")
+    return run_script("check.py", argv)
+
+
 def cmd_resume(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     run_script("pfo_context_runtime.py", ["snapshot", str(project), "--reason", "resume", "--quiet"])
@@ -3143,6 +3150,10 @@ def build_parser() -> argparse.ArgumentParser:
     full_cycle.add_argument("--skip-review", action="store_true")
     full_cycle.add_argument("--stop-on-blocked", action="store_true", help="Stop immediately when a lifecycle step is blocked.")
     full_cycle.set_defaults(func=cmd_full_cycle)
+
+    check = sub.add_parser("check", help="Run the root Product Factory OS check command.")
+    check.add_argument("--no-smoke", action="store_true", help="Skip temporary generated-project smoke checks.")
+    check.set_defaults(func=cmd_check)
 
     verify_work = sub.add_parser("verify-work", help="Record post-unit verification; fail closed by default.")
     verify_work.add_argument("project", type=Path)

@@ -10,6 +10,7 @@ Product Factory OS remains the source of truth for artifacts, state, routing, ga
 - Brainstorm route: rough ideas go through `/brainstorm` before discovery, advisory, stress-test, strategy, or planning-only artifacts.
 - Full-cycle orchestration: `pfo full-cycle` runs plan, test, implementation dispatch, review, and session-save as one fail-closed loop.
 - Next-best-action selection: `pfo next-best-action` reads `.codex-memory/STATE.json` and recommends the next blocking gate or command.
+- Root check command: `pfo check` / `python3 scripts/check.py` gives the repository one deterministic verification entrypoint.
 - Two-stage review: spec compliance is recorded before code quality review.
 - Branch finish: every completed branch records PR, merge, keep, or discard plus fresh verification.
 
@@ -23,6 +24,7 @@ Product Factory OS remains the source of truth for artifacts, state, routing, ga
 | Brainstorm | `/brainstorm`, `/discover`, `/advisor`, `/grill-me`, `/strategy`, `/blueprint` |
 | Full lifecycle loop | `pfo full-cycle`, `.codex-memory/session_*_full-cycle.md`, `.codex-memory/STATE.json` |
 | Next gate recommendation | `pfo next-best-action`, `NEXT_STEP.md`, `.codex-memory/STATE.json` |
+| Root verification command | `pfo check`, `scripts/check.py`, `scripts/production_readiness.py` |
 | Behavior-change metadata | `.pfo/UNIT_CONTEXT_MANIFEST.json` `engineeringDiscipline.behaviorChange` |
 | Bugfix metadata | `.pfo/UNIT_CONTEXT_MANIFEST.json` `engineeringDiscipline.bugfix` |
 | Two-stage review | `pfo review-stage --stage spec`, then `--stage quality` |

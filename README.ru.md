@@ -100,6 +100,7 @@ PFO теперь имеет исполняемый CLI:
 pfo new my-product --idea "SaaS для учета подписок"
 pfo adopt
 pfo adopt ../existing-product
+pfo check
 pfo analyze ../existing-product --run-gates --report
 pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product

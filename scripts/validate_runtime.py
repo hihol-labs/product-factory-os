@@ -77,6 +77,7 @@ def main() -> None:
 
     for script in [
         "pfo.py",
+        "check.py",
         "pfo_runner.py",
         "existing_project_analyzer.py",
         "validate_project.py",
