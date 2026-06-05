@@ -440,6 +440,7 @@ pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
 pfo handoff ../my-product --from-role planner --to-role implementer --reason role-switch
 pfo build ../my-product
 pfo test ../my-product
+pfo full-cycle ../my-product --note "run the standard PFO loop"
 pfo tdd-evidence ../my-product --red "pytest failed as expected" --green "pytest passed"
 pfo root-cause ../my-product --summary "bad value enters parser" --evidence "trace shows parser input"
 pfo verify-work ../my-product --evidence "tests and smoke passed" --pass-gate

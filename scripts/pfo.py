@@ -2168,6 +2168,109 @@ def cmd_review(args: argparse.Namespace) -> int:
     return run_script("pfo_runner.py", [str(args.project), "--mode", "review"])
 
 
+def write_full_cycle_session(project: Path, state: dict, steps: list[dict], note: str) -> str:
+    memory_dir = project / ".codex-memory"
+    memory_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H%M%S")
+    session_name = f"session_{stamp}_full-cycle.md"
+    session_path = memory_dir / session_name
+    rows = "\n".join(
+        f"| {step['name']} | {step['status']} | {step.get('exitCode', '')} | {step.get('note', '')} |"
+        for step in steps
+    )
+    session_path.write_text(
+        "# Full-Cycle Session\n\n"
+        f"- Project: `{project}`\n"
+        f"- Recorded at: `{now_iso()}`\n"
+        f"- Note: {note or 'none'}\n\n"
+        "## Steps\n\n"
+        "| Step | Status | Exit Code | Note |\n"
+        "|---|---|---:|---|\n"
+        f"{rows}\n\n"
+        "## Next Action\n\n"
+        f"{state.get('nextAction', '')}\n",
+        encoding="utf-8",
+    )
+    memory_path = memory_dir / "MEMORY.md"
+    existing = memory_path.read_text(encoding="utf-8") if memory_path.is_file() else "# Memory\n\n"
+    entry = f"- {stamp}: full-cycle orchestration -> {session_name}\n"
+    if entry not in existing:
+        memory_path.write_text(existing.rstrip() + "\n" + entry, encoding="utf-8")
+    add_artifact(state, f".codex-memory/{session_name}")
+    add_artifact(state, ".codex-memory/MEMORY.md")
+    return f".codex-memory/{session_name}"
+
+
+def cmd_full_cycle(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    steps: list[dict] = []
+
+    def record(name: str, code: int, note: str = "") -> None:
+        steps.append(
+            {
+                "name": name,
+                "status": "PASSED" if code == 0 else "BLOCKED",
+                "exitCode": code,
+                "note": note,
+            }
+        )
+
+    def should_continue(code: int) -> bool:
+        return code == 0 or not args.stop_on_blocked
+
+    if not args.skip_plan:
+        code = cmd_plan(argparse.Namespace(project=project, note=args.note or "full-cycle orchestration"))
+        record("plan", code, "pfo plan")
+        if not should_continue(code):
+            return code
+
+    if not args.skip_test:
+        code = run_script("pfo_runner.py", [str(project), "--mode", "test"])
+        record("test", code, "pfo test")
+        if not should_continue(code):
+            return code
+
+    if not args.skip_build:
+        code = run_script("pfo_runner.py", [str(project), "--mode", "build"])
+        record("implementation", code, "pfo build dispatch")
+        if not should_continue(code):
+            return code
+
+    if not args.skip_review:
+        code = run_script("pfo_runner.py", [str(project), "--mode", "review"])
+        record("review", code, "pfo review")
+        if not should_continue(code):
+            return code
+
+    run_script("pfo_context_runtime.py", ["snapshot", str(project), "--reason", "full-cycle", "--quiet"])
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    blocked = [step for step in steps if step["status"] == "BLOCKED"]
+    status = "BLOCKED" if blocked else "PASSED"
+    session_rel = write_full_cycle_session(project, state, steps, args.note)
+    state["fullCycle"] = {
+        "status": status,
+        "recordedAt": now_iso(),
+        "sessionPath": session_rel,
+        "steps": steps,
+    }
+    state["sessionState"] = "ACTIVE"
+    if status == "PASSED":
+        state["currentStage"] = "SESSION_SAVED"
+        state["lastSuccessfulState"] = "SESSION_SAVED"
+        state["nextAction"] = "Review full-cycle session notes, then continue with the next approved PFO unit or deploy-readiness gate."
+    else:
+        failed = ", ".join(step["name"] for step in blocked)
+        state["nextAction"] = f"Resolve blocked full-cycle step(s): {failed}."
+    append_event(project, state, "state-change", status, {"command": "full-cycle", "steps": steps})
+    save_state(project, state)
+    print(f"OK: full-cycle recorded as {status}")
+    print(f"Session: {session_rel}")
+    for step in steps:
+        print(f"{step['name']}: {step['status']} ({step['exitCode']})")
+    return 0 if status == "PASSED" else 1
+
+
 def cmd_verify_work(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
@@ -2846,6 +2949,16 @@ def build_parser() -> argparse.ArgumentParser:
             item.add_argument("--write", action="store_true")
             item.add_argument("--strict", action="store_true")
         item.set_defaults(func=func)
+
+    full_cycle = sub.add_parser("full-cycle", help="Run plan, test, implementation dispatch, review, and session-save orchestration.")
+    full_cycle.add_argument("project", type=Path)
+    full_cycle.add_argument("--note", default="")
+    full_cycle.add_argument("--skip-plan", action="store_true")
+    full_cycle.add_argument("--skip-test", action="store_true")
+    full_cycle.add_argument("--skip-build", action="store_true")
+    full_cycle.add_argument("--skip-review", action="store_true")
+    full_cycle.add_argument("--stop-on-blocked", action="store_true", help="Stop immediately when a lifecycle step is blocked.")
+    full_cycle.set_defaults(func=cmd_full_cycle)
 
     verify_work = sub.add_parser("verify-work", help="Record post-unit verification; fail closed by default.")
     verify_work.add_argument("project", type=Path)
