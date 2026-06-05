@@ -44,6 +44,18 @@ Use Fowler's vocabulary when designing new controls:
 - Sensors should return output that is easy for an agent to repair from: exact file, exact rule, observed evidence, expected condition, and next command.
 - A guide without a sensor can become wishful thinking. A sensor without a guide can create repeated repair churn. Prefer paired guide/sensor design.
 
+## Defensive Layers
+
+PFO keeps a five-layer diagnostic view in `docs/DEFENSIVE_LAYERS.md`:
+
+1. Task specification.
+2. Context provisioning.
+3. Execution environment.
+4. Verification feedback.
+5. State management.
+
+When a run fails or behaves strangely, check those layers in order. This prevents PFO from adding broad prompts or model-specific rules before ruling out the common harness causes: unclear task, bad context, invalid tool/runtime assumptions, missing sensors, or stale state. The executable guard is `python3 scripts/validate_defensive_layers.py`.
+
 ## Ratchet
 
 Every repeated agent mistake is a candidate system change, not just a reminder. PFO uses this path:

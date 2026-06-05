@@ -35,6 +35,9 @@ jobs:
       - name: Validate control harness
         run: python3 scripts/validate_control_harness.py
 
+      - name: Validate defensive layers
+        run: python3 scripts/validate_defensive_layers.py
+
       - name: Run routing fixtures
         run: python3 scripts/run_fixtures.py
 

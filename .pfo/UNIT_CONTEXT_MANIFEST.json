@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "unitId": "security-audit-v2",
-  "goal": "Implement security-audit v2 phase contract, coverage artifacts, diff security evidence gate, report validator, fix-finding workflow, and deep scan mode in Product Factory OS",
-  "createdAt": "2026-06-02T16:35:51+00:00",
+  "unitId": "harness-defensive-layers",
+  "goal": "Add explicit five-layer defensive diagnostics and validator coverage for PFO harness efficiency",
+  "createdAt": "2026-06-05T07:41:52+00:00",
   "requiredInputs": [
     "CODEX.md",
     ".codex-memory/STATE.json",
@@ -149,8 +149,8 @@
   ],
   "pivLoop": {
     "sourcePattern": "harness-engineering-demo PIV loop",
-    "planPath": "plans/security-audit-v2-piv-plan.md",
-    "implementationReportPath": "reports/security-audit-v2-implementation-report.md",
+    "planPath": "plans/harness-defensive-layers-piv-plan.md",
+    "implementationReportPath": "reports/harness-defensive-layers-implementation-report.md",
     "sequence": [
       "plan",
       "implement",
@@ -165,7 +165,7 @@
     ]
   },
   "engineeringDiscipline": {
-    "behaviorChange": false,
+    "behaviorChange": true,
     "bugfix": false,
     "strictPlan": true,
     "requiresTdd": "behavior changes",

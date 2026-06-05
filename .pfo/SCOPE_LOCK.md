@@ -2,22 +2,29 @@
 
 ## Current Task
 
-- Integrate an SEO optimization workflow into the Product Factory OS plugin runtime.
+- Add explicit five-layer defensive diagnostics to the Product Factory OS runtime.
 
 ## Allowed Change Areas
 
-- `skills/seo/`
-- `docs/SKILL_CONTRACTS.md`
-- `docs/TRIGGERS.md`
-- `docs/CALL_GRAPH.md`
+- `docs/DEFENSIVE_LAYERS.md`
 - `docs/CONTROL_HARNESS.md`
-- `hooks/route-reminder.py`
+- `docs/METHODOLOGY.md`
+- `docs/PFO_ARCHITECTURE.md`
+- `docs/AGENT_HARNESS_ENGINEERING.md`
+- `docs/DESIGN_SPACE.md`
+- `docs/rubrics/pfo.md`
+- `docs/INSTALL.md`
+- `docs/PRODUCTION_READINESS.md`
+- `.github/workflows/validate.yml`
+- `scripts/validate_defensive_layers.py`
 - `scripts/validate_structure.py`
+- `scripts/validate_runtime.py`
 - `scripts/validate_control_harness.py`
-- `tests/fixtures/seo-optimization/`
-- `tests/snapshots/route-snapshots.json`
-- `tests/fixture-contracts.json`
-- public plugin docs and metadata: `README.md`, `README.ru.md`, `CHANGELOG.md`, `.codex-plugin/plugin.json`, `marketplace/marketplace-entry.json`
+- `scripts/production_readiness.py`
+- `scripts/release_check.py`
+- `scripts/meta_review.py`
+- `scripts/verify_install_sync.py`
+- public plugin docs and metadata: `CHANGELOG.md`
 - PFO state, plans, reports, and contract artifacts for this unit.
 
 ## Forbidden Change Areas

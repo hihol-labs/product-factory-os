@@ -1,22 +1,34 @@
 # Next Step
 
-This is the user-facing steering checkpoint.
+This is the user-facing project steering checkpoint. It intentionally avoids internal state-machine terminology.
 
 ## Where We Are
 
-- Product: product-factory-os
-- Current outcome: Detected Existing Software Project with unknown stack. Ran 0 gate command(s).
-- Recommended next step: Resolve analyzer blockers before any implementation work.
-- Approval status: PENDING
+- Product: Existing project `product-factory-os` analyzed by Product Factory OS.
+- Current outcome: Unit `harness-defensive-layers` is implemented and verified.
+- Recommended next step: Review draft PR https://github.com/hihol-labs/product-factory-os/pull/39.
+- Approval status: APPROVED
 
 ## Visible Roadmap
 
 | Step | Outcome | Status |
 |---|---|---|
-| 1 | Analyze existing project | done |
-| 2 | Choose a narrow task | pending |
-| 3 | Approve next implementation step | pending |
+| 1 | Add five-layer defensive diagnostics | done |
+| 2 | Review draft PR https://github.com/hihol-labs/product-factory-os/pull/39 and merge when accepted | pending |
+
+## Recommended Next Step
+
+- Step: Review draft PR https://github.com/hihol-labs/product-factory-os/pull/39 for `codex/harness-defensive-layers`.
+- Why now: Implementation, contract gates, security evidence, two-stage review, and production readiness are complete.
+- Files likely touched: none unless PR review requests changes.
+- Verification: `python3 scripts/production_readiness.py` and `python3 scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os --write --json`.
+
+## Alternatives
+
+- Merge the PR after review.
+- Request targeted changes on the PR.
+- Keep the branch for follow-up validation.
 
 ## Decision Needed
 
-Confirm, change, or stop before another major implementation iteration starts.
+- Review the draft PR once opened.
