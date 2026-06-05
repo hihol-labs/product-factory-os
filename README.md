@@ -436,6 +436,7 @@ pfo adopt ../existing-product
 pfo analyze ../existing-product --run-gates --report
 pfo discuss ../my-product --phase phase-1 --note "API shape and fallback rules"
 pfo plan ../my-product
+pfo next-best-action ../my-product --write
 pfo manifest ../my-product --unit N1 --goal "Primary booking flow"
 pfo handoff ../my-product --from-role planner --to-role implementer --reason role-switch
 pfo build ../my-product
