@@ -183,6 +183,7 @@ def has_pfo_contracts(path: Path) -> bool:
         "PERMISSION_MATRIX.json",
         "LEARNING_PROMOTION_GATE.md",
         "EXECUTION_POLICY.json",
+        "UNIT_CONTEXT_MANIFEST.json",
         "VERIFICATION_CONTRACT.json",
         "TOOL_CAPABILITY_REGISTRY.json",
     ]:
@@ -303,6 +304,36 @@ def ensure_pfo_contracts(path: Path) -> None:
         target = pfo_dir / source.name
         if not target.exists():
             shutil.copyfile(source, target)
+        elif source.suffix == ".json":
+            upgrade_json_contract(target, source)
+
+
+def merge_missing(current: object, default: object) -> tuple[object, bool]:
+    if not isinstance(current, dict) or not isinstance(default, dict):
+        return current, False
+    changed = False
+    result = dict(current)
+    for key, value in default.items():
+        if key not in result:
+            result[key] = value
+            changed = True
+            continue
+        merged, child_changed = merge_missing(result[key], value)
+        if child_changed:
+            result[key] = merged
+            changed = True
+    return result, changed
+
+
+def upgrade_json_contract(target: Path, source: Path) -> None:
+    try:
+        current = json.loads(target.read_text(encoding="utf-8"))
+        default = json.loads(source.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return
+    merged, changed = merge_missing(current, default)
+    if changed:
+        target.write_text(json.dumps(merged, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def ensure_alias_documents(path: Path) -> None:
@@ -382,6 +413,7 @@ def mark_runtime_synced(path: Path, workspace: Path) -> None:
             ".pfo/PERMISSION_MATRIX.json",
             ".pfo/LEARNING_PROMOTION_GATE.md",
             ".pfo/EXECUTION_POLICY.json",
+            ".pfo/UNIT_CONTEXT_MANIFEST.json",
             ".pfo/VERIFICATION_CONTRACT.json",
             ".pfo/TOOL_CAPABILITY_REGISTRY.json",
             *ALIAS_DOCUMENT_NAMES,
@@ -570,6 +602,7 @@ aliases:
                         ".pfo/PERMISSION_MATRIX.json",
                         ".pfo/LEARNING_PROMOTION_GATE.md",
                         ".pfo/EXECUTION_POLICY.json",
+                        ".pfo/UNIT_CONTEXT_MANIFEST.json",
                         ".pfo/VERIFICATION_CONTRACT.json",
                         ".pfo/TOOL_CAPABILITY_REGISTRY.json",
                         ".codex-memory/MEMORY.md",

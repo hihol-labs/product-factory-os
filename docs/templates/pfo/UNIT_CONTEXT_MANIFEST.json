@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "unitId": "",
+  "goal": "",
+  "createdAt": "",
+  "routeProfile": {
+    "id": "standard",
+    "label": "Standard route profile",
+    "reason": "default existing-project adoption",
+    "intendedFor": "Default non-trivial existing-project implementation, bugfix, refactor, test, or documentation work.",
+    "steps": [
+      "adoption",
+      "repositoryAnalysis",
+      "taskClassification",
+      "unitManifest",
+      "targetedVerification",
+      "review",
+      "stateSave"
+    ],
+    "gates": [
+      "adoption",
+      "scopeLock",
+      "verificationContract",
+      "targetedVerification",
+      "specComplianceReview",
+      "codeQualityReview",
+      "contextBudget",
+      "toolCapabilityRegistry"
+    ]
+  },
+  "requiredInputs": [
+    "AGENTS.md",
+    "CODEX.md",
+    ".codex-memory/STATE.json",
+    ".pfo/PROJECT_CONTRACT.md",
+    ".pfo/SCOPE_LOCK.md",
+    ".pfo/EXECUTION_POLICY.json",
+    ".pfo/PERMISSION_MATRIX.json",
+    ".pfo/TOOL_CAPABILITY_REGISTRY.json",
+    ".pfo/UNIT_CONTEXT_MANIFEST.json",
+    ".pfo/VERIFICATION_CONTRACT.json"
+  ],
+  "allowedWriteAreas": [
+    "files listed by the active execution graph node",
+    "tests for changed behavior",
+    "PFO_REPORT.md",
+    ".codex-memory/STATE.json",
+    ".codex-memory/MEMORY.md",
+    ".codex-memory/events.jsonl",
+    ".codex-memory/context-index.json",
+    ".codex-memory/resume-snapshot.md"
+  ],
+  "forbiddenChanges": [
+    "scope outside .pfo/SCOPE_LOCK.md",
+    "silent production data substitution",
+    "unapproved deployment, migration, DNS, or production mutation",
+    "golden-flow behavior changes without verification evidence"
+  ],
+  "dependencies": [],
+  "verificationCommands": [
+    "python3 scripts/pfo_contract_gate.py <project>"
+  ],
+  "contextPolicy": {
+    "mode": "progressive-disclosure",
+    "rules": [
+      "load only the required inputs for the active unit",
+      "use pfo context-budget before adding large output to active context",
+      "use pfo context-search instead of reloading full event logs",
+      "write HANDOFF.md before compaction, delegation, AFK execution, or recovery"
+    ]
+  },
+  "gates": [
+    "adoption",
+    "scopeLock",
+    "verificationContract",
+    "targetedVerification",
+    "specComplianceReview",
+    "codeQualityReview",
+    "contextBudget",
+    "toolCapabilityRegistry"
+  ],
+  "engineeringDiscipline": {
+    "behaviorChange": false,
+    "bugfix": false,
+    "strictPlan": true,
+    "requiresTdd": "behavior changes",
+    "requiresRootCause": "bugfix units"
+  },
+  "recovery": "If verification is missing or ambiguous, mark RECOVERY_REQUIRED and create PFO_RECOVERY.md."
+}

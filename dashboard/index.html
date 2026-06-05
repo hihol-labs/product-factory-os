@@ -5,46 +5,295 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product Factory OS Dashboard</title>
     <style>
-      body { margin: 0; font-family: system-ui, sans-serif; background: #f7f7f4; color: #1d2428; }
-      header { padding: 24px 32px; border-bottom: 1px solid #d8d8d0; background: #ffffff; }
-      main { padding: 24px 32px; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-      section { background: #ffffff; border: 1px solid #d8d8d0; border-radius: 8px; padding: 16px; }
-      h1 { margin: 0; font-size: 24px; }
-      h2 { margin: 0 0 8px; font-size: 16px; }
-      code { background: #eeeeea; padding: 2px 4px; border-radius: 4px; }
-      .metric { font-size: 32px; font-weight: 700; }
+      :root {
+        color-scheme: light;
+        --bg: #f4f6f7;
+        --panel: #ffffff;
+        --text: #1d2428;
+        --muted: #5c6970;
+        --line: #d6dde1;
+        --good: #16794c;
+        --warn: #a35a00;
+        --bad: #b3261e;
+        --info: #215b87;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      header {
+        padding: 22px 28px 16px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+      }
+      h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+      h2 {
+        margin: 0 0 10px;
+        font-size: 15px;
+        letter-spacing: 0;
+      }
+      main {
+        padding: 20px 28px 32px;
+        display: grid;
+        gap: 16px;
+      }
+      .summary {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      }
+      section, .metric {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+      section { padding: 14px; overflow: auto; }
+      .metric { padding: 14px; min-height: 96px; }
+      .metric-label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .metric-value {
+        margin-top: 8px;
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .metric-note {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        border: 1px solid var(--line);
+      }
+      .status.PASS { color: var(--good); background: #e8f5ee; border-color: #b9dfca; }
+      .status.BLOCKED, .status.FAILED, .status.ERROR { color: var(--bad); background: #fdecea; border-color: #f4bbb6; }
+      .status.DEGRADED, .status.ATTENTION, .status.STALE { color: var(--warn); background: #fff4e0; border-color: #efcf9a; }
+      .status.UNKNOWN { color: var(--info); background: #eaf3fa; border-color: #bed7e8; }
+      .grid-2 {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th, td {
+        padding: 8px;
+        border-top: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      code {
+        padding: 2px 4px;
+        border-radius: 4px;
+        background: #edf1f3;
+        color: #263238;
+      }
+      .empty { color: var(--muted); font-size: 13px; }
+      @media (max-width: 680px) {
+        header { padding: 18px 16px 12px; }
+        main { padding: 16px; }
+        .metric-value { font-size: 26px; }
+      }
     </style>
   </head>
   <body>
     <header>
       <h1>Product Factory OS Dashboard</h1>
-      <p>Drop a generated <code>metrics.json</code> next to this file or paste metrics into the script block.</p>
     </header>
     <main id="app"></main>
     <script>
-      const metrics = window.PFO_METRICS || {
+      const emptyMetrics = {
         projectCount: 0,
-        deployReadyCount: 0,
-        deployedCount: 0,
         blockedCount: 0,
-        failedGateCount: 0,
-        verificationEvents: 0
+        legacyBlockedCount: 0,
+        blockedProjectPercent: 0,
+        contextRuntime: { completeCoveragePercent: 0, status: "UNKNOWN" },
+        blockers: { byType: {}, byProject: {}, status: "UNKNOWN" },
+        staleState: { staleProjectCount: 0, byProject: {}, status: "UNKNOWN" },
+        missingGates: { totalMissingCount: 0, byProject: {}, status: "UNKNOWN" },
+        liveEvalStatus: { status: "UNKNOWN", reasons: [], byProject: {} }
       };
-      const labels = {
-        projectCount: "Projects",
-        deployReadyCount: "Deploy Ready",
-        deployedCount: "Deployed",
-        blockedCount: "Blocked",
-        failedGateCount: "Failed Gates",
-        verificationEvents: "Verification Events"
+
+      const esc = (value) => String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+
+      const status = (value) => `<span class="status ${esc(value || "UNKNOWN")}">${esc(value || "UNKNOWN")}</span>`;
+
+      const metric = (label, value, note = "") => `
+        <div class="metric">
+          <div class="metric-label">${esc(label)}</div>
+          <div class="metric-value">${esc(value)}</div>
+          ${note ? `<div class="metric-note">${note}</div>` : ""}
+        </div>
+      `;
+
+      const rows = (items, render) => {
+        if (!items.length) return `<tr><td colspan="4" class="empty">none</td></tr>`;
+        return items.map(render).join("");
       };
-      document.getElementById("app").innerHTML = Object.entries(metrics).map(([key, value]) => `
-        <section>
-          <h2>${labels[key] || key}</h2>
-          <div class="metric">${value}</div>
-        </section>
-      `).join("");
+
+      function renderBlockerTypes(metrics) {
+        const byType = Object.entries(metrics.blockers?.byType || {});
+        return `
+          <section>
+            <h2>Blockers By Type</h2>
+            <table>
+              <thead><tr><th>Type</th><th>Count</th></tr></thead>
+              <tbody>${rows(byType, ([type, count]) => `<tr><td>${esc(type)}</td><td>${esc(count)}</td></tr>`)}</tbody>
+            </table>
+          </section>
+        `;
+      }
+
+      function renderBlockedProjects(metrics) {
+        const projects = Object.entries(metrics.blockers?.byProject || {})
+          .filter(([, item]) => Number(item.liveBlockerCount || 0) > 0);
+        return `
+          <section>
+            <h2>Blocked Projects</h2>
+            <table>
+              <thead><tr><th>Project</th><th>Live</th><th>Legacy</th><th>Messages</th></tr></thead>
+              <tbody>${rows(projects, ([project, item]) => `
+                <tr>
+                  <td><code>${esc(project)}</code></td>
+                  <td>${esc(item.liveBlockerCount)}</td>
+                  <td>${esc(item.legacyBlockerCount)}</td>
+                  <td>${(item.liveBlockers || []).map((blocker) => `${esc(blocker.type)}: ${esc(blocker.message)}`).join("<br>")}</td>
+                </tr>
+              `)}</tbody>
+            </table>
+          </section>
+        `;
+      }
+
+      function renderStaleState(metrics) {
+        const stale = Object.entries(metrics.staleState?.byProject || {});
+        return `
+          <section>
+            <h2>Stale State</h2>
+            <table>
+              <thead><tr><th>Project</th><th>Age</th><th>Last Updated</th><th>Source</th></tr></thead>
+              <tbody>${rows(stale, ([project, item]) => `
+                <tr>
+                  <td><code>${esc(project)}</code></td>
+                  <td>${esc(item.ageDays)}d</td>
+                  <td>${esc(item.lastUpdatedAt)}</td>
+                  <td>${esc(item.source)}</td>
+                </tr>
+              `)}</tbody>
+            </table>
+          </section>
+        `;
+      }
+
+      function renderMissingGates(metrics) {
+        const projects = Object.entries(metrics.missingGates?.byProject || {})
+          .filter(([, item]) => Number(item.missingCount || 0) > 0);
+        return `
+          <section>
+            <h2>Missing Gates</h2>
+            <table>
+              <thead><tr><th>Project</th><th>Profile</th><th>Gates</th><th>Artifacts</th></tr></thead>
+              <tbody>${rows(projects, ([project, item]) => `
+                <tr>
+                  <td><code>${esc(project)}</code></td>
+                  <td>${esc(item.routeProfile)}</td>
+                  <td>${(item.missingGateStatuses || []).map((gate) => `${esc(gate.gate)}: ${esc(gate.status || "EMPTY")}`).join("<br>")}</td>
+                  <td>${(item.missingRequiredArtifacts || []).map((artifact) => `<code>${esc(artifact)}</code>`).join("<br>")}</td>
+                </tr>
+              `)}</tbody>
+            </table>
+          </section>
+        `;
+      }
+
+      function renderLiveEval(metrics) {
+        const projects = Object.entries(metrics.liveEvalStatus?.byProject || {});
+        return `
+          <section>
+            <h2>Live Eval Status</h2>
+            <table>
+              <thead><tr><th>Project</th><th>Status</th><th>Mode</th><th>Count</th></tr></thead>
+              <tbody>${rows(projects, ([project, item]) => `
+                <tr>
+                  <td><code>${esc(project)}</code></td>
+                  <td>${status(item.latestStatus || "UNKNOWN")}</td>
+                  <td>${esc(item.latestMode)}</td>
+                  <td>${esc(item.verificationCount)}</td>
+                </tr>
+              `)}</tbody>
+            </table>
+          </section>
+        `;
+      }
+
+      function render(metrics) {
+        const context = metrics.contextRuntime || {};
+        const blockers = metrics.blockers || {};
+        const stale = metrics.staleState || {};
+        const missing = metrics.missingGates || {};
+        const evalStatus = metrics.liveEvalStatus || {};
+        document.getElementById("app").innerHTML = `
+          <div class="summary">
+            ${metric("Projects", metrics.projectCount)}
+            ${metric("Context Coverage", `${context.completeCoveragePercent || 0}%`, status(context.status))}
+            ${metric("Blocked", `${metrics.blockedCount}/${metrics.projectCount}`, `${esc(metrics.blockedProjectPercent || 0)}% · ${status(blockers.status)}`)}
+            ${metric("Legacy Blocked", metrics.legacyBlockedCount ?? 0)}
+            ${metric("Stale State", stale.staleProjectCount || 0, status(stale.status))}
+            ${metric("Missing Gates", missing.totalMissingCount || 0, status(missing.status))}
+            ${metric("Live Eval", evalStatus.status || "UNKNOWN", status(evalStatus.status))}
+          </div>
+          <div class="grid-2">
+            ${renderBlockerTypes(metrics)}
+            ${renderBlockedProjects(metrics)}
+            ${renderStaleState(metrics)}
+            ${renderMissingGates(metrics)}
+            ${renderLiveEval(metrics)}
+          </div>
+        `;
+      }
+
+      async function loadMetrics() {
+        if (window.PFO_METRICS) return window.PFO_METRICS;
+        try {
+          const response = await fetch("metrics.json", { cache: "no-store" });
+          if (response.ok) return await response.json();
+        } catch (_error) {}
+        return emptyMetrics;
+      }
+
+      loadMetrics().then(render);
     </script>
   </body>
 </html>
-

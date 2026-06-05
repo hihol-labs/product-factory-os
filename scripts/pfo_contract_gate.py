@@ -22,6 +22,7 @@ REQUIRED_CONTRACTS = [
     ".pfo/PERMISSION_MATRIX.json",
     ".pfo/LEARNING_PROMOTION_GATE.md",
     ".pfo/EXECUTION_POLICY.json",
+    ".pfo/UNIT_CONTEXT_MANIFEST.json",
     ".pfo/VERIFICATION_CONTRACT.json",
     ".pfo/TOOL_CAPABILITY_REGISTRY.json",
 ]
@@ -261,6 +262,15 @@ def json_contract_errors(project: Path) -> list[str]:
     for rel, required in {
         ".pfo/EXECUTION_POLICY.json": ["commandPolicy", "writePolicy", "networkPolicy", "approvalPolicy"],
         ".pfo/PERMISSION_MATRIX.json": ["actors", "capabilities", "rules"],
+        ".pfo/UNIT_CONTEXT_MANIFEST.json": [
+            "version",
+            "unitId",
+            "requiredInputs",
+            "allowedWriteAreas",
+            "forbiddenChanges",
+            "verificationCommands",
+            "gates",
+        ],
         ".pfo/VERIFICATION_CONTRACT.json": ["commands", "requiredArtifacts", "passCriteria", "failureMode"],
         ".pfo/TOOL_CAPABILITY_REGISTRY.json": ["tools", "selectionPolicy"],
     }.items():

@@ -1,37 +1,106 @@
+---
+title: "Handoff"
+project: "product-factory-os"
+stage: "TWO_STAGE_REVIEW"
+node: "workspace-health"
+from_role: "codex"
+to_role: "reviewer"
+reason: "workspace-health-complete"
+created: "2026-06-05T23:12:15+00:00"
+tags:
+  - pfo/handoff
+  - pfo/memory
+---
+
 # Handoff
+
+Created: 2026-06-05T23:12:15+00:00
+From: codex
+To: reviewer
+Reason: workspace-health-complete
+
+> [!todo] First Action
+> Workspace health implemented and verified; prepare commit/push/PR.
+
 
 ## Current State
 
-Route profiles overhead reduction is implemented and verified.
+- Project: `/home/hihol/projects/product-factory-os`
+- Stage: `TWO_STAGE_REVIEW`
+- Node: `workspace-health`
+- Unit: `workspace-health`
+- Next action: Resolve review findings or proceed to the next gate.
 
-Implemented:
+## Goal
 
-- Machine-readable `minimal`, `standard`, and `full` route profiles in `routing/route-profiles.json`.
-- `pfo manifest`, generated verification contracts, `pfo verify-work`, and `pfo next-best-action` now honor the active route profile.
-- Minimal route is limited to adoption, scope, targeted verification, review, and state-save, with no Product Compiler planning artifact requirement.
-- `pfo metrics` now reports `artifactDebt`: required artifacts for the active route, missing required artifacts, and tracked artifacts outside the current route.
-- `validate_route_profiles.py` is wired into structure/runtime/production-readiness validation.
-- Documentation and changelog are updated.
+Improve workspace health metrics, detection, coverage, and dashboard
+
+## Decisions
+
+- existing project analyzer run | note: runGates=False
+- existing project analyzer run | note: runGates=False
+- existing project analyzer run | note: runGates=False
+- existing project analyzer run | note: runGates=False
+- existing project analyzer run | note: runGates=False
+- next step approved | note: User requested full implementation, verification, changelog, commit, push, and PR for PFO overhead reduction.
+- existing project analyzer run | note: runGates=False
+- existing project analyzer run | note: runGates=False
+
+## Scope
+
+### Allowed Write Areas
+
+- files listed by the active execution graph node
+- tests for changed behavior
+- PFO_REPORT.md
+- plans/
+- reports/
+- .codex-memory/STATE.json
+- .codex-memory/MEMORY.md
+- .codex-memory/events.jsonl
+- .codex-memory/context-index.json
+- .codex-memory/resume-snapshot.md
+- .codex-memory/context-summary.md
+
+### Forbidden Changes
+
+- scope outside `.pfo/SCOPE_LOCK.md`
+- silent production data substitution
+- unapproved deployment, migration, DNS, or production mutation
+- golden-flow behavior changes without verification evidence
+- commands or writes outside `.pfo/EXECUTION_POLICY.json` and `.pfo/PERMISSION_MATRIX.md`
+
+## Required Inputs
+
+- .codex-memory/STATE.json
+- .pfo/EXECUTION_POLICY.json
+- .pfo/PERMISSION_MATRIX.json
+- .pfo/PROJECT_CONTRACT.md
+- .pfo/SCOPE_LOCK.md
+- .pfo/TOOL_CAPABILITY_REGISTRY.json
+- .pfo/UNIT_CONTEXT_MANIFEST.json
+- .pfo/UNIT_CONTEXT_MANIFEST.json when present
+- .pfo/VERIFICATION_CONTRACT.json
+- AGENTS.md
+- BUILD_PLAN.md
+- CODEX.md
+- EXECUTION_GRAPH.md
+- NEXT_STEP.md with approved or changed user-facing next step
+- PHASE_CONTEXT.md when present
+- active PIV plan under plans/ before implementation
+- active implementation report under reports/ before review
 
 ## Verification
 
-Passed:
+- /usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os
+- /usr/bin/python3 /home/hihol/projects/product-factory-os/scripts/validate_context_runtime.py
 
-- `python3 -m py_compile scripts/pfo.py scripts/pfo_metrics.py scripts/validate_route_profiles.py`
-- `python3 scripts/validate_route_profiles.py`
-- In-memory minimal manifest assertion: exact minimal steps and no Product Compiler planning docs.
-- `python3 scripts/pfo_metrics.py /home/hihol/projects`
-- `python3 scripts/validate_context_runtime.py`
-- `python3 scripts/validate_security_report.py reports/route-profiles-overhead-security-review.md --require-artifacts --artifacts-dir reports/route-profiles-overhead-security/artifacts`
-- `python3 scripts/pfo_contract_gate.py /home/hihol/projects/product-factory-os` -> `PASS_WITH_WARNINGS`
-- `python3 scripts/production_readiness.py`
-- `python3 scripts/meta_review.py`
-- `pfo check --no-smoke`
+## Risks And Blockers
 
-## Warnings
+> [!warning] Risks And Blockers
+> No blockers recorded.
 
-- `pfo_contract_gate` reports `PASS_WITH_WARNINGS` because this methodology runtime diff is conservatively classified as dependency/data/user-facing/security/deployment risk. Security coverage artifacts are present and validated.
 
-## Next Action
+## First Action
 
-Commit, push, and open the PR.
+Workspace health implemented and verified; prepare commit/push/PR.

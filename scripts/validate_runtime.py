@@ -139,6 +139,27 @@ def main() -> None:
         if not (ROOT / path).is_file():
             fail(f"missing runtime extension {path}")
 
+    metrics_text = (ROOT / "scripts" / "pfo_metrics.py").read_text(encoding="utf-8")
+    for token in [
+        "completeCoverageRatio",
+        "liveBlockedProjectCount",
+        "staleState",
+        "missingGates",
+        "liveEvalStatus",
+    ]:
+        if token not in metrics_text:
+            fail(f"pfo_metrics.py missing workspace health field {token}")
+    dashboard_text = (ROOT / "dashboard" / "index.html").read_text(encoding="utf-8")
+    for token in [
+        "Blockers By Type",
+        "Stale State",
+        "Missing Gates",
+        "Live Eval Status",
+        "metrics.json",
+    ]:
+        if token not in dashboard_text:
+            fail(f"dashboard missing workspace health section {token}")
+
     print(f"OK: {len(starters)} starters and {len(golden_paths)} golden paths validated")
 
 

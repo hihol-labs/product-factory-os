@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "unitId": "route-profiles-overhead",
-  "goal": "Reduce PFO overhead with route profiles, minimal gates, and artifact-debt metric",
-  "createdAt": "2026-06-05T22:09:43+00:00",
+  "unitId": "workspace-health",
+  "goal": "Improve workspace health metrics, detection, coverage, and dashboard",
+  "createdAt": "2026-06-05T23:06:36+00:00",
   "routeProfile": {
     "id": "standard",
     "label": "Standard route profile",
@@ -172,8 +172,8 @@
   ],
   "pivLoop": {
     "sourcePattern": "harness-engineering-demo PIV loop",
-    "planPath": "plans/route-profiles-overhead-piv-plan.md",
-    "implementationReportPath": "reports/route-profiles-overhead-implementation-report.md",
+    "planPath": "plans/workspace-health-piv-plan.md",
+    "implementationReportPath": "reports/workspace-health-implementation-report.md",
     "sequence": [
       "plan",
       "implement",

@@ -3,10 +3,16 @@ from pathlib import Path
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import shutil
 from typing import Any
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - Python <3.11 fallback.
+    tomllib = None
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TIMEOUT = 90
@@ -28,6 +34,35 @@ def read_json(path: Path) -> dict[str, Any]:
 def write_json(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def merge_missing(current: object, default: object) -> tuple[object, bool]:
+    if not isinstance(current, dict) or not isinstance(default, dict):
+        return current, False
+    changed = False
+    result = dict(current)
+    for key, value in default.items():
+        if key not in result:
+            result[key] = value
+            changed = True
+            continue
+        merged, child_changed = merge_missing(result[key], value)
+        if child_changed:
+            result[key] = merged
+            changed = True
+    return result, changed
+
+
+def upgrade_json_contract(target: Path, source: Path) -> bool:
+    try:
+        current = json.loads(target.read_text(encoding="utf-8"))
+        default = json.loads(source.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    merged, changed = merge_missing(current, default)
+    if changed:
+        write_json(target, merged)
+    return changed
 
 
 def default_human_steering() -> dict[str, Any]:
@@ -117,6 +152,8 @@ def ensure_pfo_contracts(project: Path) -> list[str]:
         target = pfo_dir / source.name
         if not target.exists():
             shutil.copyfile(source, target)
+            created.append(str(target.relative_to(project)))
+        elif source.suffix == ".json" and upgrade_json_contract(target, source):
             created.append(str(target.relative_to(project)))
     return created
 
@@ -209,6 +246,10 @@ def package_manager(project: Path, root_package: dict[str, Any]) -> str:
     return ""
 
 
+def command_text(command: list[str]) -> str:
+    return " ".join(command)
+
+
 def list_package_files(project: Path) -> list[Path]:
     ignored = {"node_modules", ".git", ".next", "dist", "build", ".turbo"}
     result: list[Path] = []
@@ -217,6 +258,38 @@ def list_package_files(project: Path) -> list[Path]:
             continue
         result.append(path)
     return sorted(result)
+
+
+def read_pyproject(project: Path) -> dict[str, Any]:
+    path = project / "pyproject.toml"
+    if not path.is_file() or tomllib is None:
+        return {}
+    try:
+        return tomllib.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def python_dependency_names(project: Path) -> set[str]:
+    names: set[str] = set()
+    pyproject = read_pyproject(project)
+    project_data = pyproject.get("project", {}) if isinstance(pyproject.get("project"), dict) else {}
+    for item in project_data.get("dependencies", []) if isinstance(project_data.get("dependencies"), list) else []:
+        names.add(re.split(r"[<>=~!;\[]", str(item), maxsplit=1)[0].strip().lower())
+    for section in ["dependency-groups", "tool"]:
+        value = pyproject.get(section, {})
+        if isinstance(value, dict):
+            names.update(token.lower() for token in json.dumps(value).split('"') if token.isidentifier())
+    for rel in ["requirements.txt", "requirements-dev.txt"]:
+        path = project / rel
+        if not path.is_file():
+            continue
+        for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            names.add(re.split(r"[<>=~!;\[]", line, maxsplit=1)[0].strip().lower())
+    return names
 
 
 def detect_stack(project: Path, packages: list[dict[str, Any]]) -> list[str]:
@@ -233,8 +306,14 @@ def detect_stack(project: Path, packages: list[dict[str, Any]]) -> list[str]:
 
     if "package.json" in files:
         stack.add("Node.js")
+    if len(packages) > 1:
+        stack.add("monorepo")
     if "pnpm-lock.yaml" in files:
         stack.add("pnpm")
+    if "yarn.lock" in files:
+        stack.add("Yarn")
+    if "package-lock.json" in files:
+        stack.add("npm")
     if "turbo.json" in files:
         stack.add("Turborepo")
     if "apps" in dirs and "packages" in dirs:
@@ -243,6 +322,18 @@ def detect_stack(project: Path, packages: list[dict[str, Any]]) -> list[str]:
         stack.add("Next.js")
     if "react" in deps:
         stack.add("React")
+    if "vue" in deps:
+        stack.add("Vue")
+    if "vite" in deps:
+        stack.add("Vite")
+    if "svelte" in deps or "@sveltejs/kit" in deps:
+        stack.add("Svelte")
+    if "nuxt" in deps:
+        stack.add("Nuxt")
+    if "express" in deps:
+        stack.add("Express")
+    if "@nestjs/core" in deps:
+        stack.add("NestJS")
     if "tailwindcss" in deps:
         stack.add("TailwindCSS")
     if "grammy" in deps:
@@ -256,12 +347,45 @@ def detect_stack(project: Path, packages: list[dict[str, Any]]) -> list[str]:
         stack.add("OpenAI")
     if "@anthropic-ai/sdk" in deps:
         stack.add("Anthropic")
-    if any(path.name.startswith("docker-compose") for path in (project / "docker").glob("*.yml")) if (project / "docker").is_dir() else False:
+    compose_names = {"docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml"}
+    if any(path.name.lower() in compose_names for path in project.iterdir() if path.is_file()) or (
+        (project / "docker").is_dir()
+        and any(path.name.lower() in compose_names or path.name.startswith("docker-compose") for path in (project / "docker").glob("*.y*ml"))
+    ):
         stack.add("Docker Compose")
     if (project / "Dockerfile").is_file() or list(project.glob("**/Dockerfile")):
         stack.add("Docker")
-    if "pyproject.toml" in files:
+    python_deps = python_dependency_names(project)
+    has_python = (
+        "pyproject.toml" in files
+        or "requirements.txt" in files
+        or "setup.py" in files
+        or "tox.ini" in files
+        or "pytest.ini" in files
+        or (project / "tests").is_dir()
+        or (project / "scripts").is_dir()
+        and any(path.suffix == ".py" for path in (project / "scripts").glob("*.py"))
+    )
+    if has_python:
         stack.add("Python")
+    if "fastapi" in python_deps:
+        stack.add("FastAPI")
+    if "django" in python_deps:
+        stack.add("Django")
+    if "flask" in python_deps:
+        stack.add("Flask")
+    if "pytest" in python_deps or (project / "pytest.ini").is_file() or (project / "tests").is_dir():
+        stack.add("pytest")
+    if (project / "go.mod").is_file():
+        stack.add("Go")
+    if (project / "Cargo.toml").is_file():
+        stack.add("Rust")
+    if (project / "composer.json").is_file():
+        stack.add("PHP")
+    if (project / "Gemfile").is_file():
+        stack.add("Ruby")
+    if (project / "scripts" / "pfo.py").is_file() and (project / ".codex-plugin" / "plugin.json").is_file():
+        stack.add("Product Factory OS runtime")
     return sorted(stack)
 
 
@@ -331,31 +455,108 @@ def root_command(manager: str, script: str) -> list[str]:
     return []
 
 
-def available_commands(project: Path, root_package: dict[str, Any], manager: str) -> list[dict[str, str]]:
-    scripts = root_package.get("scripts", {})
-    commands = []
-    for script in sorted(scripts):
-        command = root_command(manager, script)
-        if command:
-            commands.append({"name": script, "command": " ".join(command)})
+def package_script_command(project: Path, package_path: Path, package: dict[str, Any], script: str) -> list[str]:
+    package_dir = package_path.parent
+    manager = package_manager(package_dir, package)
+    if not manager and package_dir != project:
+        manager = package_manager(project, read_json(project / "package.json"))
+    rel = package_dir.relative_to(project).as_posix()
+    if package_dir == project:
+        return root_command(manager, script)
+    if manager == "pnpm":
+        return ["pnpm", "--dir", rel, script]
+    if manager == "yarn":
+        return ["yarn", "--cwd", rel, script]
+    if manager == "npm":
+        return ["npm", "--prefix", rel, "run", script]
+    return []
+
+
+def add_command(commands: list[dict[str, Any]], name: str, command: list[str], script: str = "", cwd: str = ".") -> None:
+    if not command:
+        return
+    text = command_text(command)
+    if any(item.get("command") == text for item in commands):
+        return
+    commands.append({"name": name, "script": script or name, "cwd": cwd, "command": text, "commandArgv": command})
+
+
+def make_targets(project: Path) -> set[str]:
+    path = project / "Makefile"
+    if not path.is_file():
+        return set()
+    targets = set()
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        match = re.match(r"^([A-Za-z0-9_.-]+):(?:\s|$)", line)
+        if match and not match.group(1).startswith("."):
+            targets.add(match.group(1))
+    return targets
+
+
+def just_targets(project: Path) -> set[str]:
+    path = project / "justfile"
+    if not path.is_file():
+        path = project / "Justfile"
+    if not path.is_file():
+        return set()
+    targets = set()
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        match = re.match(r"^([A-Za-z0-9_.-]+):(?:\s|$)", line)
+        if match and not match.group(1).startswith("_"):
+            targets.add(match.group(1))
+    return targets
+
+
+def available_commands(
+    project: Path,
+    root_package: dict[str, Any],
+    manager: str,
+    package_files: list[Path],
+    packages: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    commands: list[dict[str, Any]] = []
+    for package_path, package in zip(package_files, packages):
+        scripts = package.get("scripts", {}) if isinstance(package, dict) else {}
+        if not isinstance(scripts, dict):
+            continue
+        rel_dir = package_path.parent.relative_to(project).as_posix()
+        for script in sorted(scripts):
+            command = package_script_command(project, package_path, package, script)
+            name = script if rel_dir == "." else f"{rel_dir}:{script}"
+            add_command(commands, name, command, script=script, cwd=rel_dir)
+
     if (project / "scripts" / "check.py").is_file():
-        commands.append({"name": "check", "command": "python3 scripts/check.py"})
+        add_command(commands, "check", ["python3", "scripts/check.py"], script="check")
+    has_tests = (project / "tests").is_dir() or any(project.glob("test_*.py")) or any(project.glob("**/test_*.py"))
+    if has_tests:
+        add_command(commands, "pytest", ["python3", "-m", "pytest"], script="test")
+    for target in sorted(make_targets(project) & {"build", "check", "lint", "test", "typecheck"}):
+        add_command(commands, f"make:{target}", ["make", target], script=target)
+    for target in sorted(just_targets(project) & {"build", "check", "lint", "test", "typecheck"}):
+        add_command(commands, f"just:{target}", ["just", target], script=target)
+    if (project / "go.mod").is_file():
+        add_command(commands, "go:test", ["go", "test", "./..."], script="test")
+    if (project / "Cargo.toml").is_file():
+        add_command(commands, "cargo:test", ["cargo", "test"], script="test")
+        add_command(commands, "cargo:check", ["cargo", "check"], script="check")
     return commands
 
 
-def select_gates(project: Path, root_package: dict[str, Any], manager: str) -> list[dict[str, Any]]:
-    scripts = root_package.get("scripts", {})
+def select_gates(project: Path, commands: list[dict[str, Any]]) -> list[dict[str, Any]]:
     gates = []
     for script, gate in [
         ("build", "build"),
         ("lint", "lint"),
         ("test", "tests"),
         ("typecheck", "tests"),
+        ("check", "tests"),
     ]:
-        if script in scripts:
-            gates.append({"gate": gate, "script": script, "command": root_command(manager, script)})
-    if (project / "scripts" / "check.py").is_file():
-        gates.append({"gate": "tests", "script": "check", "command": [sys.executable, "scripts/check.py", "--no-smoke"]})
+        for item in commands:
+            if item.get("script") == script:
+                command = list(item.get("commandArgv", []))
+                if script == "check" and command == ["python3", "scripts/check.py"]:
+                    command = [sys.executable, "scripts/check.py", "--no-smoke"]
+                gates.append({"gate": gate, "script": item["name"], "command": command})
     return gates
 
 
@@ -481,7 +682,12 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
         gate_results[key] = value
 
     ran = {item["gate"]: item for item in analysis["gateRuns"]}
-    available_command_names = {item["name"] for item in analysis.get("availableCommands", [])}
+    available_command_names = {
+        value
+        for item in analysis.get("availableCommands", [])
+        for value in [item.get("name"), item.get("script")]
+        if value
+    }
     if "build" in ran:
         gate_results["review"] = "PASS" if ran["build"]["status"] == "PASS" else "BLOCKED"
     else:
@@ -506,7 +712,9 @@ def update_state(project: Path, state: dict[str, Any], analysis: dict[str, Any])
     blockers.extend(analysis["securityFindings"])
     blockers.extend(analysis.get("contractGate", {}).get("blockers", []))
     if gate_results["tests"] == "NOT_CONFIGURED":
-        blockers.append("No root test/typecheck/check script was detected.")
+        warnings = state.setdefault("warnings", [])
+        if isinstance(warnings, list) and "No automated test/typecheck/check command was detected." not in warnings:
+            warnings.append("No automated test/typecheck/check command was detected.")
     state["blockers"] = blockers
     steering = state.setdefault("humanSteering", default_human_steering())
     steering["approvalRequired"] = True
@@ -558,8 +766,8 @@ def analyze(project: Path, run_gates: bool, timeout: int) -> dict[str, Any]:
     root_package = read_json(project / "package.json")
     manager = package_manager(project, root_package)
     stack = detect_stack(project, packages)
-    commands = available_commands(project, root_package, manager)
-    gates = select_gates(project, root_package, manager) if run_gates else []
+    commands = available_commands(project, root_package, manager, package_files, packages)
+    gates = select_gates(project, commands) if run_gates else []
     gate_runs = [run_gate(project, gate, timeout) for gate in gates]
     security = security_findings(project)
     contract_gate = run_contract_gate(project)
@@ -576,7 +784,7 @@ def analyze(project: Path, run_gates: bool, timeout: int) -> dict[str, Any]:
         "packageFiles": [str(path.relative_to(project)) for path in package_files],
         "detectedStack": stack,
         "availableCommands": commands,
-        "selectedGates": [{"gate": item["gate"], "script": item["script"], "command": " ".join(item["command"])} for item in gates],
+        "selectedGates": [{"gate": item["gate"], "script": item["script"], "command": command_text(item["command"])} for item in gates],
         "gateRuns": gate_runs,
         "securityFindings": security,
         "contractGate": contract_gate,

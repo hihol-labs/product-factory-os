@@ -6,41 +6,92 @@
     "skills/browser-check/playwright/package.json"
   ],
   "detectedStack": [
-    "Docker"
+    "Docker",
+    "Product Factory OS runtime",
+    "Python",
+    "pytest"
   ],
   "availableCommands": [
     {
       "name": "check",
-      "command": "python3 scripts/check.py"
+      "script": "check",
+      "cwd": ".",
+      "command": "python3 scripts/check.py",
+      "commandArgv": [
+        "python3",
+        "scripts/check.py"
+      ]
+    },
+    {
+      "name": "pytest",
+      "script": "test",
+      "cwd": ".",
+      "command": "python3 -m pytest",
+      "commandArgv": [
+        "python3",
+        "-m",
+        "pytest"
+      ]
     }
   ],
   "selectedGates": [],
   "gateRuns": [],
   "securityFindings": [],
   "contractGate": {
-    "status": "PASS",
-    "changedFiles": [],
+    "status": "PASS_WITH_WARNINGS",
+    "changedFiles": [
+      ".gitignore",
+      "CHANGELOG.md",
+      "README.md",
+      "dashboard/README.md",
+      "dashboard/index.html",
+      "docs/INSTALL.md",
+      "docs/templates/pfo/UNIT_CONTEXT_MANIFEST.json",
+      "plans/workspace-health-piv-plan.md",
+      "reports/workspace-health-security/artifacts/02_discovery/deep_review_input.csv",
+      "reports/workspace-health-security/artifacts/02_discovery/work_ledger.jsonl",
+      "reports/workspace-health-security/artifacts/03_coverage/repository_coverage_ledger.md",
+      "reports/workspace-health-security/artifacts/05_findings/no-findings/candidate_ledger.jsonl",
+      "reports/workspace-health-security/security-review.md",
+      "scripts/adoption_check.py",
+      "scripts/existing_project_analyzer.py",
+      "scripts/pfo_contract_gate.py",
+      "scripts/pfo_metrics.py",
+      "scripts/validate_runtime.py",
+      "scripts/validate_structure.py"
+    ],
     "runtimeChangedFiles": [
-      "HANDOFF.md",
+      ".pfo/UNIT_CONTEXT_MANIFEST.json",
+      ".pfo/VERIFICATION_CONTRACT.json",
       "NEXT_STEP.md",
       "PFO_CONTRACT_GATE.json",
       "PFO_EXISTING_PROJECT_ANALYSIS.json",
       "PFO_REPORT.md"
     ],
-    "riskClasses": [],
+    "riskClasses": [
+      "business_logic_change",
+      "data_source_change",
+      "dependency_change",
+      "deployment_change",
+      "provider_integration_change",
+      "security_change",
+      "user_facing_output_change"
+    ],
     "missingContracts": [],
     "placeholderContracts": [],
     "aliasTargetErrors": [],
     "blockers": [],
-    "warnings": [],
+    "warnings": [
+      "dependency diff also touches data sources or user-facing output; verify Scope Lock explicitly."
+    ],
     "gates": {
       "aliasTargets": "PASS",
-      "scopeLock": "PASS",
+      "scopeLock": "PASS_WITH_WARNINGS",
       "dataAuthenticity": "PASS",
       "goldenFlows": "PASS",
       "regressionContract": "PASS",
       "fallbackPolicy": "PASS",
-      "diffRisk": "PASS",
+      "diffRisk": "PASS_WITH_WARNINGS",
       "securityEvidence": "PASS",
       "noSilentSubstitution": "PASS",
       "executionPolicy": "PASS",
@@ -68,5 +119,5 @@
     "auth": "project-specific auth",
     "deployment": "Docker"
   },
-  "summary": "Detected Existing Software Project with Docker. Ran 0 gate command(s)."
+  "summary": "Detected Existing Software Project with Docker, Product Factory OS runtime, Python, pytest. Ran 0 gate command(s)."
 }
