@@ -36,6 +36,7 @@ Run validation:
 python3 scripts/validate_structure.py
 python3 scripts/validate_plan_quality.py /path/to/project
 python3 scripts/validate_control_harness.py
+python3 scripts/validate_defensive_layers.py
 python3 scripts/run_fixtures.py
 python3 scripts/verify_triggers.py
 python3 scripts/verify_fixture_contracts.py

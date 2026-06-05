@@ -16,6 +16,7 @@ This map tracks which external agent-engineering principles are covered by Produ
 | Tool surface discipline | Full | tool selection policy, capability registry, approval metadata | Prune overlapping tools from real usage traces |
 | Control harness taxonomy | Full | `docs/CONTROL_HARNESS.md`, `validate_control_harness.py`, CI/release wiring | Promote repeated inferential findings into deterministic gates |
 | quality-left sensor scheduling | Full | `hooks/review-before-commit.py`, `.github/workflows/validate.yml`, `scripts/production_readiness.py`, verification contracts | Add cost tiers and runtime duration telemetry after enough real runs |
+| Five-layer defensive diagnostics | Full | `docs/DEFENSIVE_LAYERS.md`, `scripts/validate_defensive_layers.py`, CI/release/production-readiness wiring | Add per-layer failure counts after enough real traces |
 | Regulation categories | Full | maintainability, architecture fitness, and behaviour categories in `docs/AGENT_HARNESS_ENGINEERING.md` and `docs/CONTROL_HARNESS.md` | Add category coverage summaries to reports |
 | Harnessability | Partial | starter structure, golden paths, contracts, typed schemas where available, current-task scope locks | Add explicit harnessability score to repository analysis |
 | Harness templates | Partial | `templates/product-templates.json`, starter packs, golden paths | Version topology guide/sensor bundles and detect drift between template and generated project |

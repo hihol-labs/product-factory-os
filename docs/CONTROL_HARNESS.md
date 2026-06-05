@@ -34,6 +34,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | adversarial-planning | Plan, architecture, and decision stress testing | Feedforward | Inferential | `skills/grill-me/SKILL.md`, `skills/advisor/SKILL.md`, `agents/architect.md` |
 | unit-context | Task-scoped execution inputs and write scope | Feedforward | Computational | `docs/templates/pfo/EXECUTION_POLICY.json`, `docs/templates/pfo/PERMISSION_MATRIX.json`, `docs/templates/UNIT_CONTEXT_MANIFEST.json` |
 | verification-contract | Expected checks before execution starts | Feedforward | Computational | `docs/templates/pfo/VERIFICATION_CONTRACT.json`, `docs/templates/TEST_PLAN.md`, `docs/templates/QUALITY_GATES.md` |
+| defensive-layer-diagnostics | Five-layer diagnostic gate for task spec, context, execution environment, verification feedback, and state continuity | Feedback | Computational | `docs/DEFENSIVE_LAYERS.md`, `scripts/validate_defensive_layers.py`, `scripts/production_readiness.py` |
 | session-security-guard | Pre-tool safety boundary for secrets and destructive operations | Feedforward | Computational | `hooks/security-guard.py`, `hooks/hooks.json`, `docs/templates/pfo/EXECUTION_POLICY.json` |
 | context-economy | Progressive context loading, output offloading, and reset handoff policy | Feedforward | Computational | `docs/AGENT_HARNESS_ENGINEERING.md`, `skills/handoff/SKILL.md`, `docs/templates/HANDOFF.md` |
 | context-budget-runtime | Numeric context budget checks for tool/read/log/web output and raw HTTP routing | Feedback | Computational | `hooks/context-budget.py`, `scripts/pfo_context_runtime.py`, `scripts/validate_context_runtime.py` |
@@ -95,7 +96,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | Build behavior | `verification-contract`, `docs/templates/TEST_PLAN.md` | tests, `engineering-discipline`, `project-ci`, `alias-integrity`, `quality-left-scheduling`, `context-budget-runtime` |
 | Review work | rubrics and quality gate expectations | `review-agent`, `security-review-agent`, `ux-review-agent` when applicable |
 | Deploy readiness | permission matrix, deployment target, rollback expectations | `methodology-ci`, `project-ci`, security/deps/hardening/browser gates |
-| Learn and improve | learning promotion policy | `learning-promotion`, `continuous-health-sensors`, fixture and validator updates |
+| Learn and improve | learning promotion policy | `learning-promotion`, `continuous-health-sensors`, `defensive-layer-diagnostics`, fixture and validator updates |
 | Resume or compact | `context-economy`, `unit-context` | `session-memory-search`, `handoff` |
 
 ## Addition Checklist

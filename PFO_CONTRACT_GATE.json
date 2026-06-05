@@ -1,19 +1,16 @@
 {
-  "status": "BLOCKED",
+  "status": "PASS_WITH_WARNINGS",
   "changedFiles": [
+    "BRANCH_FINISH.md",
     "NEXT_STEP.md",
-    "README.md",
-    "reports/security-audit-v2-implementation-report.md",
-    "scripts/pfo.py",
-    "scripts/pfo_skill_scaffold.py",
-    "scripts/validate_runtime.py",
-    "scripts/validate_structure.py",
-    "skills/skill-create/SKILL.md"
+    "reports/harness-defensive-layers-security-review.md",
+    "reports/harness-defensive-layers/security/candidate_ledger.jsonl",
+    "reports/harness-defensive-layers/security/deep_review_input.csv",
+    "reports/harness-defensive-layers/security/repository_coverage_ledger.md",
+    "reports/harness-defensive-layers/security/work_ledger.jsonl"
   ],
   "runtimeChangedFiles": [
-    "PFO_CONTRACT_GATE.json",
-    "PFO_EXISTING_PROJECT_ANALYSIS.json",
-    "PFO_REPORT.md"
+    "PFO_CONTRACT_GATE.json"
   ],
   "riskClasses": [
     "business_logic_change",
@@ -31,12 +28,7 @@
     ".pfo/FALLBACK_POLICY.md"
   ],
   "aliasTargetErrors": [],
-  "blockers": [
-    "missing changed security coverage artifact: deep_review_input.csv",
-    "missing changed security coverage artifact: work_ledger.jsonl",
-    "missing changed security coverage artifact: repository_coverage_ledger.md",
-    "missing changed security coverage artifact: candidate_ledger.jsonl"
-  ],
+  "blockers": [],
   "warnings": [
     "placeholder contract content: .pfo/PROJECT_CONTRACT.md",
     "placeholder contract content: .pfo/FORBIDDEN_CHANGES.md",
@@ -51,7 +43,7 @@
     "regressionContract": "PASS_WITH_WARNINGS",
     "fallbackPolicy": "PASS",
     "diffRisk": "PASS_WITH_WARNINGS",
-    "securityEvidence": "BLOCKED",
+    "securityEvidence": "PASS",
     "noSilentSubstitution": "PASS",
     "executionPolicy": "PASS",
     "permissionMatrix": "PASS",

@@ -66,6 +66,7 @@ Runtime scripts live in `scripts/`:
 - `existing_project_analyzer.py`: existing-project stack, command, gate, security, and state analyzer
 - `validate_project.py`: generated-project validator
 - `validate_hooks.py`: hook contract validator
+- `validate_defensive_layers.py`: five-layer diagnostic validator for task, context, environment, feedback, and state controls
 - `voice_intent.py`: voice/text intent normalizer
 - `pfo_metrics.py`: workspace metrics
 - `release_check.py`: release validation
@@ -173,6 +174,18 @@ Sensor scheduling follows quality-left rules:
 Product templates are harness templates: each topology should carry structure, guide defaults, fast sensors, pipeline sensors, and regulation categories.
 
 `scripts/validate_control_harness.py` keeps this inventory connected to docs, CI, hooks, and runtime validators.
+
+### 5b. Defensive Diagnostics Layer
+
+`docs/DEFENSIVE_LAYERS.md` maps PFO's common failure checks into five layers:
+
+- task specification
+- context provisioning
+- execution environment
+- verification feedback
+- state management
+
+`scripts/validate_defensive_layers.py` verifies that every layer has concrete guides and sensors, that the diagnostic order is documented, and that the check is wired into CI, release checks, production readiness, structure validation, runtime validation, and the control harness inventory.
 
 ### 6. Validation Layer
 

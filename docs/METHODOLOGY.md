@@ -17,6 +17,18 @@ PFO uses agent harness engineering as the operating frame: work backwards from d
 
 PFO keeps quality left by running fast computational sensors locally, repeating them in CI or release gates, and reserving slower inferential or broad sensors for higher-risk decisions. The source integration guide is `docs/AGENT_HARNESS_ENGINEERING.md`.
 
+## Five Defensive Layers
+
+PFO now checks the harness through five diagnostic layers before blaming the model or widening scope:
+
+1. Task specification.
+2. Context provisioning.
+3. Execution environment.
+4. Verification feedback.
+5. State management.
+
+The durable contract is `docs/DEFENSIVE_LAYERS.md`, and `scripts/validate_defensive_layers.py` keeps those layers wired into CI, release checks, production readiness, and the control harness inventory. This gives PFO a repeatable triage path for common agent-work failures: first check the task, then context, then environment, then sensors, then state continuity.
+
 ## Codex Goal Mode
 
 Codex `/goal` mode is default-on inside Product Factory OS. For every non-trivial local project request, Codex creates or continues one goal before implementation. The objective names the user outcome and the active PFO route, for example `/project -> /kickstart` for new products or `/task -> /bugfix` for existing-code work.
@@ -184,6 +196,7 @@ Scores can be useful as summaries, but they must not replace the status enum.
 - `scripts/pfo_contract_gate.py`: project-contract gate for scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, no silent substitution, and alias target integrity.
 - `scripts/pfo_alias_targets.py`: alias/index target checker for `MASTER_CONTEXT.md`, `ARCHITECTURE.md`, `TASKS.md`, `PROGRESS.md`, and `TESTING.md`.
 - `scripts/validate_control_harness.py`: validates the four-quadrant feedforward/feedback and computational/inferential control inventory.
+- `scripts/validate_defensive_layers.py`: validates the five diagnostic defensive layers and their CI, release, production-readiness, and control-harness wiring.
 
 ## Autonomous Execution Layer
 
