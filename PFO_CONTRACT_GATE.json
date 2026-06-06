@@ -1,24 +1,19 @@
 {
   "status": "PASS",
   "changedFiles": [
+    ".codex-plugin/plugin.json",
     "CHANGELOG.md",
-    "docs/INSTALL.md",
+    "marketplace/marketplace-entry.json",
     "reports/target-100-security-review.md",
     "reports/target-100-security/artifacts/02_discovery/deep_review_input.csv",
     "reports/target-100-security/artifacts/02_discovery/work_ledger.jsonl",
     "reports/target-100-security/artifacts/03_coverage/repository_coverage_ledger.md",
     "reports/target-100-security/artifacts/05_findings/no-findings/candidate_ledger.jsonl",
-    "reports/target-100-workspace-metrics.json",
-    "reports/workspace-health-implementation-report.md",
-    "scripts/production_readiness.py",
-    "scripts/release_check.py",
-    "scripts/validate_workspace_targets.py"
+    "reports/workspace-health-implementation-report.md"
   ],
-  "runtimeChangedFiles": [
-    "PFO_REPORT.md"
-  ],
+  "runtimeChangedFiles": [],
   "riskClasses": [
-    "business_logic_change",
+    "data_source_change",
     "deployment_change",
     "security_change",
     "user_facing_output_change"

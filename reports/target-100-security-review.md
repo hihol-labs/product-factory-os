@@ -11,6 +11,8 @@ Reviewed the current working-tree changes for target workspace criteria and glob
 - `scripts/install_workspace.py`
 - `scripts/pfo_contract_gate.py`
 - `reports/target-100-workspace-metrics.json`
+- `.codex-plugin/plugin.json`
+- `marketplace/marketplace-entry.json`
 - `dashboard/index.html`
 - `README.md`
 - `docs/INSTALL.md`
@@ -42,10 +44,11 @@ Validation focused on fail-closed behavior:
 - `release_check.py` still requires `validate_release_live_headless.py`, so live command-mode proof remains mandatory for release.
 - `install_workspace.py` only writes stricter global policy metadata and managed AGENTS text.
 - `pfo_contract_gate.py` narrows dependency-change matching to changed dependency manifest and lockfile names instead of scanning arbitrary diff text.
+- Release version metadata is synchronized between `.codex-plugin/plugin.json`, `marketplace/marketplace-entry.json`, and `CHANGELOG.md`.
 
 ## Attack Path
 
-No exploitable attack path was found. The changed code reads local JSON/markdown state, computes ratios, and returns deterministic pass/fail output. The committed metrics proof contains only aggregate target values and no secrets. The dashboard change renders numeric fields from local `metrics.json` using the existing escaping helper. The installer change adds policy keys and text but does not add new command execution paths. The contract-gate change removes over-broad text matching and does not suppress real changed dependency manifest or lockfile paths.
+No exploitable attack path was found. The changed code reads local JSON/markdown state, computes ratios, and returns deterministic pass/fail output. The committed metrics proof contains only aggregate target values and no secrets. The dashboard change renders numeric fields from local `metrics.json` using the existing escaping helper. The installer change adds policy keys and text but does not add new command execution paths. The contract-gate change removes over-broad text matching and does not suppress real changed dependency manifest or lockfile paths. The release metadata change only synchronizes public version strings.
 
 ## Findings
 
