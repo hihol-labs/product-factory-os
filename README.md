@@ -87,7 +87,7 @@ python3 scripts/production_readiness.py
 pfo metrics
 ```
 
-`pfo metrics` includes `harnessEfficiency`: verified-unit count, repair loops per verified unit, verification/gate pass rates, and time from unit manifest to first successful verification. It also reports workspace health: context index/snapshot coverage, live blocked project ratio, blockers by type, stale state, missing gates, live eval status, and `artifactDebt`.
+`pfo metrics` includes `harnessEfficiency`: verified-unit count, repair loops per verified unit, verification/gate pass rates, and time from unit manifest to first successful verification. `validate_workspace_targets.py` enforces context coverage >90%, verification pass rate >95%, repair loops per verified unit <0.25, and PASS live eval status. Metrics also report workspace health: context index/snapshot coverage, live blocked project ratio, blockers by type, stale state, missing gates, live eval status, and `artifactDebt`.
 
 See [docs/INSTALL.md](docs/INSTALL.md) for local development, hook policy, smoke prompts, and release checks.
 

@@ -273,6 +273,8 @@
             ${metric("Stale State", stale.staleProjectCount || 0, status(stale.status))}
             ${metric("Missing Gates", missing.totalMissingCount || 0, status(missing.status))}
             ${metric("Live Eval", evalStatus.status || "UNKNOWN", status(evalStatus.status))}
+            ${metric("Verification Pass", `${Math.round((evalStatus.verificationPassRate || 0) * 10000) / 100}%`, `target >${Math.round((evalStatus.targetVerificationPassRate || 0.95) * 100)}%`)}
+            ${metric("Repair Loops", evalStatus.repairLoopsPerVerifiedUnit ?? "n/a", `target <${evalStatus.targetRepairLoopsPerVerifiedUnit ?? 0.25}`)}
           </div>
           <div class="grid-2">
             ${renderBlockerTypes(metrics)}

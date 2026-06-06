@@ -1,0 +1,4 @@
+{"phase":"discovery","candidate":"target-metric-bypass","status":"reviewed","reason":"Sub-target metric values now make liveEvalStatus BLOCKED and validate_workspace_targets exits non-zero."}
+{"phase":"validation","candidate":"release-live-proof-bypass","status":"reviewed","reason":"release_check.py still runs validate_release_live_headless.py before target metric validation."}
+{"phase":"attack_path","candidate":"installer-permission-expansion","status":"rejected","reason":"Installer change adds policy metadata/text only and does not add new execution paths or secret access."}
+{"phase":"validation","candidate":"ci-workspace-state-dependency","status":"reviewed","reason":"CI production readiness now validates committed aggregate target proof instead of requiring local machine workspace state."}

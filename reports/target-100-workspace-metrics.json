@@ -1,0 +1,15 @@
+{
+  "source": "pfo metrics --workspace /home/hihol/projects",
+  "recordedAt": "2026-06-06T07:10:00Z",
+  "contextRuntime": {
+    "completeCoverageRatio": 1.0
+  },
+  "harnessEfficiency": {
+    "verificationPassRate": 0.9535,
+    "repairLoopsPerVerifiedUnit": 0.0976
+  },
+  "liveEvalStatus": {
+    "status": "PASS",
+    "reasons": []
+  }
+}
