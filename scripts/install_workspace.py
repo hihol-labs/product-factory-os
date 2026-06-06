@@ -152,13 +152,16 @@ def write_global_policy(workspace: Path, codex_home: Path) -> None:
         "defaultWorkspace": str(workspace),
         "codexHome": str(codex_home),
         "enforcement": "global",
+        "scope": "all-local-projects-on-this-computer",
+        "automaticForNewProjectsAnywhere": True,
+        "mandatoryForExistingProjectsAnywhere": True,
         "autoAdoptAnyProject": True,
         "autoAnalyzeExistingProjects": True,
         "autoReportProjects": True,
         "codexGoalMode": codex_goal_mode_policy(),
         "defaultNewProjectRoute": "/project -> /kickstart",
         "existingProjectRoute": "/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save",
-        "nonBypassRule": "Any local project opened in Codex should auto-connect to Product Factory OS, even outside the default workspace.",
+        "nonBypassRule": "Any new or existing local project opened in Codex must auto-connect to Product Factory OS, including projects outside the default workspace.",
     }
     for target in [codex_home / "PFO_GLOBAL.json", Path.home() / ".pfo" / "PFO_GLOBAL.json"]:
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -178,6 +181,8 @@ Product Factory OS is the default methodology for Codex work on this computer.
 - Codex `/goal` mode: default-on for every non-trivial PFO project task
 
 For any local project, including projects outside the default workspace, Codex must auto-connect Product Factory OS from `PFO_GLOBAL.json` and ensure adoption before implementation. The user should not need to run setup commands manually.
+
+This applies to both existing projects and newly created projects anywhere on this computer, not only under the default `projects` workspace.
 
 At the start of any non-trivial local project request, Codex must create or continue a `/goal` objective that names the user outcome and active PFO route. Keep it active through implementation, gates, verification, and state-save; complete it only after the requested outcome and PFO exit gates are satisfied.
 {GLOBAL_MANAGED_END}
@@ -238,13 +243,16 @@ def write_windows_global_policy(workspace: Path, codex_home: Path) -> None:
         "defaultWorkspace": wsl_unc(workspace),
         "codexHome": windows_path_from_mnt(codex_home),
         "enforcement": "global",
+        "scope": "all-local-projects-on-this-computer",
+        "automaticForNewProjectsAnywhere": True,
+        "mandatoryForExistingProjectsAnywhere": True,
         "autoAdoptAnyProject": True,
         "autoAnalyzeExistingProjects": True,
         "autoReportProjects": True,
         "codexGoalMode": codex_goal_mode_policy(),
         "defaultNewProjectRoute": "/project -> /kickstart",
         "existingProjectRoute": "/task -> adoption-check -> repository-analysis -> task-classification -> daily-work skill -> gates -> state-save",
-        "nonBypassRule": "Any local project opened in Codex should auto-connect to Product Factory OS, even outside the default workspace.",
+        "nonBypassRule": "Any new or existing local project opened in Codex must auto-connect to Product Factory OS, including projects outside the default workspace.",
     }
     for target in [codex_home / "PFO_GLOBAL.json", codex_home.parent / ".pfo" / "PFO_GLOBAL.json"]:
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -366,7 +374,7 @@ def main() -> None:
     for target in windows_hook_targets:
         print(f"Windows hooks: {target}")
     print("Daily use: open any project in the workspace; PFO instructions and state are already present.")
-    print("Global use: open any local project; the preflight hook will auto-connect PFO from PFO_GLOBAL.json.")
+    print("Global use: open any new or existing local project anywhere on this computer; the preflight hook will auto-connect PFO from PFO_GLOBAL.json.")
 
 
 if __name__ == "__main__":

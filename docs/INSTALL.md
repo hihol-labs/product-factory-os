@@ -289,8 +289,9 @@ python3 scripts/pfo.py metrics --workspace /home/hihol/projects > dashboard/metr
 The metrics payload includes `harnessEfficiency`, a comparable signal for recent methodology effectiveness:
 
 - `timeToFirstValidUnitSeconds`: seconds from unit manifest to first passing verification.
-- `repairLoopsPerVerifiedUnit`: lower is better; repeated blockers or failed validations increase it.
-- `verificationPassRate` and `gatePassRate`: higher means the harness is catching and guiding work before late review.
+- `repairLoopsPerVerifiedUnit`: must stay below `0.25`; repeated blockers or failed validations increase it.
+- `verificationPassRate`: must stay above `95%`.
+- `gatePassRate`: higher means the harness is catching and guiding work before late review.
 
 It also includes workspace health:
 
@@ -298,7 +299,7 @@ It also includes workspace health:
 - `blockers`: live blocked project ratio plus blockers by type and project.
 - `staleState`: projects whose state has not been refreshed within the stale threshold.
 - `missingGates`: required route gates and artifacts that are absent or pending.
-- `liveEvalStatus`: combined health status from coverage, blockers, stale state, and pass rates.
+- `liveEvalStatus`: combined health status from coverage, blockers, stale state, pass rates, and repair-loop targets.
 
 ## Release Check
 

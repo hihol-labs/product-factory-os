@@ -12,6 +12,8 @@ FAILURE_STATUSES = {"BLOCKED", "FAILED", "ERROR", "RECOVERY_REQUIRED"}
 ROUTE_PROFILE_IDS = {"minimal", "standard", "full"}
 TARGET_CONTEXT_COVERAGE = 0.9
 TARGET_BLOCKED_RATIO = 0.2
+TARGET_VERIFICATION_PASS_RATE = 0.95
+TARGET_REPAIR_LOOPS_PER_VERIFIED_UNIT = 0.25
 STALE_STATE_DAYS = 7
 MISSING_GATE_STATUSES = {"", "NOT_RUN", "NOT_CONFIGURED", "PENDING", "RECOVERY_REQUIRED"}
 BLOCKING_GATE_STATUSES = {"BLOCKED", "FAILED", "ERROR", "RECOVERY_REQUIRED"}
@@ -463,17 +465,24 @@ def live_eval_status(
 
     verification_rate = efficiency.get("verificationPassRate")
     gate_rate = efficiency.get("gatePassRate")
+    repair_loops_per_verified_unit = efficiency.get("repairLoopsPerVerifiedUnit")
     status = "PASS"
     reasons = []
-    if context.get("completeCoverageRatio", 0) < TARGET_CONTEXT_COVERAGE:
+    if context.get("completeCoverageRatio", 0) <= TARGET_CONTEXT_COVERAGE:
         status = "BLOCKED"
-        reasons.append("context index/snapshot coverage below target")
+        reasons.append("context index/snapshot coverage must be above 90%")
     if blockers.get("liveBlockedProjectRatio", 0) >= TARGET_BLOCKED_RATIO:
         status = "BLOCKED"
         reasons.append("live blocked workspace project ratio above target")
-    if verification_rate is not None and verification_rate < 0.9:
-        status = "DEGRADED" if status == "PASS" else status
-        reasons.append("verification pass rate below 90%")
+    if verification_rate is not None and verification_rate <= TARGET_VERIFICATION_PASS_RATE:
+        status = "BLOCKED"
+        reasons.append("verification pass rate must be above 95%")
+    if (
+        repair_loops_per_verified_unit is not None
+        and repair_loops_per_verified_unit >= TARGET_REPAIR_LOOPS_PER_VERIFIED_UNIT
+    ):
+        status = "BLOCKED"
+        reasons.append("repair loops per verified unit must stay below 0.25")
     if gate_rate is not None and gate_rate < 0.9:
         status = "DEGRADED" if status == "PASS" else status
         reasons.append("gate pass rate below 90%")
@@ -486,6 +495,9 @@ def live_eval_status(
         "reasons": reasons,
         "lastVerificationAt": aware(latest_verification).isoformat() if latest_verification else "",
         "verificationPassRate": verification_rate,
+        "targetVerificationPassRate": TARGET_VERIFICATION_PASS_RATE,
+        "repairLoopsPerVerifiedUnit": repair_loops_per_verified_unit,
+        "targetRepairLoopsPerVerifiedUnit": TARGET_REPAIR_LOOPS_PER_VERIFIED_UNIT,
         "gatePassRate": gate_rate,
         "byProject": project_status,
     }

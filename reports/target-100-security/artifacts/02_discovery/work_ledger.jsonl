@@ -1,0 +1,5 @@
+{"id":"target-100-001","phase":"discovery","path":"scripts/pfo_metrics.py","status":"reviewed","notes":"Threshold constants and live eval status fail closed for <=95 verification pass rate and >=0.25 repair loops."}
+{"id":"target-100-002","phase":"validation","path":"scripts/validate_workspace_targets.py","status":"reviewed","notes":"Local-only metrics reader with deterministic non-zero exit on missed targets."}
+{"id":"target-100-003","phase":"attack_path","path":"scripts/release_check.py","status":"reviewed","notes":"Release still requires live headless proof and now also target metric gate."}
+{"id":"target-100-004","phase":"attack_path","path":"scripts/install_workspace.py","status":"reviewed","notes":"Policy text/key additions only; no new command execution or secret handling path."}
+{"id":"target-100-005","phase":"validation","path":"scripts/pfo_contract_gate.py","status":"reviewed","notes":"Dependency risk now comes from changed manifest or lockfile names, not arbitrary diff text."}

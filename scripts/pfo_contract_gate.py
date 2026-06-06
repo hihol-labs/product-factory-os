@@ -60,8 +60,20 @@ DOCUMENTATION_SUFFIXES = (
     ".rst",
 )
 
+DEPENDENCY_FILE_NAMES = {
+    "package.json",
+    "package-lock.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    "requirements.txt",
+    "pyproject.toml",
+    "go.mod",
+    "go.sum",
+    "cargo.toml",
+    "cargo.lock",
+}
+
 RISK_RULES: list[tuple[str, tuple[str, ...]]] = [
-    ("dependency_change", ("package.json", "lock", "requirements.txt", "pyproject.toml", "go.mod", "cargo.toml")),
     ("business_logic_change", ("service", "domain", "usecase", "handler", "route", "controller", "job", "workflow")),
     ("data_source_change", ("source", "database", "db", "sql", "supabase", "postgres", "query", "schema", "migration")),
     ("provider_integration_change", ("openai", "anthropic", "llm", "provider", "api_key", "webhook", "client")),
@@ -217,6 +229,8 @@ def classify_risks(files: list[str], diff: str) -> list[str]:
     corpus = "\n".join(files) + "\n" + diff
     lowered = corpus.lower()
     risks = set()
+    if any(Path(path.replace("\\", "/")).name.lower() in DEPENDENCY_FILE_NAMES for path in files):
+        risks.add("dependency_change")
     for risk, markers in RISK_RULES:
         if any(marker in lowered for marker in markers):
             risks.add(risk)

@@ -38,10 +38,14 @@
 - Workspace health metrics in `pfo metrics`: context index/snapshot coverage, live blocked project ratio, blockers by type, stale state, missing gates, and live eval status.
 - Static workspace health dashboard sections for blockers by type, blocked projects, stale state, missing gates, and live eval status.
 - `.pfo/UNIT_CONTEXT_MANIFEST.json` template in project-local PFO contracts so adopted existing projects satisfy route-profile context coverage.
+- `validate_workspace_targets.py` deterministic gate for the 100/100 workspace targets: context coverage above 90%, verification pass rate above 95%, repair loops per verified unit below 0.25, and PASS live eval status.
+- Global PFO policy now explicitly covers new and existing local projects anywhere on the computer, including projects outside the default `projects` workspace.
 
 ### Changed
 
 - `pfo_contract_gate.py` now treats generated PFO status/report artifacts as runtime diffs and requires security coverage only for real non-doc, non-test security-sensitive product files.
+- `pfo_contract_gate.py` now detects dependency risk from changed dependency manifests and lockfiles instead of broad text matches, removing false-positive dependency warnings.
+- Production readiness and release checks now run the PFO contract gate and the workspace target gate.
 - `pfo manifest`, generated verification contracts, `pfo verify-work`, and `pfo next-best-action` now honor the active route profile.
 - Existing-project adoption and analysis now deep-merge missing JSON contract keys from templates, repairing stale permission matrix, context runtime, tool registry, and unit manifest contracts without overwriting project-local settings.
 - Existing-project stack and command detection now covers nested package scripts, Vite/Vue/Svelte/Nuxt/Express/NestJS, Python/pytest/FastAPI/Django/Flask, Make/Just, Go, Rust, Docker Compose, and PFO runtime projects.

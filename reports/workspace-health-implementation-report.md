@@ -1,7 +1,7 @@
 # Implementation Report: workspace-health
 
 Project: `product-factory-os`
-Created: 2026-06-05T23:11:18+00:00
+Created: 2026-06-06T07:08:01+00:00
 Plan: `plans/workspace-health-piv-plan.md`
 
 ## Goal
@@ -10,17 +10,17 @@ Improve workspace health metrics, detection, coverage, and dashboard
 
 ## Evidence
 
-workspace health targets met: context coverage 13/13=100%, live blocked projects 2/13=15.38%, missing required artifacts 0, stale state 0, live eval PASS; validators passed: validate_structure, validate_runtime, validate_route_profiles, production_readiness, validate_context_runtime, validate_security_report, pfo_contract_gate PASS_WITH_WARNINGS
+CHANGELOG updated; production_readiness passed before commit/push/PR
 
 ## Validation History
 
 | Mode | Node | Evidence |
 |---|---|---|
-| review-stage |  | Spec passed: minimal, standard, and full route profiles are machine-readable; minimal route is limited to adoption, scope, targeted verification, review, state-save; artifactDebt reports required/missing/outside-route artifacts for the active route. |
-| review-stage |  | Quality passed: py_compile, validate_route_profiles, minimal manifest assertion, pfo_metrics artifactDebt JSON, validate_context_runtime, validate_security_report with artifacts, pfo_contract_gate PASS_WITH_WARNINGS, production_readiness, and meta_review passed; warning is contract-gate scope warning due runtime methodology diff. |
-| existing-project-analyze |  |  |
-| existing-project-analyze |  |  |
-| verify-work | workspace-health | workspace health targets met: context coverage 13/13=100%, live blocked projects 2/13=15.38%, missing required artifacts 0, stale state 0, live eval PASS; validators passed: validate_structure, validate_runtime, validate_route_profiles, production_readiness, validate_context_runtime, validate_security_report, pfo_contract_gate PASS_WITH_WARNINGS |
+| verify-work | workspace-health | validate_structure passed; validate_runtime passed |
+| verify-work | workspace-health | validate_release_live_headless --check-config passed; validate_eval_layer passed |
+| verify-work | workspace-health | validate_security_report passed; pfo_contract_gate passed |
+| verify-work | workspace-health | production_readiness passed; workspace target gate passed; pfo_contract_gate passed; global PFO policy installed for all local projects |
+| verify-work | workspace-health | CHANGELOG updated; production_readiness passed before commit/push/PR |
 
 ## Gate Results
 
@@ -31,13 +31,13 @@ workspace health targets met: context coverage 13/13=100%, live blocked projects
 | architecture | PASS_WITH_WARNINGS |
 | assetExtraction | PENDING |
 | branchFinish | PASSED |
-| codeQualityReview | PASSED_WITH_WARNINGS |
+| codeQualityReview | PASSED |
 | contentPipeline | PENDING |
 | contextBudget | PASSED |
 | dataAuthenticity | PASS |
 | dependencies | NOT_RUN |
 | deploymentReadiness | PASS |
-| diffRisk | PASS_WITH_WARNINGS |
+| diffRisk | PASS |
 | executionPolicy | PASS |
 | experimentDecision | PENDING |
 | experimentMetric | PENDING |
@@ -46,7 +46,7 @@ workspace health targets met: context coverage 13/13=100%, live blocked projects
 | feedbackLoop | PENDING |
 | funnel | PENDING |
 | goldenFlows | PASS |
-| handoff | PENDING |
+| handoff | PASSED |
 | hardening | NOT_RUN |
 | ideaGate | PENDING |
 | learningPromotion | PASS |
@@ -57,7 +57,7 @@ workspace health targets met: context coverage 13/13=100%, live blocked projects
 | regressionContract | PASS |
 | review | PASSED |
 | rootCause | PENDING |
-| scopeLock | PASS_WITH_WARNINGS |
+| scopeLock | PASS |
 | security | PASS |
 | securityEvidence | PASS |
 | seoGrowthGuarantee | PENDING |
