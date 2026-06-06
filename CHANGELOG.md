@@ -46,6 +46,7 @@
 - `pfo_contract_gate.py` now treats generated PFO status/report artifacts as runtime diffs and requires security coverage only for real non-doc, non-test security-sensitive product files.
 - `pfo_contract_gate.py` now detects dependency risk from changed dependency manifests and lockfiles instead of broad text matches, removing false-positive dependency warnings.
 - Production readiness and release checks now run the PFO contract gate and the workspace target gate.
+- Production readiness and release checks now validate a committed workspace-target metrics proof so GitHub Actions can run without local machine workspace state, while live workspace validation remains available with `--workspace`.
 - `pfo manifest`, generated verification contracts, `pfo verify-work`, and `pfo next-best-action` now honor the active route profile.
 - Existing-project adoption and analysis now deep-merge missing JSON contract keys from templates, repairing stale permission matrix, context runtime, tool registry, and unit manifest contracts without overwriting project-local settings.
 - Existing-project stack and command detection now covers nested package scripts, Vite/Vue/Svelte/Nuxt/Express/NestJS, Python/pytest/FastAPI/Django/Flask, Make/Just, Go, Rust, Docker Compose, and PFO runtime projects.

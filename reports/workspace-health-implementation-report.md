@@ -1,7 +1,7 @@
 # Implementation Report: workspace-health
 
 Project: `product-factory-os`
-Created: 2026-06-06T07:08:01+00:00
+Created: 2026-06-06T07:45:12+00:00
 Plan: `plans/workspace-health-piv-plan.md`
 
 ## Goal
@@ -10,17 +10,17 @@ Improve workspace health metrics, detection, coverage, and dashboard
 
 ## Evidence
 
-CHANGELOG updated; production_readiness passed before commit/push/PR
+CI production readiness failure fixed: validate_workspace_targets supports committed metrics proof; production_readiness passed
 
 ## Validation History
 
 | Mode | Node | Evidence |
 |---|---|---|
-| verify-work | workspace-health | validate_structure passed; validate_runtime passed |
 | verify-work | workspace-health | validate_release_live_headless --check-config passed; validate_eval_layer passed |
 | verify-work | workspace-health | validate_security_report passed; pfo_contract_gate passed |
 | verify-work | workspace-health | production_readiness passed; workspace target gate passed; pfo_contract_gate passed; global PFO policy installed for all local projects |
 | verify-work | workspace-health | CHANGELOG updated; production_readiness passed before commit/push/PR |
+| verify-work | workspace-health | CI production readiness failure fixed: validate_workspace_targets supports committed metrics proof; production_readiness passed |
 
 ## Gate Results
 

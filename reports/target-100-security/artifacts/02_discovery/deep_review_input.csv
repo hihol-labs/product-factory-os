@@ -5,4 +5,5 @@ target-100-003,scripts/production_readiness.py,readiness wiring,Ensures target m
 target-100-004,scripts/release_check.py,release wiring,Ensures target metrics are checked after mandatory live release proof.
 target-100-005,scripts/install_workspace.py,global policy,Clarifies all local projects must auto-connect PFO anywhere on the computer.
 target-100-006,scripts/pfo_contract_gate.py,risk classification,Narrows dependency-change marker to real dependency manifests and lockfiles.
-target-100-007,dashboard/index.html,metrics rendering,Renders local target values using existing escaping.
+target-100-007,reports/target-100-workspace-metrics.json,CI metrics proof,Provides aggregate target values for CI without local workspace state.
+target-100-008,dashboard/index.html,metrics rendering,Renders local target values using existing escaping.

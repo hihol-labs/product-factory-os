@@ -180,6 +180,7 @@ Architecture: `modular monolith`
 - {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'workspace-health', 'evidence': 'validate_security_report passed; pfo_contract_gate passed', 'recordedAt': '2026-06-06T06:52:17+00:00'}
 - {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'workspace-health', 'evidence': 'production_readiness passed; workspace target gate passed; pfo_contract_gate passed; global PFO policy installed for all local projects', 'recordedAt': '2026-06-06T06:55:50+00:00'}
 - {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'workspace-health', 'evidence': 'CHANGELOG updated; production_readiness passed before commit/push/PR', 'recordedAt': '2026-06-06T07:08:01+00:00'}
+- {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'workspace-health', 'evidence': 'CI production readiness failure fixed: validate_workspace_targets supports committed metrics proof; production_readiness passed', 'recordedAt': '2026-06-06T07:45:12+00:00'}
 
 ## TDD Evidence
 
@@ -206,9 +207,9 @@ Architecture: `modular monolith`
 ## Telemetry
 
 - Units: `0`
-- Verifications: `29`
+- Verifications: `30`
 - Token notes: none
 - Cost notes: none
-- Event log: `.codex-memory/events.jsonl` last `event-20260606T070801Z-1`
+- Event log: `.codex-memory/events.jsonl` last `event-20260606T074512Z-1`
 - Permission matrix: `.pfo/PERMISSION_MATRIX.json` `READY`
 - Tool registry: `.pfo/TOOL_CAPABILITY_REGISTRY.json` `READY`

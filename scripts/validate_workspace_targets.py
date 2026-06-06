@@ -29,17 +29,33 @@ def load_project_states(workspace: Path) -> list[tuple[Path, dict]]:
     return project_states
 
 
+def load_metrics_payload(metrics_json: Path) -> tuple[dict, dict, dict]:
+    payload = json.loads(metrics_json.read_text(encoding="utf-8"))
+    harness = payload.get("harnessEfficiency", {}) if isinstance(payload.get("harnessEfficiency"), dict) else {}
+    context = payload.get("contextRuntime", {}) if isinstance(payload.get("contextRuntime"), dict) else {}
+    live_eval = payload.get("liveEvalStatus", {}) if isinstance(payload.get("liveEvalStatus"), dict) else {}
+    return harness, context, live_eval
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validate PFO 100/100 workspace target metrics.")
     parser.add_argument("--workspace", type=Path, default=ROOT.parent)
+    parser.add_argument(
+        "--metrics-json",
+        type=Path,
+        help="Validate a recorded pfo metrics payload instead of reading live workspace state.",
+    )
     args = parser.parse_args()
 
-    project_states = load_project_states(args.workspace)
-    harness = pfo_metrics.efficiency_metrics(project_states)
-    context = pfo_metrics.context_runtime_metrics(project_states)
-    blockers = pfo_metrics.blocker_metrics(project_states)
-    stale = pfo_metrics.stale_state_metrics(project_states)
-    live_eval = pfo_metrics.live_eval_status(project_states, harness, context, blockers, stale)
+    if args.metrics_json:
+        harness, context, live_eval = load_metrics_payload(args.metrics_json)
+    else:
+        project_states = load_project_states(args.workspace)
+        harness = pfo_metrics.efficiency_metrics(project_states)
+        context = pfo_metrics.context_runtime_metrics(project_states)
+        blockers = pfo_metrics.blocker_metrics(project_states)
+        stale = pfo_metrics.stale_state_metrics(project_states)
+        live_eval = pfo_metrics.live_eval_status(project_states, harness, context, blockers, stale)
 
     errors: list[str] = []
     context_coverage = context.get("completeCoverageRatio")

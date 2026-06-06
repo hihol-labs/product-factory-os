@@ -2,32 +2,24 @@
   "status": "PASS",
   "changedFiles": [
     "CHANGELOG.md",
-    "README.md",
-    "dashboard/index.html",
     "docs/INSTALL.md",
     "reports/target-100-security-review.md",
     "reports/target-100-security/artifacts/02_discovery/deep_review_input.csv",
     "reports/target-100-security/artifacts/02_discovery/work_ledger.jsonl",
     "reports/target-100-security/artifacts/03_coverage/repository_coverage_ledger.md",
     "reports/target-100-security/artifacts/05_findings/no-findings/candidate_ledger.jsonl",
+    "reports/target-100-workspace-metrics.json",
     "reports/workspace-health-implementation-report.md",
-    "scripts/install_workspace.py",
-    "scripts/pfo_contract_gate.py",
-    "scripts/pfo_metrics.py",
     "scripts/production_readiness.py",
     "scripts/release_check.py",
     "scripts/validate_workspace_targets.py"
   ],
   "runtimeChangedFiles": [
-    "PFO_CONTRACT_GATE.json",
-    "PFO_EXISTING_PROJECT_ANALYSIS.json",
     "PFO_REPORT.md"
   ],
   "riskClasses": [
     "business_logic_change",
-    "data_source_change",
     "deployment_change",
-    "provider_integration_change",
     "security_change",
     "user_facing_output_change"
   ],

@@ -10,6 +10,7 @@ Reviewed the current working-tree changes for target workspace criteria and glob
 - `scripts/release_check.py`
 - `scripts/install_workspace.py`
 - `scripts/pfo_contract_gate.py`
+- `reports/target-100-workspace-metrics.json`
 - `dashboard/index.html`
 - `README.md`
 - `docs/INSTALL.md`
@@ -36,6 +37,7 @@ Discovery reviewed the new metric thresholds, target validator, readiness/releas
 Validation focused on fail-closed behavior:
 
 - `validate_workspace_targets.py` exits non-zero when context coverage, verification pass rate, repair-loop ratio, or live eval status miss target.
+- `validate_workspace_targets.py` can validate either live workspace state or a committed metrics proof for CI environments that do not have the local machine workspace.
 - `production_readiness.py` and `release_check.py` both invoke the new target validator.
 - `release_check.py` still requires `validate_release_live_headless.py`, so live command-mode proof remains mandatory for release.
 - `install_workspace.py` only writes stricter global policy metadata and managed AGENTS text.
@@ -43,7 +45,7 @@ Validation focused on fail-closed behavior:
 
 ## Attack Path
 
-No exploitable attack path was found. The changed code reads local JSON/markdown state, computes ratios, and returns deterministic pass/fail output. The dashboard change renders numeric fields from local `metrics.json` using the existing escaping helper. The installer change adds policy keys and text but does not add new command execution paths. The contract-gate change removes over-broad text matching and does not suppress real changed dependency manifest or lockfile paths.
+No exploitable attack path was found. The changed code reads local JSON/markdown state, computes ratios, and returns deterministic pass/fail output. The committed metrics proof contains only aggregate target values and no secrets. The dashboard change renders numeric fields from local `metrics.json` using the existing escaping helper. The installer change adds policy keys and text but does not add new command execution paths. The contract-gate change removes over-broad text matching and does not suppress real changed dependency manifest or lockfile paths.
 
 ## Findings
 

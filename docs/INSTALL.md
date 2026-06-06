@@ -301,6 +301,12 @@ It also includes workspace health:
 - `missingGates`: required route gates and artifacts that are absent or pending.
 - `liveEvalStatus`: combined health status from coverage, blockers, stale state, pass rates, and repair-loop targets.
 
+CI and release readiness validate the committed target proof at `reports/target-100-workspace-metrics.json`; local operators can rerun the live workspace gate with:
+
+```bash
+python3 scripts/validate_workspace_targets.py --workspace /home/hihol/projects
+```
+
 ## Release Check
 
 ```bash

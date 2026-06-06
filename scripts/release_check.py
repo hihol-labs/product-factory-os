@@ -41,7 +41,7 @@ def main() -> None:
         live_command.extend(["--proof-root", live_proof])
     run(live_command)
     run([sys.executable, "scripts/validate_eval_layer.py"])
-    run([sys.executable, "scripts/validate_workspace_targets.py"])
+    run([sys.executable, "scripts/validate_workspace_targets.py", "--metrics-json", "reports/target-100-workspace-metrics.json"])
     run([sys.executable, "scripts/verify_skill_profiles.py"])
     run([sys.executable, "scripts/validate_execution_graph.py"])
     run([sys.executable, "scripts/validate_runtime.py"])
