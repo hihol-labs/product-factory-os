@@ -4,3 +4,5 @@
 {"id":"target-100-004","phase":"attack_path","path":"scripts/install_workspace.py","status":"reviewed","notes":"Policy text/key additions only; no new command execution or secret handling path."}
 {"id":"target-100-005","phase":"validation","path":"scripts/pfo_contract_gate.py","status":"reviewed","notes":"Dependency risk now comes from changed manifest or lockfile names, not arbitrary diff text."}
 {"id":"target-100-006","phase":"validation","path":"reports/target-100-workspace-metrics.json","status":"reviewed","notes":"Committed proof contains aggregate metrics only and lets CI validate target gates without local workspace state."}
+{"id":"target-100-007","phase":"validation","path":".codex-plugin/plugin.json","status":"reviewed","notes":"Version-only public metadata update; no auth, execution, or secret handling path."}
+{"id":"target-100-008","phase":"validation","path":"marketplace/marketplace-entry.json","status":"reviewed","notes":"Version-only public metadata update synchronized with plugin manifest."}

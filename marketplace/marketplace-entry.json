@@ -1,7 +1,7 @@
 {
   "name": "product-factory-os",
   "displayName": "Product Factory OS",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "source": {
     "source": "local",
     "path": "./product-factory-os"

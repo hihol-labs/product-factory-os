@@ -9,4 +9,6 @@
 | target-100-005 | `scripts/install_workspace.py` | Global auto-adoption ambiguity | No issue found; policy explicitly covers new and existing projects anywhere on the computer. |
 | target-100-006 | `scripts/pfo_contract_gate.py` | False dependency risk | No issue found; dependency matching uses changed manifest and lockfile paths. |
 | target-100-007 | `reports/target-100-workspace-metrics.json` | Secret leakage in CI proof | No issue found; artifact contains aggregate ratios and status only. |
-| target-100-008 | `dashboard/index.html` | Unsafe metrics rendering | No issue found; values are rendered through existing escaped metric helpers. |
+| target-100-008 | `.codex-plugin/plugin.json` | Release metadata tampering | No issue found; version is synchronized to changelog and marketplace. |
+| target-100-009 | `marketplace/marketplace-entry.json` | Release metadata mismatch | No issue found; version matches plugin manifest. |
+| target-100-010 | `dashboard/index.html` | Unsafe metrics rendering | No issue found; values are rendered through existing escaped metric helpers. |
