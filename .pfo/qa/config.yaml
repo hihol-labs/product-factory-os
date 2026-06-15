@@ -1,0 +1,7 @@
+project: product-factory-os
+default_target: local
+apps:
+  docs:
+    path_patterns: ['*.md', 'docs/**']
+    test_tool: pfo-validators
+failure_learning: suggest_in_report

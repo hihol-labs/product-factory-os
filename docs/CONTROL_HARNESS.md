@@ -64,6 +64,16 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | human-approval | Irreversible or production-impacting boundary approval | Feedback | Inferential | `docs/METHODOLOGY.md`, `docs/templates/pfo/PERMISSION_MATRIX.md`, `skills/deploy/SKILL.md` |
 | human-steering | Human attention routed to unclear intent, accepted risk, load-bearing convention, and harness gaps | Feedback | Inferential | `docs/METHODOLOGY.md`, `.codex-memory/STATE.json`, `NEXT_STEP.md` |
 | learning-promotion | Turn repeated failures into stronger controls | Feedback | Computational | `docs/templates/pfo/LEARNING_PROMOTION_GATE.md`, `scripts/pfo_learn.py`, `memory/LEARNING_REGISTRY.json` |
+| platform-readiness | Measure whether a project can support autonomous PFO work before raising autonomy | Feedback | Computational | `pfo readiness`, `PFO_READINESS_REPORT.md`, `.codex-memory/STATE.json` |
+| readiness-remediation | Convert readiness gaps into deterministic local artifact repair | Feedback | Computational | `pfo readiness-fix`, `.codex-memory/context-index.json`, `.codex-memory/resume-snapshot.md`, `.codex-memory/LEARNING_PROPOSALS.json` |
+| autonomy-policy | Explain and check risk-tier permissions before headless or delegated work | Feedforward | Computational | `pfo policy`, `pfo autonomy`, `.pfo/PERMISSION_MATRIX.json`, `.pfo/EXECUTION_POLICY.json` |
+| headless-exec-envelope | Run deterministic PFO routes as machine-readable one-shot automation | Feedforward | Computational | `pfo exec`, route profile, JSON result envelope |
+| mission-control | Plan and validate milestone-based agent work without relying on chat history | Feedforward | Computational | `pfo mission`, `.pfo/mission.json`, `PFO_MISSION.md` |
+| project-wiki | Keep navigable architecture, module, command, gate, and state context close to the repo | Feedforward | Computational | `pfo wiki`, `.pfo/wiki/index.md` |
+| diff-scoped-qa | Test only relevant app/project surfaces and record evidence after changes | Feedback | Computational | `pfo qa`, `.pfo/qa/config.yaml`, `.pfo/qa/PFO_QA_REPORT.md` |
+| telemetry-export | Export local event, artifact, gate, and verification metrics for observability | Feedback | Computational | `pfo telemetry`, `.pfo/telemetry/pfo-telemetry.jsonl`, `pfo metrics` |
+
+Platform surface canonical artifacts: `scripts/pfo.py`, `scripts/pfo_metrics.py`, `routing/route-profiles.json`, `docs/HEADLESS_EXECUTION.md`, `docs/DROID_INSPIRED_RUNTIME.md`, `PFO_READINESS_REPORT.md`, `PFO_MISSION.md`, `.pfo/mission.json`, `.pfo/wiki/index.md`, `.pfo/qa/config.yaml`, `.pfo/qa/PFO_QA_REPORT.md`, `.pfo/telemetry/pfo-telemetry.jsonl`, `.codex-memory/STATE.json`, `.codex-memory/context-index.json`, `.codex-memory/resume-snapshot.md`, `.codex-memory/LEARNING_PROPOSALS.json`, `docs/templates/pfo/PERMISSION_MATRIX.json`, and `docs/templates/pfo/EXECUTION_POLICY.json`.
 
 ## Precedence
 
@@ -100,6 +110,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | Review work | rubrics and quality gate expectations | `review-agent`, `security-review-agent`, `ux-review-agent` when applicable |
 | Deploy readiness | permission matrix, deployment target, rollback expectations | `methodology-ci`, `project-ci`, security/deps/hardening/browser gates |
 | Learn and improve | learning promotion policy | `learning-promotion`, `continuous-health-sensors`, `defensive-layer-diagnostics`, fixture and validator updates |
+| Operate agent platform | `autonomy-policy`, `mission-control`, `headless-exec-envelope`, `project-wiki` | `platform-readiness`, `readiness-remediation`, `diff-scoped-qa`, `telemetry-export` |
 | Resume or compact | `context-economy`, `unit-context` | `session-memory-search`, `handoff` |
 
 ## Addition Checklist

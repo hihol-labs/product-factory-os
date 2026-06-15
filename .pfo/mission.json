@@ -1,0 +1,37 @@
+{
+  "goal": "Implement Droid-inspired PFO runtime surfaces",
+  "status": "RUNNING",
+  "milestones": [
+    {
+      "id": "M1",
+      "name": "Readiness and policy",
+      "features": [
+        "readiness",
+        "policy"
+      ],
+      "validator": "readiness",
+      "status": "PASSED",
+      "validatedAt": "2026-06-15T13:53:11+00:00"
+    },
+    {
+      "id": "M2",
+      "name": "Knowledge and QA",
+      "features": [
+        "wiki",
+        "qa"
+      ],
+      "validator": "qa"
+    },
+    {
+      "id": "M3",
+      "name": "Telemetry and handoff",
+      "features": [
+        "telemetry",
+        "handoff"
+      ],
+      "validator": "telemetry"
+    }
+  ],
+  "currentMilestone": "M1",
+  "updatedAt": "2026-06-15T13:52:57+00:00"
+}

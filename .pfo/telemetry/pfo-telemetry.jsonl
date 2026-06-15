@@ -1,0 +1,4 @@
+{"type": "metric", "name": "eventCount", "value": 192, "project": "product-factory-os"}
+{"type": "metric", "name": "artifactCount", "value": 63, "project": "product-factory-os"}
+{"type": "metric", "name": "gateCount", "value": 45, "project": "product-factory-os"}
+{"type": "metric", "name": "verificationCount", "value": 90, "project": "product-factory-os"}

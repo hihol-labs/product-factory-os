@@ -383,6 +383,87 @@ CONTROL_REGISTRY = [
             "memory/LEARNING_REGISTRY.json",
         ],
     },
+    {
+        "id": "platform-readiness",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            "PFO_READINESS_REPORT.md",
+            ".codex-memory/STATE.json",
+        ],
+    },
+    {
+        "id": "readiness-remediation",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            ".codex-memory/context-index.json",
+            ".codex-memory/resume-snapshot.md",
+            ".codex-memory/LEARNING_PROPOSALS.json",
+        ],
+    },
+    {
+        "id": "autonomy-policy",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            "docs/templates/pfo/PERMISSION_MATRIX.json",
+            "docs/templates/pfo/EXECUTION_POLICY.json",
+        ],
+    },
+    {
+        "id": "headless-exec-envelope",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            "routing/route-profiles.json",
+            "docs/HEADLESS_EXECUTION.md",
+        ],
+    },
+    {
+        "id": "mission-control",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            ".pfo/mission.json",
+            "PFO_MISSION.md",
+        ],
+    },
+    {
+        "id": "project-wiki",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            ".pfo/wiki/index.md",
+            "docs/DROID_INSPIRED_RUNTIME.md",
+        ],
+    },
+    {
+        "id": "diff-scoped-qa",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            ".pfo/qa/config.yaml",
+            ".pfo/qa/PFO_QA_REPORT.md",
+        ],
+    },
+    {
+        "id": "telemetry-export",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            ".pfo/telemetry/pfo-telemetry.jsonl",
+            "scripts/pfo_metrics.py",
+        ],
+    },
 ]
 
 

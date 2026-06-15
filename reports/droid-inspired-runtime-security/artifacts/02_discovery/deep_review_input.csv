@@ -1,0 +1,4 @@
+id,path,reason
+1,scripts/pfo.py,new CLI surfaces and project-local write paths
+2,scripts/pfo_metrics.py,new platform surface metrics
+3,docs/DROID_INSPIRED_RUNTIME.md,new operator-facing runtime documentation
