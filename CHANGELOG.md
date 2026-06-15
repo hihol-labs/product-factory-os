@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Droid-inspired PFO platform surfaces: `pfo readiness`, `pfo readiness-fix`, `pfo policy`, `pfo autonomy`, `pfo exec`, `pfo mission`, `pfo wiki`, `pfo qa`, and `pfo telemetry`.
+- `PFO_READINESS_REPORT.md`, `.pfo/mission.json`, `.pfo/wiki/`, `.pfo/qa/`, and `.pfo/telemetry/` runtime artifacts for local-first readiness, orchestration, knowledge, QA, and observability.
+- `platformSurfaces` metrics in `pfo metrics` to track readiness, mission, policy, wiki, QA, and telemetry coverage across adopted projects.
+- `docs/DROID_INSPIRED_RUNTIME.md` documenting the seven implemented Droid-inspired PFO contours.
+- Control-harness registry and documentation entries for the new readiness, remediation, autonomy, exec, mission, wiki, QA, and telemetry surfaces, preserving Harness Engineering guide/sensor coverage.
+
 ## [1.1.0] - 2026-06-06
 
 ### Added

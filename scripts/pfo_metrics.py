@@ -503,6 +503,41 @@ def live_eval_status(
     }
 
 
+def platform_surface_metrics(project_states: list[tuple[Path, dict]]) -> dict:
+    surfaces = {
+        "readiness": "PFO_READINESS_REPORT.md",
+        "mission": ".pfo/mission.json",
+        "policy": ".pfo/PERMISSION_MATRIX.json",
+        "wiki": ".pfo/wiki/index.md",
+        "qa": ".pfo/qa/PFO_QA_REPORT.md",
+        "telemetry": ".pfo/telemetry/pfo-telemetry.jsonl",
+    }
+    by_project = {}
+    totals = {key: 0 for key in surfaces}
+    for project, state in project_states:
+        project_surfaces = {}
+        for key, rel in surfaces.items():
+            present = (project / rel).is_file() or rel in set(state.get("artifacts", []))
+            project_surfaces[key] = {"path": rel, "status": "READY" if present else "MISSING"}
+            if present:
+                totals[key] += 1
+        by_project[project.name] = project_surfaces
+    project_count = len(project_states)
+    coverage = {
+        key: {
+            "readyProjectCount": value,
+            "coverageRatio": ratio(value, project_count),
+            "coveragePercent": percent(value, project_count),
+        }
+        for key, value in totals.items()
+    }
+    return {
+        "surfaces": coverage,
+        "byProject": by_project,
+        "status": "PASS" if all(item["readyProjectCount"] == project_count for item in coverage.values()) else "ATTENTION",
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Collect Product Factory OS workspace metrics.")
     parser.add_argument("workspace", type=Path)
@@ -524,6 +559,7 @@ def main() -> None:
     stale = stale_state_metrics(project_states)
     missing_gates = missing_gate_metrics(project_states, artifact_debt)
     live_eval = live_eval_status(project_states, harness, context, blockers, stale)
+    platform_surfaces = platform_surface_metrics(project_states)
 
     metrics = {
         "projectCount": len(projects),
@@ -541,6 +577,7 @@ def main() -> None:
         "staleState": stale,
         "missingGates": missing_gates,
         "liveEvalStatus": live_eval,
+        "platformSurfaces": platform_surfaces,
     }
     print(json.dumps(metrics, indent=2, ensure_ascii=False))
 

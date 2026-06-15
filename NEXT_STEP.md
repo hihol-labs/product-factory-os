@@ -6,7 +6,7 @@ This is the user-facing steering checkpoint.
 
 - Product: product-factory-os
 - Current outcome: Detected Existing Software Project with Docker, Product Factory OS runtime, Python, pytest. Ran 0 gate command(s).
-- Recommended next step: Choose and approve the next task-specific implementation step.
+- Recommended next step: Resolve analyzer blockers before any implementation work.
 - Approval status: PENDING
 
 ## Visible Roadmap

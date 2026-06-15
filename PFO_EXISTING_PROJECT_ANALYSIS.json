@@ -38,14 +38,46 @@
   "gateRuns": [],
   "securityFindings": [],
   "contractGate": {
-    "status": "PASS",
-    "changedFiles": [],
-    "runtimeChangedFiles": [],
-    "riskClasses": [],
+    "status": "BLOCKED",
+    "changedFiles": [
+      "CHANGELOG.md",
+      "PFO_MISSION.md",
+      "PFO_READINESS_REPORT.md",
+      "docs/DROID_INSPIRED_RUNTIME.md",
+      "scripts/pfo.py",
+      "scripts/pfo_metrics.py"
+    ],
+    "runtimeChangedFiles": [
+      ".pfo/mission.json",
+      ".pfo/qa/PFO_QA_REPORT.md",
+      ".pfo/qa/REPORT-TEMPLATE.md",
+      ".pfo/qa/config.yaml",
+      ".pfo/qa/flows/docs.md",
+      ".pfo/wiki/architecture.md",
+      ".pfo/wiki/commands.md",
+      ".pfo/wiki/current-state.md",
+      ".pfo/wiki/gates.md",
+      ".pfo/wiki/index.md",
+      ".pfo/wiki/modules.md",
+      "PFO_CONTRACT_GATE.json",
+      "PFO_REPORT.md"
+    ],
+    "riskClasses": [
+      "business_logic_change",
+      "data_source_change",
+      "deployment_change",
+      "security_change",
+      "user_facing_output_change"
+    ],
     "missingContracts": [],
     "placeholderContracts": [],
     "aliasTargetErrors": [],
-    "blockers": [],
+    "blockers": [
+      "missing changed security coverage artifact: deep_review_input.csv",
+      "missing changed security coverage artifact: work_ledger.jsonl",
+      "missing changed security coverage artifact: repository_coverage_ledger.md",
+      "missing changed security coverage artifact: candidate_ledger.jsonl"
+    ],
     "warnings": [],
     "gates": {
       "aliasTargets": "PASS",
@@ -55,7 +87,7 @@
       "regressionContract": "PASS",
       "fallbackPolicy": "PASS",
       "diffRisk": "PASS",
-      "securityEvidence": "PASS",
+      "securityEvidence": "BLOCKED",
       "noSilentSubstitution": "PASS",
       "executionPolicy": "PASS",
       "permissionMatrix": "PASS",

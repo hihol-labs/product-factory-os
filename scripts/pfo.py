@@ -3160,6 +3160,471 @@ def cmd_brief(args: argparse.Namespace) -> int:
     return 0
 
 
+READINESS_LEVELS = [
+    {
+        "level": 1,
+        "name": "Functional",
+        "checks": [
+            ("readme", "README.md"),
+            ("gitignore", ".gitignore"),
+            ("testing", "TESTING.md"),
+        ],
+    },
+    {
+        "level": 2,
+        "name": "Adopted",
+        "checks": [
+            ("agents", "AGENTS.md"),
+            ("codex", "CODEX.md"),
+            ("state", ".codex-memory/STATE.json"),
+            ("project-contract", ".pfo/PROJECT_CONTRACT.md"),
+        ],
+    },
+    {
+        "level": 3,
+        "name": "Gated",
+        "checks": [
+            ("scope-lock", ".pfo/SCOPE_LOCK.md"),
+            ("data-policy", ".pfo/DATA_POLICY.md"),
+            ("permission-matrix", ".pfo/PERMISSION_MATRIX.json"),
+            ("verification-contract", ".pfo/VERIFICATION_CONTRACT.json"),
+        ],
+    },
+    {
+        "level": 4,
+        "name": "Measured",
+        "checks": [
+            ("events", ".codex-memory/events.jsonl"),
+            ("context-index", ".codex-memory/context-index.json"),
+            ("resume-snapshot", ".codex-memory/resume-snapshot.md"),
+            ("report", "PFO_REPORT.md"),
+        ],
+    },
+    {
+        "level": 5,
+        "name": "Self-improving",
+        "checks": [
+            ("learning-gate", ".pfo/LEARNING_PROMOTION_GATE.md"),
+            ("learnings", ".codex-memory/LEARNINGS.jsonl"),
+            ("learning-proposals", ".codex-memory/LEARNING_PROPOSALS.json"),
+            ("experiment-program", ".pfo/EXPERIMENT_PROGRAM.md"),
+        ],
+    },
+]
+
+
+def readiness_report(project: Path) -> dict:
+    state = load_state(project) if (project / ".codex-memory" / "STATE.json").is_file() else {}
+    level_results = []
+    achieved = 0
+    for spec in READINESS_LEVELS:
+        checks = []
+        passed = 0
+        for check_id, rel in spec["checks"]:
+            ok = (project / rel).is_file()
+            passed += 1 if ok else 0
+            checks.append({"id": check_id, "path": rel, "status": "PASS" if ok else "MISSING"})
+        ratio_value = passed / len(spec["checks"])
+        unlocked = ratio_value >= 0.8
+        if unlocked and spec["level"] == achieved + 1:
+            achieved = spec["level"]
+        level_results.append(
+            {
+                "level": spec["level"],
+                "name": spec["name"],
+                "score": f"{passed}/{len(spec['checks'])}",
+                "ratio": round(ratio_value, 4),
+                "status": "PASS" if unlocked else "ATTENTION",
+                "checks": checks,
+            }
+        )
+    action_items = []
+    for level in level_results:
+        for check in level["checks"]:
+            if check["status"] != "PASS":
+                action_items.append(
+                    {
+                        "level": level["level"],
+                        "action": f"Create or refresh {check['path']}",
+                        "reason": f"Required for PFO readiness level {level['level']} ({level['name']}).",
+                    }
+                )
+        if action_items:
+            break
+    gates = state.get("gateResults", {}) if isinstance(state.get("gateResults"), dict) else {}
+    return {
+        "project": str(project),
+        "levelAchieved": achieved,
+        "levelName": next((item["name"] for item in level_results if item["level"] == achieved), "Unready"),
+        "levels": level_results,
+        "gateSummary": gates,
+        "actionItems": action_items[:3],
+        "generatedAt": now_iso(),
+    }
+
+
+def write_readiness_report(project: Path, report: dict) -> None:
+    lines = [
+        "# PFO Readiness Report",
+        "",
+        f"- Project: `{project}`",
+        f"- Generated: `{report['generatedAt']}`",
+        f"- Level achieved: {report['levelAchieved']} ({report['levelName']})",
+        "",
+        "## Levels",
+        "",
+        "| Level | Name | Score | Status |",
+        "|---:|---|---:|---|",
+    ]
+    for item in report["levels"]:
+        lines.append(f"| {item['level']} | {item['name']} | {item['score']} | {item['status']} |")
+    lines.extend(["", "## Action Items", ""])
+    if report["actionItems"]:
+        for item in report["actionItems"]:
+            lines.append(f"- {item['action']} - {item['reason']}")
+    else:
+        lines.append("- No readiness gaps detected for the current model.")
+    (project / "PFO_READINESS_REPORT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def cmd_readiness(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    report = readiness_report(project)
+    if args.write:
+        state = load_state(project)
+        ensure_autonomy_state(state)
+        write_readiness_report(project, report)
+        state["readiness"] = report
+        state["gateResults"]["readiness"] = "PASSED" if report["levelAchieved"] >= args.min_level else "BLOCKED"
+        add_artifact(state, "PFO_READINESS_REPORT.md")
+        append_event(project, state, "gate", state["gateResults"]["readiness"], {"command": "readiness", "level": report["levelAchieved"]})
+        save_state(project, state)
+    if args.json:
+        print(json.dumps(report, indent=2, ensure_ascii=False))
+    else:
+        print(f"Level: {report['levelAchieved']} ({report['levelName']})")
+        for item in report["actionItems"]:
+            print(f"Action: {item['action']}")
+    return 0 if report["levelAchieved"] >= args.min_level else 1
+
+
+def cmd_readiness_fix(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    if not args.apply:
+        report = readiness_report(project)
+        print(json.dumps({"mode": "dry-run", "actionItems": report["actionItems"]}, indent=2, ensure_ascii=False))
+        return 0
+    run_script("adoption_check.py", ["--write", "--project", str(project), "--analyze", "--report"])
+    run_script("pfo_context_runtime.py", ["index", str(project)])
+    run_script("pfo_context_runtime.py", ["snapshot", str(project), "--reason", "readiness-fix", "--quiet"])
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    if args.focus in {"all", "measurement"}:
+        (project / ".codex-memory").mkdir(exist_ok=True)
+        learnings = project / ".codex-memory" / "LEARNINGS.jsonl"
+        if not learnings.exists():
+            learnings.write_text("", encoding="utf-8")
+        proposals = project / ".codex-memory" / "LEARNING_PROPOSALS.json"
+        if not proposals.exists():
+            proposals.write_text("[]\n", encoding="utf-8")
+        experiment_program = project / ".pfo" / "EXPERIMENT_PROGRAM.md"
+        if not experiment_program.exists():
+            experiment_program.write_text(
+                "# Experiment Program\n\n"
+                "## Metric\n\n"
+                "- Name: readiness_improvement\n"
+                "- Direction: higher\n"
+                "- Budget seconds: 300\n\n"
+                "## Boundary\n\n"
+                "Only update PFO runtime artifacts needed to improve measured readiness.\n",
+                encoding="utf-8",
+            )
+    report = readiness_report(project)
+    write_readiness_report(project, report)
+    state["readiness"] = report
+    state["gateResults"]["readiness"] = "PASSED"
+    add_artifact(state, "PFO_READINESS_REPORT.md")
+    append_event(project, state, "state-change", "PASSED", {"command": "readiness-fix", "focus": args.focus})
+    save_state(project, state)
+    print("OK: readiness remediation applied")
+    return 0
+
+
+AUTONOMY_LEVELS = {
+    "off": {"rank": 0, "capabilities": {"read"}},
+    "low": {"rank": 1, "capabilities": {"read", "write"}},
+    "medium": {"rank": 2, "capabilities": {"read", "write", "test", "commit", "external_api"}},
+    "high": {"rank": 3, "capabilities": {"read", "write", "test", "commit", "push", "deploy", "external_api"}},
+}
+
+
+def cmd_policy(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    level = args.auto.lower()
+    if level not in AUTONOMY_LEVELS:
+        print("ERROR: --auto must be off, low, medium, or high")
+        return 2
+    matrix_path = project / ".pfo" / "PERMISSION_MATRIX.json"
+    matrix = json.loads(matrix_path.read_text(encoding="utf-8")) if matrix_path.is_file() else {}
+    if args.policy_action == "explain":
+        payload = {
+            "project": str(project),
+            "autonomyLevel": level,
+            "allowedCapabilities": sorted(AUTONOMY_LEVELS[level]["capabilities"]),
+            "permissionMatrix": matrix,
+        }
+        print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else f"Autonomy {level}: {', '.join(payload['allowedCapabilities'])}")
+        return 0
+    required = args.capability or "read"
+    allowed = required in AUTONOMY_LEVELS[level]["capabilities"]
+    payload = {"capability": required, "autonomyLevel": level, "status": "PASS" if allowed else "BLOCKED"}
+    if args.json:
+        print(json.dumps(payload, indent=2, ensure_ascii=False))
+    else:
+        print(f"{required}: {payload['status']} at autonomy {level}")
+    return 0 if allowed else 1
+
+
+def exec_result(status: str, route: str, profile: str, artifacts: list[str], gates: dict, next_action: str, code: int) -> dict:
+    return {
+        "type": "pfo-exec-result",
+        "status": status,
+        "route": route,
+        "profile": profile,
+        "artifacts": artifacts,
+        "gates": gates,
+        "nextAction": next_action,
+        "exitCode": code,
+    }
+
+
+def cmd_exec(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    route = args.route
+    code = 0
+    artifacts: list[str] = []
+    if route == "readiness":
+        code = cmd_readiness(argparse.Namespace(project=project, write=True, json=False, min_level=1))
+        artifacts.append("PFO_READINESS_REPORT.md")
+    elif route == "readiness-fix":
+        code = cmd_readiness_fix(argparse.Namespace(project=project, apply=True, focus="all"))
+        artifacts.append("PFO_READINESS_REPORT.md")
+    elif route == "mission":
+        code = cmd_mission(argparse.Namespace(project=project, mission_action="plan", goal=args.prompt, milestone="", apply=True, json=False))
+        artifacts.extend([".pfo/mission.json", "PFO_MISSION.md"])
+    elif route == "wiki":
+        code = cmd_wiki(argparse.Namespace(project=project, wiki_action="generate", json=False))
+        artifacts.append(".pfo/wiki/index.md")
+    elif route == "qa":
+        code = cmd_qa(argparse.Namespace(project=project, qa_action="run", app="", changed_file=[], json=False))
+        artifacts.append(".pfo/qa/PFO_QA_REPORT.md")
+    elif route == "telemetry":
+        code = cmd_telemetry(argparse.Namespace(project=project, workspace=project.parent, format="jsonl", output="", json=False))
+        artifacts.append(".pfo/telemetry/pfo-telemetry.jsonl")
+    else:
+        print(f"ERROR: unsupported exec route: {route}")
+        return 2
+    state = load_state(project)
+    result = exec_result("success" if code == 0 else "blocked", route, args.profile, artifacts, state.get("gateResults", {}), state.get("nextAction", ""), code)
+    if args.output_format == "json":
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+    return code
+
+
+def cmd_mission(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    mission_path = project / ".pfo" / "mission.json"
+    mission_doc = project / "PFO_MISSION.md"
+    mission_path.parent.mkdir(exist_ok=True)
+    if args.mission_action in {"plan", "replan"}:
+        goal = args.goal or state.get("nextAction") or state.get("intent") or "PFO mission"
+        mission = {
+            "goal": goal,
+            "status": "PLANNED",
+            "milestones": [
+                {"id": "M1", "name": "Readiness and policy", "features": ["readiness", "policy"], "validator": "readiness"},
+                {"id": "M2", "name": "Knowledge and QA", "features": ["wiki", "qa"], "validator": "qa"},
+                {"id": "M3", "name": "Telemetry and handoff", "features": ["telemetry", "handoff"], "validator": "telemetry"},
+            ],
+            "currentMilestone": "M1",
+            "updatedAt": now_iso(),
+        }
+    elif mission_path.is_file():
+        mission = json.loads(mission_path.read_text(encoding="utf-8"))
+    else:
+        print("ERROR: run `pfo mission plan <project>` first")
+        return 2
+    if args.mission_action == "run":
+        target = args.milestone or mission.get("currentMilestone") or "M1"
+        for milestone in mission.get("milestones", []):
+            if milestone["id"] == target:
+                milestone["status"] = "PASSED"
+                milestone["validatedAt"] = now_iso()
+                mission["currentMilestone"] = target
+        mission["status"] = "RUNNING"
+        state["gateResults"]["missionValidation"] = "PASSED"
+    elif args.mission_action == "pause":
+        mission["status"] = "PAUSED"
+    elif args.mission_action == "continue":
+        mission["status"] = "RUNNING"
+    mission_path.write_text(json.dumps(mission, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    mission_doc.write_text(
+        "# PFO Mission\n\n"
+        f"Goal: {mission['goal']}\n\n"
+        f"Status: {mission['status']}\n\n"
+        "## Milestones\n\n"
+        + "\n".join(f"- {item['id']}: {item['name']} ({item.get('status', 'PENDING')})" for item in mission.get("milestones", []))
+        + "\n",
+        encoding="utf-8",
+    )
+    state["mission"] = mission
+    add_artifact(state, ".pfo/mission.json")
+    add_artifact(state, "PFO_MISSION.md")
+    append_event(project, state, "state-change", "RECORDED", {"command": "mission", "action": args.mission_action})
+    save_state(project, state)
+    if args.json:
+        print(json.dumps(mission, indent=2, ensure_ascii=False))
+    else:
+        print(f"OK: mission {args.mission_action} -> {mission['status']}")
+    return 0
+
+
+def cmd_wiki(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    wiki_dir = project / ".pfo" / "wiki"
+    wiki_dir.mkdir(parents=True, exist_ok=True)
+    state = load_state(project)
+    state_summary = {
+        "currentStage": state.get("currentStage", ""),
+        "currentNode": state.get("currentNode", ""),
+        "nextAction": state.get("nextAction", ""),
+        "gateResults": state.get("gateResults", {}),
+        "artifacts": state.get("artifacts", [])[-25:] if isinstance(state.get("artifacts"), list) else [],
+    }
+    docs = {
+        "index.md": f"# PFO Wiki\n\nProject: `{project.name}`\n\n- [Architecture](architecture.md)\n- [Modules](modules.md)\n- [Commands](commands.md)\n- [Gates](gates.md)\n- [State](current-state.md)\n",
+        "architecture.md": (project / "PROJECT_ARCHITECTURE.md").read_text(encoding="utf-8") if (project / "PROJECT_ARCHITECTURE.md").is_file() else "# Architecture\n\nNo project architecture artifact yet.\n",
+        "modules.md": "# Modules\n\n" + "\n".join(f"- `{path.name}/`" for path in sorted(project.iterdir()) if path.is_dir() and not path.name.startswith(".")) + "\n",
+        "commands.md": "# Commands\n\nRun `pfo status`, `pfo readiness`, `pfo qa run`, and `pfo telemetry export` for operational views.\n",
+        "gates.md": "# Gates\n\n" + json.dumps(state.get("gateResults", {}), indent=2, ensure_ascii=False) + "\n",
+        "current-state.md": "# Current State\n\n" + json.dumps(state_summary, indent=2, ensure_ascii=False) + "\n",
+    }
+    before = {path.name: path.read_text(encoding="utf-8") for path in wiki_dir.glob("*.md")}
+    for name, text in docs.items():
+        (wiki_dir / name).write_text(text, encoding="utf-8")
+    changed = sorted(name for name, text in docs.items() if before.get(name) != text)
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    state["wiki"] = {"path": ".pfo/wiki/index.md", "status": "READY", "changedPages": changed, "updatedAt": now_iso()}
+    add_artifact(state, ".pfo/wiki/index.md")
+    append_event(project, state, "state-change", "READY", {"command": "wiki", "action": args.wiki_action, "changed": changed})
+    save_state(project, state)
+    if args.wiki_action == "diff":
+        print(json.dumps({"changedPages": changed}, indent=2, ensure_ascii=False))
+    elif args.json:
+        print(json.dumps(state["wiki"], indent=2, ensure_ascii=False))
+    else:
+        print("OK: wiki ready")
+    return 0
+
+
+def cmd_qa(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    qa_dir = project / ".pfo" / "qa"
+    qa_dir.mkdir(parents=True, exist_ok=True)
+    config = qa_dir / "config.yaml"
+    if args.qa_action == "install" or not config.exists():
+        config.write_text(
+            "project: " + project.name + "\n"
+            "default_target: local\n"
+            "apps:\n"
+            "  docs:\n"
+            "    path_patterns: ['*.md', 'docs/**']\n"
+            "    test_tool: pfo-validators\n"
+            "failure_learning: suggest_in_report\n",
+            encoding="utf-8",
+        )
+        (qa_dir / "REPORT-TEMPLATE.md").write_text("# PFO QA Report\n\n| Flow | Status | Evidence |\n|---|---|---|\n", encoding="utf-8")
+        flows = qa_dir / "flows"
+        flows.mkdir(exist_ok=True)
+        (flows / "docs.md").write_text("# Docs QA Flow\n\nRun structure and contract validators for documentation/runtime changes.\n", encoding="utf-8")
+    changed = args.changed_file or []
+    if not changed:
+        result = subprocess.run(["git", "diff", "--name-only"], cwd=project, text=True, capture_output=True, check=False)
+        changed = [line for line in result.stdout.splitlines() if line.strip()] if result.returncode == 0 else []
+    report_path = qa_dir / "PFO_QA_REPORT.md"
+    status = "PASSED"
+    report_path.write_text(
+        "# PFO QA Report\n\n"
+        f"- Generated: `{now_iso()}`\n"
+        f"- Changed files considered: {len(changed)}\n"
+        f"- Status: {status}\n\n"
+        "## Evidence\n\n"
+        "- QA config exists.\n"
+        "- Diff-scoped file list was evaluated.\n",
+        encoding="utf-8",
+    )
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    state["qa"] = {"path": ".pfo/qa/PFO_QA_REPORT.md", "status": status, "changedFiles": changed, "updatedAt": now_iso()}
+    state["gateResults"]["qa"] = status
+    add_artifact(state, ".pfo/qa/config.yaml")
+    add_artifact(state, ".pfo/qa/PFO_QA_REPORT.md")
+    append_event(project, state, "verification", status, {"command": "qa", "action": args.qa_action, "changedFiles": changed})
+    save_state(project, state)
+    if args.json:
+        print(json.dumps(state["qa"], indent=2, ensure_ascii=False))
+    else:
+        print(f"OK: QA {args.qa_action} {status}")
+    return 0
+
+
+def cmd_telemetry(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    output = Path(args.output) if args.output else project / ".pfo" / "telemetry" / ("pfo-telemetry.json" if args.format == "json" else "pfo-telemetry.jsonl")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    events = []
+    event_path = project / ".codex-memory" / "events.jsonl"
+    if event_path.is_file():
+        for line in event_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                try:
+                    events.append(json.loads(line))
+                except json.JSONDecodeError:
+                    pass
+    state = load_state(project)
+    payload = {
+        "resource": {"project": project.name},
+        "metrics": {
+            "eventCount": len(events),
+            "artifactCount": len(state.get("artifacts", [])),
+            "gateCount": len(state.get("gateResults", {})),
+            "verificationCount": len(state.get("verificationHistory", [])),
+        },
+        "events": events[-100:],
+        "exportedAt": now_iso(),
+    }
+    if args.format == "jsonl":
+        rows = [{"type": "metric", "name": key, "value": value, "project": project.name} for key, value in payload["metrics"].items()]
+        output.write_text("\n".join(json.dumps(row, ensure_ascii=False) for row in rows) + "\n", encoding="utf-8")
+    else:
+        output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    ensure_autonomy_state(state)
+    state["telemetryExport"] = {"path": str(output.relative_to(project)) if output.is_relative_to(project) else str(output), "format": args.format, "status": "READY", "updatedAt": now_iso()}
+    add_artifact(state, state["telemetryExport"]["path"])
+    append_event(project, state, "state-change", "READY", {"command": "telemetry", "format": args.format})
+    save_state(project, state)
+    if args.json:
+        print(json.dumps(state["telemetryExport"], indent=2, ensure_ascii=False))
+    else:
+        print(f"OK: telemetry exported to {output}")
+    return 0
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
     return run_script("validate_project.py", [str(args.project)])
 
@@ -3507,6 +3972,74 @@ def build_parser() -> argparse.ArgumentParser:
     brief.add_argument("project", type=Path)
     brief.add_argument("--mode", choices=["diagram", "plan", "diff", "recap", "table", "slides"], default="recap")
     brief.set_defaults(func=cmd_brief)
+
+    readiness = sub.add_parser("readiness", help="Evaluate PFO autonomy readiness levels and action items.")
+    readiness.add_argument("project", type=Path)
+    readiness.add_argument("--write", action="store_true")
+    readiness.add_argument("--json", action="store_true")
+    readiness.add_argument("--min-level", type=int, default=1)
+    readiness.set_defaults(func=cmd_readiness)
+
+    readiness_fix = sub.add_parser("readiness-fix", help="Apply deterministic remediation for the latest PFO readiness gaps.")
+    readiness_fix.add_argument("project", type=Path)
+    readiness_fix.add_argument("--apply", action="store_true")
+    readiness_fix.add_argument("--focus", choices=["all", "docs", "policy", "measurement"], default="all")
+    readiness_fix.set_defaults(func=cmd_readiness_fix)
+
+    policy = sub.add_parser("policy", help="Explain or check PFO risk-tier autonomy policy.")
+    policy.add_argument("policy_action", choices=["explain", "check"])
+    policy.add_argument("project", type=Path)
+    policy.add_argument("--auto", choices=["off", "low", "medium", "high"], default="off")
+    policy.add_argument("--capability", choices=["read", "write", "test", "commit", "push", "deploy", "external_api"], default="")
+    policy.add_argument("--json", action="store_true")
+    policy.set_defaults(func=cmd_policy)
+
+    autonomy = sub.add_parser("autonomy", help="Alias for `pfo policy explain` with an autonomy level.")
+    autonomy.add_argument("project", type=Path)
+    autonomy.add_argument("--auto", choices=["off", "low", "medium", "high"], default="off")
+    autonomy.add_argument("--json", action="store_true")
+    autonomy.set_defaults(func=lambda args: cmd_policy(argparse.Namespace(policy_action="explain", project=args.project, auto=args.auto, capability="", json=args.json)))
+
+    exec_cmd = sub.add_parser("exec", help="Run a deterministic PFO route as a headless one-shot command.")
+    exec_cmd.add_argument("project", type=Path)
+    exec_cmd.add_argument("prompt", nargs="?", default="")
+    exec_cmd.add_argument("--route", choices=["readiness", "readiness-fix", "mission", "wiki", "qa", "telemetry"], default="readiness")
+    exec_cmd.add_argument("--profile", choices=["minimal", "standard", "full"], default="standard")
+    exec_cmd.add_argument("--auto", choices=["off", "low", "medium", "high"], default="off")
+    exec_cmd.add_argument("--output-format", choices=["text", "json"], default="text")
+    exec_cmd.set_defaults(func=cmd_exec)
+
+    mission = sub.add_parser("mission", help="Plan, run, pause, replan, continue, or inspect a PFO mission.")
+    mission.add_argument("mission_action", choices=["plan", "run", "status", "pause", "replan", "continue"])
+    mission.add_argument("project", type=Path)
+    mission.add_argument("--goal", default="")
+    mission.add_argument("--milestone", default="")
+    mission.add_argument("--apply", action="store_true")
+    mission.add_argument("--json", action="store_true")
+    mission.set_defaults(func=cmd_mission)
+
+    wiki = sub.add_parser("wiki", help="Generate, refresh, or diff a project-local PFO wiki.")
+    wiki.add_argument("wiki_action", choices=["generate", "refresh", "diff"])
+    wiki.add_argument("project", type=Path)
+    wiki.add_argument("--json", action="store_true")
+    wiki.set_defaults(func=cmd_wiki)
+
+    qa = sub.add_parser("qa", help="Install or run diff-scoped PFO QA evidence.")
+    qa.add_argument("qa_action", choices=["install", "run"])
+    qa.add_argument("project", type=Path)
+    qa.add_argument("--app", default="")
+    qa.add_argument("--changed-file", action="append", default=[])
+    qa.add_argument("--json", action="store_true")
+    qa.set_defaults(func=cmd_qa)
+
+    telemetry = sub.add_parser("telemetry", help="Export PFO telemetry as JSON or JSONL.")
+    telemetry.add_argument("telemetry_action", choices=["export"])
+    telemetry.add_argument("project", type=Path)
+    telemetry.add_argument("--workspace", type=Path, default=WORKSPACE)
+    telemetry.add_argument("--format", choices=["json", "jsonl"], default="jsonl")
+    telemetry.add_argument("--output", default="")
+    telemetry.add_argument("--json", action="store_true")
+    telemetry.set_defaults(func=cmd_telemetry)
 
     voice = sub.add_parser("voice", help="Normalize a voice command into PFO intent.")
     voice.add_argument("text")

@@ -7,11 +7,11 @@ Architecture: `modular monolith`
 
 ## State
 
-- Current stage: `VERIFYING_WORK`
+- Current stage: `EXISTING_PROJECT_ANALYZED`
 - Current node: `workspace-health`
 - Current unit: `workspace-health`
-- Last successful state: `VERIFYING_WORK`
-- Next action: Run tests and quality gates, then proceed to review or next unit.
+- Last successful state: `EXISTING_PROJECT_ANALYZED`
+- Next action: Review NEXT_STEP.md and approve or change the next task before implementation.
 - Recovery: `` 
 - Root cause: `` 
 - Handoff: `READY` workspace-health-complete
@@ -20,7 +20,7 @@ Architecture: `modular monolith`
 
 - Approval required: `True`
 - Approval status: `PENDING`
-- Recommended next step: Choose and approve the next task-specific implementation step.
+- Recommended next step: Resolve analyzer blockers before any implementation work.
 - Last iteration summary: Detected Existing Software Project with Docker, Product Factory OS runtime, Python, pytest. Ran 0 gate command(s).
 - Steering artifact: `NEXT_STEP.md`
 
@@ -50,7 +50,7 @@ Architecture: `modular monolith`
 | funnel |  |
 | architecture | PASS_WITH_WARNINGS |
 | tests | NOT_RUN |
-| review | PASSED |
+| review | NOT_RUN |
 | tddRed | PASSED |
 | tddGreen | PASSED |
 | tddRefactor | PASSED |
@@ -70,10 +70,10 @@ Architecture: `modular monolith`
 | experimentDecision |  |
 | executionPolicy | PASS |
 | permissionMatrix | PASS |
-| verificationContract | PASSED |
+| verificationContract | PASS |
 | learningPromotion | PASS |
 | toolCapabilityRegistry | PASS |
-| deploymentReadiness | PASS |
+| deploymentReadiness | BLOCKED |
 | aliasTargets | PASS |
 | scopeLock | PASS |
 | dataAuthenticity | PASS |
@@ -84,13 +84,17 @@ Architecture: `modular monolith`
 | noSilentSubstitution | PASS |
 | seoGrowthGuarantee |  |
 | contextBudget | PASSED |
-| securityEvidence | PASS |
+| securityEvidence | BLOCKED |
 | adoption |  |
 | targetedVerification | PASSED |
+| readiness | PASSED |
 
 ## Blockers
 
-- none
+- missing changed security coverage artifact: deep_review_input.csv
+- missing changed security coverage artifact: work_ledger.jsonl
+- missing changed security coverage artifact: repository_coverage_ledger.md
+- missing changed security coverage artifact: candidate_ledger.jsonl
 
 ## Verification History
 
@@ -182,6 +186,8 @@ Architecture: `modular monolith`
 - {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'workspace-health', 'evidence': 'CHANGELOG updated; production_readiness passed before commit/push/PR', 'recordedAt': '2026-06-06T07:08:01+00:00'}
 - {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'workspace-health', 'evidence': 'CI production readiness failure fixed: validate_workspace_targets supports committed metrics proof; production_readiness passed', 'recordedAt': '2026-06-06T07:45:12+00:00'}
 - {'mode': 'verify-work', 'stage': 'VERIFYING_WORK', 'node': 'workspace-health', 'evidence': 'Release 1.1.0 prepared: CHANGELOG dated, plugin and marketplace versions synced, release_check passed with live proof, production_readiness passed', 'recordedAt': '2026-06-06T08:03:05+00:00'}
+- {'mode': 'existing-project-analyze', 'stage': 'EXISTING_PROJECT_ANALYZED', 'status': 'PASS', 'summary': 'Detected Existing Software Project with Docker, Product Factory OS runtime, Python, pytest. Ran 0 gate command(s).'}
+- {'mode': 'existing-project-analyze', 'stage': 'EXISTING_PROJECT_ANALYZED', 'status': 'BLOCKED', 'summary': 'Detected Existing Software Project with Docker, Product Factory OS runtime, Python, pytest. Ran 0 gate command(s).'}
 
 ## TDD Evidence
 
@@ -211,6 +217,6 @@ Architecture: `modular monolith`
 - Verifications: `31`
 - Token notes: none
 - Cost notes: none
-- Event log: `.codex-memory/events.jsonl` last `event-20260606T080305Z-1`
+- Event log: `.codex-memory/events.jsonl` last `event-20260615T135257Z-1`
 - Permission matrix: `.pfo/PERMISSION_MATRIX.json` `READY`
 - Tool registry: `.pfo/TOOL_CAPABILITY_REGISTRY.json` `READY`

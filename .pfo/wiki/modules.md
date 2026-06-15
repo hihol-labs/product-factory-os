@@ -1,0 +1,27 @@
+# Modules
+
+- `\/`
+- `agents/`
+- `benchmarks/`
+- `commercial/`
+- `core/`
+- `dashboard/`
+- `deployment/`
+- `docs/`
+- `execution/`
+- `golden-paths/`
+- `hooks/`
+- `integrations/`
+- `interface/`
+- `marketplace/`
+- `memory/`
+- `packaging/`
+- `pipelines/`
+- `plans/`
+- `reports/`
+- `routing/`
+- `scripts/`
+- `skills/`
+- `starters/`
+- `templates/`
+- `tests/`
