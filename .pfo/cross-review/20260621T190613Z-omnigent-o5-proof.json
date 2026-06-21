@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "id": "20260621T190613Z-omnigent-o5-proof",
+  "title": "omnigent-o5-proof",
+  "risks": [
+    "security"
+  ],
+  "criticalRisk": true,
+  "vendorAvailable": true,
+  "implementer": {
+    "agent": "backend-builder",
+    "harness": "codex-native",
+    "vendor": "openai",
+    "model": ""
+  },
+  "reviewer": {
+    "agent": "reviewer",
+    "harness": "claude-native",
+    "vendor": "anthropic",
+    "model": ""
+  },
+  "requireDifferentHarness": true,
+  "requireDifferentVendorForCriticalRisk": true,
+  "contract": "",
+  "diff": "",
+  "status": "READY",
+  "reason": "independent review envelope ready",
+  "createdAt": "2026-06-21T19:06:13+00:00"
+}

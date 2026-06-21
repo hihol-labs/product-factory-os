@@ -9,6 +9,11 @@ tools:
   pfo: inherit
   dispatch: pfo dispatch
   session: pfo session
+terminals:
+  default:
+    shell: bash
+    cwd: .
+    purpose: local PFO runner commands
 policies:
   runtime: pfo policy-eval
 sandbox:

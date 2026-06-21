@@ -10,3 +10,11 @@
 - `scripts/validate_control_harness.py`: CI-safe runtime-only artifact handling for `.codex-memory/` and `.pfo/` references.
 
 Security-sensitive review focused on local runtime policy enforcement. No new network, secret, deploy, auth, or destructive filesystem capability was added.
+
+## Omnigent O1-O9 Runtime Completion
+
+- `scripts/pfo.py`: policy event schema, runner/server commands, dispatch worktree creation, cross-vendor review, cost-route, live session payload, attach/share, and sandbox generation.
+- `scripts/validate_omnigent_runtime.py`: behavior-level O1-O9 validation.
+- `agents/*.yaml`, `docs/templates/PFO_AGENT_SPEC.yaml`: terminals and sandbox profile coverage.
+- `.pfo/PERMISSION_MATRIX.json`, `docs/templates/pfo/PERMISSION_MATRIX.json`: cost/risk routing fields including `downgradeAllowed`.
+- `docs/CONTROL_HARNESS.md`: runner-server-separation control and O1-O9 Harness Engineering mapping.

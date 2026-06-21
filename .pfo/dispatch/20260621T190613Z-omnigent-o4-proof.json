@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "20260621T190613Z-omnigent-o4-proof",
+  "title": "omnigent-o4-proof",
+  "agent": "backend-builder",
+  "purpose": "implement",
+  "harness": "codex-native",
+  "model": "",
+  "worktree": {
+    "enabled": true,
+    "path": "/home/hihol/projects/.pfo-worktrees/product-factory-os/20260621T190613Z-omnigent-o4-proof",
+    "branch": "pfo/20260621T190613Z-omnigent-o4-proof",
+    "status": "declared",
+    "independent": true
+  },
+  "contract": "",
+  "status": "QUEUED",
+  "createdAt": "2026-06-21T19:06:13+00:00",
+  "inbox": {
+    "status": "PENDING",
+    "resultPath": ".pfo/dispatch/20260621T190613Z-omnigent-o4-proof.result.json"
+  }
+}

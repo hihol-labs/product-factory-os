@@ -4,3 +4,5 @@ scripts/validate_acceptance_contract.py,new deterministic acceptance validator,c
 docs/templates/pfo/ACCEPTANCE_CONTRACT.json,new runtime contract template,required fields and source tracing
 .pfo/ACCEPTANCE_CONTRACT.json,active task acceptance proof,criteria closure and independent evidence
 scripts/validate_control_harness.py,CI runtime-only artifact handling,do not require .codex-memory or .pfo runtime files in clean checkout
+scripts/pfo.py,full Omnigent O1-O9 runtime behavior,policy schema runner server dispatch worktree cross-vendor cost session sandbox enforcement
+scripts/validate_omnigent_runtime.py,behavior-level O1-O9 validator,strict runtime wiring validation

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "role": "coordination-server",
+  "mode": "dashboard-and-approval-plane",
+  "projectSourceOfTruth": "local-pfo-artifacts",
+  "coordinates": [
+    "sessions",
+    "telemetry",
+    "gates",
+    "approvals"
+  ],
+  "neverExecutesTools": true,
+  "runnerHost": ".pfo/runner/runner-host.json",
+  "status": "READY",
+  "updatedAt": "2026-06-21T19:06:02+00:00"
+}

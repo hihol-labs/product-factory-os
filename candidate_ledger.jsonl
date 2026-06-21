@@ -2,3 +2,6 @@
 {"receipt":"validation","target":"acceptance runtime enforcement","result":"New validator and CLI gate pass for the active contract; structure/runtime/control harness validators recognize the new artifacts."}
 {"receipt":"attack_path","target":"self-authored validator false pass","result":"Changed validate*.py references in acceptance evidence now require independentEvidence."}
 {"receipt":"validation","target":"ci control harness failure","result":"Runtime-only .codex-memory/ and .pfo/ artifact references no longer require committed files in clean GitHub Actions checkout."}
+{"receipt":"discovery","target":"omnigent-o1-o9-runtime","result":"Identified v1 token-level implementation gaps and converted them into behavior-level runtime contracts."}
+{"receipt":"validation","target":"omnigent-o1-o9-runtime","result":"O1-O9 validator and representative CLI commands passed locally."}
+{"receipt":"attack_path","target":"omnigent-o1-o9-runtime","result":"Critical changes now require independent reviewer runtime; policy events preserve actor usage session_state and result; dispatch can create independent worktrees."}

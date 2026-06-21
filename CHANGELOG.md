@@ -10,6 +10,14 @@
 - `docs/DROID_INSPIRED_RUNTIME.md` documenting the seven implemented Droid-inspired PFO contours.
 - Control-harness registry and documentation entries for the new readiness, remediation, autonomy, exec, mission, wiki, QA, and telemetry surfaces, preserving Harness Engineering guide/sensor coverage.
 
+## [1.2.2] - 2026-06-21
+
+### Added
+
+- Completed Omnigent-inspired PFO runtime O1-O9 with behavior-level enforcement: agent YAML terminals, full policy event schema, runner/server contracts, real dispatch worktree creation, critical-risk cross-vendor review, cost/risk routing with `downgradeAllowed`, live session observability, session attach/share packets, and snake_case sandbox specs.
+- Strengthened `scripts/validate_omnigent_runtime.py` from token checks into an O1-O9 behavioral wiring validator.
+- Added runner/server separation to the control harness as a Harness Engineering feedforward control.
+
 ## [1.2.1] - 2026-06-21
 
 ### Added

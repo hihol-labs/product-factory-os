@@ -444,6 +444,17 @@ CONTROL_REGISTRY = [
             "docs/PFO_OMNIGENT_RUNTIME.md",
         ],
     },
+
+    {
+        "id": "runner-server-separation",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            ".pfo/runner/runner-host.json",
+            ".pfo/server/control-plane.json",
+        ],
+    },
     {
         "id": "dispatch-runtime",
         "timing": "Feedforward",
