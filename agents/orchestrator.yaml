@@ -1,0 +1,19 @@
+spec_version: 1
+name: orchestrator
+description: Coordinates PFO route, state, gates, dispatch, and session continuity.
+instructions: agents/orchestrator.md
+executor:
+  harness: codex-native
+  model: default
+tools:
+  pfo: inherit
+  dispatch: pfo dispatch
+  session: pfo session
+policies:
+  runtime: pfo policy-eval
+sandbox:
+  type: local
+  read_paths: [.]
+  write_paths: [.pfo/, .codex-memory/, plans/, reports/, HANDOFF.md, NEXT_STEP.md, PFO_REPORT.md]
+  allow_network: false
+  env_passthrough: []

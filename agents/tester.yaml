@@ -1,0 +1,18 @@
+spec_version: 1
+name: tester
+description: Runs declared verification sensors and records test evidence.
+instructions: agents/tester.md
+executor:
+  harness: codex-native
+  model: standard
+tools:
+  pfo: inherit
+  tests: inherit
+policies:
+  runtime: pfo policy-eval
+sandbox:
+  type: local
+  read_paths: [.]
+  write_paths: [tests/, reports/, .codex-memory/events.jsonl]
+  allow_network: false
+  env_passthrough: []

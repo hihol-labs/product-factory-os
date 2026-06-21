@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "id": "20260615T203223Z-omnigent-runtime-cross-review",
+  "title": "omnigent-runtime-cross-review",
+  "implementer": {
+    "agent": "codex",
+    "harness": "codex-native"
+  },
+  "reviewer": {
+    "agent": "reviewer",
+    "harness": "claude-native"
+  },
+  "requireDifferentHarness": true,
+  "contract": "Review O1-O9 implementation proof",
+  "diff": "",
+  "status": "READY",
+  "reason": "independent review envelope ready",
+  "createdAt": "2026-06-15T20:32:23+00:00"
+}

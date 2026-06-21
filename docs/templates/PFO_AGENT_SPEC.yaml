@@ -1,0 +1,28 @@
+spec_version: 1
+name: pfo-agent
+description: Runnable Product Factory OS agent profile.
+instructions: agents/orchestrator.md
+executor:
+  harness: codex-native
+  model: default
+tools:
+  pfo:
+    type: cli
+    command: python3 scripts/pfo.py
+  repo:
+    type: os
+    mode: scoped
+policies:
+  pfo_policy_runtime:
+    type: pfo-policy-eval
+    verdicts: [ALLOW, DENY, ASK]
+    source: .pfo/PERMISSION_MATRIX.json
+sandbox:
+  type: local
+  read_paths: [.]
+  write_paths: [.pfo/, .codex-memory/, plans/, reports/]
+  allow_network: false
+  env_passthrough: []
+session:
+  export: .pfo/session/session-export.json
+  live_status: .pfo/session/live-status.json

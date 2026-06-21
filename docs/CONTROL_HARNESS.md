@@ -67,13 +67,21 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | platform-readiness | Measure whether a project can support autonomous PFO work before raising autonomy | Feedback | Computational | `pfo readiness`, `PFO_READINESS_REPORT.md`, `.codex-memory/STATE.json` |
 | readiness-remediation | Convert readiness gaps into deterministic local artifact repair | Feedback | Computational | `pfo readiness-fix`, `.codex-memory/context-index.json`, `.codex-memory/resume-snapshot.md`, `.codex-memory/LEARNING_PROPOSALS.json` |
 | autonomy-policy | Explain and check risk-tier permissions before headless or delegated work | Feedforward | Computational | `pfo policy`, `pfo autonomy`, `.pfo/PERMISSION_MATRIX.json`, `.pfo/EXECUTION_POLICY.json` |
+| agent-spec-runtime | Declare runnable PFO roles with harness, tools, policies, and sandbox boundaries | Feedforward | Computational | `docs/templates/PFO_AGENT_SPEC.yaml`, `agents/orchestrator.yaml`, `scripts/validate_omnigent_runtime.py` |
+| policy-verdict-runtime | Evaluate runtime events into `ALLOW`, `DENY`, or `ASK` before or after tool activity | Feedback | Computational | `scripts/pfo.py`, `docs/templates/pfo/PERMISSION_MATRIX.json`, `docs/PFO_OMNIGENT_RUNTIME.md` |
+| dispatch-runtime | Create bounded sub-agent dispatch envelopes with purpose, harness, model, inbox, and worktree metadata | Feedforward | Computational | `scripts/pfo.py`, `docs/PFO_OMNIGENT_RUNTIME.md`, `.pfo/UNIT_CONTEXT_MANIFEST.json` |
+| cross-harness-review | Require an independent different-harness reviewer for high-risk diffs when available | Feedback | Inferential | `scripts/pfo.py`, `agents/reviewer.yaml`, `docs/PFO_OMNIGENT_RUNTIME.md` |
+| cost-risk-routing | Route model tier and autonomy from risk score, cost estimate, and triviality before spending budget | Feedforward | Computational | `scripts/pfo.py`, `docs/templates/pfo/PERMISSION_MATRIX.json`, `docs/PFO_OMNIGENT_RUNTIME.md` |
+| live-session-observability | Expose live gates, artifacts, policy, dispatch, review, telemetry, and next action for dashboards or team supervision | Feedback | Computational | `scripts/pfo.py`, `dashboard/index.html`, `docs/PFO_OMNIGENT_RUNTIME.md` |
+| forkable-session-context | Export/import compact session packets for attach, fork, handoff, and recovery workflows | Feedforward | Computational | `scripts/pfo.py`, `docs/templates/HANDOFF.md`, `docs/PFO_OMNIGENT_RUNTIME.md` |
+| sandbox-spec-runtime | Keep filesystem, network, and environment boundaries in agent and unit specs before execution | Feedforward | Computational | `docs/templates/PFO_AGENT_SPEC.yaml`, `docs/templates/UNIT_CONTEXT_MANIFEST.json`, `docs/templates/pfo/UNIT_CONTEXT_MANIFEST.json` |
 | headless-exec-envelope | Run deterministic PFO routes as machine-readable one-shot automation | Feedforward | Computational | `pfo exec`, route profile, JSON result envelope |
 | mission-control | Plan and validate milestone-based agent work without relying on chat history | Feedforward | Computational | `pfo mission`, `.pfo/mission.json`, `PFO_MISSION.md` |
 | project-wiki | Keep navigable architecture, module, command, gate, and state context close to the repo | Feedforward | Computational | `pfo wiki`, `.pfo/wiki/index.md` |
 | diff-scoped-qa | Test only relevant app/project surfaces and record evidence after changes | Feedback | Computational | `pfo qa`, `.pfo/qa/config.yaml`, `.pfo/qa/PFO_QA_REPORT.md` |
 | telemetry-export | Export local event, artifact, gate, and verification metrics for observability | Feedback | Computational | `pfo telemetry`, `.pfo/telemetry/pfo-telemetry.jsonl`, `pfo metrics` |
 
-Platform surface canonical artifacts: `scripts/pfo.py`, `scripts/pfo_metrics.py`, `routing/route-profiles.json`, `docs/HEADLESS_EXECUTION.md`, `docs/DROID_INSPIRED_RUNTIME.md`, `PFO_READINESS_REPORT.md`, `PFO_MISSION.md`, `.pfo/mission.json`, `.pfo/wiki/index.md`, `.pfo/qa/config.yaml`, `.pfo/qa/PFO_QA_REPORT.md`, `.pfo/telemetry/pfo-telemetry.jsonl`, `.codex-memory/STATE.json`, `.codex-memory/context-index.json`, `.codex-memory/resume-snapshot.md`, `.codex-memory/LEARNING_PROPOSALS.json`, `docs/templates/pfo/PERMISSION_MATRIX.json`, and `docs/templates/pfo/EXECUTION_POLICY.json`.
+Platform surface canonical artifacts: `scripts/pfo.py`, `scripts/pfo_metrics.py`, `routing/route-profiles.json`, `docs/HEADLESS_EXECUTION.md`, `docs/DROID_INSPIRED_RUNTIME.md`, `docs/PFO_OMNIGENT_RUNTIME.md`, `docs/templates/PFO_AGENT_SPEC.yaml`, `agents/orchestrator.yaml`, `PFO_READINESS_REPORT.md`, `PFO_MISSION.md`, `.pfo/mission.json`, `.pfo/dispatch/`, `.pfo/cross-review/`, `.pfo/session/live-status.json`, `.pfo/session/session-export.json`, `.pfo/wiki/index.md`, `.pfo/qa/config.yaml`, `.pfo/qa/PFO_QA_REPORT.md`, `.pfo/telemetry/pfo-telemetry.jsonl`, `.codex-memory/STATE.json`, `.codex-memory/context-index.json`, `.codex-memory/resume-snapshot.md`, `.codex-memory/LEARNING_PROPOSALS.json`, `docs/templates/pfo/PERMISSION_MATRIX.json`, and `docs/templates/pfo/EXECUTION_POLICY.json`.
 
 ## Precedence
 
@@ -111,6 +119,7 @@ Platform surface canonical artifacts: `scripts/pfo.py`, `scripts/pfo_metrics.py`
 | Deploy readiness | permission matrix, deployment target, rollback expectations | `methodology-ci`, `project-ci`, security/deps/hardening/browser gates |
 | Learn and improve | learning promotion policy | `learning-promotion`, `continuous-health-sensors`, `defensive-layer-diagnostics`, fixture and validator updates |
 | Operate agent platform | `autonomy-policy`, `mission-control`, `headless-exec-envelope`, `project-wiki` | `platform-readiness`, `readiness-remediation`, `diff-scoped-qa`, `telemetry-export` |
+| Supervise live agents | `agent-spec-runtime`, `dispatch-runtime`, `cost-risk-routing`, `forkable-session-context`, `sandbox-spec-runtime` | `policy-verdict-runtime`, `cross-harness-review`, `live-session-observability`, `telemetry-export` |
 | Resume or compact | `context-economy`, `unit-context` | `session-memory-search`, `handoff` |
 
 ## Addition Checklist

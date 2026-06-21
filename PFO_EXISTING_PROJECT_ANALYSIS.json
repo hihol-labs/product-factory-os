@@ -34,50 +34,96 @@
       ]
     }
   ],
-  "selectedGates": [],
-  "gateRuns": [],
+  "selectedGates": [
+    {
+      "gate": "tests",
+      "script": "pytest",
+      "command": "python3 -m pytest"
+    },
+    {
+      "gate": "tests",
+      "script": "check",
+      "command": "/usr/bin/python3 scripts/check.py --no-smoke"
+    }
+  ],
+  "gateRuns": [
+    {
+      "gate": "tests",
+      "script": "pytest",
+      "command": "python3 -m pytest",
+      "status": "BLOCKED",
+      "exitCode": 1,
+      "summary": "Command failed with exit code 1.",
+      "outputTail": "/usr/bin/python3: No module named pytest"
+    },
+    {
+      "gate": "tests",
+      "script": "check",
+      "command": "/usr/bin/python3 scripts/check.py --no-smoke",
+      "status": "PASS",
+      "exitCode": 0,
+      "summary": "Command completed successfully.",
+      "outputTail": "==> compile runtime CLI: /usr/bin/python3 -m py_compile scripts/pfo.py scripts/existing_project_analyzer.py\n==> production readiness: /usr/bin/python3 scripts/production_readiness.py\nOK: Product Factory OS production-readiness gate passed\nOK: root PFO check passed"
+    }
+  ],
   "securityFindings": [],
   "contractGate": {
-    "status": "BLOCKED",
+    "status": "PASS",
     "changedFiles": [
       "CHANGELOG.md",
-      "PFO_MISSION.md",
-      "PFO_READINESS_REPORT.md",
-      "docs/DROID_INSPIRED_RUNTIME.md",
+      "README.md",
+      "agents/backend-builder.yaml",
+      "agents/frontend-builder.yaml",
+      "agents/memory-agent.yaml",
+      "agents/orchestrator.yaml",
+      "agents/reviewer.yaml",
+      "agents/security-reviewer.yaml",
+      "agents/tester.yaml",
+      "docs/CONTROL_HARNESS.md",
+      "docs/METHODOLOGY.md",
+      "docs/PFO_ARCHITECTURE.md",
+      "docs/PFO_OMNIGENT_RUNTIME.md",
+      "docs/templates/PFO_AGENT_SPEC.yaml",
+      "docs/templates/UNIT_CONTEXT_MANIFEST.json",
+      "docs/templates/pfo/PERMISSION_MATRIX.json",
+      "docs/templates/pfo/UNIT_CONTEXT_MANIFEST.json",
+      "memory/session-state.schema.json",
+      "reports/omnigent-runtime-security-review.md",
+      "reports/omnigent-runtime-security/candidate_ledger.jsonl",
+      "reports/omnigent-runtime-security/deep_review_input.csv",
+      "reports/omnigent-runtime-security/repository_coverage_ledger.md",
+      "reports/omnigent-runtime-security/work_ledger.jsonl",
       "scripts/pfo.py",
-      "scripts/pfo_metrics.py"
+      "scripts/production_readiness.py",
+      "scripts/validate_control_harness.py",
+      "scripts/validate_omnigent_runtime.py",
+      "scripts/validate_runtime.py",
+      "scripts/validate_structure.py"
     ],
     "runtimeChangedFiles": [
-      ".pfo/mission.json",
-      ".pfo/qa/PFO_QA_REPORT.md",
-      ".pfo/qa/REPORT-TEMPLATE.md",
-      ".pfo/qa/config.yaml",
-      ".pfo/qa/flows/docs.md",
-      ".pfo/wiki/architecture.md",
-      ".pfo/wiki/commands.md",
-      ".pfo/wiki/current-state.md",
-      ".pfo/wiki/gates.md",
-      ".pfo/wiki/index.md",
-      ".pfo/wiki/modules.md",
+      ".pfo/PERMISSION_MATRIX.json",
+      ".pfo/UNIT_CONTEXT_MANIFEST.json",
+      ".pfo/cross-review/20260615T203223Z-omnigent-runtime-cross-review.json",
+      ".pfo/dispatch/20260615T203223Z-omnigent-runtime-proof.json",
+      ".pfo/session/live-status.json",
+      ".pfo/session/session-export.json",
+      "NEXT_STEP.md",
       "PFO_CONTRACT_GATE.json",
+      "PFO_EXISTING_PROJECT_ANALYSIS.json",
       "PFO_REPORT.md"
     ],
     "riskClasses": [
       "business_logic_change",
       "data_source_change",
       "deployment_change",
+      "provider_integration_change",
       "security_change",
       "user_facing_output_change"
     ],
     "missingContracts": [],
     "placeholderContracts": [],
     "aliasTargetErrors": [],
-    "blockers": [
-      "missing changed security coverage artifact: deep_review_input.csv",
-      "missing changed security coverage artifact: work_ledger.jsonl",
-      "missing changed security coverage artifact: repository_coverage_ledger.md",
-      "missing changed security coverage artifact: candidate_ledger.jsonl"
-    ],
+    "blockers": [],
     "warnings": [],
     "gates": {
       "aliasTargets": "PASS",
@@ -87,7 +133,7 @@
       "regressionContract": "PASS",
       "fallbackPolicy": "PASS",
       "diffRisk": "PASS",
-      "securityEvidence": "BLOCKED",
+      "securityEvidence": "PASS",
       "noSilentSubstitution": "PASS",
       "executionPolicy": "PASS",
       "permissionMatrix": "PASS",
@@ -114,5 +160,5 @@
     "auth": "project-specific auth",
     "deployment": "Docker"
   },
-  "summary": "Detected Existing Software Project with Docker, Product Factory OS runtime, Python, pytest. Ran 0 gate command(s)."
+  "summary": "Detected Existing Software Project with Docker, Product Factory OS runtime, Python, pytest. Ran 2 gate command(s)."
 }

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "id": "20260615T203223Z-omnigent-runtime-proof",
+  "title": "omnigent-runtime-proof",
+  "agent": "backend-builder",
+  "purpose": "explore",
+  "harness": "codex-native",
+  "model": "",
+  "worktree": {
+    "enabled": true,
+    "path": ".pfo/worktrees/20260615T203223Z-omnigent-runtime-proof",
+    "branch": ""
+  },
+  "contract": "Verify O1-O9 runtime surfaces",
+  "status": "QUEUED",
+  "createdAt": "2026-06-15T20:32:23+00:00",
+  "inbox": {
+    "status": "PENDING",
+    "resultPath": ".pfo/dispatch/20260615T203223Z-omnigent-runtime-proof.result.json"
+  }
+}

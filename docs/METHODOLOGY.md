@@ -57,22 +57,23 @@ The goal stays active through implementation, gates, verification, and state-sav
 18. Run fast local sensors as early as possible: targeted tests, validators, lint, schema checks, route checks.
 19. Record dispatches, verification commands, cost or token notes, and recovery decisions.
 20. For measurement-driven self-improvement, initialize an experiment loop with one metric, a fixed budget, protected evaluation files, and a results TSV.
-21. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
-22. For bugfixes, record root-cause evidence before changing code.
-23. Run `/browser-check` for browser-facing critical flows.
-24. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
-25. Before MVP launch, define activation, retention, PMF signals, and false-positive traction when market risk is material.
-26. Use optional launch maturity and scale moat artifacts only when stage and risk justify them.
-27. Verify work fail-closed: unclear verification does not pass.
-28. Run two-stage review: spec compliance first, code quality second.
-29. Review before commit or deploy.
-30. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
-31. Finish branches with an explicit PR, merge, keep, or discard decision.
-32. Extract durable learnings after completed milestones or significant repairs, and promote repeated failures through the harness ratchet.
-33. Promote repeatable solutions into assets and content candidates.
-34. Harden production-facing services.
-35. Deploy only after explicit confirmation.
-36. Save reloadable session memory.
+21. For supervised agent work, validate `agents/*.yaml`, evaluate policy events with `pfo policy-eval`, create bounded dispatch envelopes, and require cross-harness review for high-risk diffs when a different reviewer harness is available.
+22. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
+23. For bugfixes, record root-cause evidence before changing code.
+24. Run `/browser-check` for browser-facing critical flows.
+25. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
+26. Before MVP launch, define activation, retention, PMF signals, and false-positive traction when market risk is material.
+27. Use optional launch maturity and scale moat artifacts only when stage and risk justify them.
+28. Verify work fail-closed: unclear verification does not pass.
+29. Run two-stage review: spec compliance first, code quality second.
+30. Review before commit or deploy.
+31. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
+32. Finish branches with an explicit PR, merge, keep, or discard decision.
+33. Extract durable learnings after completed milestones or significant repairs, and promote repeated failures through the harness ratchet.
+34. Promote repeatable solutions into assets and content candidates.
+35. Harden production-facing services.
+36. Deploy only after explicit confirmation.
+37. Save reloadable session memory.
 
 ## Existing Project Lifecycle
 

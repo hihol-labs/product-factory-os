@@ -1,0 +1,18 @@
+spec_version: 1
+name: backend-builder
+description: Implements scoped backend units from the active PFO manifest.
+instructions: agents/backend-builder.md
+executor:
+  harness: codex-native
+  model: standard
+tools:
+  pfo: inherit
+  tests: inherit
+policies:
+  runtime: pfo policy-eval
+sandbox:
+  type: local
+  read_paths: [.]
+  write_paths: [app/, backend/, src/, tests/, .codex-memory/, reports/]
+  allow_network: false
+  env_passthrough: []

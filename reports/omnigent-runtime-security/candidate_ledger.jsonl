@@ -1,0 +1,3 @@
+{"candidate":"policy-verdict-bypass","discovery":"permission matrix defaults and thresholds reviewed","validation":"ALLOW DENY ASK branches are explicit","attack_path":"write/push/deploy remain gated by matrix and risk thresholds","decision":"no finding"}
+{"candidate":"same-harness-review","discovery":"cross-review metadata reviewed","validation":"same harness blocks when different harness is required","attack_path":"fake independent review is recorded as BLOCKED","decision":"no finding"}
+{"candidate":"session-secret-leak","discovery":"session export payload reviewed","validation":"payload uses state, gates, artifacts, and event pointers","attack_path":"no secret-read capability is introduced","decision":"no finding"}

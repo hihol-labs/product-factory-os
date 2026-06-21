@@ -1,0 +1,18 @@
+spec_version: 1
+name: reviewer
+description: Performs spec-compliance and code-quality review without editing deliverables.
+instructions: agents/reviewer.md
+executor:
+  harness: codex-native
+  model: strong
+tools:
+  pfo: inherit
+  cross_review: pfo cross-review
+policies:
+  runtime: pfo policy-eval
+sandbox:
+  type: local
+  read_paths: [.]
+  write_paths: [.pfo/cross-review/, .codex-memory/events.jsonl, reports/]
+  allow_network: false
+  env_passthrough: []

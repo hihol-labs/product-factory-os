@@ -1,0 +1,18 @@
+spec_version: 1
+name: memory-agent
+description: Maintains reloadable state, event memory, session exports, and handoffs.
+instructions: agents/memory-agent.md
+executor:
+  harness: codex-native
+  model: cheap
+tools:
+  pfo: inherit
+  session: pfo session
+policies:
+  runtime: pfo policy-eval
+sandbox:
+  type: local
+  read_paths: [.]
+  write_paths: [.codex-memory/, .pfo/session/, HANDOFF.md]
+  allow_network: false
+  env_passthrough: []

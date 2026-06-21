@@ -10,6 +10,22 @@
 - `docs/DROID_INSPIRED_RUNTIME.md` documenting the seven implemented Droid-inspired PFO contours.
 - Control-harness registry and documentation entries for the new readiness, remediation, autonomy, exec, mission, wiki, QA, and telemetry surfaces, preserving Harness Engineering guide/sensor coverage.
 
+## [1.2.0] - 2026-06-21
+
+### Added
+
+- Omnigent-inspired PFO runtime v1 with local-first agent YAML specs, `pfo agent-spec`, `pfo policy-eval`, `pfo dispatch`, `pfo cross-review`, `pfo cost-route`, and `pfo session`.
+- `docs/PFO_OMNIGENT_RUNTIME.md`, `docs/templates/PFO_AGENT_SPEC.yaml`, and runnable `agents/*.yaml` profiles for orchestrator, builders, reviewers, tester, and memory roles.
+- Policy verdict runtime that evaluates events into `ALLOW`, `DENY`, or `ASK`, records state, and supports risk, cost, and tool-call thresholds.
+- Dispatch and cross-review envelopes under `.pfo/dispatch/` and `.pfo/cross-review/`, including worktree metadata and different-harness review enforcement for high-risk diffs.
+- Cost/risk routing state, session export/import/status packets, live status artifacts, and sandbox specs in agent and unit manifests.
+- `scripts/validate_omnigent_runtime.py` plus production-readiness, runtime, structure, and control-harness wiring to prove all O1-O9 mechanisms are implemented.
+
+### Changed
+
+- PFO unit manifests and permission matrices now carry sandbox and cost/risk policy contracts for adopted projects.
+- PFO methodology, architecture, README, and control harness now describe supervised live-agent operation as guide/sensor Harness Engineering controls.
+
 ## [1.1.0] - 2026-06-06
 
 ### Added
