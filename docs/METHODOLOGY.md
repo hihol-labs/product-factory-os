@@ -50,30 +50,31 @@ The goal stays active through implementation, gates, verification, and state-sav
 11. Produce documents before code.
 12. Review the documents before implementation.
 13. Build a unit context manifest before executing a node, including context and tool policy for the active unit.
-14. Check harnessability for the active unit: clear structure, contracts, golden flows, command availability, and sensor coverage.
-15. Write `/handoff` before session transfer, role switch, delegated execution, AFK, compaction, or recovery.
-16. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
-17. Implement execution graph nodes in small, isolated units.
-18. Run fast local sensors as early as possible: targeted tests, validators, lint, schema checks, route checks.
-19. Record dispatches, verification commands, cost or token notes, and recovery decisions.
-20. For measurement-driven self-improvement, initialize an experiment loop with one metric, a fixed budget, protected evaluation files, and a results TSV.
-21. For supervised agent work, validate `agents/*.yaml`, evaluate policy events with `pfo policy-eval`, create bounded dispatch envelopes, and require cross-harness review for high-risk diffs when a different reviewer harness is available.
-22. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
-23. For bugfixes, record root-cause evidence before changing code.
-24. Run `/browser-check` for browser-facing critical flows.
-25. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
-26. Before MVP launch, define activation, retention, PMF signals, and false-positive traction when market risk is material.
-27. Use optional launch maturity and scale moat artifacts only when stage and risk justify them.
-28. Verify work fail-closed: unclear verification does not pass.
-29. Run two-stage review: spec compliance first, code quality second.
-30. Review before commit or deploy.
-31. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
-32. Finish branches with an explicit PR, merge, keep, or discard decision.
-33. Extract durable learnings after completed milestones or significant repairs, and promote repeated failures through the harness ratchet.
-34. Promote repeatable solutions into assets and content candidates.
-35. Harden production-facing services.
-36. Deploy only after explicit confirmation.
-37. Save reloadable session memory.
+14. Create `.pfo/ACCEPTANCE_CONTRACT.json` from the original user request before implementation. Each criterion must trace to a source quote and name how it will be proved.
+15. Check harnessability for the active unit: clear structure, contracts, golden flows, command availability, and sensor coverage.
+16. Write `/handoff` before session transfer, role switch, delegated execution, AFK, compaction, or recovery.
+17. Use `/mcp-docs` when library, SDK, or platform behavior could be stale.
+18. Implement execution graph nodes in small, isolated units.
+19. Run fast local sensors as early as possible: targeted tests, validators, lint, schema checks, route checks.
+20. Record dispatches, verification commands, cost or token notes, and recovery decisions.
+21. For measurement-driven self-improvement, initialize an experiment loop with one metric, a fixed budget, protected evaluation files, and a results TSV.
+22. For supervised agent work, validate `agents/*.yaml`, evaluate policy events with `pfo policy-eval`, create bounded dispatch envelopes, and require cross-harness review for high-risk diffs when a different reviewer harness is available.
+23. For behavior changes, record TDD red/green/refactor evidence or an explicit exception.
+24. For bugfixes, record root-cause evidence before changing code.
+25. Run `/browser-check` for browser-facing critical flows.
+26. Capture feedback and iteration outcomes from users, metrics, or validation evidence.
+27. Before MVP launch, define activation, retention, PMF signals, and false-positive traction when market risk is material.
+28. Use optional launch maturity and scale moat artifacts only when stage and risk justify them.
+29. Verify work fail-closed: unclear verification does not pass, and `pfo verify-work --pass-gate` must pass the acceptance contract gate first.
+30. Run two-stage review: spec compliance first, code quality second.
+31. Review before commit or deploy.
+32. Use `/github-workflow` and `/tool-sync` when PR, CI, release, or external planning sync is in scope.
+33. Finish branches with an explicit PR, merge, keep, or discard decision.
+34. Extract durable learnings after completed milestones or significant repairs, and promote repeated failures through the harness ratchet.
+35. Promote repeatable solutions into assets and content candidates.
+36. Harden production-facing services.
+37. Deploy only after explicit confirmation.
+38. Save reloadable session memory.
 
 ## Existing Project Lifecycle
 
@@ -159,6 +160,7 @@ New projects are local-first. The mandatory bootstrap target is a project direct
 - `.pfo/PERMISSION_MATRIX.json`: machine-readable permission table for local, git, external API, secret, deploy, migration, and context budget actions
 - `.pfo/PERMISSION_MATRIX.md`: human-readable permission table
 - `.pfo/VERIFICATION_CONTRACT.json`: required verification commands, expected output, timeout, pass/fail parser, artifacts, and sensor timing policy
+- `.pfo/ACCEPTANCE_CONTRACT.json`: original user request, source-traced acceptance criteria, evidence kind, proof, and independent evidence when a changed validator is involved
 - `.pfo/TOOL_CAPABILITY_REGISTRY.json`: tool and connector read/write/execute capability registry with side effects, auth, external data risk, fallback mode, and approvals
 - `.pfo/LEARNING_PROMOTION_GATE.md`: promotion path from repeated errors to tests, hooks, docs, rules, linters, validators, templates, routes, or skills
 - `docs/AGENT_HARNESS_ENGINEERING.md`: PFO operating standard for ratcheting observed agent failures into context, tool, hook, verification, and review controls
@@ -212,6 +214,7 @@ Product Factory OS adopts the strongest GSD execution ideas without copying its 
 - Resume snapshot: `pfo resume`, `pfo handoff`, and `pfo context-snapshot` maintain `.codex-memory/resume-snapshot.md` with last request, files, tasks, decisions, errors, and blockers.
 - Atomic progress: every meaningful unit records dispatch, verification, and next action in state.
 - Fail-closed verification: missing or ambiguous evidence creates a repair path, not a pass.
+- Acceptance contract gate: original-request criteria must be `PASSED` before `pfo verify-work --pass-gate`; weak self-authored validators require independent evidence.
 - Drift and recovery: stale state, missing artifacts, broken alias targets, unexpected worktree changes, and blocked verification are first-class recovery cases.
 - Telemetry: record unit duration, commands, token or cost notes when available, and gate outcomes.
 - Autoresearch-style experiments: use one protected metric, fixed budget, baseline-first result logging, and keep/discard/crash decisions for self-improvement loops.
@@ -236,6 +239,7 @@ Every PFO mechanism must be explainable as one of the four control types from `d
 - Before implementation, the active feedforward controls must name scope, write boundaries, required artifacts, and expected verification.
 - After implementation, feedback controls must produce evidence or a repair path.
 - Computational feedback blockers cannot be waived by inferential review.
+- The acceptance contract is a computational feedback blocker: if a requested item is missing, pending, or proved only by a changed validator, the unit is not complete.
 - Inferential feedback may add blockers for issues deterministic checks cannot see.
 - New repeatable findings should be promoted into computational controls through `.pfo/LEARNING_PROMOTION_GATE.md`.
 

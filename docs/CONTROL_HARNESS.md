@@ -35,6 +35,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | adversarial-planning | Plan, architecture, and decision stress testing | Feedforward | Inferential | `skills/grill-me/SKILL.md`, `skills/advisor/SKILL.md`, `agents/architect.md` |
 | unit-context | Task-scoped execution inputs and write scope | Feedforward | Computational | `docs/templates/pfo/EXECUTION_POLICY.json`, `docs/templates/pfo/PERMISSION_MATRIX.json`, `docs/templates/UNIT_CONTEXT_MANIFEST.json` |
 | verification-contract | Expected checks before execution starts | Feedforward | Computational | `docs/templates/pfo/VERIFICATION_CONTRACT.json`, `docs/templates/TEST_PLAN.md`, `docs/templates/QUALITY_GATES.md` |
+| acceptance-contract | Original request criteria and evidence closure before a unit can pass | Feedback | Computational | `scripts/validate_acceptance_contract.py`, `docs/templates/pfo/ACCEPTANCE_CONTRACT.json`, `docs/gates/acceptance-contract-gate.md` |
 | defensive-layer-diagnostics | Five-layer diagnostic gate for task spec, context, execution environment, verification feedback, and state continuity | Feedback | Computational | `docs/DEFENSIVE_LAYERS.md`, `scripts/validate_defensive_layers.py`, `scripts/production_readiness.py` |
 | session-security-guard | Pre-tool safety boundary for secrets and destructive operations | Feedforward | Computational | `hooks/security-guard.py`, `hooks/hooks.json`, `docs/templates/pfo/EXECUTION_POLICY.json` |
 | context-economy | Progressive context loading, output offloading, and reset handoff policy | Feedforward | Computational | `docs/AGENT_HARNESS_ENGINEERING.md`, `skills/handoff/SKILL.md`, `docs/templates/HANDOFF.md` |
@@ -114,7 +115,7 @@ Platform surface canonical artifacts: `scripts/pfo.py`, `scripts/pfo_metrics.py`
 | Route request | `intent-routing`, `product-classification` | `route-regression` |
 | Plan product | `ideation-routing`, `planning-documents`, `market-validation`, `adversarial-planning`, `harnessability-assessment` | `review-agent` |
 | Dispatch unit | `unit-context`, `verification-contract`, `harness-templates` when topology is selected | `engineering-discipline` |
-| Build behavior | `verification-contract`, `docs/templates/TEST_PLAN.md` | tests, `engineering-discipline`, `project-ci`, `alias-integrity`, `quality-left-scheduling`, `context-budget-runtime` |
+| Build behavior | `verification-contract`, `.pfo/ACCEPTANCE_CONTRACT.json`, `docs/templates/TEST_PLAN.md` | tests, `acceptance-contract`, `engineering-discipline`, `project-ci`, `alias-integrity`, `quality-left-scheduling`, `context-budget-runtime` |
 | Review work | rubrics and quality gate expectations | `review-agent`, `security-review-agent`, `ux-review-agent` when applicable |
 | Deploy readiness | permission matrix, deployment target, rollback expectations | `methodology-ci`, `project-ci`, security/deps/hardening/browser gates |
 | Learn and improve | learning promotion policy | `learning-promotion`, `continuous-health-sensors`, `defensive-layer-diagnostics`, fixture and validator updates |

@@ -1,0 +1,5 @@
+path,reason,review_focus
+scripts/pfo.py,acceptance runtime gate and pass-gate enforcement,command behavior state updates and fail-closed verification
+scripts/validate_acceptance_contract.py,new deterministic acceptance validator,criteria evidence validation and self-authored validator protection
+docs/templates/pfo/ACCEPTANCE_CONTRACT.json,new runtime contract template,required fields and source tracing
+.pfo/ACCEPTANCE_CONTRACT.json,active task acceptance proof,criteria closure and independent evidence

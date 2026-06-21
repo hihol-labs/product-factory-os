@@ -87,6 +87,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "acceptance-contract",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/validate_acceptance_contract.py",
+            "docs/templates/pfo/ACCEPTANCE_CONTRACT.json",
+            "docs/gates/acceptance-contract-gate.md",
+        ],
+    },
+    {
         "id": "defensive-layer-diagnostics",
         "timing": "Feedback",
         "evaluator": "Computational",

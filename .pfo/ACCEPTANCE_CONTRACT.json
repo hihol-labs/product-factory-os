@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "createdAt": "2026-06-21T00:00:00+00:00",
+  "createdBeforeImplementation": true,
+  "originalRequest": "Исправь это в самом ПФО, чтобы текущий runtime enforcement был достаточно жестко заставлял следовать этой методологии.",
+  "unitId": "acceptance-runtime-enforcement",
+  "status": "PASSED",
+  "criteria": [
+    {
+      "id": "AC1",
+      "requirement": "PFO must create a source-traced acceptance contract before implementation for non-trivial work.",
+      "source": "user_request",
+      "sourceQuote": "runtime enforcement был достаточно жестко заставлял следовать этой методологии",
+      "verification": "pfo manifest creates .pfo/ACCEPTANCE_CONTRACT.json when missing; pfo acceptance init creates explicit criteria.",
+      "status": "PASSED",
+      "evidenceKind": "artifact",
+      "evidence": "scripts/pfo.py defines default_acceptance_contract, cmd_acceptance init, and cmd_manifest writes .pfo/ACCEPTANCE_CONTRACT.json.",
+      "independentEvidence": "docs/templates/pfo/ACCEPTANCE_CONTRACT.json and docs/gates/acceptance-contract-gate.md define the runtime contract shape."
+    },
+    {
+      "id": "AC2",
+      "requirement": "PFO must block final verification if acceptance criteria are missing, pending, failed, or weakly proved.",
+      "source": "user_request",
+      "sourceQuote": "достаточно жестко заставлял следовать этой методологии",
+      "verification": "pfo verify-work --pass-gate invokes validate_acceptance_contract.py before passing targeted verification.",
+      "status": "PASSED",
+      "evidenceKind": "contract_gate",
+      "evidence": "scripts/pfo.py cmd_verify_work calls acceptance_contract_ready(project) and raises before pass-gate on failure.",
+      "independentEvidence": "docs/gates/acceptance-contract-gate.md documents fail-closed status and evidence rules."
+    },
+    {
+      "id": "AC3",
+      "requirement": "Self-authored validators cannot be the only proof for a criterion.",
+      "source": "user_request",
+      "sourceQuote": "следовать этой методологии",
+      "verification": "Acceptance validator detects changed validate*.py evidence and requires independentEvidence.",
+      "status": "PASSED",
+      "evidenceKind": "contract_gate",
+      "evidence": "scripts/validate_acceptance_contract.py checks changed validator references and fails without independentEvidence.",
+      "independentEvidence": "This contract records independentEvidence for criteria that reference changed validation code."
+    },
+    {
+      "id": "AC4",
+      "requirement": "The new enforcement must be wired into PFO production readiness, structure, runtime, and control harness validation.",
+      "source": "user_request",
+      "sourceQuote": "Исправь это в самом ПФО",
+      "verification": "Production readiness and structure/runtime/control validators include acceptance enforcement artifacts.",
+      "status": "PASSED",
+      "evidenceKind": "production_readiness",
+      "evidence": "scripts/production_readiness.py runs validate_acceptance_contract.py --self-check; validate_structure.py and validate_runtime.py require the new artifacts.",
+      "independentEvidence": "scripts/validate_control_harness.py and docs/CONTROL_HARNESS.md include acceptance-contract as a computational feedback control."
+    },
+    {
+      "id": "AC5",
+      "requirement": "PFO methodology must explicitly match Harness Engineering after the fix.",
+      "source": "user_request",
+      "sourceQuote": "следовать этой методологии",
+      "verification": "Methodology and control harness docs describe acceptance contract as a guide/sensor runtime gate.",
+      "status": "PASSED",
+      "evidenceKind": "artifact",
+      "evidence": "docs/METHODOLOGY.md requires acceptance contract creation before implementation and pass-gate closure after implementation.",
+      "independentEvidence": "docs/CONTROL_HARNESS.md maps acceptance-contract into the computational feedback quadrant."
+    },
+    {
+      "id": "AC6",
+      "requirement": "The change must be documented in dated changelog format used by the repository.",
+      "source": "user_request",
+      "sourceQuote": "Исправь это в самом ПФО",
+      "verification": "CHANGELOG.md contains a dated release entry for the acceptance enforcement fix.",
+      "status": "PASSED",
+      "evidenceKind": "artifact",
+      "evidence": "CHANGELOG.md includes version 1.2.1 dated 2026-06-21.",
+      "independentEvidence": "validate_structure.py requires CHANGELOG.md as an existing repository artifact."
+    }
+  ]
+}

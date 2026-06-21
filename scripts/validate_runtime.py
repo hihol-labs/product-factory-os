@@ -82,6 +82,7 @@ def main() -> None:
         "existing_project_analyzer.py",
         "validate_project.py",
         "validate_plan_quality.py",
+        "validate_acceptance_contract.py",
         "validate_control_harness.py",
         "validate_omnigent_runtime.py",
         "validate_defensive_layers.py",

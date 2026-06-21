@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "createdAt": "",
+  "createdBeforeImplementation": true,
+  "originalRequest": "",
+  "unitId": "",
+  "status": "PENDING",
+  "criteria": [
+    {
+      "id": "AC1",
+      "requirement": "",
+      "source": "user_request",
+      "sourceQuote": "",
+      "verification": "",
+      "status": "PENDING",
+      "evidenceKind": "",
+      "evidence": "",
+      "independentEvidence": ""
+    }
+  ]
+}

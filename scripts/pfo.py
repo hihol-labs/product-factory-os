@@ -213,6 +213,7 @@ def ensure_autonomy_state(state: dict) -> None:
     state.setdefault("permissionMatrix", {"path": ".pfo/PERMISSION_MATRIX.json", "humanPath": ".pfo/PERMISSION_MATRIX.md", "status": ""})
     state.setdefault("contextBudget", {"gate": "pfo context-budget", "indexPath": ".codex-memory/context-index.json", "snapshotPath": ".codex-memory/resume-snapshot.md", "status": ""})
     state.setdefault("verificationContract", {"path": ".pfo/VERIFICATION_CONTRACT.json", "status": ""})
+    state.setdefault("acceptanceContract", {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": ""})
     state.setdefault("toolCapabilityRegistry", {"path": ".pfo/TOOL_CAPABILITY_REGISTRY.json", "status": ""})
     state.setdefault("learningPromotionGate", {"path": ".pfo/LEARNING_PROMOTION_GATE.md", "status": ""})
     state.setdefault(
@@ -346,6 +347,7 @@ def ensure_autonomy_state(state: dict) -> None:
         "permissionMatrix",
         "contextBudget",
         "verificationContract",
+        "acceptanceContract",
         "securityEvidence",
         "learningPromotion",
         "toolCapabilityRegistry",
@@ -1683,6 +1685,59 @@ def verification_contract_ready(project: Path) -> bool:
     return True
 
 
+def acceptance_contract_path(project: Path) -> Path:
+    return project / ".pfo" / "ACCEPTANCE_CONTRACT.json"
+
+
+def load_acceptance_contract(project: Path) -> dict:
+    path = acceptance_contract_path(project)
+    if not path.is_file():
+        raise SystemExit(f"ERROR: missing acceptance contract: {path}")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"ERROR: invalid acceptance contract JSON: {exc}") from exc
+    if not isinstance(data, dict):
+        raise SystemExit("ERROR: acceptance contract must be a JSON object")
+    return data
+
+
+def write_acceptance_contract(project: Path, contract: dict) -> None:
+    path = acceptance_contract_path(project)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(contract, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def default_acceptance_contract(request: str, unit_id: str = "", goal: str = "") -> dict:
+    source = request or goal or "PFO unit request"
+    criterion_id = "AC1"
+    return {
+        "version": 1,
+        "createdAt": now_iso(),
+        "createdBeforeImplementation": True,
+        "originalRequest": source,
+        "unitId": unit_id,
+        "status": "PENDING",
+        "criteria": [
+            {
+                "id": criterion_id,
+                "requirement": source,
+                "source": "user_request",
+                "sourceQuote": source,
+                "verification": "Record task-specific evidence before passing pfo verify-work --pass-gate.",
+                "status": "PENDING",
+                "evidenceKind": "",
+                "evidence": "",
+                "independentEvidence": "",
+            }
+        ],
+    }
+
+
+def acceptance_contract_ready(project: Path) -> bool:
+    return run_script("validate_acceptance_contract.py", [str(project)]) == 0
+
+
 def slugify_unit(value: str) -> str:
     slug = re.sub(r"[^a-zA-Z0-9._-]+", "-", str(value or "unit").strip()).strip("-._").lower()
     return slug or "unit"
@@ -2464,6 +2519,11 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     verification_contract = generated_verification_contract(project, manifest)
     verification_path = pfo_dir / "VERIFICATION_CONTRACT.json"
     verification_path.write_text(json.dumps(verification_contract, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    acceptance_path = acceptance_contract_path(project)
+    if not acceptance_path.is_file():
+        write_acceptance_contract(project, default_acceptance_contract(args.goal, manifest["unitId"], manifest["goal"]))
+        state["acceptanceContract"] = {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": "PENDING"}
+        state["gateResults"]["acceptanceContract"] = "PENDING"
     plan_rel = manifest["pivLoop"]["planPath"]
     plan_path = project / plan_rel
     plan_path.parent.mkdir(parents=True, exist_ok=True)
@@ -2486,13 +2546,16 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     state["contextBudget"] = {"gate": "pfo context-budget", "indexPath": ".codex-memory/context-index.json", "snapshotPath": ".codex-memory/resume-snapshot.md", "status": "READY"}
     state["toolCapabilityRegistry"] = {"path": ".pfo/TOOL_CAPABILITY_REGISTRY.json", "status": "READY"}
     state["verificationContract"] = {"path": ".pfo/VERIFICATION_CONTRACT.json", "status": "READY"}
+    state.setdefault("acceptanceContract", {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": "PENDING"})
     state["gateResults"]["executionPolicy"] = "PASSED"
     state["gateResults"]["permissionMatrix"] = "PASSED"
     state["gateResults"]["contextBudget"] = "PASSED"
     state["gateResults"]["toolCapabilityRegistry"] = "PASSED"
     state["gateResults"]["verificationContract"] = "PASSED"
+    state["gateResults"].setdefault("acceptanceContract", "PENDING")
     add_artifact(state, ".pfo/UNIT_CONTEXT_MANIFEST.json")
     add_artifact(state, ".pfo/VERIFICATION_CONTRACT.json")
+    add_artifact(state, ".pfo/ACCEPTANCE_CONTRACT.json")
     add_artifact(state, plan_rel)
     set_next_step_pending(
         project,
@@ -2509,7 +2572,7 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     save_state(project, state)
     print(
         "OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json, "
-        f".pfo/VERIFICATION_CONTRACT.json, and {plan_rel} "
+        f".pfo/VERIFICATION_CONTRACT.json, .pfo/ACCEPTANCE_CONTRACT.json, and {plan_rel} "
         f"with {manifest['routeProfile']['id']} profile"
     )
     return 0
@@ -2711,8 +2774,11 @@ def cmd_verify_work(args: argparse.Namespace) -> int:
     if args.pass_gate:
         if not verification_contract_ready(project):
             raise SystemExit("ERROR: cannot pass verification without a ready .pfo/VERIFICATION_CONTRACT.json")
+        if not acceptance_contract_ready(project):
+            raise SystemExit("ERROR: cannot pass verification until .pfo/ACCEPTANCE_CONTRACT.json passes")
         state["gateResults"]["review"] = "PASSED"
         state["gateResults"]["verificationContract"] = "PASSED"
+        state["gateResults"]["acceptanceContract"] = "PASSED"
         state["gateResults"]["targetedVerification"] = "PASSED"
         state["lastSuccessfulState"] = "VERIFYING_WORK"
         state["nextAction"] = "Run tests and quality gates, then proceed to review or next unit."
@@ -2968,6 +3034,113 @@ def cmd_event(args: argparse.Namespace) -> int:
     if args.duration_seconds is not None:
         argv.extend(["--duration-seconds", str(args.duration_seconds)])
     return run_script("pfo_event_log.py", argv)
+
+
+def cmd_acceptance(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    action = args.acceptance_action
+    if action == "init":
+        if acceptance_contract_path(project).is_file() and not args.force:
+            raise SystemExit("ERROR: .pfo/ACCEPTANCE_CONTRACT.json already exists; use --force to replace it")
+        contract = default_acceptance_contract(args.request, args.unit, args.request)
+        criteria = []
+        for index, raw in enumerate(args.criterion or [], start=1):
+            parts = raw.split("::", 2)
+            if len(parts) == 3:
+                criterion_id, requirement, verification = parts
+            else:
+                criterion_id = f"AC{index}"
+                requirement = raw
+                verification = "Provide independent evidence before passing acceptance gate."
+            criteria.append(
+                {
+                    "id": criterion_id.strip() or f"AC{index}",
+                    "requirement": requirement.strip(),
+                    "source": "user_request",
+                    "sourceQuote": requirement.strip(),
+                    "verification": verification.strip(),
+                    "status": "PENDING",
+                    "evidenceKind": "",
+                    "evidence": "",
+                    "independentEvidence": "",
+                }
+            )
+        if criteria:
+            contract["criteria"] = criteria
+        write_acceptance_contract(project, contract)
+        state["acceptanceContract"] = {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": "PENDING"}
+        state["gateResults"]["acceptanceContract"] = "PENDING"
+        add_artifact(state, ".pfo/ACCEPTANCE_CONTRACT.json")
+        append_event(project, state, "gate", "PENDING", {"command": "acceptance init", "criteria": len(contract["criteria"])})
+        save_state(project, state)
+        print(f"OK: wrote .pfo/ACCEPTANCE_CONTRACT.json with {len(contract['criteria'])} criteria")
+        return 0
+    if action == "add":
+        contract = load_acceptance_contract(project)
+        criteria = contract.setdefault("criteria", [])
+        if not isinstance(criteria, list):
+            raise SystemExit("ERROR: acceptance criteria must be a list")
+        criteria.append(
+            {
+                "id": args.id,
+                "requirement": args.requirement,
+                "source": "user_request",
+                "sourceQuote": args.source_quote or args.requirement,
+                "verification": args.verification,
+                "status": "PENDING",
+                "evidenceKind": "",
+                "evidence": "",
+                "independentEvidence": "",
+            }
+        )
+        contract["status"] = "PENDING"
+        write_acceptance_contract(project, contract)
+        state["acceptanceContract"] = {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": "PENDING"}
+        state["gateResults"]["acceptanceContract"] = "PENDING"
+        add_artifact(state, ".pfo/ACCEPTANCE_CONTRACT.json")
+        append_event(project, state, "gate", "PENDING", {"command": "acceptance add", "id": args.id})
+        save_state(project, state)
+        print(f"OK: added acceptance criterion {args.id}")
+        return 0
+    if action == "verify":
+        contract = load_acceptance_contract(project)
+        found = False
+        for item in contract.get("criteria", []):
+            if isinstance(item, dict) and item.get("id") == args.id:
+                item["status"] = args.status
+                item["evidenceKind"] = args.evidence_kind
+                item["evidence"] = args.evidence
+                item["independentEvidence"] = args.independent_evidence
+                item["verifiedAt"] = now_iso()
+                found = True
+                break
+        if not found:
+            raise SystemExit(f"ERROR: acceptance criterion not found: {args.id}")
+        statuses = [str(item.get("status", "")).upper() for item in contract.get("criteria", []) if isinstance(item, dict)]
+        contract["status"] = "PASSED" if statuses and all(status == "PASSED" for status in statuses) else "PENDING"
+        write_acceptance_contract(project, contract)
+        state["acceptanceContract"] = {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": contract["status"]}
+        state["gateResults"]["acceptanceContract"] = contract["status"]
+        append_event(project, state, "gate", contract["status"], {"command": "acceptance verify", "id": args.id})
+        save_state(project, state)
+        print(f"OK: acceptance criterion {args.id} recorded as {args.status}")
+        return 0
+    if action == "gate":
+        if not acceptance_contract_ready(project):
+            return 1
+        state["acceptanceContract"] = {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": "PASSED"}
+        state["gateResults"]["acceptanceContract"] = "PASSED"
+        append_event(project, state, "gate", "PASSED", {"command": "acceptance gate"})
+        save_state(project, state)
+        print("OK: acceptance gate passed")
+        return 0
+    if action == "status":
+        contract = load_acceptance_contract(project)
+        print(json.dumps(contract, indent=2, ensure_ascii=False) if args.json else contract.get("status", ""))
+        return 0
+    raise SystemExit(f"ERROR: unknown acceptance action: {action}")
 
 
 def cmd_context_budget(args: argparse.Namespace) -> int:
@@ -4279,6 +4452,28 @@ def build_parser() -> argparse.ArgumentParser:
     event.add_argument("--token-notes", default="")
     event.add_argument("--reason", default="")
     event.set_defaults(func=cmd_event)
+
+    acceptance = sub.add_parser("acceptance", help="Create, update, and gate original-request acceptance criteria.")
+    acceptance.add_argument("acceptance_action", choices=["init", "add", "verify", "gate", "status"])
+    acceptance.add_argument("project", type=Path)
+    acceptance.add_argument("--request", default="")
+    acceptance.add_argument("--unit", default="")
+    acceptance.add_argument("--criterion", action="append", default=[], help="Repeat as ID::requirement::verification or raw requirement.")
+    acceptance.add_argument("--id", default="")
+    acceptance.add_argument("--requirement", default="")
+    acceptance.add_argument("--source-quote", default="")
+    acceptance.add_argument("--verification", default="")
+    acceptance.add_argument("--status", choices=["PENDING", "PASSED", "FAILED", "WAIVED"], default="PASSED")
+    acceptance.add_argument(
+        "--evidence-kind",
+        choices=["command", "test", "review", "security", "manual", "artifact", "production_readiness", "contract_gate"],
+        default="command",
+    )
+    acceptance.add_argument("--evidence", default="")
+    acceptance.add_argument("--independent-evidence", default="")
+    acceptance.add_argument("--force", action="store_true")
+    acceptance.add_argument("--json", action="store_true")
+    acceptance.set_defaults(func=cmd_acceptance)
 
     context_budget = sub.add_parser("context-budget", help="Check tool/read/log/web output against the context budget gate.")
     context_budget.add_argument("project", type=Path)

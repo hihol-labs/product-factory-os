@@ -10,6 +10,15 @@
 - `docs/DROID_INSPIRED_RUNTIME.md` documenting the seven implemented Droid-inspired PFO contours.
 - Control-harness registry and documentation entries for the new readiness, remediation, autonomy, exec, mission, wiki, QA, and telemetry surfaces, preserving Harness Engineering guide/sensor coverage.
 
+## [1.2.1] - 2026-06-21
+
+### Added
+
+- Acceptance contract runtime gate with `.pfo/ACCEPTANCE_CONTRACT.json`, `pfo acceptance init/add/verify/gate/status`, and `scripts/validate_acceptance_contract.py`.
+- Fail-closed `pfo verify-work --pass-gate` enforcement: final verification now requires all source-traced acceptance criteria to be `PASSED`.
+- Self-authored validator protection: criteria proved by changed `scripts/validate*.py` files must include independent evidence.
+- Production-readiness, structure, runtime, methodology, and control-harness wiring for the acceptance contract as a Harness Engineering feedback sensor.
+
 ## [1.2.0] - 2026-06-21
 
 ### Added
