@@ -12,6 +12,8 @@ CHECKS = [
     [sys.executable, "scripts/validate_structure.py"],
     [sys.executable, "scripts/validate_plan_quality.py", "--self-check"],
     [sys.executable, "scripts/validate_control_harness.py"],
+    [sys.executable, "scripts/validate_acceptance_contract.py", "--self-check"],
+    [sys.executable, "scripts/validate_omnigent_runtime.py"],
     [sys.executable, "scripts/validate_defensive_layers.py"],
     [sys.executable, "scripts/validate_self_contracts.py"],
     [sys.executable, "scripts/pfo_contract_gate.py", str(ROOT)],

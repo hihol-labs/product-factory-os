@@ -1,0 +1,10 @@
+id,path,reason,status
+O1,agents/*.yaml,agent specs declare harness tools policies sandbox,reviewed
+O2,scripts/pfo.py,policy-eval emits ALLOW DENY ASK verdicts,reviewed
+O3,scripts/pfo.py,session and exec surfaces expose runner envelope,reviewed
+O4,scripts/pfo.py,dispatch writes bounded local envelopes,reviewed
+O5,scripts/pfo.py,cross-review enforces different harness metadata,reviewed
+O6,scripts/pfo.py,cost-route records risk and budget decision,reviewed
+O7,scripts/pfo.py,session and telemetry expose live status,reviewed
+O8,scripts/pfo.py,session export/import creates forkable packet,reviewed
+O9,docs/templates/UNIT_CONTEXT_MANIFEST.json,sandbox boundary included in unit manifest,reviewed

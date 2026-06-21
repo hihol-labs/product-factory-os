@@ -125,7 +125,14 @@
       "verificationContract": "",
       "learningPromotion": "",
       "toolCapabilityRegistry": "",
-      "deploymentReadiness": ""
+      "deploymentReadiness": "",
+      "agentSpec": "",
+      "policyRuntime": "",
+      "dispatchRuntime": "",
+      "crossReview": "",
+      "costRiskRouting": "",
+      "sessionRuntime": "",
+      "sandboxRuntime": ""
     },
     "tddEvidence": {
       "red": "",
@@ -258,6 +265,52 @@
       "activeBranch": "",
       "activeWorktree": "",
       "mergeStatus": ""
+    },
+    "agentRuntime": {
+      "specVersion": 1,
+      "agentSpecsPath": "agents/*.yaml",
+      "projectAgentSpecsPath": ".pfo/agents/",
+      "lastValidation": "",
+      "status": ""
+    },
+    "policyRuntime": {
+      "engine": "pfo-policy-eval",
+      "verdicts": ["ALLOW", "DENY", "ASK"],
+      "lastVerdict": "",
+      "lastReason": "",
+      "lastEventAt": ""
+    },
+    "dispatchRuntime": {
+      "path": ".pfo/dispatch/",
+      "activeDispatches": [],
+      "lastDispatchId": "",
+      "worktreeIsolation": "declared-per-dispatch"
+    },
+    "crossReview": {
+      "path": ".pfo/cross-review/",
+      "requiredForRisk": ["security", "migration", "deploy", "auth", "payments", "data-loss"],
+      "lastReviewId": "",
+      "status": ""
+    },
+    "costRiskRouting": {
+      "lastDecision": "",
+      "modelTier": "",
+      "riskScore": 0,
+      "estimatedCostUsd": 0,
+      "budgetDecision": "",
+      "updatedAt": ""
+    },
+    "sessionRuntime": {
+      "path": ".pfo/session/",
+      "liveStatusPath": ".pfo/session/live-status.json",
+      "exportPath": ".pfo/session/session-export.json",
+      "lastExportAt": "",
+      "lastImportAt": ""
+    },
+    "sandboxRuntime": {
+      "defaultType": "local",
+      "specSource": ".pfo/UNIT_CONTEXT_MANIFEST.json",
+      "lastCheckedAt": ""
     },
     "blockers": [],
     "nextAction": ""

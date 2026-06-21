@@ -1,0 +1,18 @@
+spec_version: 1
+name: frontend-builder
+description: Implements scoped frontend and browser-facing units from the active PFO manifest.
+instructions: agents/frontend-builder.md
+executor:
+  harness: codex-native
+  model: standard
+tools:
+  pfo: inherit
+  browser-check: inherit
+policies:
+  runtime: pfo policy-eval
+sandbox:
+  type: local
+  read_paths: [.]
+  write_paths: [frontend/, src/, tests/, .codex-memory/, reports/]
+  allow_network: false
+  env_passthrough: []

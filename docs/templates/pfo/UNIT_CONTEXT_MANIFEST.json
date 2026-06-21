@@ -69,6 +69,23 @@
       "write HANDOFF.md before compaction, delegation, AFK execution, or recovery"
     ]
   },
+  "sandbox": {
+    "type": "local",
+    "readPaths": [
+      "."
+    ],
+    "writePaths": [
+      "files listed by the active execution graph node",
+      "tests/",
+      "plans/",
+      "reports/",
+      ".codex-memory/",
+      ".pfo/"
+    ],
+    "allowNetwork": false,
+    "envPassthrough": [],
+    "policySource": ".pfo/EXECUTION_POLICY.json"
+  },
   "gates": [
     "adoption",
     "scopeLock",

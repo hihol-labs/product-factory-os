@@ -348,6 +348,20 @@ Uses `integrations/mcp-capabilities.json` and `docs/OPENAI_MCP_INTEGRATIONS.md` 
 - `/github-workflow` for issues, PRs, CI, and release workflow.
 - `/tool-sync` for Linear, Notion, Google Drive, and export-only payloads.
 
+### 16. Omnigent-Inspired Runtime Layer
+
+PFO includes a local-first live-agent runtime surface inspired by Omnigent, without adding an external dependency or replacing PFO contracts:
+
+- `agents/*.yaml` and `docs/templates/PFO_AGENT_SPEC.yaml` declare runnable roles with harness, tools, policies, session, and sandbox boundaries.
+- `pfo policy-eval` evaluates runtime events into `ALLOW`, `DENY`, or `ASK`.
+- `pfo dispatch` writes bounded sub-agent envelopes under `.pfo/dispatch/`.
+- `pfo cross-review` records independent different-harness review envelopes for high-risk diffs.
+- `pfo cost-route` chooses a model tier from risk, cost, and triviality before execution.
+- `pfo session export/import/status` writes compact forkable context packets and `.pfo/session/live-status.json`.
+- Unit manifests include `sandbox` boundaries for read paths, write paths, network, environment passthrough, and policy source.
+
+The layer is validated by `scripts/validate_omnigent_runtime.py` and mapped into `docs/CONTROL_HARNESS.md` as guide/sensor controls.
+
 ## Required PFO Artifacts
 
 Every full-cycle PFO project should maintain:

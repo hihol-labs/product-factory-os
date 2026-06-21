@@ -87,6 +87,16 @@ CONTROL_REGISTRY = [
         ],
     },
     {
+        "id": "acceptance-contract",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/validate_acceptance_contract.py",
+            "docs/templates/pfo/ACCEPTANCE_CONTRACT.json",
+            "docs/gates/acceptance-contract-gate.md",
+        ],
+    },
+    {
         "id": "defensive-layer-diagnostics",
         "timing": "Feedback",
         "evaluator": "Computational",
@@ -412,6 +422,86 @@ CONTROL_REGISTRY = [
             "scripts/pfo.py",
             "docs/templates/pfo/PERMISSION_MATRIX.json",
             "docs/templates/pfo/EXECUTION_POLICY.json",
+        ],
+    },
+    {
+        "id": "agent-spec-runtime",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "docs/templates/PFO_AGENT_SPEC.yaml",
+            "agents/orchestrator.yaml",
+            "scripts/validate_omnigent_runtime.py",
+        ],
+    },
+    {
+        "id": "policy-verdict-runtime",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            "docs/templates/pfo/PERMISSION_MATRIX.json",
+            "docs/PFO_OMNIGENT_RUNTIME.md",
+        ],
+    },
+    {
+        "id": "dispatch-runtime",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            "docs/PFO_OMNIGENT_RUNTIME.md",
+            ".pfo/UNIT_CONTEXT_MANIFEST.json",
+        ],
+    },
+    {
+        "id": "cross-harness-review",
+        "timing": "Feedback",
+        "evaluator": "Inferential",
+        "artifacts": [
+            "scripts/pfo.py",
+            "agents/reviewer.yaml",
+            "docs/PFO_OMNIGENT_RUNTIME.md",
+        ],
+    },
+    {
+        "id": "cost-risk-routing",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            "docs/templates/pfo/PERMISSION_MATRIX.json",
+            "docs/PFO_OMNIGENT_RUNTIME.md",
+        ],
+    },
+    {
+        "id": "live-session-observability",
+        "timing": "Feedback",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            "dashboard/index.html",
+            "docs/PFO_OMNIGENT_RUNTIME.md",
+        ],
+    },
+    {
+        "id": "forkable-session-context",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "scripts/pfo.py",
+            "docs/templates/HANDOFF.md",
+            "docs/PFO_OMNIGENT_RUNTIME.md",
+        ],
+    },
+    {
+        "id": "sandbox-spec-runtime",
+        "timing": "Feedforward",
+        "evaluator": "Computational",
+        "artifacts": [
+            "docs/templates/PFO_AGENT_SPEC.yaml",
+            "docs/templates/UNIT_CONTEXT_MANIFEST.json",
+            "docs/templates/pfo/UNIT_CONTEXT_MANIFEST.json",
         ],
     },
     {

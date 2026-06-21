@@ -474,6 +474,12 @@ pfo learnings ../my-product --lesson "Keep provider fallback explicit"
 pfo improve ../my-product --from-learnings --propose
 pfo learning-gate ../my-product --require-approved
 pfo permission-check ../my-product --capability write --path .codex-memory/STATE.json
+pfo policy-eval ../my-product --capability write --risk-score 30 --cost-usd 0.50 --json
+pfo agent-spec validate ../my-product
+pfo dispatch ../my-product --agent backend-builder --purpose implement --title auth-flow --worktree
+pfo cross-review ../my-product --implementer codex --reviewer reviewer --implementer-harness codex-native --reviewer-harness claude-native --contract "Diff must satisfy manifest"
+pfo cost-route ../my-product "small docs fix" --trivial --risk-score 5
+pfo session export ../my-product --json
 pfo event validate ../my-product
 pfo tool-registry ../my-product
 pfo metrics
@@ -504,6 +510,16 @@ interface/                        Voice-first input/output contract
 ```
 
 `.pfo/` project contracts cover scope lock, data authenticity, golden flows, regression contracts, fallback policy, diff risk, and no silent substitution.
+
+## Omnigent-Inspired Runtime
+
+PFO adopts useful Omnigent runtime mechanics as local-first contracts: declarative agent YAML specs, `ALLOW` / `DENY` / `ASK` policy verdicts, bounded dispatch envelopes, cross-harness review, cost/risk routing, live session observability, forkable session exports, and sandbox specs in agent and unit manifests.
+
+The canonical guide is [`docs/PFO_OMNIGENT_RUNTIME.md`](docs/PFO_OMNIGENT_RUNTIME.md). The deterministic proof is:
+
+```bash
+python3 scripts/validate_omnigent_runtime.py
+```
 
 ## Integrations
 

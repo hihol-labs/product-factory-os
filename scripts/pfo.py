@@ -213,6 +213,7 @@ def ensure_autonomy_state(state: dict) -> None:
     state.setdefault("permissionMatrix", {"path": ".pfo/PERMISSION_MATRIX.json", "humanPath": ".pfo/PERMISSION_MATRIX.md", "status": ""})
     state.setdefault("contextBudget", {"gate": "pfo context-budget", "indexPath": ".codex-memory/context-index.json", "snapshotPath": ".codex-memory/resume-snapshot.md", "status": ""})
     state.setdefault("verificationContract", {"path": ".pfo/VERIFICATION_CONTRACT.json", "status": ""})
+    state.setdefault("acceptanceContract", {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": ""})
     state.setdefault("toolCapabilityRegistry", {"path": ".pfo/TOOL_CAPABILITY_REGISTRY.json", "status": ""})
     state.setdefault("learningPromotionGate", {"path": ".pfo/LEARNING_PROMOTION_GATE.md", "status": ""})
     state.setdefault(
@@ -252,6 +253,73 @@ def ensure_autonomy_state(state: dict) -> None:
         "worktreeIsolation",
         {"enabled": False, "strategy": "", "activeBranch": "", "activeWorktree": "", "mergeStatus": ""},
     )
+    state.setdefault(
+        "agentRuntime",
+        {
+            "specVersion": 1,
+            "agentSpecsPath": "agents/*.yaml",
+            "projectAgentSpecsPath": ".pfo/agents/",
+            "lastValidation": "",
+            "status": "",
+        },
+    )
+    state.setdefault(
+        "policyRuntime",
+        {
+            "engine": "pfo-policy-eval",
+            "verdicts": ["ALLOW", "DENY", "ASK"],
+            "lastVerdict": "",
+            "lastReason": "",
+            "lastEventAt": "",
+        },
+    )
+    state.setdefault(
+        "dispatchRuntime",
+        {
+            "path": ".pfo/dispatch/",
+            "activeDispatches": [],
+            "lastDispatchId": "",
+            "worktreeIsolation": "declared-per-dispatch",
+        },
+    )
+    state.setdefault(
+        "crossReview",
+        {
+            "path": ".pfo/cross-review/",
+            "requiredForRisk": ["security", "migration", "deploy", "auth", "payments", "data-loss"],
+            "lastReviewId": "",
+            "status": "",
+        },
+    )
+    state.setdefault(
+        "costRiskRouting",
+        {
+            "lastDecision": "",
+            "modelTier": "",
+            "riskScore": 0,
+            "estimatedCostUsd": 0,
+            "budgetDecision": "",
+            "updatedAt": "",
+        },
+    )
+    state.setdefault(
+        "sessionRuntime",
+        {
+            "path": ".pfo/session/",
+            "liveStatusPath": ".pfo/session/live-status.json",
+            "exportPath": ".pfo/session/session-export.json",
+            "lastExportAt": "",
+            "lastImportAt": "",
+        },
+    )
+    state.setdefault(
+        "sandboxRuntime",
+        {
+            "defaultType": "local",
+            "specSource": ".pfo/UNIT_CONTEXT_MANIFEST.json",
+            "lastCheckedAt": "",
+        },
+    )
     gates = state.setdefault("gateResults", {})
     for gate in [
         "ideaGate",
@@ -279,9 +347,17 @@ def ensure_autonomy_state(state: dict) -> None:
         "permissionMatrix",
         "contextBudget",
         "verificationContract",
+        "acceptanceContract",
         "securityEvidence",
         "learningPromotion",
         "toolCapabilityRegistry",
+        "agentSpec",
+        "policyRuntime",
+        "dispatchRuntime",
+        "crossReview",
+        "costRiskRouting",
+        "sessionRuntime",
+        "sandboxRuntime",
     ]:
         gates.setdefault(gate, "")
     ensure_human_steering(state)
@@ -1444,6 +1520,21 @@ def generated_unit_manifest(
                 "prefer durable artifact references over chat-only memory",
             ],
         },
+        "sandbox": {
+            "type": "local",
+            "readPaths": ["."],
+            "writePaths": [
+                "files listed by the active execution graph node",
+                "tests/",
+                "plans/",
+                "reports/",
+                ".codex-memory/",
+                ".pfo/",
+            ],
+            "allowNetwork": False,
+            "envPassthrough": [],
+            "policySource": ".pfo/EXECUTION_POLICY.json",
+        },
         "toolPolicy": {
             "mode": "minimal-trusted-menu",
             "rules": [
@@ -1592,6 +1683,59 @@ def verification_contract_ready(project: Path) -> bool:
             if not item.get(field):
                 return False
     return True
+
+
+def acceptance_contract_path(project: Path) -> Path:
+    return project / ".pfo" / "ACCEPTANCE_CONTRACT.json"
+
+
+def load_acceptance_contract(project: Path) -> dict:
+    path = acceptance_contract_path(project)
+    if not path.is_file():
+        raise SystemExit(f"ERROR: missing acceptance contract: {path}")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"ERROR: invalid acceptance contract JSON: {exc}") from exc
+    if not isinstance(data, dict):
+        raise SystemExit("ERROR: acceptance contract must be a JSON object")
+    return data
+
+
+def write_acceptance_contract(project: Path, contract: dict) -> None:
+    path = acceptance_contract_path(project)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(contract, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def default_acceptance_contract(request: str, unit_id: str = "", goal: str = "") -> dict:
+    source = request or goal or "PFO unit request"
+    criterion_id = "AC1"
+    return {
+        "version": 1,
+        "createdAt": now_iso(),
+        "createdBeforeImplementation": True,
+        "originalRequest": source,
+        "unitId": unit_id,
+        "status": "PENDING",
+        "criteria": [
+            {
+                "id": criterion_id,
+                "requirement": source,
+                "source": "user_request",
+                "sourceQuote": source,
+                "verification": "Record task-specific evidence before passing pfo verify-work --pass-gate.",
+                "status": "PENDING",
+                "evidenceKind": "",
+                "evidence": "",
+                "independentEvidence": "",
+            }
+        ],
+    }
+
+
+def acceptance_contract_ready(project: Path) -> bool:
+    return run_script("validate_acceptance_contract.py", [str(project)]) == 0
 
 
 def slugify_unit(value: str) -> str:
@@ -2375,6 +2519,11 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     verification_contract = generated_verification_contract(project, manifest)
     verification_path = pfo_dir / "VERIFICATION_CONTRACT.json"
     verification_path.write_text(json.dumps(verification_contract, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    acceptance_path = acceptance_contract_path(project)
+    if not acceptance_path.is_file():
+        write_acceptance_contract(project, default_acceptance_contract(args.goal, manifest["unitId"], manifest["goal"]))
+        state["acceptanceContract"] = {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": "PENDING"}
+        state["gateResults"]["acceptanceContract"] = "PENDING"
     plan_rel = manifest["pivLoop"]["planPath"]
     plan_path = project / plan_rel
     plan_path.parent.mkdir(parents=True, exist_ok=True)
@@ -2397,13 +2546,16 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     state["contextBudget"] = {"gate": "pfo context-budget", "indexPath": ".codex-memory/context-index.json", "snapshotPath": ".codex-memory/resume-snapshot.md", "status": "READY"}
     state["toolCapabilityRegistry"] = {"path": ".pfo/TOOL_CAPABILITY_REGISTRY.json", "status": "READY"}
     state["verificationContract"] = {"path": ".pfo/VERIFICATION_CONTRACT.json", "status": "READY"}
+    state.setdefault("acceptanceContract", {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": "PENDING"})
     state["gateResults"]["executionPolicy"] = "PASSED"
     state["gateResults"]["permissionMatrix"] = "PASSED"
     state["gateResults"]["contextBudget"] = "PASSED"
     state["gateResults"]["toolCapabilityRegistry"] = "PASSED"
     state["gateResults"]["verificationContract"] = "PASSED"
+    state["gateResults"].setdefault("acceptanceContract", "PENDING")
     add_artifact(state, ".pfo/UNIT_CONTEXT_MANIFEST.json")
     add_artifact(state, ".pfo/VERIFICATION_CONTRACT.json")
+    add_artifact(state, ".pfo/ACCEPTANCE_CONTRACT.json")
     add_artifact(state, plan_rel)
     set_next_step_pending(
         project,
@@ -2420,7 +2572,7 @@ def cmd_manifest(args: argparse.Namespace) -> int:
     save_state(project, state)
     print(
         "OK: wrote .pfo/UNIT_CONTEXT_MANIFEST.json, "
-        f".pfo/VERIFICATION_CONTRACT.json, and {plan_rel} "
+        f".pfo/VERIFICATION_CONTRACT.json, .pfo/ACCEPTANCE_CONTRACT.json, and {plan_rel} "
         f"with {manifest['routeProfile']['id']} profile"
     )
     return 0
@@ -2622,8 +2774,11 @@ def cmd_verify_work(args: argparse.Namespace) -> int:
     if args.pass_gate:
         if not verification_contract_ready(project):
             raise SystemExit("ERROR: cannot pass verification without a ready .pfo/VERIFICATION_CONTRACT.json")
+        if not acceptance_contract_ready(project):
+            raise SystemExit("ERROR: cannot pass verification until .pfo/ACCEPTANCE_CONTRACT.json passes")
         state["gateResults"]["review"] = "PASSED"
         state["gateResults"]["verificationContract"] = "PASSED"
+        state["gateResults"]["acceptanceContract"] = "PASSED"
         state["gateResults"]["targetedVerification"] = "PASSED"
         state["lastSuccessfulState"] = "VERIFYING_WORK"
         state["nextAction"] = "Run tests and quality gates, then proceed to review or next unit."
@@ -2879,6 +3034,113 @@ def cmd_event(args: argparse.Namespace) -> int:
     if args.duration_seconds is not None:
         argv.extend(["--duration-seconds", str(args.duration_seconds)])
     return run_script("pfo_event_log.py", argv)
+
+
+def cmd_acceptance(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    action = args.acceptance_action
+    if action == "init":
+        if acceptance_contract_path(project).is_file() and not args.force:
+            raise SystemExit("ERROR: .pfo/ACCEPTANCE_CONTRACT.json already exists; use --force to replace it")
+        contract = default_acceptance_contract(args.request, args.unit, args.request)
+        criteria = []
+        for index, raw in enumerate(args.criterion or [], start=1):
+            parts = raw.split("::", 2)
+            if len(parts) == 3:
+                criterion_id, requirement, verification = parts
+            else:
+                criterion_id = f"AC{index}"
+                requirement = raw
+                verification = "Provide independent evidence before passing acceptance gate."
+            criteria.append(
+                {
+                    "id": criterion_id.strip() or f"AC{index}",
+                    "requirement": requirement.strip(),
+                    "source": "user_request",
+                    "sourceQuote": requirement.strip(),
+                    "verification": verification.strip(),
+                    "status": "PENDING",
+                    "evidenceKind": "",
+                    "evidence": "",
+                    "independentEvidence": "",
+                }
+            )
+        if criteria:
+            contract["criteria"] = criteria
+        write_acceptance_contract(project, contract)
+        state["acceptanceContract"] = {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": "PENDING"}
+        state["gateResults"]["acceptanceContract"] = "PENDING"
+        add_artifact(state, ".pfo/ACCEPTANCE_CONTRACT.json")
+        append_event(project, state, "gate", "PENDING", {"command": "acceptance init", "criteria": len(contract["criteria"])})
+        save_state(project, state)
+        print(f"OK: wrote .pfo/ACCEPTANCE_CONTRACT.json with {len(contract['criteria'])} criteria")
+        return 0
+    if action == "add":
+        contract = load_acceptance_contract(project)
+        criteria = contract.setdefault("criteria", [])
+        if not isinstance(criteria, list):
+            raise SystemExit("ERROR: acceptance criteria must be a list")
+        criteria.append(
+            {
+                "id": args.id,
+                "requirement": args.requirement,
+                "source": "user_request",
+                "sourceQuote": args.source_quote or args.requirement,
+                "verification": args.verification,
+                "status": "PENDING",
+                "evidenceKind": "",
+                "evidence": "",
+                "independentEvidence": "",
+            }
+        )
+        contract["status"] = "PENDING"
+        write_acceptance_contract(project, contract)
+        state["acceptanceContract"] = {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": "PENDING"}
+        state["gateResults"]["acceptanceContract"] = "PENDING"
+        add_artifact(state, ".pfo/ACCEPTANCE_CONTRACT.json")
+        append_event(project, state, "gate", "PENDING", {"command": "acceptance add", "id": args.id})
+        save_state(project, state)
+        print(f"OK: added acceptance criterion {args.id}")
+        return 0
+    if action == "verify":
+        contract = load_acceptance_contract(project)
+        found = False
+        for item in contract.get("criteria", []):
+            if isinstance(item, dict) and item.get("id") == args.id:
+                item["status"] = args.status
+                item["evidenceKind"] = args.evidence_kind
+                item["evidence"] = args.evidence
+                item["independentEvidence"] = args.independent_evidence
+                item["verifiedAt"] = now_iso()
+                found = True
+                break
+        if not found:
+            raise SystemExit(f"ERROR: acceptance criterion not found: {args.id}")
+        statuses = [str(item.get("status", "")).upper() for item in contract.get("criteria", []) if isinstance(item, dict)]
+        contract["status"] = "PASSED" if statuses and all(status == "PASSED" for status in statuses) else "PENDING"
+        write_acceptance_contract(project, contract)
+        state["acceptanceContract"] = {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": contract["status"]}
+        state["gateResults"]["acceptanceContract"] = contract["status"]
+        append_event(project, state, "gate", contract["status"], {"command": "acceptance verify", "id": args.id})
+        save_state(project, state)
+        print(f"OK: acceptance criterion {args.id} recorded as {args.status}")
+        return 0
+    if action == "gate":
+        if not acceptance_contract_ready(project):
+            return 1
+        state["acceptanceContract"] = {"path": ".pfo/ACCEPTANCE_CONTRACT.json", "status": "PASSED"}
+        state["gateResults"]["acceptanceContract"] = "PASSED"
+        append_event(project, state, "gate", "PASSED", {"command": "acceptance gate"})
+        save_state(project, state)
+        print("OK: acceptance gate passed")
+        return 0
+    if action == "status":
+        contract = load_acceptance_contract(project)
+        print(json.dumps(contract, indent=2, ensure_ascii=False) if args.json else contract.get("status", ""))
+        return 0
+    raise SystemExit(f"ERROR: unknown acceptance action: {action}")
 
 
 def cmd_context_budget(args: argparse.Namespace) -> int:
@@ -3385,6 +3647,331 @@ def cmd_policy(args: argparse.Namespace) -> int:
     return 0 if allowed else 1
 
 
+def parse_json_arg(value: str, path_value: str = "") -> dict:
+    if path_value:
+        path = Path(path_value)
+        return json.loads(path.read_text(encoding="utf-8"))
+    if value:
+        return json.loads(value)
+    return {}
+
+
+def policy_eval_payload(project: Path, args: argparse.Namespace) -> dict:
+    event = parse_json_arg(getattr(args, "event_json", ""), getattr(args, "event_file", ""))
+    event_type = event.get("type") or args.event_type
+    target = event.get("target") or args.target
+    data = event.get("data", {}) if isinstance(event.get("data", {}), dict) else {}
+    capability = data.get("capability") or args.capability or target or "read"
+    cost_usd = float(data.get("cost_usd", args.cost_usd or 0) or 0)
+    risk_score = int(data.get("risk_score", args.risk_score or 0) or 0)
+    tool_calls = int(data.get("tool_calls", args.tool_calls or 0) or 0)
+    matrix_path = project / ".pfo" / "PERMISSION_MATRIX.json"
+    matrix = json.loads(matrix_path.read_text(encoding="utf-8")) if matrix_path.is_file() else {}
+    capability_policy = matrix.get("capabilities", {}).get(capability, {}) if isinstance(matrix.get("capabilities"), dict) else {}
+    default_decision = str(capability_policy.get("default") or matrix.get("defaultDecision") or "deny").lower()
+    approval_required = capability_policy.get("approvalRequired", False)
+    reasons: list[str] = []
+    verdict = "ALLOW"
+    if default_decision == "block":
+        verdict = "DENY"
+        reasons.append(f"{capability} is blocked by permission matrix")
+    elif default_decision == "deny":
+        verdict = "DENY"
+        reasons.append(f"{capability} is denied by default")
+    elif approval_required is True or (isinstance(approval_required, str) and approval_required not in {"false", "False", ""}):
+        verdict = "ASK"
+        reasons.append(f"{capability} requires approval: {approval_required}")
+    if risk_score >= args.deny_risk:
+        verdict = "DENY"
+        reasons.append(f"risk score {risk_score} >= deny threshold {args.deny_risk}")
+    elif risk_score >= args.ask_risk and verdict == "ALLOW":
+        verdict = "ASK"
+        reasons.append(f"risk score {risk_score} >= ask threshold {args.ask_risk}")
+    if cost_usd >= args.deny_cost:
+        verdict = "DENY"
+        reasons.append(f"estimated cost ${cost_usd:.2f} >= deny threshold ${args.deny_cost:.2f}")
+    elif cost_usd >= args.ask_cost and verdict == "ALLOW":
+        verdict = "ASK"
+        reasons.append(f"estimated cost ${cost_usd:.2f} >= ask threshold ${args.ask_cost:.2f}")
+    if tool_calls > args.max_tool_calls:
+        verdict = "DENY"
+        reasons.append(f"tool call count {tool_calls} > limit {args.max_tool_calls}")
+    return {
+        "type": "pfo-policy-verdict",
+        "project": str(project),
+        "event": {"type": event_type, "target": target, "capability": capability, "data": data},
+        "result": verdict,
+        "reason": "; ".join(reasons) or "allowed by active PFO policy",
+        "riskScore": risk_score,
+        "estimatedCostUsd": cost_usd,
+        "toolCalls": tool_calls,
+        "checkedAt": now_iso(),
+    }
+
+
+def cmd_policy_eval(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    payload = policy_eval_payload(project, args)
+    state["policyRuntime"] = {
+        "engine": "pfo-policy-eval",
+        "verdicts": ["ALLOW", "DENY", "ASK"],
+        "lastVerdict": payload["result"],
+        "lastReason": payload["reason"],
+        "lastEventAt": payload["checkedAt"],
+    }
+    state["gateResults"]["policyRuntime"] = "PASSED" if payload["result"] == "ALLOW" else payload["result"]
+    if args.record:
+        append_event(project, state, "policy", payload["result"], payload)
+    save_state(project, state)
+    if args.json:
+        print(json.dumps(payload, indent=2, ensure_ascii=False))
+    else:
+        print(f"{payload['result']}: {payload['reason']}")
+    return 0 if payload["result"] == "ALLOW" else 1
+
+
+def agent_spec_paths() -> list[Path]:
+    return sorted((ROOT / "agents").glob("*.yaml"))
+
+
+def validate_agent_spec_text(path: Path, text: str) -> list[str]:
+    errors = []
+    for token in ["spec_version:", "name:", "instructions:", "executor:", "tools:", "policies:", "sandbox:"]:
+        if token not in text:
+            errors.append(f"{path}: missing {token}")
+    if "harness:" not in text:
+        errors.append(f"{path}: missing executor harness")
+    return errors
+
+
+def cmd_agent_spec(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    paths = agent_spec_paths()
+    if args.agent_action == "list":
+        payload = {"count": len(paths), "agents": [path.stem for path in paths], "path": "agents/*.yaml"}
+        print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else "\n".join(payload["agents"]))
+        return 0
+    if args.agent_action == "write-defaults":
+        target_dir = project / ".pfo" / "agents"
+        target_dir.mkdir(parents=True, exist_ok=True)
+        for path in paths:
+            (target_dir / path.name).write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+        state["agentRuntime"] = {
+            "specVersion": 1,
+            "agentSpecsPath": "agents/*.yaml",
+            "projectAgentSpecsPath": ".pfo/agents/",
+            "lastValidation": now_iso(),
+            "status": "READY",
+        }
+        state["gateResults"]["agentSpec"] = "PASSED"
+        add_artifact(state, ".pfo/agents/")
+        append_event(project, state, "state-change", "READY", {"command": "agent-spec", "action": "write-defaults"})
+        save_state(project, state)
+        print(f"OK: wrote {len(paths)} agent specs to .pfo/agents/")
+        return 0
+    errors = []
+    template = ROOT / "docs" / "templates" / "PFO_AGENT_SPEC.yaml"
+    if not template.is_file():
+        errors.append("missing docs/templates/PFO_AGENT_SPEC.yaml")
+    if len(paths) < 5:
+        errors.append("expected at least 5 runnable agent specs under agents/*.yaml")
+    for path in paths:
+        errors.extend(validate_agent_spec_text(path, path.read_text(encoding="utf-8")))
+    status = "PASSED" if not errors else "BLOCKED"
+    state["agentRuntime"]["lastValidation"] = now_iso()
+    state["agentRuntime"]["status"] = "READY" if not errors else "BLOCKED"
+    state["gateResults"]["agentSpec"] = status
+    append_event(project, state, "verification", status, {"command": "agent-spec", "errors": errors})
+    save_state(project, state)
+    payload = {"status": status, "count": len(paths), "errors": errors}
+    if args.json:
+        print(json.dumps(payload, indent=2, ensure_ascii=False))
+    else:
+        print(f"Agent spec validation: {status}")
+        for error in errors:
+            print(f"- {error}")
+    return 0 if not errors else 1
+
+
+def dispatch_id(title: str) -> str:
+    return f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{slugify_unit(title)[:48]}"
+
+
+def cmd_dispatch(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    item_id = dispatch_id(args.title or args.agent)
+    dispatch_dir = project / ".pfo" / "dispatch"
+    dispatch_dir.mkdir(parents=True, exist_ok=True)
+    worktree_path = f".pfo/worktrees/{item_id}" if args.worktree else ""
+    payload = {
+        "version": 1,
+        "id": item_id,
+        "title": args.title or item_id,
+        "agent": args.agent,
+        "purpose": args.purpose,
+        "harness": args.harness,
+        "model": args.model,
+        "worktree": {"enabled": bool(args.worktree), "path": worktree_path, "branch": args.branch},
+        "contract": args.contract,
+        "status": "QUEUED",
+        "createdAt": now_iso(),
+        "inbox": {"status": "PENDING", "resultPath": f".pfo/dispatch/{item_id}.result.json"},
+    }
+    rel = f".pfo/dispatch/{item_id}.json"
+    (dispatch_dir / f"{item_id}.json").write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    runtime = state.setdefault("dispatchRuntime", {})
+    runtime["path"] = ".pfo/dispatch/"
+    runtime["lastDispatchId"] = item_id
+    active = runtime.setdefault("activeDispatches", [])
+    if item_id not in active:
+        active.append(item_id)
+    state["worktreeIsolation"] = {"enabled": bool(args.worktree), "strategy": "per-dispatch", "activeBranch": args.branch, "activeWorktree": worktree_path, "mergeStatus": "human-owned"}
+    state["gateResults"]["dispatchRuntime"] = "PASSED"
+    add_artifact(state, rel)
+    append_event(project, state, "dispatch", "QUEUED", payload)
+    save_state(project, state)
+    print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else f"OK: dispatch queued {item_id}")
+    return 0
+
+
+def cmd_cross_review(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    same = args.implementer.lower() == args.reviewer.lower() or args.implementer_harness.lower() == args.reviewer_harness.lower()
+    status = "BLOCKED" if same and args.require_different_harness else "READY"
+    review_id = dispatch_id(args.title or "cross-review")
+    review_dir = project / ".pfo" / "cross-review"
+    review_dir.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "version": 1,
+        "id": review_id,
+        "title": args.title or review_id,
+        "implementer": {"agent": args.implementer, "harness": args.implementer_harness},
+        "reviewer": {"agent": args.reviewer, "harness": args.reviewer_harness},
+        "requireDifferentHarness": args.require_different_harness,
+        "contract": args.contract,
+        "diff": args.diff,
+        "status": status,
+        "reason": "reviewer must use a different harness/vendor" if status == "BLOCKED" else "independent review envelope ready",
+        "createdAt": now_iso(),
+    }
+    rel = f".pfo/cross-review/{review_id}.json"
+    (review_dir / f"{review_id}.json").write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    state["crossReview"]["lastReviewId"] = review_id
+    state["crossReview"]["status"] = status
+    state["gateResults"]["crossReview"] = "PASSED" if status == "READY" else "BLOCKED"
+    add_artifact(state, rel)
+    append_event(project, state, "review", state["gateResults"]["crossReview"], payload)
+    save_state(project, state)
+    print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else f"Cross-review {status}: {payload['reason']}")
+    return 0 if status == "READY" else 1
+
+
+def cost_route_decision(risk_score: int, estimated_cost_usd: float, trivial: bool) -> dict:
+    if trivial and risk_score < 20:
+        tier = "cheap"
+        decision = "downgrade"
+    elif risk_score >= 80 or estimated_cost_usd >= 5:
+        tier = "strong"
+        decision = "escalate"
+    elif risk_score >= 40 or estimated_cost_usd >= 1:
+        tier = "standard"
+        decision = "keep-standard"
+    else:
+        tier = "cheap"
+        decision = "optimize-cost"
+    return {"modelTier": tier, "budgetDecision": decision}
+
+
+def cmd_cost_route(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    decision = cost_route_decision(args.risk_score, args.estimated_cost_usd, args.trivial)
+    payload = {
+        "type": "pfo-cost-risk-route",
+        "prompt": args.prompt,
+        "riskScore": args.risk_score,
+        "estimatedCostUsd": args.estimated_cost_usd,
+        "trivial": args.trivial,
+        **decision,
+        "updatedAt": now_iso(),
+    }
+    state["costRiskRouting"] = {
+        "lastDecision": decision["budgetDecision"],
+        "modelTier": decision["modelTier"],
+        "riskScore": args.risk_score,
+        "estimatedCostUsd": args.estimated_cost_usd,
+        "budgetDecision": decision["budgetDecision"],
+        "updatedAt": payload["updatedAt"],
+    }
+    state["gateResults"]["costRiskRouting"] = "PASSED"
+    append_event(project, state, "routing", "PASSED", payload)
+    save_state(project, state)
+    print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else f"{decision['modelTier']}: {decision['budgetDecision']}")
+    return 0
+
+
+def session_export_payload(project: Path, state: dict) -> dict:
+    return {
+        "version": 1,
+        "project": project.name,
+        "exportedAt": now_iso(),
+        "currentStage": state.get("currentStage", ""),
+        "currentNode": state.get("currentNode", ""),
+        "currentUnit": state.get("currentUnit", {}),
+        "nextAction": state.get("nextAction", ""),
+        "gateResults": state.get("gateResults", {}),
+        "artifacts": state.get("artifacts", []),
+        "eventLog": state.get("eventLog", {}),
+        "dispatchRuntime": state.get("dispatchRuntime", {}),
+        "crossReview": state.get("crossReview", {}),
+        "policyRuntime": state.get("policyRuntime", {}),
+        "costRiskRouting": state.get("costRiskRouting", {}),
+    }
+
+
+def cmd_session(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    session_dir = project / ".pfo" / "session"
+    session_dir.mkdir(parents=True, exist_ok=True)
+    export_path = Path(args.output) if args.output else session_dir / "session-export.json"
+    if args.session_action == "export":
+        payload = session_export_payload(project, state)
+        export_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        live_path = session_dir / "live-status.json"
+        live_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        state["sessionRuntime"]["lastExportAt"] = payload["exportedAt"]
+        state["gateResults"]["sessionRuntime"] = "PASSED"
+        add_artifact(state, ".pfo/session/session-export.json")
+        add_artifact(state, ".pfo/session/live-status.json")
+        append_event(project, state, "state-change", "READY", {"command": "session", "action": "export"})
+        save_state(project, state)
+        print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else f"OK: session exported to {export_path}")
+        return 0
+    if args.session_action == "import":
+        payload = json.loads(export_path.read_text(encoding="utf-8"))
+        state["sessionRuntime"]["lastImportAt"] = now_iso()
+        state.setdefault("decisionLog", []).append({"event": "session import", "source": str(export_path), "exportedAt": payload.get("exportedAt", "")})
+        state["gateResults"]["sessionRuntime"] = "PASSED"
+        append_event(project, state, "state-change", "READY", {"command": "session", "action": "import", "source": str(export_path)})
+        save_state(project, state)
+        print(f"OK: session import recorded from {export_path}")
+        return 0
+    payload = session_export_payload(project, state)
+    print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else f"{payload['currentStage']} -> {payload['nextAction']}")
+    return 0
+
+
 def exec_result(status: str, route: str, profile: str, artifacts: list[str], gates: dict, next_action: str, code: int) -> dict:
     return {
         "type": "pfo-exec-result",
@@ -3866,6 +4453,28 @@ def build_parser() -> argparse.ArgumentParser:
     event.add_argument("--reason", default="")
     event.set_defaults(func=cmd_event)
 
+    acceptance = sub.add_parser("acceptance", help="Create, update, and gate original-request acceptance criteria.")
+    acceptance.add_argument("acceptance_action", choices=["init", "add", "verify", "gate", "status"])
+    acceptance.add_argument("project", type=Path)
+    acceptance.add_argument("--request", default="")
+    acceptance.add_argument("--unit", default="")
+    acceptance.add_argument("--criterion", action="append", default=[], help="Repeat as ID::requirement::verification or raw requirement.")
+    acceptance.add_argument("--id", default="")
+    acceptance.add_argument("--requirement", default="")
+    acceptance.add_argument("--source-quote", default="")
+    acceptance.add_argument("--verification", default="")
+    acceptance.add_argument("--status", choices=["PENDING", "PASSED", "FAILED", "WAIVED"], default="PASSED")
+    acceptance.add_argument(
+        "--evidence-kind",
+        choices=["command", "test", "review", "security", "manual", "artifact", "production_readiness", "contract_gate"],
+        default="command",
+    )
+    acceptance.add_argument("--evidence", default="")
+    acceptance.add_argument("--independent-evidence", default="")
+    acceptance.add_argument("--force", action="store_true")
+    acceptance.add_argument("--json", action="store_true")
+    acceptance.set_defaults(func=cmd_acceptance)
+
     context_budget = sub.add_parser("context-budget", help="Check tool/read/log/web output against the context budget gate.")
     context_budget.add_argument("project", type=Path)
     context_budget.add_argument("--kind", choices=["tool", "read", "log", "web", "http", "grep", "rg"], default="tool")
@@ -3994,11 +4603,78 @@ def build_parser() -> argparse.ArgumentParser:
     policy.add_argument("--json", action="store_true")
     policy.set_defaults(func=cmd_policy)
 
+    policy_eval = sub.add_parser("policy-eval", help="Evaluate a PFO runtime policy event and return ALLOW, DENY, or ASK.")
+    policy_eval.add_argument("project", type=Path)
+    policy_eval.add_argument("--event-json", default="")
+    policy_eval.add_argument("--event-file", default="")
+    policy_eval.add_argument("--event-type", default="tool_call")
+    policy_eval.add_argument("--target", default="")
+    policy_eval.add_argument("--capability", choices=["read", "write", "test", "commit", "push", "deploy", "external_api", "secrets", "context_budget"], default="read")
+    policy_eval.add_argument("--cost-usd", type=float, default=0)
+    policy_eval.add_argument("--risk-score", type=int, default=0)
+    policy_eval.add_argument("--tool-calls", type=int, default=0)
+    policy_eval.add_argument("--ask-risk", type=int, default=50)
+    policy_eval.add_argument("--deny-risk", type=int, default=90)
+    policy_eval.add_argument("--ask-cost", type=float, default=3.0)
+    policy_eval.add_argument("--deny-cost", type=float, default=10.0)
+    policy_eval.add_argument("--max-tool-calls", type=int, default=200)
+    policy_eval.add_argument("--record", action="store_true")
+    policy_eval.add_argument("--json", action="store_true")
+    policy_eval.set_defaults(func=cmd_policy_eval)
+
     autonomy = sub.add_parser("autonomy", help="Alias for `pfo policy explain` with an autonomy level.")
     autonomy.add_argument("project", type=Path)
     autonomy.add_argument("--auto", choices=["off", "low", "medium", "high"], default="off")
     autonomy.add_argument("--json", action="store_true")
     autonomy.set_defaults(func=lambda args: cmd_policy(argparse.Namespace(policy_action="explain", project=args.project, auto=args.auto, capability="", json=args.json)))
+
+    agent_spec = sub.add_parser("agent-spec", help="List, validate, or materialize PFO Agent Spec v1 YAML profiles.")
+    agent_spec.add_argument("agent_action", choices=["list", "validate", "write-defaults"])
+    agent_spec.add_argument("project", type=Path)
+    agent_spec.add_argument("--json", action="store_true")
+    agent_spec.set_defaults(func=cmd_agent_spec)
+
+    dispatch = sub.add_parser("dispatch", help="Create a PFO sub-agent dispatch envelope with optional worktree isolation.")
+    dispatch.add_argument("project", type=Path)
+    dispatch.add_argument("--agent", required=True)
+    dispatch.add_argument("--purpose", choices=["implement", "review", "explore", "search"], required=True)
+    dispatch.add_argument("--title", default="")
+    dispatch.add_argument("--harness", default="codex-native")
+    dispatch.add_argument("--model", default="")
+    dispatch.add_argument("--branch", default="")
+    dispatch.add_argument("--contract", default="")
+    dispatch.add_argument("--worktree", action="store_true")
+    dispatch.add_argument("--json", action="store_true")
+    dispatch.set_defaults(func=cmd_dispatch)
+
+    cross_review = sub.add_parser("cross-review", help="Create an independent cross-harness review envelope for a diff and contract.")
+    cross_review.add_argument("project", type=Path)
+    cross_review.add_argument("--implementer", required=True)
+    cross_review.add_argument("--reviewer", required=True)
+    cross_review.add_argument("--implementer-harness", default="codex-native")
+    cross_review.add_argument("--reviewer-harness", default="claude-native")
+    cross_review.add_argument("--title", default="")
+    cross_review.add_argument("--diff", default="")
+    cross_review.add_argument("--contract", default="")
+    cross_review.add_argument("--require-different-harness", action="store_true", default=True)
+    cross_review.add_argument("--json", action="store_true")
+    cross_review.set_defaults(func=cmd_cross_review)
+
+    cost_route = sub.add_parser("cost-route", help="Route model tier from risk, cost, and triviality signals.")
+    cost_route.add_argument("project", type=Path)
+    cost_route.add_argument("prompt", nargs="?", default="")
+    cost_route.add_argument("--risk-score", type=int, default=0)
+    cost_route.add_argument("--estimated-cost-usd", type=float, default=0)
+    cost_route.add_argument("--trivial", action="store_true")
+    cost_route.add_argument("--json", action="store_true")
+    cost_route.set_defaults(func=cmd_cost_route)
+
+    session = sub.add_parser("session", help="Export, import, or inspect forkable PFO session runtime context.")
+    session.add_argument("session_action", choices=["export", "import", "status"])
+    session.add_argument("project", type=Path)
+    session.add_argument("--output", default="")
+    session.add_argument("--json", action="store_true")
+    session.set_defaults(func=cmd_session)
 
     exec_cmd = sub.add_parser("exec", help="Run a deterministic PFO route as a headless one-shot command.")
     exec_cmd.add_argument("project", type=Path)

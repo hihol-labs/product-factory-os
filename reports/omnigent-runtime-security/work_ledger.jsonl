@@ -1,0 +1,5 @@
+{"id":"O1","phase":"discovery","status":"reviewed","note":"agent YAML specs include executor tools policies sandbox"}
+{"id":"O2","phase":"validation","status":"reviewed","note":"policy-eval returns ALLOW DENY ASK and records state when requested"}
+{"id":"O4","phase":"validation","status":"reviewed","note":"dispatch creates metadata envelope only; no uncontrolled external execution"}
+{"id":"O5","phase":"attack_path","status":"reviewed","note":"cross-review blocks same harness when different harness is required"}
+{"id":"O8","phase":"validation","status":"reviewed","note":"session export contains compact state and event pointers, not secret reads"}

@@ -107,11 +107,34 @@
       ".codex-memory/resume-snapshot.md"
     ]
   },
+  "costRiskPolicy": {
+    "version": 1,
+    "mode": "risk-and-budget-routing",
+    "riskScore": {
+      "askThreshold": 50,
+      "denyThreshold": 90
+    },
+    "estimatedCostUsd": {
+      "askThreshold": 3.0,
+      "denyThreshold": 10.0
+    },
+    "modelTiers": {
+      "cheap": "Use for trivial or low-risk work.",
+      "standard": "Use for normal scoped implementation and review.",
+      "strong": "Use for high-risk architecture, security, migration, deploy, or final review."
+    },
+    "evidence": [
+      ".codex-memory/events.jsonl",
+      "costRiskRouting",
+      "policyRuntime"
+    ]
+  },
   "rules": [
     "A blocked capability requires explicit user approval before action.",
     "A scoped capability must stay inside its declared scope source.",
     "Every approval, denial, command, gate, external tool call, and secret access attempt must be logged to .codex-memory/events.jsonl.",
     "Large tool, read, log, web, and raw HTTP outputs must pass context_budget or be routed through sandbox-summary before entering active chat context.",
-    "Production deploy, migration, DNS, billing, external writes, and secret reads are never implicit."
+    "Production deploy, migration, DNS, billing, external writes, and secret reads are never implicit.",
+    "Cost and risk routing must choose the cheapest sufficient model tier before expensive execution."
   ]
 }

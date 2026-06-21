@@ -112,6 +112,23 @@
       "prefer durable artifact references over chat-only memory"
     ]
   },
+  "sandbox": {
+    "type": "local",
+    "readPaths": [
+      "."
+    ],
+    "writePaths": [
+      "files listed by the active execution graph node",
+      "tests/",
+      "plans/",
+      "reports/",
+      ".codex-memory/",
+      ".pfo/"
+    ],
+    "allowNetwork": false,
+    "envPassthrough": [],
+    "policySource": ".pfo/EXECUTION_POLICY.json"
+  },
   "toolPolicy": {
     "mode": "minimal-trusted-menu",
     "rules": [

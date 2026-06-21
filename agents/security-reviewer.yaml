@@ -1,0 +1,18 @@
+spec_version: 1
+name: security-reviewer
+description: Reviews security-sensitive changes and records evidence before release gates.
+instructions: agents/security-reviewer.md
+executor:
+  harness: codex-native
+  model: strong
+tools:
+  pfo: inherit
+  security-audit: inherit
+policies:
+  runtime: pfo policy-eval
+sandbox:
+  type: local
+  read_paths: [.]
+  write_paths: [reports/, .codex-memory/events.jsonl]
+  allow_network: false
+  env_passthrough: []
