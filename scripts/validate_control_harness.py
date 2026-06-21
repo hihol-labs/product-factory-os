@@ -571,6 +571,15 @@ def assert_contains(text: str, token: str, source: str) -> None:
         fail(f"{source} is missing {token!r}")
 
 
+def is_runtime_only_artifact(artifact: str) -> bool:
+    normalized = artifact.replace("\\", "/")
+    return (
+        normalized in RUNTIME_ONLY_ARTIFACTS
+        or normalized.startswith(".codex-memory/")
+        or normalized.startswith(".pfo/")
+    )
+
+
 def validate_doc_shape(text: str) -> None:
     for heading in [
         "# Control Harness",
@@ -605,7 +614,7 @@ def validate_inventory(text: str) -> None:
         assert_contains(text, f"| {control_id} |", "docs/CONTROL_HARNESS.md")
         seen_quadrants.add((item["timing"], item["evaluator"]))
         for artifact in item["artifacts"]:
-            if artifact not in RUNTIME_ONLY_ARTIFACTS and not (ROOT / artifact).is_file():
+            if not is_runtime_only_artifact(artifact) and not (ROOT / artifact).is_file():
                 fail(f"{control_id} references missing artifact: {artifact}")
             assert_contains(text, f"`{artifact}`", "docs/CONTROL_HARNESS.md")
 

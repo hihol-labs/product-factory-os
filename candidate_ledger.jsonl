@@ -1,3 +1,4 @@
 {"receipt":"discovery","target":"acceptance runtime enforcement","result":"Existing completion flow had verification and policy contracts but no source-traced acceptance contract gate."}
 {"receipt":"validation","target":"acceptance runtime enforcement","result":"New validator and CLI gate pass for the active contract; structure/runtime/control harness validators recognize the new artifacts."}
 {"receipt":"attack_path","target":"self-authored validator false pass","result":"Changed validate*.py references in acceptance evidence now require independentEvidence."}
+{"receipt":"validation","target":"ci control harness failure","result":"Runtime-only .codex-memory/ and .pfo/ artifact references no longer require committed files in clean GitHub Actions checkout."}
