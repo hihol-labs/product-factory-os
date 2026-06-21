@@ -6,15 +6,15 @@ Product Factory OS adopts the effective runtime mechanics from Omnigent without 
 
 | ID | Omnigent-inspired mechanism | PFO implementation | Harness role |
 |---|---|---|---|
-| O1 | Declarative agent YAML | `docs/templates/PFO_AGENT_SPEC.yaml`, `agents/*.yaml`, `pfo agent-spec` | Feedforward guide |
-| O2 | Policy engine verdicts | `pfo policy-eval` returns `ALLOW`, `DENY`, or `ASK` from runtime events | Computational sensor |
-| O3 | Runner/server envelope | `pfo exec`, `pfo session export`, `.pfo/session/live-status.json` | Guide plus sensor |
-| O4 | Multi-agent dispatch | `pfo dispatch` writes `.pfo/dispatch/*.json` with purpose, agent, harness, model, and worktree envelope | Feedforward guide |
-| O5 | Cross-harness review | `pfo cross-review` requires a different reviewer harness for high-risk review envelopes | Inferential feedback gate |
-| O6 | Cost/risk routing | `pfo cost-route` and `pfo policy-eval` record risk score, estimated cost, model tier, and budget decision | Computational guide |
-| O7 | Live observability | `pfo telemetry`, `.pfo/session/live-status.json`, `.pfo/telemetry/` expose gates, artifacts, dispatch, review, policy, and cost state for live observability | Computational sensor |
-| O8 | Session fork/attach/share substrate | `pfo session export/import/status` creates forkable context packets from state, gates, artifacts, and event pointers | Feedforward guide |
-| O9 | Sandbox in agent/unit specs | `sandbox:` in `agents/*.yaml` and `.pfo/UNIT_CONTEXT_MANIFEST.json` declares `read_paths`, `write_paths`, network, env, and policy boundaries | Computational feedforward |
+| O1 | Declarative agent YAML | `docs/templates/PFO_AGENT_SPEC.yaml`, `agents/*.yaml`, `pfo agent-spec`; each profile declares role instructions, executor harness/model, tools, policies, terminals, and sandbox | Feedforward guide |
+| O2 | Policy engine verdicts | `pfo policy-eval` normalizes runtime events with `type`, `target`, `data`, `actor`, `usage`, `session_state`, and `result`, then returns `ALLOW`, `DENY`, or `ASK` | Computational sensor |
+| O3 | Runner/server envelope | `pfo runner register/status` writes `.pfo/runner/runner-host.json`; `pfo server register/status` writes `.pfo/server/control-plane.json`; local PFO artifacts remain source of truth while server coordinates sessions, telemetry, gates, and approvals | Guide plus sensor |
+| O4 | Multi-agent dispatch | `pfo dispatch --worktree` creates an independent git worktree under `../.pfo-worktrees/<project>/...` and writes `.pfo/dispatch/*.json` with purpose, agent, harness, model, inbox, and isolation metadata | Feedforward guide |
+| O5 | Cross-harness/vendor review | `pfo cross-review --risk security|migration|deploy|auth|payments|data-loss` requires independent agent, harness, vendor, or model when another vendor is available | Inferential feedback gate |
+| O6 | Cost/risk routing | `pfo cost-route` and `.pfo/PERMISSION_MATRIX.json` carry `riskScore`, `estimatedCost`, `modelTier`, `budgetDecision`, `downgradeAllowed`, daily budget, and expensive-model gates into state and telemetry | Computational guide |
+| O7 | Live observability | `pfo session export/status` writes `.pfo/session/live-status.json` with active goal, route, current unit, running command, subagents, inbox, approvals, gates, diff, verification, and cost/policy state | Computational sensor |
+| O8 | Session fork/attach/share substrate | `pfo session export/import/attach/share/status` creates forkable packets with snapshot, unit manifest, event range, active artifacts, gates, dispatches, and review state | Feedforward guide |
+| O9 | Sandbox in agent/unit specs | `sandbox:` in `agents/*.yaml`, `docs/templates/PFO_AGENT_SPEC.yaml`, and unit manifests declares `sandbox.type`, `read_paths`, `write_paths`, `allow_network`, and `env_passthrough` | Computational feedforward |
 
 ## Operating Rules
 
@@ -34,3 +34,7 @@ python3 scripts/validate_omnigent_runtime.py
 ```
 
 The validator checks that all O1-O9 mechanisms have a CLI surface, artifact, documentation entry, control-harness entry, and production-readiness wiring.
+
+- `pfo session attach` is part of the behavioral O1-O9 acceptance surface.
+
+- `pfo session share` is part of the behavioral O1-O9 acceptance surface.

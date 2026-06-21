@@ -31,6 +31,10 @@ The primary abuse path is a false pass: an agent writes a validator and claims t
 - `repository_coverage_ledger.md`
 - `candidate_ledger.jsonl`
 
+## Omnigent O1-O9 runtime completion
+
+Reviewed added runtime behavior for policy interception, runner/server separation, dispatch worktree creation, cross-vendor review, cost routing, live session export, attach/share, and sandbox declarations. The change adds local filesystem metadata and git worktree orchestration; it does not add production deploy, secret read, remote execution, or hosted control-plane mutation. Risk controls are explicit permission policy, acceptance contract, independent review, and fail-closed validators.
+
 ## Final Decision
 
 PASSED_WITH_WARNINGS: acceptance enforcement hardens completion gating. Residual risk is semantic quality of the original criteria; this is intentionally addressed through source quotes and independent evidence rather than fully automated natural-language proof.

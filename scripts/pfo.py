@@ -320,6 +320,15 @@ def ensure_autonomy_state(state: dict) -> None:
             "lastCheckedAt": "",
         },
     )
+    state.setdefault(
+        "runnerServer",
+        {
+            "runnerHostPath": ".pfo/runner/runner-host.json",
+            "serverControlPlanePath": ".pfo/server/control-plane.json",
+            "runnerStatus": "",
+            "serverStatus": "",
+        },
+    )
     gates = state.setdefault("gateResults", {})
     for gate in [
         "ideaGate",
@@ -358,6 +367,7 @@ def ensure_autonomy_state(state: dict) -> None:
         "costRiskRouting",
         "sessionRuntime",
         "sandboxRuntime",
+        "runnerServer",
     ]:
         gates.setdefault(gate, "")
     ensure_human_steering(state)
@@ -1522,6 +1532,17 @@ def generated_unit_manifest(
         },
         "sandbox": {
             "type": "local",
+            "read_paths": ["."],
+            "write_paths": [
+                "files listed by the active execution graph node",
+                "tests/",
+                "plans/",
+                "reports/",
+                ".codex-memory/",
+                ".pfo/",
+            ],
+            "allow_network": False,
+            "env_passthrough": [],
             "readPaths": ["."],
             "writePaths": [
                 "files listed by the active execution graph node",
@@ -3661,13 +3682,18 @@ def policy_eval_payload(project: Path, args: argparse.Namespace) -> dict:
     event_type = event.get("type") or args.event_type
     target = event.get("target") or args.target
     data = event.get("data", {}) if isinstance(event.get("data", {}), dict) else {}
+    usage = event.get("usage", {}) if isinstance(event.get("usage", {}), dict) else parse_json_arg(getattr(args, "usage_json", ""), "")
+    session_state = event.get("session_state", {}) if isinstance(event.get("session_state", {}), dict) else parse_json_arg(getattr(args, "session_state_json", ""), "")
+    result = event.get("result", {}) if isinstance(event.get("result", {}), dict) else parse_json_arg(getattr(args, "result_json", ""), "")
+    actor = event.get("actor") or args.actor
     capability = data.get("capability") or args.capability or target or "read"
-    cost_usd = float(data.get("cost_usd", args.cost_usd or 0) or 0)
-    risk_score = int(data.get("risk_score", args.risk_score or 0) or 0)
-    tool_calls = int(data.get("tool_calls", args.tool_calls or 0) or 0)
+    cost_usd = float(usage.get("estimatedCostUsd", data.get("cost_usd", args.cost_usd or 0)) or 0)
+    risk_score = int(usage.get("riskScore", data.get("risk_score", args.risk_score or 0)) or 0)
+    tool_calls = int(usage.get("toolCalls", data.get("tool_calls", args.tool_calls or 0)) or 0)
     matrix_path = project / ".pfo" / "PERMISSION_MATRIX.json"
     matrix = json.loads(matrix_path.read_text(encoding="utf-8")) if matrix_path.is_file() else {}
     capability_policy = matrix.get("capabilities", {}).get(capability, {}) if isinstance(matrix.get("capabilities"), dict) else {}
+    cost_policy = matrix.get("costRiskPolicy", {}) if isinstance(matrix.get("costRiskPolicy"), dict) else {}
     default_decision = str(capability_policy.get("default") or matrix.get("defaultDecision") or "deny").lower()
     approval_required = capability_policy.get("approvalRequired", False)
     reasons: list[str] = []
@@ -3681,27 +3707,49 @@ def policy_eval_payload(project: Path, args: argparse.Namespace) -> dict:
     elif approval_required is True or (isinstance(approval_required, str) and approval_required not in {"false", "False", ""}):
         verdict = "ASK"
         reasons.append(f"{capability} requires approval: {approval_required}")
-    if risk_score >= args.deny_risk:
+    risk_thresholds = cost_policy.get("riskScore", {}) if isinstance(cost_policy.get("riskScore"), dict) else {}
+    cost_thresholds = cost_policy.get("estimatedCostUsd", {}) if isinstance(cost_policy.get("estimatedCostUsd"), dict) else {}
+    deny_risk = int(risk_thresholds.get("denyThreshold", args.deny_risk))
+    ask_risk = int(risk_thresholds.get("askThreshold", args.ask_risk))
+    deny_cost = float(cost_thresholds.get("denyThreshold", args.deny_cost))
+    ask_cost = float(cost_thresholds.get("askThreshold", args.ask_cost))
+    if risk_score >= deny_risk:
         verdict = "DENY"
-        reasons.append(f"risk score {risk_score} >= deny threshold {args.deny_risk}")
-    elif risk_score >= args.ask_risk and verdict == "ALLOW":
+        reasons.append(f"risk score {risk_score} >= deny threshold {deny_risk}")
+    elif risk_score >= ask_risk and verdict == "ALLOW":
         verdict = "ASK"
-        reasons.append(f"risk score {risk_score} >= ask threshold {args.ask_risk}")
-    if cost_usd >= args.deny_cost:
+        reasons.append(f"risk score {risk_score} >= ask threshold {ask_risk}")
+    if cost_usd >= deny_cost:
         verdict = "DENY"
-        reasons.append(f"estimated cost ${cost_usd:.2f} >= deny threshold ${args.deny_cost:.2f}")
-    elif cost_usd >= args.ask_cost and verdict == "ALLOW":
+        reasons.append(f"estimated cost ${cost_usd:.2f} >= deny threshold ${deny_cost:.2f}")
+    elif cost_usd >= ask_cost and verdict == "ALLOW":
         verdict = "ASK"
-        reasons.append(f"estimated cost ${cost_usd:.2f} >= ask threshold ${args.ask_cost:.2f}")
+        reasons.append(f"estimated cost ${cost_usd:.2f} >= ask threshold ${ask_cost:.2f}")
     if tool_calls > args.max_tool_calls:
         verdict = "DENY"
         reasons.append(f"tool call count {tool_calls} > limit {args.max_tool_calls}")
+    normalized_event = {
+        "type": event_type,
+        "target": target,
+        "data": data,
+        "actor": actor,
+        "usage": {
+            "riskScore": risk_score,
+            "estimatedCostUsd": cost_usd,
+            "toolCalls": tool_calls,
+            **{key: value for key, value in usage.items() if key not in {"riskScore", "estimatedCostUsd", "toolCalls"}},
+        },
+        "session_state": session_state,
+        "result": result,
+        "capability": capability,
+    }
     return {
         "type": "pfo-policy-verdict",
         "project": str(project),
-        "event": {"type": event_type, "target": target, "capability": capability, "data": data},
+        "event": normalized_event,
         "result": verdict,
         "reason": "; ".join(reasons) or "allowed by active PFO policy",
+        "actor": actor,
         "riskScore": risk_score,
         "estimatedCostUsd": cost_usd,
         "toolCalls": tool_calls,
@@ -3719,6 +3767,7 @@ def cmd_policy_eval(args: argparse.Namespace) -> int:
         "verdicts": ["ALLOW", "DENY", "ASK"],
         "lastVerdict": payload["result"],
         "lastReason": payload["reason"],
+        "lastEvent": payload["event"],
         "lastEventAt": payload["checkedAt"],
     }
     state["gateResults"]["policyRuntime"] = "PASSED" if payload["result"] == "ALLOW" else payload["result"]
@@ -3738,7 +3787,7 @@ def agent_spec_paths() -> list[Path]:
 
 def validate_agent_spec_text(path: Path, text: str) -> list[str]:
     errors = []
-    for token in ["spec_version:", "name:", "instructions:", "executor:", "tools:", "policies:", "sandbox:"]:
+    for token in ["spec_version:", "name:", "instructions:", "executor:", "tools:", "policies:", "terminals:", "sandbox:", "read_paths:", "write_paths:", "allow_network:", "env_passthrough:"]:
         if token not in text:
             errors.append(f"{path}: missing {token}")
     if "harness:" not in text:
@@ -3808,7 +3857,30 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     item_id = dispatch_id(args.title or args.agent)
     dispatch_dir = project / ".pfo" / "dispatch"
     dispatch_dir.mkdir(parents=True, exist_ok=True)
-    worktree_path = f".pfo/worktrees/{item_id}" if args.worktree else ""
+    branch = args.branch or f"pfo/{item_id}"
+    worktree_path = ""
+    worktree_status = "not-requested"
+    if args.worktree:
+        worktree_root = project.parent / ".pfo-worktrees" / project.name
+        worktree_root.mkdir(parents=True, exist_ok=True)
+        worktree = worktree_root / item_id
+        worktree_path = str(worktree)
+        if args.no_create_worktree:
+            worktree_status = "declared"
+        else:
+            if worktree.exists():
+                worktree_status = "exists"
+            else:
+                completed = subprocess.run(
+                    ["git", "worktree", "add", "-b", branch, str(worktree), "HEAD"],
+                    cwd=project,
+                    text=True,
+                    capture_output=True,
+                    check=False,
+                )
+                if completed.returncode != 0:
+                    raise SystemExit("ERROR: failed to create dispatch worktree: " + (completed.stderr or completed.stdout).strip())
+                worktree_status = "created"
     payload = {
         "version": 1,
         "id": item_id,
@@ -3817,7 +3889,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "purpose": args.purpose,
         "harness": args.harness,
         "model": args.model,
-        "worktree": {"enabled": bool(args.worktree), "path": worktree_path, "branch": args.branch},
+        "worktree": {"enabled": bool(args.worktree), "path": worktree_path, "branch": branch, "status": worktree_status, "independent": bool(args.worktree)},
         "contract": args.contract,
         "status": "QUEUED",
         "createdAt": now_iso(),
@@ -3831,7 +3903,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     active = runtime.setdefault("activeDispatches", [])
     if item_id not in active:
         active.append(item_id)
-    state["worktreeIsolation"] = {"enabled": bool(args.worktree), "strategy": "per-dispatch", "activeBranch": args.branch, "activeWorktree": worktree_path, "mergeStatus": "human-owned"}
+    state["worktreeIsolation"] = {"enabled": bool(args.worktree), "strategy": "per-dispatch", "activeBranch": branch, "activeWorktree": worktree_path, "mergeStatus": "human-owned", "status": worktree_status}
     state["gateResults"]["dispatchRuntime"] = "PASSED"
     add_artifact(state, rel)
     append_event(project, state, "dispatch", "QUEUED", payload)
@@ -3840,12 +3912,22 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     return 0
 
 
+CRITICAL_REVIEW_RISKS = {"security", "migration", "deploy", "auth", "payments", "data-loss"}
+
+
 def cmd_cross_review(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
     ensure_autonomy_state(state)
-    same = args.implementer.lower() == args.reviewer.lower() or args.implementer_harness.lower() == args.reviewer_harness.lower()
-    status = "BLOCKED" if same and args.require_different_harness else "READY"
+    risks = set(args.risk or [])
+    critical = bool(risks & CRITICAL_REVIEW_RISKS)
+    same_agent = args.implementer.lower() == args.reviewer.lower()
+    same_harness = args.implementer_harness.lower() == args.reviewer_harness.lower()
+    same_vendor = args.implementer_vendor.lower() == args.reviewer_vendor.lower()
+    same_model = bool(args.implementer_model and args.reviewer_model and args.implementer_model.lower() == args.reviewer_model.lower())
+    independence_failed = same_agent or same_harness or same_vendor or same_model
+    requires_independent = args.require_different_harness or (critical and args.vendor_available)
+    status = "BLOCKED" if requires_independent and independence_failed else "READY"
     review_id = dispatch_id(args.title or "cross-review")
     review_dir = project / ".pfo" / "cross-review"
     review_dir.mkdir(parents=True, exist_ok=True)
@@ -3853,13 +3935,17 @@ def cmd_cross_review(args: argparse.Namespace) -> int:
         "version": 1,
         "id": review_id,
         "title": args.title or review_id,
-        "implementer": {"agent": args.implementer, "harness": args.implementer_harness},
-        "reviewer": {"agent": args.reviewer, "harness": args.reviewer_harness},
+        "risks": sorted(risks),
+        "criticalRisk": critical,
+        "vendorAvailable": args.vendor_available,
+        "implementer": {"agent": args.implementer, "harness": args.implementer_harness, "vendor": args.implementer_vendor, "model": args.implementer_model},
+        "reviewer": {"agent": args.reviewer, "harness": args.reviewer_harness, "vendor": args.reviewer_vendor, "model": args.reviewer_model},
         "requireDifferentHarness": args.require_different_harness,
+        "requireDifferentVendorForCriticalRisk": critical and args.vendor_available,
         "contract": args.contract,
         "diff": args.diff,
         "status": status,
-        "reason": "reviewer must use a different harness/vendor" if status == "BLOCKED" else "independent review envelope ready",
+        "reason": "critical review requires independent harness/vendor/model" if status == "BLOCKED" else "independent review envelope ready",
         "createdAt": now_iso(),
     }
     rel = f".pfo/cross-review/{review_id}.json"
@@ -3874,31 +3960,43 @@ def cmd_cross_review(args: argparse.Namespace) -> int:
     return 0 if status == "READY" else 1
 
 
-def cost_route_decision(risk_score: int, estimated_cost_usd: float, trivial: bool) -> dict:
-    if trivial and risk_score < 20:
+def cost_route_decision(risk_score: int, estimated_cost_usd: float, trivial: bool, daily_budget_usd: float = 20.0) -> dict:
+    downgrade_allowed = risk_score < 40 and estimated_cost_usd < min(1.0, daily_budget_usd)
+    if trivial and downgrade_allowed:
         tier = "cheap"
         decision = "downgrade"
+    elif estimated_cost_usd > daily_budget_usd:
+        tier = "blocked"
+        decision = "budget-deny"
+        downgrade_allowed = False
     elif risk_score >= 80 or estimated_cost_usd >= 5:
         tier = "strong"
         decision = "escalate"
+        downgrade_allowed = False
     elif risk_score >= 40 or estimated_cost_usd >= 1:
         tier = "standard"
         decision = "keep-standard"
+        downgrade_allowed = False
     else:
         tier = "cheap"
         decision = "optimize-cost"
-    return {"modelTier": tier, "budgetDecision": decision}
+    return {"modelTier": tier, "budgetDecision": decision, "downgradeAllowed": downgrade_allowed, "dailyBudgetUsd": daily_budget_usd}
 
 
 def cmd_cost_route(args: argparse.Namespace) -> int:
     project = args.project.resolve()
     state = load_state(project)
     ensure_autonomy_state(state)
-    decision = cost_route_decision(args.risk_score, args.estimated_cost_usd, args.trivial)
+    matrix_path = project / ".pfo" / "PERMISSION_MATRIX.json"
+    matrix = json.loads(matrix_path.read_text(encoding="utf-8")) if matrix_path.is_file() else {}
+    cost_policy = matrix.get("costRiskPolicy", {}) if isinstance(matrix.get("costRiskPolicy"), dict) else {}
+    daily_budget = float(args.daily_budget_usd or cost_policy.get("dailyBudgetUsd", 20.0) or 20.0)
+    decision = cost_route_decision(args.risk_score, args.estimated_cost_usd, args.trivial, daily_budget)
     payload = {
         "type": "pfo-cost-risk-route",
         "prompt": args.prompt,
         "riskScore": args.risk_score,
+        "estimatedCost": args.estimated_cost_usd,
         "estimatedCostUsd": args.estimated_cost_usd,
         "trivial": args.trivial,
         **decision,
@@ -3908,34 +4006,54 @@ def cmd_cost_route(args: argparse.Namespace) -> int:
         "lastDecision": decision["budgetDecision"],
         "modelTier": decision["modelTier"],
         "riskScore": args.risk_score,
+        "estimatedCost": args.estimated_cost_usd,
         "estimatedCostUsd": args.estimated_cost_usd,
         "budgetDecision": decision["budgetDecision"],
+        "downgradeAllowed": decision["downgradeAllowed"],
+        "dailyBudgetUsd": daily_budget,
         "updatedAt": payload["updatedAt"],
     }
-    state["gateResults"]["costRiskRouting"] = "PASSED"
-    append_event(project, state, "routing", "PASSED", payload)
+    state.setdefault("telemetry", {})["costRiskRouting"] = state["costRiskRouting"]
+    state["gateResults"]["costRiskRouting"] = "PASSED" if decision["modelTier"] != "blocked" else "BLOCKED"
+    append_event(project, state, "routing", state["gateResults"]["costRiskRouting"], payload)
     save_state(project, state)
     print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else f"{decision['modelTier']}: {decision['budgetDecision']}")
-    return 0
+    return 0 if decision["modelTier"] != "blocked" else 1
 
 
-def session_export_payload(project: Path, state: dict) -> dict:
+def live_session_payload(project: Path, state: dict) -> dict:
+    human = state.get("humanSteering", {}) if isinstance(state.get("humanSteering"), dict) else {}
+    manifest = state.get("unitContextManifest", {}) if isinstance(state.get("unitContextManifest"), dict) else {}
     return {
         "version": 1,
         "project": project.name,
         "exportedAt": now_iso(),
+        "activeGoal": state.get("intent", "") or state.get("nextAction", ""),
+        "route": state.get("currentTaskRoute", state.get("currentRoute", "")),
         "currentStage": state.get("currentStage", ""),
         "currentNode": state.get("currentNode", ""),
         "currentUnit": state.get("currentUnit", {}),
+        "unitManifest": manifest,
+        "runningCommand": state.get("telemetry", {}).get("lastCommand", "") if isinstance(state.get("telemetry"), dict) else "",
+        "subagents": state.get("dispatchRuntime", {}).get("activeDispatches", []) if isinstance(state.get("dispatchRuntime"), dict) else [],
+        "inbox": state.get("dispatchRuntime", {}),
+        "approvals": human,
+        "gates": state.get("gateResults", {}),
+        "diff": {"source": "git diff --stat", "status": "external"},
+        "verification": state.get("verificationHistory", []),
         "nextAction": state.get("nextAction", ""),
-        "gateResults": state.get("gateResults", {}),
         "artifacts": state.get("artifacts", []),
         "eventLog": state.get("eventLog", {}),
+        "eventRange": {"from": state.get("eventLog", {}).get("lastEventId", ""), "to": state.get("eventLog", {}).get("lastEventId", "")},
         "dispatchRuntime": state.get("dispatchRuntime", {}),
         "crossReview": state.get("crossReview", {}),
         "policyRuntime": state.get("policyRuntime", {}),
         "costRiskRouting": state.get("costRiskRouting", {}),
     }
+
+
+def session_export_payload(project: Path, state: dict) -> dict:
+    return live_session_payload(project, state)
 
 
 def cmd_session(args: argparse.Namespace) -> int:
@@ -3967,8 +4085,91 @@ def cmd_session(args: argparse.Namespace) -> int:
         save_state(project, state)
         print(f"OK: session import recorded from {export_path}")
         return 0
+    if args.session_action == "attach":
+        payload = json.loads(export_path.read_text(encoding="utf-8")) if export_path.is_file() else session_export_payload(project, state)
+        state["sessionRuntime"]["lastAttachAt"] = now_iso()
+        state["sessionRuntime"]["attachedExport"] = str(export_path)
+        state.setdefault("decisionLog", []).append({"event": "session attach", "source": str(export_path), "exportedAt": payload.get("exportedAt", "")})
+        state["gateResults"]["sessionRuntime"] = "PASSED"
+        append_event(project, state, "state-change", "READY", {"command": "session", "action": "attach", "source": str(export_path)})
+        save_state(project, state)
+        print(f"OK: session attached from {export_path}")
+        return 0
+    if args.session_action == "share":
+        payload = session_export_payload(project, state)
+        share_path = session_dir / "session-share.json"
+        share_payload = {"shareMode": "local-artifact", "createdAt": now_iso(), "packet": payload}
+        share_path.write_text(json.dumps(share_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        state["sessionRuntime"]["lastShareAt"] = share_payload["createdAt"]
+        state["sessionRuntime"]["sharePath"] = ".pfo/session/session-share.json"
+        state["gateResults"]["sessionRuntime"] = "PASSED"
+        add_artifact(state, ".pfo/session/session-share.json")
+        append_event(project, state, "state-change", "READY", {"command": "session", "action": "share"})
+        save_state(project, state)
+        print(json.dumps(share_payload, indent=2, ensure_ascii=False) if args.json else "OK: session share packet written to .pfo/session/session-share.json")
+        return 0
     payload = session_export_payload(project, state)
     print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else f"{payload['currentStage']} -> {payload['nextAction']}")
+    return 0
+
+
+def cmd_runner(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    runner_dir = project / ".pfo" / "runner"
+    runner_dir.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "version": 1,
+        "role": "runner-host",
+        "mode": "local-source-of-truth",
+        "project": str(project),
+        "executesTools": True,
+        "sandboxSource": ".pfo/UNIT_CONTEXT_MANIFEST.json",
+        "serverContract": ".pfo/server/control-plane.json",
+        "status": "READY",
+        "updatedAt": now_iso(),
+    }
+    path = runner_dir / "runner-host.json"
+    if args.runner_action in {"status", "register"}:
+        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        state.setdefault("runnerServer", {})["runnerHostPath"] = ".pfo/runner/runner-host.json"
+        state.setdefault("runnerServer", {})["runnerStatus"] = "READY"
+        state["gateResults"]["runnerServer"] = "PASSED"
+        add_artifact(state, ".pfo/runner/runner-host.json")
+        append_event(project, state, "state-change", "READY", {"command": "runner", "action": args.runner_action})
+        save_state(project, state)
+    print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else "runner-host: READY")
+    return 0
+
+
+def cmd_server(args: argparse.Namespace) -> int:
+    project = args.project.resolve()
+    state = load_state(project)
+    ensure_autonomy_state(state)
+    server_dir = project / ".pfo" / "server"
+    server_dir.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "version": 1,
+        "role": "coordination-server",
+        "mode": "dashboard-and-approval-plane",
+        "projectSourceOfTruth": "local-pfo-artifacts",
+        "coordinates": ["sessions", "telemetry", "gates", "approvals"],
+        "neverExecutesTools": True,
+        "runnerHost": ".pfo/runner/runner-host.json",
+        "status": "READY",
+        "updatedAt": now_iso(),
+    }
+    path = server_dir / "control-plane.json"
+    if args.server_action in {"status", "register"}:
+        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        state.setdefault("runnerServer", {})["serverControlPlanePath"] = ".pfo/server/control-plane.json"
+        state.setdefault("runnerServer", {})["serverStatus"] = "READY"
+        state["gateResults"]["runnerServer"] = "PASSED"
+        add_artifact(state, ".pfo/server/control-plane.json")
+        append_event(project, state, "state-change", "READY", {"command": "server", "action": args.server_action})
+        save_state(project, state)
+    print(json.dumps(payload, indent=2, ensure_ascii=False) if args.json else "coordination-server: READY")
     return 0
 
 
@@ -4609,6 +4810,10 @@ def build_parser() -> argparse.ArgumentParser:
     policy_eval.add_argument("--event-file", default="")
     policy_eval.add_argument("--event-type", default="tool_call")
     policy_eval.add_argument("--target", default="")
+    policy_eval.add_argument("--actor", default="codex")
+    policy_eval.add_argument("--usage-json", default="")
+    policy_eval.add_argument("--session-state-json", default="")
+    policy_eval.add_argument("--result-json", default="")
     policy_eval.add_argument("--capability", choices=["read", "write", "test", "commit", "push", "deploy", "external_api", "secrets", "context_budget"], default="read")
     policy_eval.add_argument("--cost-usd", type=float, default=0)
     policy_eval.add_argument("--risk-score", type=int, default=0)
@@ -4644,6 +4849,7 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--branch", default="")
     dispatch.add_argument("--contract", default="")
     dispatch.add_argument("--worktree", action="store_true")
+    dispatch.add_argument("--no-create-worktree", action="store_true", help="Declare worktree isolation without creating a git worktree.")
     dispatch.add_argument("--json", action="store_true")
     dispatch.set_defaults(func=cmd_dispatch)
 
@@ -4653,6 +4859,12 @@ def build_parser() -> argparse.ArgumentParser:
     cross_review.add_argument("--reviewer", required=True)
     cross_review.add_argument("--implementer-harness", default="codex-native")
     cross_review.add_argument("--reviewer-harness", default="claude-native")
+    cross_review.add_argument("--implementer-vendor", default="openai")
+    cross_review.add_argument("--reviewer-vendor", default="anthropic")
+    cross_review.add_argument("--implementer-model", default="")
+    cross_review.add_argument("--reviewer-model", default="")
+    cross_review.add_argument("--risk", action="append", choices=["security", "migration", "deploy", "auth", "payments", "data-loss", "general"], default=[])
+    cross_review.add_argument("--vendor-available", action="store_true", default=True)
     cross_review.add_argument("--title", default="")
     cross_review.add_argument("--diff", default="")
     cross_review.add_argument("--contract", default="")
@@ -4665,16 +4877,29 @@ def build_parser() -> argparse.ArgumentParser:
     cost_route.add_argument("prompt", nargs="?", default="")
     cost_route.add_argument("--risk-score", type=int, default=0)
     cost_route.add_argument("--estimated-cost-usd", type=float, default=0)
+    cost_route.add_argument("--daily-budget-usd", type=float, default=0)
     cost_route.add_argument("--trivial", action="store_true")
     cost_route.add_argument("--json", action="store_true")
     cost_route.set_defaults(func=cmd_cost_route)
 
-    session = sub.add_parser("session", help="Export, import, or inspect forkable PFO session runtime context.")
-    session.add_argument("session_action", choices=["export", "import", "status"])
+    session = sub.add_parser("session", help="Export, import, attach, share, or inspect forkable PFO session runtime context.")
+    session.add_argument("session_action", choices=["export", "import", "attach", "share", "status"])
     session.add_argument("project", type=Path)
     session.add_argument("--output", default="")
     session.add_argument("--json", action="store_true")
     session.set_defaults(func=cmd_session)
+
+    runner = sub.add_parser("runner", help="Register or inspect the local PFO runner host.")
+    runner.add_argument("runner_action", choices=["register", "status"])
+    runner.add_argument("project", type=Path)
+    runner.add_argument("--json", action="store_true")
+    runner.set_defaults(func=cmd_runner)
+
+    server = sub.add_parser("server", help="Register or inspect the coordination server contract.")
+    server.add_argument("server_action", choices=["register", "status"])
+    server.add_argument("project", type=Path)
+    server.add_argument("--json", action="store_true")
+    server.set_defaults(func=cmd_server)
 
     exec_cmd = sub.add_parser("exec", help="Run a deterministic PFO route as a headless one-shot command.")
     exec_cmd.add_argument("project", type=Path)

@@ -78,7 +78,20 @@
     ],
     "allowNetwork": false,
     "envPassthrough": [],
-    "policySource": ".pfo/EXECUTION_POLICY.json"
+    "policySource": ".pfo/EXECUTION_POLICY.json",
+    "read_paths": [
+      "."
+    ],
+    "write_paths": [
+      "files listed by the active execution graph node",
+      "tests/",
+      "plans/",
+      "reports/",
+      ".codex-memory/",
+      ".pfo/"
+    ],
+    "allow_network": false,
+    "env_passthrough": []
   },
   "toolPolicy": {
     "mode": "minimal-trusted-menu",

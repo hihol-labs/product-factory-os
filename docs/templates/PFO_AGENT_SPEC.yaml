@@ -12,6 +12,11 @@ tools:
   repo:
     type: os
     mode: scoped
+terminals:
+  default:
+    shell: bash
+    cwd: .
+    purpose: local PFO runner commands
 policies:
   pfo_policy_runtime:
     type: pfo-policy-eval

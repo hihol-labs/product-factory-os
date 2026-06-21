@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "role": "runner-host",
+  "mode": "local-source-of-truth",
+  "project": "/home/hihol/projects/product-factory-os",
+  "executesTools": true,
+  "sandboxSource": ".pfo/UNIT_CONTEXT_MANIFEST.json",
+  "serverContract": ".pfo/server/control-plane.json",
+  "status": "READY",
+  "updatedAt": "2026-06-21T19:06:02+00:00"
+}

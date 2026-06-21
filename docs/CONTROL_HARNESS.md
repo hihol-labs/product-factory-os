@@ -70,6 +70,7 @@ Every durable PFO control should be classified by quadrant. A single mechanism m
 | autonomy-policy | Explain and check risk-tier permissions before headless or delegated work | Feedforward | Computational | `pfo policy`, `pfo autonomy`, `.pfo/PERMISSION_MATRIX.json`, `.pfo/EXECUTION_POLICY.json` |
 | agent-spec-runtime | Declare runnable PFO roles with harness, tools, policies, and sandbox boundaries | Feedforward | Computational | `docs/templates/PFO_AGENT_SPEC.yaml`, `agents/orchestrator.yaml`, `scripts/validate_omnigent_runtime.py` |
 | policy-verdict-runtime | Evaluate runtime events into `ALLOW`, `DENY`, or `ASK` before or after tool activity | Feedback | Computational | `scripts/pfo.py`, `docs/templates/pfo/PERMISSION_MATRIX.json`, `docs/PFO_OMNIGENT_RUNTIME.md` |
+| runner-server-separation | Separate local runner execution from coordination server/dashboard state | Feedforward | Computational | `scripts/pfo.py`, `.pfo/runner/runner-host.json`, `.pfo/server/control-plane.json` |
 | dispatch-runtime | Create bounded sub-agent dispatch envelopes with purpose, harness, model, inbox, and worktree metadata | Feedforward | Computational | `scripts/pfo.py`, `docs/PFO_OMNIGENT_RUNTIME.md`, `.pfo/UNIT_CONTEXT_MANIFEST.json` |
 | cross-harness-review | Require an independent different-harness reviewer for high-risk diffs when available | Feedback | Inferential | `scripts/pfo.py`, `agents/reviewer.yaml`, `docs/PFO_OMNIGENT_RUNTIME.md` |
 | cost-risk-routing | Route model tier and autonomy from risk score, cost estimate, and triviality before spending budget | Feedforward | Computational | `scripts/pfo.py`, `docs/templates/pfo/PERMISSION_MATRIX.json`, `docs/PFO_OMNIGENT_RUNTIME.md` |
@@ -120,7 +121,7 @@ Platform surface canonical artifacts: `scripts/pfo.py`, `scripts/pfo_metrics.py`
 | Deploy readiness | permission matrix, deployment target, rollback expectations | `methodology-ci`, `project-ci`, security/deps/hardening/browser gates |
 | Learn and improve | learning promotion policy | `learning-promotion`, `continuous-health-sensors`, `defensive-layer-diagnostics`, fixture and validator updates |
 | Operate agent platform | `autonomy-policy`, `mission-control`, `headless-exec-envelope`, `project-wiki` | `platform-readiness`, `readiness-remediation`, `diff-scoped-qa`, `telemetry-export` |
-| Supervise live agents | `agent-spec-runtime`, `dispatch-runtime`, `cost-risk-routing`, `forkable-session-context`, `sandbox-spec-runtime` | `policy-verdict-runtime`, `cross-harness-review`, `live-session-observability`, `telemetry-export` |
+| Supervise live agents | `agent-spec-runtime`, `runner-server-separation`, `dispatch-runtime`, `cost-risk-routing`, `forkable-session-context`, `sandbox-spec-runtime` | `policy-verdict-runtime`, `cross-harness-review`, `live-session-observability`, `telemetry-export` |
 | Resume or compact | `context-economy`, `unit-context` | `session-memory-search`, `handoff` |
 
 ## Addition Checklist

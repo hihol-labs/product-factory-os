@@ -8,6 +8,11 @@ executor:
 tools:
   pfo: inherit
   tests: inherit
+terminals:
+  default:
+    shell: bash
+    cwd: .
+    purpose: local PFO runner commands
 policies:
   runtime: pfo policy-eval
 sandbox:
